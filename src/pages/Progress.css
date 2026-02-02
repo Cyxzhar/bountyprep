@@ -9,8 +9,8 @@
     display: flex;
     gap: var(--space-lg);
     padding: var(--space-lg);
-    background: linear-gradient(135deg, var(--bg-card) 0%, rgba(0, 184, 148, 0.08) 100%);
-    border: 1px solid rgba(0, 184, 148, 0.2);
+    background: linear-gradient(135deg, var(--bg-card) 0%, rgba(159, 239, 0, 0.08) 100%);
+    border: 1px solid rgba(159, 239, 0, 0.2);
     border-radius: var(--radius-xl);
     margin-bottom: var(--space-lg);
     position: relative;
@@ -25,7 +25,7 @@
     left: 0;
     right: 0;
     height: 3px;
-    background: linear-gradient(90deg, #00B894, #55EFC4);
+    background: linear-gradient(90deg, var(--neon-green), #B8FF33);
 }
 
 .level-ring {
@@ -51,7 +51,7 @@
 }
 
 .level-ring .ring-fill {
-    stroke: #00B894;
+    stroke: var(--neon-green);
     stroke-linecap: round;
     transition: stroke-dasharray var(--transition-slow);
 }
@@ -69,7 +69,7 @@
     font-size: 2rem;
     font-weight: 800;
     line-height: 1;
-    background: linear-gradient(135deg, #00B894, #55EFC4);
+    background: linear-gradient(135deg, var(--neon-green), #B8FF33);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     background-clip: text;
@@ -204,15 +204,15 @@
 }
 
 .heat-cell.level-1 {
-    background: rgba(0, 184, 148, 0.25);
+    background: rgba(159, 239, 0, 0.25);
 }
 
 .heat-cell.level-2 {
-    background: rgba(0, 184, 148, 0.5);
+    background: rgba(159, 239, 0, 0.5);
 }
 
 .heat-cell.level-3 {
-    background: #00B894;
+    background: var(--neon-green);
 }
 
 .heatmap-legend {
@@ -397,25 +397,26 @@
         grid-template-columns: repeat(4, 1fr);
     }
 }
+
 /* Override progress bars to green on Progress page */
 .progress-screen .progress-bar {
-    background: rgba(0, 184, 148, 0.15);
+    background: rgba(159, 239, 0, 0.15);
 }
 
 .progress-screen .progress-fill {
-    background: linear-gradient(90deg, #00B894, #55EFC4);
+    background: linear-gradient(90deg, var(--neon-green), #B8FF33);
 }
 
 /* Skills progress bars */
 .skill-row .progress-bar {
-    background: rgba(0, 184, 148, 0.15);
+    background: rgba(159, 239, 0, 0.15);
 }
 
 .skill-row .progress-fill {
-    background: linear-gradient(90deg, #00B894, #55EFC4);
+    background: linear-gradient(90deg, var(--neon-green), #B8FF33);
 }
 
 /* Module progress rings on this page */
 .progress-screen .module-card .ring-fill {
-    stroke: #00B894;
+    stroke: var(--neon-green);
 }
