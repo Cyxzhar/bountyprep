@@ -2,14 +2,14 @@
  * AdminSeeder - Temporary component for seeding Firestore
  * 
  * IMPORTANT: Remove this component after seeding is complete!
- * Access via: /admin-seed (add route temporarily)
+ * Access via: /admin-seed
  */
 
 import { useState } from 'react';
 import { useAuth } from '../context/AuthContext';
 import { db } from '../lib/firebase';
+import { doc, setDoc, serverTimestamp } from 'firebase/firestore';
 import { challenges } from '../data/challenges';
-import { seedChallengesFromBrowser } from '../scripts/seedChallenges';
 
 export default function AdminSeeder() {
     const { currentUser } = useAuth();
@@ -27,16 +27,35 @@ export default function AdminSeeder() {
         setStatus([{ message: '🌱 Starting seed...', type: 'info' }]);
 
         try {
-            const results = await seedChallengesFromBrowser(db, challenges);
+            for (const challenge of challenges) {
+                try {
+                    await setDoc(doc(db, 'challenges', challenge.id.toString()), {
+                        id: challenge.id.toString(),
+                        title: challenge.title,
+                        description: challenge.description,
+                        type: challenge.type,
+                        difficulty: challenge.difficulty,
+                        xpReward: challenge.xpReward,
+                        isPremium: challenge.isPremium || false,
+                        estimatedTimeMinutes: challenge.estimatedTime || 10,
+                        questions: challenge.questions,
+                        createdAt: serverTimestamp(),
+                        updatedAt: serverTimestamp(),
+                    });
 
-            const newStatus = results.map(r => ({
-                message: r.success
-                    ? `✅ Seeded challenge ${r.id}`
-                    : `❌ Failed: ${r.id} - ${r.error}`,
-                type: r.success ? 'success' : 'error'
-            }));
+                    setStatus(prev => [...prev, {
+                        message: `✅ Seeded: ${challenge.title}`,
+                        type: 'success'
+                    }]);
+                } catch (error) {
+                    setStatus(prev => [...prev, {
+                        message: `❌ Failed: ${challenge.id} - ${error.message}`,
+                        type: 'error'
+                    }]);
+                }
+            }
 
-            setStatus(prev => [...prev, ...newStatus, { message: '✨ Seeding complete!', type: 'info' }]);
+            setStatus(prev => [...prev, { message: '✨ Seeding complete!', type: 'info' }]);
             setDone(true);
         } catch (error) {
             setStatus(prev => [...prev, { message: `❌ Fatal error: ${error.message}`, type: 'error' }]);
@@ -60,22 +79,22 @@ export default function AdminSeeder() {
             </p>
 
             {currentUser ? (
-                <p style={{ color: '#9fef00' }}>Logged in as: {currentUser.email}</p>
+                <p style={{ color: '#9fef00' }}>✅ Logged in as: {currentUser.email}</p>
             ) : (
-                <p style={{ color: '#ff4444' }}>⚠️ Not logged in - please log in first</p>
+                <p style={{ color: '#ff4444' }}>⚠️ Not logged in - please log in first at /auth/login</p>
             )}
 
             <button
                 onClick={handleSeed}
-                disabled={loading || done}
+                disabled={loading || done || !currentUser}
                 style={{
                     padding: '1rem 2rem',
-                    background: done ? '#333' : '#9fef00',
-                    color: done ? '#666' : '#000',
+                    background: done ? '#333' : (!currentUser ? '#555' : '#9fef00'),
+                    color: done || !currentUser ? '#666' : '#000',
                     border: 'none',
                     borderRadius: '8px',
                     fontWeight: 'bold',
-                    cursor: loading || done ? 'not-allowed' : 'pointer',
+                    cursor: loading || done || !currentUser ? 'not-allowed' : 'pointer',
                     marginTop: '1rem',
                     marginBottom: '1rem'
                 }}
@@ -90,19 +109,23 @@ export default function AdminSeeder() {
                 maxHeight: '400px',
                 overflow: 'auto'
             }}>
-                {status.map((s, i) => (
-                    <p key={i} style={{
-                        color: s.type === 'error' ? '#ff4444' : s.type === 'success' ? '#9fef00' : '#888',
-                        margin: '0.25rem 0'
-                    }}>
-                        {s.message}
-                    </p>
-                ))}
+                {status.length === 0 ? (
+                    <p style={{ color: '#666' }}>Click "Seed Challenges" to begin...</p>
+                ) : (
+                    status.map((s, i) => (
+                        <p key={i} style={{
+                            color: s.type === 'error' ? '#ff4444' : s.type === 'success' ? '#9fef00' : '#888',
+                            margin: '0.25rem 0'
+                        }}>
+                            {s.message}
+                        </p>
+                    ))
+                )}
             </div>
 
             {done && (
                 <p style={{ marginTop: '1rem', color: '#9fef00' }}>
-                    ✅ Go to Firebase Console → Firestore to verify data
+                    ✅ Go to Firebase Console → Firestore to verify data, then navigate to /home
                 </p>
             )}
         </div>
