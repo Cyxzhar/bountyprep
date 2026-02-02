@@ -1,15 +1,21 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import {
     ArrowLeft, Clock, Lightbulb, CheckCircle, XCircle,
-    ChevronRight, Award, Copy, Zap
+    ChevronRight, Award, Copy, Zap, Star
 } from 'lucide-react';
+import { useAuth } from '../context/AuthContext';
+import { useToast } from '../context/ToastContext';
 import { challenges } from '../data/challenges';
+import { calculateQuestionXp, checkLevelUp, getLevelTitle } from '../utils/xp';
+import { saveChallengeProgress, updateUserStats, markChallengeCompleted, updateStreak } from '../utils/firestore';
 import './ChallengeDetail.css';
 
 export default function ChallengeDetail() {
     const { id } = useParams();
     const navigate = useNavigate();
+    const { currentUser } = useAuth();
+    const { showToast } = useToast();
     const challenge = challenges.find(c => c.id === id) || challenges[0];
 
     const [currentQ, setCurrentQ] = useState(0);
@@ -17,24 +23,103 @@ export default function ChallengeDetail() {
     const [showHint, setShowHint] = useState(false);
     const [result, setResult] = useState(null);
     const [showResult, setShowResult] = useState(false);
+    const [usedHint, setUsedHint] = useState(false);
+
+    // Track session stats
+    const [sessionXp, setSessionXp] = useState(0);
+    const [correctAnswers, setCorrectAnswers] = useState(0);
+    const [previousUserXp, setPreviousUserXp] = useState(currentUser?.xp || 0);
 
     const question = challenge.questions[currentQ];
 
-    const handleSubmit = () => {
+    useEffect(() => {
+        // Update streak when starting a challenge
+        if (currentUser?.uid) {
+            updateStreak(currentUser.uid).catch(console.error);
+        }
+    }, [currentUser?.uid]);
+
+    const handleSubmit = async () => {
         if (selected === null) return;
+
         const isCorrect = selected === question.correctAnswer;
         setResult(isCorrect);
         setShowResult(true);
+
+        // Calculate XP
+        const xpEarned = calculateQuestionXp(
+            challenge.xpReward,
+            challenge.questions.length,
+            isCorrect,
+            usedHint
+        );
+
+        if (isCorrect) {
+            setCorrectAnswers(prev => prev + 1);
+            setSessionXp(prev => prev + xpEarned);
+        }
+
+        // Save progress to Firestore
+        if (currentUser?.uid) {
+            try {
+                await updateUserStats(currentUser.uid, xpEarned, isCorrect);
+                await saveChallengeProgress(currentUser.uid, challenge.id, {
+                    currentQuestion: currentQ,
+                    lastAnswer: selected,
+                    lastAnswerCorrect: isCorrect,
+                    xpEarned: sessionXp + xpEarned,
+                });
+
+                // Check for level up
+                const newTotalXp = previousUserXp + sessionXp + xpEarned;
+                const levelUpResult = checkLevelUp(previousUserXp, newTotalXp);
+
+                if (levelUpResult.leveledUp) {
+                    showToast(
+                        `🎉 Level Up! You're now Level ${levelUpResult.newLevel}: ${levelUpResult.newTitle}!`,
+                        'success',
+                        5000
+                    );
+                }
+            } catch (error) {
+                console.error('Failed to save progress:', error);
+            }
+        }
     };
 
-    const handleNext = () => {
+    const handleShowHint = () => {
+        setShowHint(true);
+        setUsedHint(true);
+    };
+
+    const handleNext = async () => {
         if (currentQ < challenge.questions.length - 1) {
             setCurrentQ(prev => prev + 1);
             setSelected(null);
             setShowHint(false);
             setShowResult(false);
             setResult(null);
+            setUsedHint(false);
         } else {
+            // Challenge complete!
+            if (currentUser?.uid) {
+                try {
+                    const accuracy = Math.round((correctAnswers / challenge.questions.length) * 100);
+                    await markChallengeCompleted(currentUser.uid, challenge.id, {
+                        totalXpEarned: sessionXp,
+                        correctAnswers,
+                        totalQuestions: challenge.questions.length,
+                        accuracy,
+                    });
+
+                    showToast(
+                        `🏆 Challenge Complete! +${sessionXp} XP (${accuracy}% accuracy)`,
+                        'success'
+                    );
+                } catch (error) {
+                    console.error('Failed to mark challenge complete:', error);
+                }
+            }
             navigate('/challenges');
         }
     };
@@ -49,7 +134,7 @@ export default function ChallengeDetail() {
                 <div className="header-info">
                     <span className="badge badge-info">{challenge.type}</span>
                     <span className={`badge ${challenge.difficulty === 'easy' ? 'badge-success' :
-                            challenge.difficulty === 'medium' ? 'badge-warning' : 'badge-danger'
+                        challenge.difficulty === 'medium' ? 'badge-warning' : 'badge-danger'
                         }`}>
                         {challenge.difficulty}
                     </span>
@@ -71,6 +156,14 @@ export default function ChallengeDetail() {
                         ></div>
                     </div>
                 </div>
+
+                {/* Session XP indicator */}
+                {sessionXp > 0 && (
+                    <div className="session-xp">
+                        <Star size={14} />
+                        <span>+{sessionXp} XP this session</span>
+                    </div>
+                )}
 
                 {/* Scenario */}
                 <div className="scenario-card">
@@ -117,11 +210,12 @@ export default function ChallengeDetail() {
                 {/* Hint */}
                 {!showResult && (
                     <button
-                        className="hint-btn"
-                        onClick={() => setShowHint(!showHint)}
+                        className={`hint-btn ${usedHint ? 'used' : ''}`}
+                        onClick={handleShowHint}
+                        disabled={showHint}
                     >
                         <Lightbulb size={18} />
-                        {showHint ? 'Hide Hint' : 'Show Hint'}
+                        {showHint ? 'Hint Used (-50% XP)' : 'Show Hint (-50% XP)'}
                     </button>
                 )}
 
@@ -142,7 +236,10 @@ export default function ChallengeDetail() {
                         {result && (
                             <div className="xp-earned">
                                 <Award size={18} />
-                                <span>+{Math.round(challenge.xpReward / challenge.questions.length)} XP earned</span>
+                                <span>
+                                    +{calculateQuestionXp(challenge.xpReward, challenge.questions.length, true, usedHint)} XP earned
+                                    {usedHint && ' (hint penalty applied)'}
+                                </span>
                             </div>
                         )}
                     </div>
