@@ -38,6 +38,7 @@ export default function SignUp() {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
+        console.log("SignUp Form Submitted - Preventing Default");
         setError('');
 
         if (!isValidEmail(formData.email)) {
