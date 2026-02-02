@@ -1,7 +1,7 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Shield, Bug, Mail, Lock, Eye, EyeOff, ChevronRight } from 'lucide-react';
-import { signInWithEmailAndPassword, signInWithPopup } from 'firebase/auth';
+import { signInWithEmailAndPassword, signInWithPopup, signInWithRedirect, getRedirectResult } from 'firebase/auth';
 import { auth, googleProvider } from '../../lib/firebase';
 import './Auth.css';
 
@@ -11,6 +11,18 @@ export default function Login() {
     const [showPassword, setShowPassword] = useState(false);
     const [error, setError] = useState('');
     const [loading, setLoading] = useState(false);
+
+    useEffect(() => {
+        // Handle redirect result for mobile
+        getRedirectResult(auth).then((result) => {
+            if (result) {
+                navigate('/home');
+            }
+        }).catch((err) => {
+            console.error(err);
+            setError('Failed to log in with Google.');
+        });
+    }, [navigate]);
 
     const handleSubmit = async (e) => {
         e.preventDefault();
@@ -30,8 +42,9 @@ export default function Login() {
 
     const handleGoogleLogin = async () => {
         try {
-            await signInWithPopup(auth, googleProvider);
-            navigate('/home');
+            // Use redirect for better mobile support
+            await signInWithRedirect(auth, googleProvider);
+            // redirect handles navigation on return
         } catch (err) {
             console.error(err);
             setError('Failed to log in with Google.');
