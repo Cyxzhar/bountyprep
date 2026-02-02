@@ -237,3 +237,32 @@
 .text-muted {
     color: var(--text-muted);
 }
+
+/* Password Strength Bar */
+.strength-bar-container {
+    display: flex;
+    gap: 4px;
+    margin-top: 6px;
+    height: 4px;
+    width: 100%;
+}
+
+.strength-segment {
+    flex: 1;
+    background: var(--bg-dark);
+    /* darker bg for empty segments */
+    border-radius: 2px;
+    transition: background 0.3s ease;
+}
+
+.strength-segment.active.weak {
+    background: #ff4444;
+}
+
+.strength-segment.active.medium {
+    background: #ffbb33;
+}
+
+.strength-segment.active.strong {
+    background: var(--neon-green);
+}
