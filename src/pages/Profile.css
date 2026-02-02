@@ -10,10 +10,12 @@
     flex-direction: column;
     align-items: center;
     text-align: center;
-    padding: var(--space-lg);
-    background: linear-gradient(180deg, rgba(159, 239, 0, 0.05) 0%, transparent 100%);
+    padding: var(--space-xl) var(--space-lg);
+    background: var(--bg-card);
+    border: 1px solid var(--border-color);
     border-radius: var(--radius-xl);
     margin-bottom: var(--space-lg);
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
 }
 
 .profile-avatar {
