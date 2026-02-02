@@ -6,6 +6,7 @@ import {
 } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 import { useToast } from '../context/ToastContext';
+import { useAchievement } from '../context/AchievementContext';
 import { challenges } from '../data/challenges';
 import { calculateQuestionXp, checkLevelUp, getLevelTitle } from '../utils/xp';
 import { saveChallengeProgress, updateUserStats, markChallengeCompleted, updateStreak } from '../utils/firestore';
@@ -16,6 +17,7 @@ export default function ChallengeDetail() {
     const navigate = useNavigate();
     const { currentUser, refreshUser } = useAuth();
     const { showToast } = useToast();
+    const { unlockMultiple } = useAchievement();
     const challenge = challenges.find(c => c.id === id) || challenges[0];
 
     const [currentQ, setCurrentQ] = useState(0);
@@ -35,9 +37,13 @@ export default function ChallengeDetail() {
     useEffect(() => {
         // Update streak when starting a challenge
         if (currentUser?.uid) {
-            updateStreak(currentUser.uid).catch(console.error);
+            updateStreak(currentUser.uid).then(result => {
+                if (result.achievements?.length > 0) {
+                    unlockMultiple(result.achievements);
+                }
+            }).catch(console.error);
         }
-    }, [currentUser?.uid]);
+    }, [currentUser?.uid, unlockMultiple]);
 
     const handleSubmit = async () => {
         if (selected === null) return;
@@ -62,7 +68,13 @@ export default function ChallengeDetail() {
         // Save progress to Firestore
         if (currentUser?.uid) {
             try {
-                await updateUserStats(currentUser.uid, xpEarned, isCorrect);
+                // Returns achievements if any unlocked
+                const newAchievements = await updateUserStats(currentUser.uid, xpEarned, isCorrect);
+
+                if (newAchievements?.length > 0) {
+                    unlockMultiple(newAchievements);
+                }
+
                 await saveChallengeProgress(currentUser.uid, challenge.id, {
                     currentQuestion: currentQ,
                     lastAnswer: selected,
@@ -108,12 +120,16 @@ export default function ChallengeDetail() {
             if (currentUser?.uid) {
                 try {
                     const accuracy = Math.round((correctAnswers / challenge.questions.length) * 100);
-                    await markChallengeCompleted(currentUser.uid, challenge.id, {
+                    const newAchievements = await markChallengeCompleted(currentUser.uid, challenge.id, {
                         totalXpEarned: sessionXp,
                         correctAnswers,
                         totalQuestions: challenge.questions.length,
                         accuracy,
                     });
+
+                    if (newAchievements?.length > 0) {
+                        unlockMultiple(newAchievements);
+                    }
 
                     showToast(
                         `🏆 Challenge Complete! +${sessionXp} XP (${accuracy}% accuracy)`,
