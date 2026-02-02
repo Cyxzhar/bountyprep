@@ -1,4 +1,4 @@
-import { createContext, useContext, useEffect, useState } from 'react';
+import { createContext, useContext, useEffect, useState, useCallback } from 'react';
 import { onAuthStateChanged, signOut } from 'firebase/auth';
 import { doc, setDoc, getDoc, getDocFromCache, serverTimestamp } from 'firebase/firestore';
 import { auth, db } from '../lib/firebase';
@@ -123,6 +123,24 @@ export function AuthProvider({ children }) {
         return unsubscribe;
     }, []);
 
+    // Refresh user data from Firestore
+    const refreshUser = useCallback(async () => {
+        if (auth.currentUser) {
+            try {
+                const userRef = doc(db, 'users', auth.currentUser.uid);
+                const userSnap = await getDoc(userRef);
+                if (userSnap.exists()) {
+                    setCurrentUser(prev => ({
+                        ...prev,
+                        ...userSnap.data()
+                    }));
+                }
+            } catch (error) {
+                console.error('Failed to refresh user:', error);
+            }
+        }
+    }, []);
+
     const logout = () => {
         return signOut(auth);
     };
@@ -132,6 +150,7 @@ export function AuthProvider({ children }) {
         loading,
         logout,
         createUserProfile,
+        refreshUser, // Add refresh function
     };
 
     return (

@@ -14,7 +14,7 @@ import './ChallengeDetail.css';
 export default function ChallengeDetail() {
     const { id } = useParams();
     const navigate = useNavigate();
-    const { currentUser } = useAuth();
+    const { currentUser, refreshUser } = useAuth();
     const { showToast } = useToast();
     const challenge = challenges.find(c => c.id === id) || challenges[0];
 
@@ -116,6 +116,9 @@ export default function ChallengeDetail() {
                         `🏆 Challenge Complete! +${sessionXp} XP (${accuracy}% accuracy)`,
                         'success'
                     );
+
+                    // Refresh user data so stats update immediately
+                    await refreshUser();
                 } catch (error) {
                     console.error('Failed to mark challenge complete:', error);
                 }
