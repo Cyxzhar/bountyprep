@@ -6,6 +6,8 @@ import {
 } from 'lucide-react';
 import BottomNav from '../components/BottomNav';
 import { FirstVisitTransition } from '../components/PageTransition';
+import { useAuth } from '../context/AuthContext';
+import { useToast } from '../context/ToastContext';
 import './Profile.css';
 
 const menuSections = [
@@ -45,6 +47,19 @@ const menuSections = [
 
 export default function Profile() {
     const navigate = useNavigate();
+    const { currentUser, logout } = useAuth();
+    const { success, error } = useToast();
+
+    const handleLogout = async () => {
+        try {
+            await logout();
+            success('Logged out successfully');
+            navigate('/auth/login');
+        } catch (err) {
+            console.error('Logout failed', err);
+            error('Failed to log out');
+        }
+    };
 
     return (
         <div className="profile-screen">
@@ -54,7 +69,11 @@ export default function Profile() {
                     <div className="profile-avatar">
                         <div className="avatar-ring">
                             <div className="avatar-inner">
-                                <User size={32} />
+                                {currentUser?.photoURL ? (
+                                    <img src={currentUser.photoURL} alt="Profile" style={{ width: '100%', height: '100%', borderRadius: '50%' }} />
+                                ) : (
+                                    <User size={32} />
+                                )}
                             </div>
                         </div>
                         <div className="premium-crown">
@@ -62,8 +81,8 @@ export default function Profile() {
                         </div>
                     </div>
                     <div className="profile-info">
-                        <h1 className="profile-name">Alex Hunter</h1>
-                        <p className="profile-email">alex.hunter@example.com</p>
+                        <h1 className="profile-name">{currentUser?.displayName || 'Fellow Hunter'}</h1>
+                        <p className="profile-email">{currentUser?.email || 'No Email'}</p>
                         <span className="profile-badge">
                             <Crown size={12} />
                             Premium Member
@@ -123,7 +142,7 @@ export default function Profile() {
                 {/* Logout */}
                 <button
                     className="logout-btn"
-                    onClick={() => navigate('/')}
+                    onClick={handleLogout}
                 >
                     <LogOut size={20} />
                     Log Out
