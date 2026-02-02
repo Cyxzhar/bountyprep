@@ -397,3 +397,25 @@
         grid-template-columns: repeat(4, 1fr);
     }
 }
+/* Override progress bars to green on Progress page */
+.progress-screen .progress-bar {
+    background: rgba(0, 184, 148, 0.15);
+}
+
+.progress-screen .progress-fill {
+    background: linear-gradient(90deg, #00B894, #55EFC4);
+}
+
+/* Skills progress bars */
+.skill-row .progress-bar {
+    background: rgba(0, 184, 148, 0.15);
+}
+
+.skill-row .progress-fill {
+    background: linear-gradient(90deg, #00B894, #55EFC4);
+}
+
+/* Module progress rings on this page */
+.progress-screen .module-card .ring-fill {
+    stroke: #00B894;
+}
