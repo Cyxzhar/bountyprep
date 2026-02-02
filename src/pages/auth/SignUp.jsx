@@ -1,11 +1,11 @@
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Shield, Bug, Mail, Lock, Eye, EyeOff, ChevronRight } from 'lucide-react';
-import { createUserWithEmailAndPassword, updateProfile, signInWithPopup } from 'firebase/auth'; // Removed getRedirectResult
+import { Shield, Bug, Mail, Lock, Eye, EyeOff, ChevronRight, CheckCircle, XCircle } from 'lucide-react';
+import { createUserWithEmailAndPassword, updateProfile, signInWithPopup } from 'firebase/auth';
 import { auth, googleProvider } from '../../lib/firebase';
 import { useToast } from '../../context/ToastContext';
 import { useAuth } from '../../context/AuthContext';
-import { getAuthErrorMessage, validatePassword, isValidEmail } from '../../utils/validation';
+import { getAuthErrorMessage, validatePassword, isValidEmail, checkPasswordStrength } from '../../utils/validation';
 import './Auth.css';
 
 export default function SignUp() {
@@ -17,59 +17,80 @@ export default function SignUp() {
     const [error, setError] = useState('');
     const [loading, setLoading] = useState(false);
 
+    // Live Validation State
+    const [emailStatus, setEmailStatus] = useState(null); // { isValid: bool, msg: string }
+    const [passStrength, setPassStrength] = useState({ score: 0, label: '', color: '' });
+    const [matchStatus, setMatchStatus] = useState(null); // { isMatch: bool }
+
     useEffect(() => {
         if (currentUser) {
             navigate('/home');
         }
     }, [currentUser, navigate]);
 
+    const handleInputChange = (e) => {
+        const { name, value } = e.target;
+        setFormData(prev => ({ ...prev, [name]: value }));
+
+        // Live Validation Logic
+        if (name === 'email') {
+            if (value) {
+                const valid = isValidEmail(value);
+                setEmailStatus({ isValid: valid, msg: valid ? 'Valid Email' : 'Invalid Email Format' });
+            } else {
+                setEmailStatus(null);
+            }
+        }
+
+        if (name === 'password') {
+            setPassStrength(checkPasswordStrength(value));
+            // Re-check match if confirm password exists
+            if (formData.confirmPassword) {
+                setMatchStatus({ isMatch: value === formData.confirmPassword });
+            }
+        }
+
+        if (name === 'confirmPassword') {
+            if (value) {
+                setMatchStatus({ isMatch: value === formData.password });
+            } else {
+                setMatchStatus(null);
+            }
+        }
+    };
+
     const handleSubmit = async (e) => {
         e.preventDefault();
         setError('');
 
-        // Strict Validation Order
-
-        // 1. Email Format
         if (!isValidEmail(formData.email)) {
-            const msg = 'Please enter a valid email address';
-            setError(msg);
-            toastError(msg);
-            return; // Block
+            setError('Please enter a valid email address');
+            return;
         }
 
-        // 2. Password Strength
-        const passValidation = validatePassword(formData.password);
-        if (!passValidation.isValid) {
-            setError(passValidation.message);
-            toastError(passValidation.message);
-            return; // Block
+        if (passStrength.score < 2) {
+            if (formData.password.length < 6) {
+                setError('Password must be at least 6 characters');
+                return;
+            }
         }
 
-        // 3. Confirm Password
         if (formData.password !== formData.confirmPassword) {
-            const msg = 'Passwords do not match';
-            setError(msg);
-            toastError(msg);
-            return; // Block
+            setError('Passwords do not match');
+            return;
         }
 
         setLoading(true);
 
         try {
             const userCredential = await createUserWithEmailAndPassword(auth, formData.email, formData.password);
-
-            // Set default display name from email username
             const username = formData.email.split('@')[0];
-            await updateProfile(userCredential.user, {
-                displayName: username
-            });
-
+            await updateProfile(userCredential.user, { displayName: username });
             success('Account created successfully!');
             navigate('/home');
         } catch (err) {
             console.error(err);
             let msg = getAuthErrorMessage(err.code);
-            // Custom friendly message for duplicates
             if (err.code === 'auth/email-already-in-use') {
                 msg = 'An account with this email already exists. Please log in.';
             }
@@ -84,7 +105,6 @@ export default function SignUp() {
         try {
             const result = await signInWithPopup(auth, googleProvider);
             if (result.user) {
-                // Check if user is new or existing (optional, but handled gracefully)
                 success('Account created successfully with Google!');
                 navigate('/home');
             }
@@ -97,7 +117,6 @@ export default function SignUp() {
     };
 
     const handleAppleLogin = async () => {
-        // Apple auth temporarily disabled
         const msg = 'Apple Sign In is currently unavailable.';
         setError(msg);
         toastError(msg);
@@ -108,7 +127,6 @@ export default function SignUp() {
             <div className="auth-bg-grid"></div>
 
             <div className="auth-content">
-                {/* Logo */}
                 <div className="auth-logo">
                     <div className="logo-wrapper">
                         <Shield size={40} strokeWidth={1.5} />
@@ -122,20 +140,26 @@ export default function SignUp() {
 
                 {error && <div className="auth-error">{error}</div>}
 
-                {/* Form */}
-                <form onSubmit={handleSubmit} className="auth-form">
+                <form onSubmit={handleSubmit} className="auth-form" noValidate>
                     <div className="input-group">
                         <label className="input-label">Email</label>
                         <div className="input-with-icon">
                             <Mail className="input-icon" size={20} />
                             <input
                                 type="email"
+                                name="email"
                                 className="input"
                                 placeholder="you@example.com"
                                 value={formData.email}
-                                onChange={(e) => setFormData({ ...formData, email: e.target.value })}
+                                onChange={handleInputChange}
                             />
                         </div>
+                        {emailStatus && (
+                            <div className={`validation-message ${emailStatus.isValid ? 'text-success' : 'text-error'}`}>
+                                {emailStatus.isValid ? <CheckCircle size={12} /> : <XCircle size={12} />}
+                                {emailStatus.msg}
+                            </div>
+                        )}
                     </div>
 
                     <div className="input-group">
@@ -144,10 +168,11 @@ export default function SignUp() {
                             <Lock className="input-icon" size={20} />
                             <input
                                 type={showPassword ? 'text' : 'password'}
+                                name="password"
                                 className="input"
                                 placeholder="Create a password"
                                 value={formData.password}
-                                onChange={(e) => setFormData({ ...formData, password: e.target.value })}
+                                onChange={handleInputChange}
                             />
                             <button
                                 type="button"
@@ -157,6 +182,12 @@ export default function SignUp() {
                                 {showPassword ? <EyeOff size={20} /> : <Eye size={20} />}
                             </button>
                         </div>
+                        {formData.password && (
+                            <div className={`validation-message ${passStrength.color}`}>
+                                {passStrength.score > 1 ? <CheckCircle size={12} /> : <Shield size={12} />}
+                                Strength: {passStrength.label}
+                            </div>
+                        )}
                     </div>
 
                     <div className="input-group">
@@ -165,12 +196,19 @@ export default function SignUp() {
                             <Lock className="input-icon" size={20} />
                             <input
                                 type="password"
+                                name="confirmPassword"
                                 className="input"
                                 placeholder="Confirm your password"
                                 value={formData.confirmPassword}
-                                onChange={(e) => setFormData({ ...formData, confirmPassword: e.target.value })}
+                                onChange={handleInputChange}
                             />
                         </div>
+                        {matchStatus && (
+                            <div className={`validation-message ${matchStatus.isMatch ? 'text-success' : 'text-error'}`}>
+                                {matchStatus.isMatch ? <CheckCircle size={12} /> : <XCircle size={12} />}
+                                {matchStatus.isMatch ? 'Passwords Match' : 'Passwords do not match'}
+                            </div>
+                        )}
                     </div>
 
                     <button type="submit" className="btn btn-primary btn-full" disabled={loading}>
@@ -179,12 +217,10 @@ export default function SignUp() {
                     </button>
                 </form>
 
-                {/* Divider */}
                 <div className="auth-divider">
                     <span>or continue with</span>
                 </div>
 
-                {/* Social Buttons */}
                 <div className="social-buttons">
                     <button className="btn-social" onClick={handleGoogleSignUp}>
                         <svg viewBox="0 0 24 24" width="20" height="20">
@@ -206,7 +242,7 @@ export default function SignUp() {
                 {/* Footer */}
                 <p className="auth-footer">
                     Already have an account? <button onClick={() => navigate('/auth/login')}>Log In</button>
-                    <br /><span style={{ fontSize: '0.7rem', opacity: 0.5 }}>v1.0.6 (Stable)</span>
+                    <br /><span style={{ fontSize: '0.7rem', opacity: 0.5 }}>v1.1.0 (Live Validation)</span>
                 </p>
             </div>
         </div>
