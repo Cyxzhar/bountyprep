@@ -347,3 +347,28 @@
         max-width: 400px;
     }
 }
+/* Session XP Indicator */
+.session-xp {
+    display: flex;
+    align-items: center;
+    gap: var(--space-xs);
+    padding: var(--space-sm) var(--space-md);
+    background: linear-gradient(135deg, rgba(159, 239, 0, 0.1), rgba(159, 239, 0, 0.05));
+    border: 1px solid rgba(159, 239, 0, 0.3);
+    border-radius: var(--radius-md);
+    color: var(--neon-green);
+    font-weight: 600;
+    font-size: 0.85rem;
+    margin-bottom: var(--space-md);
+    animation: pulse-glow 2s ease-in-out infinite;
+}
+
+@keyframes pulse-glow {
+    0%, 100% { box-shadow: 0 0 10px rgba(159, 239, 0, 0.2); }
+    50% { box-shadow: 0 0 20px rgba(159, 239, 0, 0.4); }
+}
+
+.hint-btn.used {
+    opacity: 0.6;
+    cursor: default;
+}

@@ -1,12 +1,14 @@
+import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import {
     Flame, CheckCircle, Target, ChevronRight, Clock,
-    Bot, Lock, Unlock, Syringe, Link, IdCard, RefreshCw, Upload
+    Bot, Lock, Unlock, Syringe, Link, IdCard, RefreshCw, Upload, Star
 } from 'lucide-react';
 import BottomNav from '../components/BottomNav';
 import { FirstVisitTransition } from '../components/PageTransition';
 import { challenges, skillModules } from '../data/challenges';
+import { calculateLevel, getLevelProgress, getLevelTitle, formatXp } from '../utils/xp';
 import './Home.css';
 
 // Map icon names to components
@@ -23,9 +25,21 @@ export default function Home() {
     const navigate = useNavigate();
     const { currentUser } = useAuth();
     const todayChallenge = challenges[0];
-    const streakDays = 12;
+
+    // Real user stats from Firestore (via AuthContext)
+    const xp = currentUser?.xp || 0;
+    const level = calculateLevel(xp);
+    const levelProgress = getLevelProgress(xp);
+    const title = getLevelTitle(level);
+    const streak = currentUser?.streak || 0;
+    const totalCompleted = currentUser?.totalCompleted || 0;
 
     const displayName = currentUser?.displayName || currentUser?.email?.split('@')[0] || "Hacker";
+
+    // Get current date
+    const today = new Date();
+    const dateOptions = { weekday: 'long', month: 'short', day: 'numeric' };
+    const dateString = today.toLocaleDateString('en-US', dateOptions);
 
     return (
         <FirstVisitTransition pageName="home">
@@ -34,14 +48,34 @@ export default function Home() {
                     {/* Header */}
                     <header className="home-header">
                         <div className="header-content">
-                            <p className="greeting-date">Monday, Feb 2</p>
+                            <p className="greeting-date">{dateString}</p>
                             <h1 className="greeting-text">Welcome back, <span className="text-gradient">{displayName}</span></h1>
                         </div>
                         <div className="streak-badge">
                             <Flame size={18} />
-                            <span>{streakDays}</span>
+                            <span>{streak}</span>
                         </div>
                     </header>
+
+                    {/* Level/XP Card */}
+                    <section className="level-card">
+                        <div className="level-info">
+                            <div className="level-badge">
+                                <Star size={16} />
+                                <span>Level {level}</span>
+                            </div>
+                            <span className="level-title">{title}</span>
+                        </div>
+                        <div className="xp-progress">
+                            <div className="xp-bar">
+                                <div
+                                    className="xp-fill"
+                                    style={{ width: `${levelProgress}%` }}
+                                ></div>
+                            </div>
+                            <span className="xp-text">{formatXp(xp)} XP</span>
+                        </div>
+                    </section>
 
                     {/* Today's Challenge */}
                     <section className="today-challenge card-glow" onClick={() => navigate(`/challenge/${todayChallenge.id}`)}>
@@ -60,15 +94,8 @@ export default function Home() {
                         <h2 className="challenge-title">{todayChallenge.title}</h2>
                         <p className="challenge-desc">{todayChallenge.description}</p>
 
-                        <div className="challenge-progress">
-                            <div className="progress-bar">
-                                <div className="progress-fill" style={{ width: '40%' }}></div>
-                            </div>
-                            <span className="progress-label">2/5 questions</span>
-                        </div>
-
                         <button className="btn btn-primary btn-full mt-md">
-                            Continue Challenge
+                            Start Challenge
                             <ChevronRight size={20} />
                         </button>
                     </section>
@@ -79,22 +106,22 @@ export default function Home() {
                             <div className="stat-icon">
                                 <CheckCircle size={20} />
                             </div>
-                            <span className="stat-value">24</span>
+                            <span className="stat-value">{totalCompleted}</span>
                             <span className="stat-label">Completed</span>
                         </div>
                         <div className="stat-card">
                             <div className="stat-icon fire">
                                 <Flame size={20} />
                             </div>
-                            <span className="stat-value">{streakDays}</span>
+                            <span className="stat-value">{streak}</span>
                             <span className="stat-label">Day Streak</span>
                         </div>
                         <div className="stat-card">
                             <div className="stat-icon">
                                 <Target size={20} />
                             </div>
-                            <span className="stat-value">5</span>
-                            <span className="stat-label">Skills</span>
+                            <span className="stat-value">{level}</span>
+                            <span className="stat-label">Level</span>
                         </div>
                     </section>
 
