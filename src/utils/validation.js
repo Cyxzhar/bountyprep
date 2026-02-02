@@ -45,6 +45,26 @@ export const isValidEmail = (email) => {
  * @param {string} password 
  * @returns {object} { isValid: boolean, message: string }
  */
+/**
+ * Checks password strength
+ * @param {string} password 
+ * @returns {object} { score: 0-4, label: string, color: string }
+ */
+export const checkPasswordStrength = (password) => {
+    if (!password) return { score: 0, label: '', color: 'text-muted' };
+
+    let score = 0;
+    if (password.length > 5) score++; // Min length
+    if (password.length > 8) score++; // Good length
+    if (/[A-Z]/.test(password)) score++; // Uppercase
+    if (/[0-9]/.test(password)) score++; // Number
+    if (/[^A-Za-z0-9]/.test(password)) score++; // Special char
+
+    if (score < 2) return { score, label: 'Weak', color: 'text-error' };
+    if (score < 4) return { score, label: 'Medium', color: 'text-warning' };
+    return { score, label: 'Strong', color: 'text-success' };
+};
+
 export const validatePassword = (password) => {
     if (!password || password.length < 6) {
         return { isValid: false, message: 'Password must be at least 6 characters long' };
