@@ -39,6 +39,7 @@ export default function Login() {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
+        console.log("Login Form Submitted - Preventing Default");
         setError('');
         setLoading(true);
 
@@ -171,6 +172,7 @@ export default function Login() {
                 {/* Footer */}
                 <p className="auth-footer">
                     Already have an account? <button onClick={() => navigate('/auth/signup')}>Sign Up</button>
+                    <br /><span style={{ fontSize: '0.7rem', opacity: 0.5 }}>v1.0.2 (Toast Fix)</span>
                 </p>
             </div>
         </div>
