@@ -1,0 +1,7 @@
+<?xml version='1.0' encoding='utf-8'?>
+<resources>
+    <string name="app_name">BountyPrep</string>
+    <string name="title_activity_main">BountyPrep</string>
+    <string name="package_name">com.bountyprep.app</string>
+    <string name="custom_url_scheme">com.bountyprep.app</string>
+</resources>

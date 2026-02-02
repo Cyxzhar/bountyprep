@@ -1,0 +1,143 @@
+.splash-screen {
+    min-height: 100vh;
+    min-height: 100dvh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--bg-darker);
+    position: relative;
+    overflow: hidden;
+}
+
+/* Background Grid Effect */
+.splash-bg-grid {
+    position: absolute;
+    inset: 0;
+    background-image:
+        linear-gradient(rgba(159, 239, 0, 0.03) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(159, 239, 0, 0.03) 1px, transparent 1px);
+    background-size: 50px 50px;
+    mask-image: radial-gradient(ellipse at center, black 20%, transparent 70%);
+    -webkit-mask-image: radial-gradient(ellipse at center, black 20%, transparent 70%);
+}
+
+.splash-glow {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 400px;
+    height: 400px;
+    background: radial-gradient(circle, rgba(159, 239, 0, 0.15) 0%, transparent 70%);
+    pointer-events: none;
+}
+
+.splash-content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    z-index: 1;
+    animation: fadeIn 0.8s ease;
+}
+
+/* Logo */
+.splash-logo {
+    margin-bottom: var(--space-xl);
+}
+
+.logo-icon-wrapper {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.logo-shield {
+    color: var(--neon-green);
+    filter: drop-shadow(0 0 20px rgba(159, 239, 0, 0.5));
+}
+
+.logo-bug {
+    position: absolute;
+    color: var(--bg-dark);
+    filter: drop-shadow(0 0 4px rgba(159, 239, 0, 0.8));
+}
+
+/* Brand */
+.splash-brand {
+    font-size: clamp(2rem, 8vw, 3rem);
+    font-weight: 800;
+    margin-bottom: var(--space-sm);
+    letter-spacing: -0.02em;
+}
+
+.brand-text {
+    color: var(--text-primary);
+}
+
+.brand-accent {
+    color: var(--neon-green);
+    text-shadow: 0 0 30px rgba(159, 239, 0, 0.5);
+}
+
+.splash-tagline {
+    color: var(--text-secondary);
+    font-size: 1rem;
+    margin-bottom: var(--space-2xl);
+}
+
+/* Loader */
+.splash-loader {
+    width: 200px;
+}
+
+.loader-bar {
+    height: 4px;
+    background: var(--bg-card);
+    border-radius: var(--radius-full);
+    overflow: hidden;
+    margin-bottom: var(--space-md);
+}
+
+.loader-fill {
+    height: 100%;
+    background: var(--gradient-primary);
+    border-radius: var(--radius-full);
+    transition: width 0.1s ease;
+    box-shadow: 0 0 10px rgba(159, 239, 0, 0.5);
+}
+
+.loader-text {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: var(--space-xs);
+    color: var(--text-muted);
+    font-size: 0.75rem;
+    font-family: var(--font-mono);
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+}
+
+.loader-text svg {
+    color: var(--neon-green);
+    animation: pulse 1s ease-in-out infinite;
+}
+
+/* Version */
+.splash-version {
+    position: absolute;
+    bottom: calc(var(--space-lg) + env(safe-area-inset-bottom));
+    font-size: 0.75rem;
+    font-family: var(--font-mono);
+    color: var(--text-muted);
+}
+
+/* Responsive */
+@media (max-width: 480px) {
+    .splash-glow {
+        width: 280px;
+        height: 280px;
+    }
+}
