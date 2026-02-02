@@ -2,8 +2,9 @@
  * Firestore utility functions for user progress
  */
 
-import { doc, getDoc, setDoc, updateDoc, increment, serverTimestamp } from 'firebase/firestore';
+import { doc, getDoc, setDoc, updateDoc, increment, arrayUnion, serverTimestamp } from 'firebase/firestore';
 import { db } from '../lib/firebase';
+import { checkNewAchievements } from './gamification';
 
 /**
  * Save challenge progress to Firestore
@@ -27,7 +28,43 @@ export async function getChallengeProgress(userId, challengeId) {
 }
 
 /**
+ * Check and unlock achievements for a user
+ * Private helper function
+ */
+async function processAchievements(userId, userSnapshot = null) {
+    const userRef = doc(db, 'users', userId);
+
+    // If snapshot not provided, fetch it
+    let userData;
+    if (userSnapshot) {
+        userData = userSnapshot.data();
+    } else {
+        const snap = await getDoc(userRef);
+        if (!snap.exists()) return [];
+        userData = snap.data();
+    }
+
+    // Check for new achievements
+    const newAchievements = checkNewAchievements(userData);
+
+    if (newAchievements.length > 0) {
+        // Add to user profile
+        const achievementIds = newAchievements.map(a => a.id);
+
+        await updateDoc(userRef, {
+            achievements: arrayUnion(...achievementIds),
+            updatedAt: serverTimestamp()
+        });
+
+        return newAchievements;
+    }
+
+    return [];
+}
+
+/**
  * Update user XP and stats after answering a question
+ * Returns any newly unlocked achievements
  */
 export async function updateUserStats(userId, xpEarned, isCorrect) {
     const userRef = doc(db, 'users', userId);
@@ -43,10 +80,14 @@ export async function updateUserStats(userId, xpEarned, isCorrect) {
     }
 
     await updateDoc(userRef, updates);
+
+    // Check achievements after update
+    return await processAchievements(userId);
 }
 
 /**
  * Mark a challenge as completed
+ * Returns any newly unlocked achievements
  */
 export async function markChallengeCompleted(userId, challengeId, stats) {
     const userRef = doc(db, 'users', userId);
@@ -64,16 +105,20 @@ export async function markChallengeCompleted(userId, challengeId, stats) {
         totalCompleted: increment(1),
         updatedAt: serverTimestamp(),
     });
+
+    // Check achievements after update
+    return await processAchievements(userId);
 }
 
 /**
  * Update user's streak
+ * Returns new streak and any streak-related achievements
  */
 export async function updateStreak(userId) {
     const userRef = doc(db, 'users', userId);
     const userSnap = await getDoc(userRef);
 
-    if (!userSnap.exists()) return { streak: 0 };
+    if (!userSnap.exists()) return { streak: 0, achievements: [] };
 
     const userData = userSnap.data();
     const lastActivity = userData.lastActivityDate?.toDate?.() || null;
@@ -81,6 +126,7 @@ export async function updateStreak(userId) {
     const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
 
     let newStreak = userData.streak || 0;
+    let updated = false;
 
     if (lastActivity) {
         const lastDate = new Date(lastActivity.getFullYear(), lastActivity.getMonth(), lastActivity.getDate());
@@ -91,21 +137,39 @@ export async function updateStreak(userId) {
         } else if (daysDiff === 1) {
             // Next day - increment streak
             newStreak += 1;
+            updated = true;
         } else {
             // Streak broken - reset to 1
             newStreak = 1;
+            updated = true;
         }
     } else {
         // First activity ever
         newStreak = 1;
+        updated = true;
     }
 
-    await updateDoc(userRef, {
-        streak: newStreak,
-        lastActivityDate: serverTimestamp(),
-    });
+    if (updated) {
+        await updateDoc(userRef, {
+            streak: newStreak,
+            lastActivityDate: serverTimestamp(),
+        });
 
-    return { streak: newStreak };
+        // Check achievements specifically for streak update
+        // (We need to re-fetch or construct updated user object)
+        const updatedUserData = { ...userData, streak: newStreak };
+        const newAchievements = checkNewAchievements(updatedUserData);
+
+        if (newAchievements.length > 0) {
+            const achievementIds = newAchievements.map(a => a.id);
+            await updateDoc(userRef, {
+                achievements: arrayUnion(...achievementIds)
+            });
+            return { streak: newStreak, achievements: newAchievements };
+        }
+    }
+
+    return { streak: newStreak, achievements: [] };
 }
 
 /**

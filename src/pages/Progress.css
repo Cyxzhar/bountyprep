@@ -381,10 +381,12 @@
     .level-stats {
         justify-content: center;
     }
+}
 
-    .achievements-grid {
-        grid-template-columns: repeat(2, 1fr);
-    }
+.achievements-grid {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-md);
 }
 
 @media (min-width: 768px) {
@@ -394,7 +396,8 @@
     }
 
     .achievements-grid {
-        grid-template-columns: repeat(4, 1fr);
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
     }
 }
 

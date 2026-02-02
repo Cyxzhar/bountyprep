@@ -5,7 +5,9 @@ import {
 import { useAuth } from '../context/AuthContext';
 import BottomNav from '../components/BottomNav';
 import { FirstVisitTransition } from '../components/PageTransition';
-import { skillModules, achievements } from '../data/challenges';
+import { skillModules } from '../data/challenges';
+import { achievements } from '../data/achievements';
+import AchievementCard from '../components/AchievementCard';
 import { calculateLevel, getLevelProgress, getLevelTitle, getXpToNextLevel, formatXp } from '../utils/xp';
 import './Progress.css';
 
@@ -21,7 +23,7 @@ const iconComponents = {
 
 export default function Progress() {
     const { currentUser } = useAuth();
-    
+
     // Real user stats from Firestore
     const xp = currentUser?.xp || 0;
     const level = calculateLevel(xp);
@@ -155,20 +157,34 @@ export default function Progress() {
                 </section>
 
                 {/* Achievements */}
+                {/* Achievements */}
                 <section className="section">
                     <div className="section-header">
                         <h3 className="section-title">Achievements</h3>
-                        <span className="section-meta">{achievements.filter(a => a.unlocked).length} / {achievements.length} unlocked</span>
+                        <span className="section-meta">
+                            {achievements.filter(a => (currentUser?.achievements || []).includes(a.id)).length} / {achievements.length} unlocked
+                        </span>
                     </div>
                     <div className="achievements-grid">
-                        {achievements.map(a => (
-                            <div key={a.id} className={`achievement-card ${a.unlocked ? 'unlocked' : 'locked'}`}>
-                                {!a.unlocked && <Lock className="lock-icon" size={14} />}
-                                <span className="ach-icon">{a.icon}</span>
-                                <span className="ach-name">{a.name}</span>
-                                <span className={`ach-rarity rarity-${a.rarity}`}>{a.rarity}</span>
-                            </div>
-                        ))}
+                        {achievements.map(achievement => {
+                            // Firestore saves timestamp objects, need to verify structure if unlocked
+                            // Currently we only store ID list in `achievements` array
+                            // To store dates, we'd need a map or subcollection. 
+                            // For MVP simplicity: Checks if ID in array.
+                            const isUnlocked = (currentUser?.achievements || []).includes(achievement.id);
+
+                            // Mock unlockedAt date for now since we just store IDs array
+                            // In a full implementation, we'd store { id: 'x', unlockedAt: Timestamp } in a subcollection
+                            const unlockedAt = isUnlocked ? { seconds: Date.now() / 1000 } : null;
+
+                            return (
+                                <AchievementCard
+                                    key={achievement.id}
+                                    achievementId={achievement.id}
+                                    unlockedAt={unlockedAt}
+                                />
+                            );
+                        })}
                     </div>
                 </section>
             </div>
