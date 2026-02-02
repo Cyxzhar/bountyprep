@@ -14,7 +14,6 @@ export default function SignUp() {
     const { currentUser } = useAuth();
     const [formData, setFormData] = useState({ email: '', password: '', confirmPassword: '' });
     const [showPassword, setShowPassword] = useState(false);
-    const [error, setError] = useState('');
     const [loading, setLoading] = useState(false);
 
     // Live Validation State
@@ -61,22 +60,21 @@ export default function SignUp() {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        setError('');
 
         if (!isValidEmail(formData.email)) {
-            setError('Please enter a valid email address');
+            toastError('Please enter a valid email address');
             return;
         }
 
         if (passStrength.score < 2) {
             if (formData.password.length < 6) {
-                setError('Password must be at least 6 characters');
+                toastError('Password must be at least 6 characters');
                 return;
             }
         }
 
         if (formData.password !== formData.confirmPassword) {
-            setError('Passwords do not match');
+            toastError('Passwords do not match');
             return;
         }
 
@@ -94,7 +92,6 @@ export default function SignUp() {
             if (err.code === 'auth/email-already-in-use') {
                 msg = 'An account with this email already exists. Please log in.';
             }
-            setError(msg);
             toastError(msg);
         } finally {
             setLoading(false);
@@ -111,14 +108,12 @@ export default function SignUp() {
         } catch (err) {
             console.error(err);
             const msg = getAuthErrorMessage(err.code);
-            setError(msg);
             toastError(msg);
         }
     };
 
     const handleAppleLogin = async () => {
         const msg = 'Apple Sign In is currently unavailable.';
-        setError(msg);
         toastError(msg);
     };
 
@@ -181,9 +176,16 @@ export default function SignUp() {
                             </button>
                         </div>
                         {formData.password && (
-                            <div className={`validation-message ${passStrength.color}`}>
-                                {passStrength.score > 1 ? <CheckCircle size={12} /> : <Shield size={12} />}
-                                Strength: {passStrength.label}
+                            <div style={{ width: '100%' }}>
+                                <div className="strength-bar-container">
+                                    <div className={`strength-segment ${passStrength.score >= 1 ? 'active' : ''} ${passStrength.label.toLowerCase()}`}></div>
+                                    <div className={`strength-segment ${passStrength.score >= 2 ? 'active' : ''} ${passStrength.label.toLowerCase()}`}></div>
+                                    <div className={`strength-segment ${passStrength.score >= 3 ? 'active' : ''} ${passStrength.label.toLowerCase()}`}></div>
+                                    <div className={`strength-segment ${passStrength.score >= 4 ? 'active' : ''} ${passStrength.label.toLowerCase()}`}></div>
+                                </div>
+                                <div className={`validation-message ${passStrength.color}`}>
+                                    {passStrength.label} Password
+                                </div>
                             </div>
                         )}
                     </div>
@@ -237,10 +239,9 @@ export default function SignUp() {
                     </button>
                 </div>
 
-                {/* Footer */}
                 <p className="auth-footer">
                     Already have an account? <button onClick={() => navigate('/auth/login')}>Log In</button>
-                    <br /><span style={{ fontSize: '0.7rem', opacity: 0.5 }}>v1.1.0 (Live Validation)</span>
+                    <br /><span style={{ fontSize: '0.7rem', opacity: 0.5 }}>v1.1.1 (Clean UI)</span>
                 </p>
             </div>
         </div>

@@ -14,7 +14,6 @@ export default function Login() {
     const { currentUser } = useAuth();
     const [formData, setFormData] = useState({ email: '', password: '' });
     const [showPassword, setShowPassword] = useState(false);
-    const [error, setError] = useState('');
     const [loading, setLoading] = useState(false);
 
     // Live Validation State
@@ -42,7 +41,6 @@ export default function Login() {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        setError('');
         setLoading(true);
 
         try {
@@ -52,7 +50,6 @@ export default function Login() {
         } catch (err) {
             console.error(err);
             const msg = getAuthErrorMessage(err.code);
-            setError(msg);
             toastError(msg);
         } finally {
             setLoading(false);
@@ -69,14 +66,12 @@ export default function Login() {
         } catch (err) {
             console.error(err);
             const msg = getAuthErrorMessage(err.code);
-            setError(msg);
             toastError(msg);
         }
     };
 
     const handleAppleLogin = async () => {
         const msg = 'Apple Sign In is currently unavailable.';
-        setError(msg);
         toastError(msg);
     };
 
@@ -95,8 +90,6 @@ export default function Login() {
 
                 <h1 className="auth-title">Welcome Back!</h1>
                 <p className="auth-subtitle">Continue your security journey</p>
-
-                {error && <div className="auth-error">{error}</div>}
 
                 <form onSubmit={handleSubmit} className="auth-form" noValidate>
                     <div className="input-group">
@@ -177,7 +170,7 @@ export default function Login() {
 
                 <p className="auth-footer">
                     Already have an account? <button onClick={() => navigate('/auth/signup')}>Sign Up</button>
-                    <br /><span style={{ fontSize: '0.7rem', opacity: 0.5 }}>v1.1.0 (Live Validation)</span>
+                    <br /><span style={{ fontSize: '0.7rem', opacity: 0.5 }}>v1.1.1 (Clean UI)</span>
                 </p>
             </div>
         </div>
