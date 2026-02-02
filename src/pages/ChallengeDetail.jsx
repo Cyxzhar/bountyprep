@@ -70,6 +70,9 @@ export default function ChallengeDetail() {
                     xpEarned: sessionXp + xpEarned,
                 });
 
+                // Refresh user data immediately so stats update in real-time
+                await refreshUser();
+
                 // Check for level up
                 const newTotalXp = previousUserXp + sessionXp + xpEarned;
                 const levelUpResult = checkLevelUp(previousUserXp, newTotalXp);
