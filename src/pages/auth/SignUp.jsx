@@ -4,18 +4,25 @@ import { Shield, Bug, Mail, Lock, Eye, EyeOff, ChevronRight } from 'lucide-react
 import { createUserWithEmailAndPassword, updateProfile, signInWithPopup, signInWithRedirect, getRedirectResult } from 'firebase/auth';
 import { auth, googleProvider } from '../../lib/firebase';
 import { useToast } from '../../context/ToastContext';
+import { useAuth } from '../../context/AuthContext';
 import { getAuthErrorMessage, validatePassword, isValidEmail } from '../../utils/validation';
 import './Auth.css';
 
 export default function SignUp() {
     const navigate = useNavigate();
     const { success, error: toastError } = useToast();
+    const { currentUser } = useAuth();
     const [formData, setFormData] = useState({ email: '', password: '', confirmPassword: '' });
     const [showPassword, setShowPassword] = useState(false);
     const [error, setError] = useState('');
     const [loading, setLoading] = useState(false);
 
     useEffect(() => {
+        if (currentUser) {
+            navigate('/home');
+            return;
+        }
+
         getRedirectResult(auth).then((result) => {
             if (result) {
                 success('Account created successfully with Google!');
@@ -27,7 +34,7 @@ export default function SignUp() {
             setError(msg);
             toastError(msg);
         });
-    }, [navigate, success, toastError]);
+    }, [navigate, success, toastError, currentUser]);
 
     const handleSubmit = async (e) => {
         e.preventDefault();

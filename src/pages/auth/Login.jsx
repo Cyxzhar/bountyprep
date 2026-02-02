@@ -4,18 +4,25 @@ import { Shield, Bug, Mail, Lock, Eye, EyeOff, ChevronRight } from 'lucide-react
 import { signInWithEmailAndPassword, signInWithPopup, signInWithRedirect, getRedirectResult } from 'firebase/auth';
 import { auth, googleProvider } from '../../lib/firebase';
 import { useToast } from '../../context/ToastContext';
+import { useAuth } from '../../context/AuthContext';
 import { getAuthErrorMessage } from '../../utils/validation';
 import './Auth.css';
 
 export default function Login() {
     const navigate = useNavigate();
     const { success, error: toastError } = useToast();
+    const { currentUser } = useAuth();
     const [formData, setFormData] = useState({ email: '', password: '' });
     const [showPassword, setShowPassword] = useState(false);
     const [error, setError] = useState('');
     const [loading, setLoading] = useState(false);
 
     useEffect(() => {
+        if (currentUser) {
+            navigate('/home');
+            return;
+        }
+
         // Handle redirect result for mobile
         getRedirectResult(auth).then((result) => {
             if (result) {
@@ -28,7 +35,7 @@ export default function Login() {
             setError(msg);
             toastError(msg);
         });
-    }, [navigate, success, toastError]);
+    }, [navigate, success, toastError, currentUser]);
 
     const handleSubmit = async (e) => {
         e.preventDefault();
