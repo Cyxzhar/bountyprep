@@ -2,9 +2,11 @@ import {
     Flame, Target, Trophy, ChevronRight, Calendar,
     CheckCircle, Zap, Award, Lock, Syringe, Link, IdCard, RefreshCw, Upload
 } from 'lucide-react';
+import { useAuth } from '../context/AuthContext';
 import BottomNav from '../components/BottomNav';
 import { FirstVisitTransition } from '../components/PageTransition';
 import { skillModules, achievements } from '../data/challenges';
+import { calculateLevel, getLevelProgress, getLevelTitle, getXpToNextLevel, formatXp } from '../utils/xp';
 import './Progress.css';
 
 // Map icon names to components
@@ -18,12 +20,21 @@ const iconComponents = {
 };
 
 export default function Progress() {
-    const level = 12;
-    const currentXP = 1240;
-    const nextLevelXP = 2000;
-    const xpPercent = (currentXP / nextLevelXP) * 100;
+    const { currentUser } = useAuth();
+    
+    // Real user stats from Firestore
+    const xp = currentUser?.xp || 0;
+    const level = calculateLevel(xp);
+    const levelProgress = getLevelProgress(xp);
+    const title = getLevelTitle(level);
+    const xpToNext = getXpToNextLevel(xp);
+    const streak = currentUser?.streak || 0;
+    const totalCompleted = currentUser?.totalCompleted || 0;
+    const totalQuestions = currentUser?.totalQuestionsAnswered || 0;
+    const correctAnswers = currentUser?.totalCorrectAnswers || 0;
+    const accuracy = totalQuestions > 0 ? Math.round((correctAnswers / totalQuestions) * 100) : 0;
 
-    // Generate heatmap data
+    // Generate heatmap data (placeholder for now - would load from Firestore)
     const heatmapData = Array(91).fill(0).map(() => Math.floor(Math.random() * 4));
 
     return (
@@ -37,7 +48,7 @@ export default function Progress() {
                             <circle
                                 className="ring-fill"
                                 cx="60" cy="60" r="54"
-                                strokeDasharray={`${xpPercent * 3.39} 339`}
+                                strokeDasharray={`${levelProgress * 3.39} 339`}
                             />
                         </svg>
                         <div className="level-content">
@@ -46,21 +57,21 @@ export default function Progress() {
                         </div>
                     </div>
                     <div className="level-info">
-                        <h2 className="level-title">Security Analyst</h2>
+                        <h2 className="level-title">{title}</h2>
                         <div className="xp-progress">
                             <div className="progress-bar">
-                                <div className="progress-fill" style={{ width: `${xpPercent}%` }}></div>
+                                <div className="progress-fill" style={{ width: `${levelProgress}%` }}></div>
                             </div>
-                            <span className="xp-text">{currentXP.toLocaleString()} / {nextLevelXP.toLocaleString()} XP</span>
+                            <span className="xp-text">{formatXp(xp)} XP • {formatXp(xpToNext)} to next</span>
                         </div>
                         <div className="level-stats">
                             <div className="mini-stat">
                                 <Flame size={16} />
-                                <span>12 day streak</span>
+                                <span>{streak} day streak</span>
                             </div>
                             <div className="mini-stat">
                                 <Trophy size={16} />
-                                <span>#1,247 rank</span>
+                                <span>#{Math.max(1, 10000 - totalCompleted * 100)} rank</span>
                             </div>
                         </div>
                     </div>
@@ -70,18 +81,18 @@ export default function Progress() {
                 <div className="quick-stats">
                     <div className="qs-card">
                         <CheckCircle size={20} />
-                        <span className="qs-value">24</span>
+                        <span className="qs-value">{totalCompleted}</span>
                         <span className="qs-label">Completed</span>
                     </div>
                     <div className="qs-card">
                         <Target size={20} />
-                        <span className="qs-value">85%</span>
+                        <span className="qs-value">{accuracy}%</span>
                         <span className="qs-label">Accuracy</span>
                     </div>
                     <div className="qs-card">
                         <Zap size={20} />
-                        <span className="qs-value">48h</span>
-                        <span className="qs-label">Study Time</span>
+                        <span className="qs-value">{totalQuestions}</span>
+                        <span className="qs-label">Questions</span>
                     </div>
                 </div>
 
@@ -147,7 +158,7 @@ export default function Progress() {
                 <section className="section">
                     <div className="section-header">
                         <h3 className="section-title">Achievements</h3>
-                        <span className="section-meta">4 / 12 unlocked</span>
+                        <span className="section-meta">{achievements.filter(a => a.unlocked).length} / {achievements.length} unlocked</span>
                     </div>
                     <div className="achievements-grid">
                         {achievements.map(a => (

@@ -1,19 +1,65 @@
 import { useState, useEffect } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
-import { Search, Filter, Lock, ChevronRight, Clock, CheckCircle } from 'lucide-react';
+import { Search, Filter, Lock, ChevronRight, Clock, CheckCircle, Star } from 'lucide-react';
+import { useAuth } from '../context/AuthContext';
+import { collection, getDocs, query, orderBy } from 'firebase/firestore';
+import { db } from '../lib/firebase';
 import BottomNav from '../components/BottomNav';
 import { FirstVisitTransition } from '../components/PageTransition';
-import { challenges } from '../data/challenges';
+import { challenges as localChallenges } from '../data/challenges';
 import './Challenges.css';
 
 const filters = ['All', 'SQL Injection', 'XSS', 'CSRF', 'Auth Bypass', 'IDOR', 'File Upload'];
 
 export default function Challenges() {
     const navigate = useNavigate();
+    const { currentUser } = useAuth();
     const [searchParams] = useSearchParams();
     const initialFilter = searchParams.get('filter') || 'All';
     const [searchQuery, setSearchQuery] = useState('');
     const [activeFilter, setActiveFilter] = useState(initialFilter);
+    const [challenges, setChallenges] = useState(localChallenges);
+    const [completedChallenges, setCompletedChallenges] = useState(new Set());
+    const [loading, setLoading] = useState(true);
+
+    // Load challenges from Firestore and check completed status
+    useEffect(() => {
+        async function loadData() {
+            try {
+                // Load challenges from Firestore
+                const challengesRef = collection(db, 'challenges');
+                const challengesSnap = await getDocs(query(challengesRef, orderBy('id')));
+
+                if (!challengesSnap.empty) {
+                    const firestoreChallenges = challengesSnap.docs.map(doc => ({
+                        ...doc.data(),
+                        firestoreId: doc.id
+                    }));
+                    setChallenges(firestoreChallenges);
+                }
+
+                // Load user's completed challenges
+                if (currentUser?.uid) {
+                    const userChallengesRef = collection(db, 'users', currentUser.uid, 'challenges');
+                    const userChallengesSnap = await getDocs(userChallengesRef);
+
+                    const completed = new Set();
+                    userChallengesSnap.docs.forEach(doc => {
+                        if (doc.data().completed) {
+                            completed.add(doc.id);
+                        }
+                    });
+                    setCompletedChallenges(completed);
+                }
+            } catch (error) {
+                console.error('Failed to load challenges:', error);
+            } finally {
+                setLoading(false);
+            }
+        }
+
+        loadData();
+    }, [currentUser?.uid]);
 
     const filteredChallenges = challenges.filter(c => {
         const matchesSearch = c.title.toLowerCase().includes(searchQuery.toLowerCase());
@@ -23,6 +69,8 @@ export default function Challenges() {
             activeFilter.toLowerCase().includes(c.type.toLowerCase());
         return matchesSearch && matchesFilter;
     });
+
+    const totalCompleted = currentUser?.totalCompleted || completedChallenges.size;
 
     return (
         <FirstVisitTransition pageName="challenges">
@@ -66,50 +114,67 @@ export default function Challenges() {
                     <div className="challenges-stats">
                         <span className="stat-text"><strong>{filteredChallenges.length}</strong> challenges</span>
                         <span className="stat-separator">•</span>
-                        <span className="stat-text"><strong>24</strong> completed</span>
+                        <span className="stat-text"><strong>{totalCompleted}</strong> completed</span>
                     </div>
+
+                    {/* Loading State */}
+                    {loading && (
+                        <div className="loading-state">
+                            <div className="loading-spinner"></div>
+                            <span>Loading challenges...</span>
+                        </div>
+                    )}
 
                     {/* Challenges List */}
                     <div className="challenges-list">
-                        {filteredChallenges.map((challenge, idx) => (
-                            <div
-                                key={challenge.id}
-                                className="challenge-card"
-                                onClick={() => navigate(`/challenge/${challenge.id}`)}
-                            >
-                                <div className="card-left">
-                                    <div className={`card-icon ${challenge.completed ? 'completed' : ''}`}>
-                                        {challenge.completed ? <CheckCircle size={22} /> :
-                                            challenge.isPremium ? <Lock size={18} /> :
-                                                <span className="icon-number">{idx + 1}</span>}
+                        {filteredChallenges.map((challenge, idx) => {
+                            const isCompleted = completedChallenges.has(challenge.id);
+                            return (
+                                <div
+                                    key={challenge.id}
+                                    className={`challenge-card ${isCompleted ? 'completed' : ''}`}
+                                    onClick={() => navigate(`/challenge/${challenge.id}`)}
+                                >
+                                    <div className="card-left">
+                                        <div className={`card-icon ${isCompleted ? 'completed' : ''}`}>
+                                            {isCompleted ? <CheckCircle size={22} /> :
+                                                challenge.isPremium ? <Lock size={18} /> :
+                                                    <span className="icon-number">{idx + 1}</span>}
+                                        </div>
                                     </div>
-                                </div>
 
-                                <div className="card-content">
-                                    <div className="card-badges">
-                                        <span className="badge badge-info">{challenge.type}</span>
-                                        <span className={`badge ${challenge.difficulty === 'easy' ? 'badge-success' :
-                                            challenge.difficulty === 'medium' ? 'badge-warning' : 'badge-danger'
-                                            }`}>
-                                            {challenge.difficulty}
-                                        </span>
+                                    <div className="card-content">
+                                        <div className="card-badges">
+                                            <span className="badge badge-info">{challenge.type}</span>
+                                            <span className={`badge ${challenge.difficulty === 'easy' ? 'badge-success' :
+                                                challenge.difficulty === 'medium' ? 'badge-warning' : 'badge-danger'
+                                                }`}>
+                                                {challenge.difficulty}
+                                            </span>
+                                            {isCompleted && (
+                                                <span className="badge badge-completed">
+                                                    <CheckCircle size={12} /> Done
+                                                </span>
+                                            )}
+                                        </div>
+                                        <h3 className="card-title">{challenge.title}</h3>
+                                        <p className="card-desc">{challenge.description}</p>
+                                        <div className="card-meta">
+                                            <span className="meta-item">
+                                                <Clock size={14} />
+                                                {challenge.estimatedTime || challenge.estimatedTimeMinutes} min
+                                            </span>
+                                            <span className="meta-item xp-reward">
+                                                <Star size={14} />
+                                                +{challenge.xpReward} XP
+                                            </span>
+                                        </div>
                                     </div>
-                                    <h3 className="card-title">{challenge.title}</h3>
-                                    <p className="card-desc">{challenge.description}</p>
-                                    <div className="card-meta">
-                                        <span className="meta-item">
-                                            <Clock size={14} />
-                                            {challenge.estimatedTime} min
-                                        </span>
-                                        <span className="meta-item">
-                                            +{challenge.xpReward} XP
-                                        </span>
-                                    </div>
-                                </div>
 
-                                <ChevronRight className="card-arrow" size={20} />
-                            </div>
-                        ))}
+                                    <ChevronRight className="card-arrow" size={20} />
+                                </div>
+                            );
+                        })}
                     </div>
                 </div>
 
