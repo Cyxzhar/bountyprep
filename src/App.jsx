@@ -1,6 +1,7 @@
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import { AnimationProvider } from './context/AnimationContext';
 import { AuthProvider } from './context/AuthContext';
+import { ToastProvider } from './context/ToastContext';
 import Splash from './pages/Splash';
 import Welcome from './pages/onboarding/Welcome';
 import GoalSelection from './pages/onboarding/GoalSelection';
@@ -22,24 +23,26 @@ function App() {
     <BrowserRouter>
       <AnimationProvider>
         <AuthProvider>
-          <Routes>
-            <Route path="/" element={<Splash />} />
-            <Route path="/onboarding/welcome" element={<Welcome />} />
-            <Route path="/onboarding/goal" element={<GoalSelection />} />
-            <Route path="/onboarding/experience" element={<ExperienceLevel />} />
-            <Route path="/onboarding/commitment" element={<DailyCommitment />} />
-            <Route path="/onboarding/analysis" element={<Analysis />} />
-            <Route path="/onboarding/paywall" element={<Paywall />} />
-            <Route path="/auth/signup" element={<SignUp />} />
-            <Route path="/auth/login" element={<Login />} />
-            <Route path="/home" element={<Home />} />
-            <Route path="/challenges" element={<Challenges />} />
-            <Route path="/challenge/:id" element={<ChallengeDetail />} />
-            <Route path="/interview" element={<Interview />} />
-            <Route path="/progress" element={<Progress />} />
-            <Route path="/profile" element={<Profile />} />
-            <Route path="*" element={<Navigate to="/" replace />} />
-          </Routes>
+          <ToastProvider>
+            <Routes>
+              <Route path="/" element={<Splash />} />
+              <Route path="/onboarding/welcome" element={<Welcome />} />
+              <Route path="/onboarding/goal" element={<GoalSelection />} />
+              <Route path="/onboarding/experience" element={<ExperienceLevel />} />
+              <Route path="/onboarding/commitment" element={<DailyCommitment />} />
+              <Route path="/onboarding/analysis" element={<Analysis />} />
+              <Route path="/onboarding/paywall" element={<Paywall />} />
+              <Route path="/auth/signup" element={<SignUp />} />
+              <Route path="/auth/login" element={<Login />} />
+              <Route path="/home" element={<Home />} />
+              <Route path="/challenges" element={<Challenges />} />
+              <Route path="/challenge/:id" element={<ChallengeDetail />} />
+              <Route path="/interview" element={<Interview />} />
+              <Route path="/progress" element={<Progress />} />
+              <Route path="/profile" element={<Profile />} />
+              <Route path="*" element={<Navigate to="/" replace />} />
+            </Routes>
+          </ToastProvider>
         </AuthProvider>
       </AnimationProvider>
     </BrowserRouter>
