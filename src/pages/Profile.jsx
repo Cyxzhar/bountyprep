@@ -93,15 +93,19 @@ export default function Profile() {
                 {/* Stats Row */}
                 <div className="profile-stats">
                     <div className="ps-card">
-                        <span className="ps-value">48</span>
+                        <span className="ps-value">{currentUser?.totalCompleted || 0}</span>
                         <span className="ps-label">Challenges</span>
                     </div>
                     <div className="ps-card">
-                        <span className="ps-value">85%</span>
+                        <span className="ps-value">
+                            {currentUser?.totalQuestionsAnswered > 0
+                                ? Math.round((currentUser.totalCorrectAnswers / currentUser.totalQuestionsAnswered) * 100)
+                                : 0}%
+                        </span>
                         <span className="ps-label">Accuracy</span>
                     </div>
                     <div className="ps-card">
-                        <span className="ps-value">#1.2K</span>
+                        <span className="ps-value">#{Math.max(1, 10000 - (currentUser?.totalCompleted || 0) * 10)}</span>
                         <span className="ps-label">Rank</span>
                     </div>
                 </div>
