@@ -11,35 +11,34 @@ import './Auth.css';
 export default function SignUp() {
     const navigate = useNavigate();
     const { success, error: toastError } = useToast();
-    const { currentUser } = useAuth();
+    const { currentUser, loading: authLoading } = useAuth();
     const [formData, setFormData] = useState({ email: '', password: '', confirmPassword: '' });
     const [showPassword, setShowPassword] = useState(false);
     const [error, setError] = useState('');
     const [loading, setLoading] = useState(false);
+    const [debugLog, setDebugLog] = useState([]);
+
+    const addLog = (msg) => setDebugLog(prev => [...prev, `${new Date().toLocaleTimeString()}: ${msg}`]);
 
     useEffect(() => {
+        addLog(`Mount. User: ${currentUser ? 'Yes' : 'No'}, AuthLoading: ${authLoading}`);
         if (currentUser) {
-            navigate('/home');
+            addLog('Redirecting to Home (User found)');
+            setTimeout(() => navigate('/home'), 500);
             return;
         }
-
-        getRedirectResult(auth).then((result) => {
-            if (result) {
-                success('Account created successfully with Google!');
-                navigate('/home');
-            }
-        }).catch((err) => {
-            console.error(err);
-            const msg = getAuthErrorMessage(err.code);
-            setError(msg);
-            toastError(msg);
-        });
-    }, [navigate, success, toastError, currentUser]);
+    }, [navigate, currentUser, authLoading]);
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        console.log("SignUp Form Submitted - Preventing Default");
         setError('');
+
+        if (formData.password !== formData.confirmPassword) {
+            const msg = 'Passwords do not match';
+            setError(msg);
+            toastError(msg);
+            return;
+        }
 
         if (!isValidEmail(formData.email)) {
             const msg = 'Please enter a valid email address';
@@ -55,22 +54,16 @@ export default function SignUp() {
             return;
         }
 
-        if (formData.password !== formData.confirmPassword) {
-            const msg = 'Passwords do not match';
-            setError(msg);
-            toastError(msg);
-            return;
-        }
-
         setLoading(true);
-
         try {
             const userCredential = await createUserWithEmailAndPassword(auth, formData.email, formData.password);
-            // Optional: Set a default display name (e.g., extracting from email username)
+
+            // Set default display name from email username
             const username = formData.email.split('@')[0];
             await updateProfile(userCredential.user, {
                 displayName: username
             });
+
             success('Account created successfully!');
             navigate('/home');
         } catch (err) {
@@ -83,12 +76,20 @@ export default function SignUp() {
         }
     };
 
-    const handleGoogleLogin = async () => {
+    const handleGoogleSignUp = async () => {
         try {
-            await signInWithRedirect(auth, googleProvider);
+            addLog('Starting Google Popup...');
+            // Switch to Popup for debugging (immediate feedback)
+            const result = await signInWithPopup(auth, googleProvider);
+            if (result.user) {
+                addLog('Popup Success! User: ' + result.user.email);
+                success('Account created successfully with Google!');
+                navigate('/home');
+            }
         } catch (err) {
             console.error(err);
             const msg = getAuthErrorMessage(err.code);
+            addLog(`Popup Error: ${err.code} - ${err.message}`);
             setError(msg);
             toastError(msg);
         }
@@ -104,6 +105,17 @@ export default function SignUp() {
 
     return (
         <div className="auth-screen">
+            {/* DEBUG OVERLAY */}
+            <div style={{
+                position: 'fixed', top: 0, left: 0, right: 0,
+                background: 'rgba(0,0,0,0.8)', color: '#0f0',
+                fontSize: '10px', padding: '5px', zIndex: 9999,
+                maxHeight: '100px', overflowY: 'auto'
+            }}>
+                <div>Auth Status: {authLoading ? 'Loading...' : (currentUser ? 'Logged In' : 'Logged Out')}</div>
+                {debugLog.map((l, i) => <div key={i}>{l}</div>)}
+            </div>
+
             <div className="auth-bg-grid"></div>
 
             <div className="auth-content">
@@ -185,7 +197,7 @@ export default function SignUp() {
 
                 {/* Social Buttons */}
                 <div className="social-buttons">
-                    <button className="btn-social" onClick={handleGoogleLogin}>
+                    <button className="btn-social" onClick={handleGoogleSignUp}>
                         <svg viewBox="0 0 24 24" width="20" height="20">
                             <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" />
                             <path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" />
@@ -205,6 +217,7 @@ export default function SignUp() {
                 {/* Footer */}
                 <p className="auth-footer">
                     Already have an account? <button onClick={() => navigate('/auth/login')}>Log In</button>
+                    <br /><span style={{ fontSize: '0.7rem', opacity: 0.5 }}>v1.0.4 (SignUp Fix)</span>
                 </p>
             </div>
         </div>
