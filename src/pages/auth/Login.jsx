@@ -1,11 +1,11 @@
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Shield, Bug, Mail, Lock, Eye, EyeOff, ChevronRight } from 'lucide-react';
-import { signInWithEmailAndPassword, signInWithPopup } from 'firebase/auth'; // Removed getRedirectResult
+import { Shield, Bug, Mail, Lock, Eye, EyeOff, ChevronRight, CheckCircle, XCircle } from 'lucide-react';
+import { signInWithEmailAndPassword, signInWithPopup } from 'firebase/auth';
 import { auth, googleProvider } from '../../lib/firebase';
 import { useToast } from '../../context/ToastContext';
 import { useAuth } from '../../context/AuthContext';
-import { getAuthErrorMessage } from '../../utils/validation';
+import { getAuthErrorMessage, isValidEmail } from '../../utils/validation';
 import './Auth.css';
 
 export default function Login() {
@@ -17,11 +17,28 @@ export default function Login() {
     const [error, setError] = useState('');
     const [loading, setLoading] = useState(false);
 
+    // Live Validation State
+    const [emailStatus, setEmailStatus] = useState(null);
+
     useEffect(() => {
         if (currentUser) {
             navigate('/home');
         }
     }, [currentUser, navigate]);
+
+    const handleInputChange = (e) => {
+        const { name, value } = e.target;
+        setFormData(prev => ({ ...prev, [name]: value }));
+
+        if (name === 'email') {
+            if (value) {
+                const valid = isValidEmail(value);
+                setEmailStatus({ isValid: valid, msg: valid ? 'Valid Email' : 'Invalid Email Format' });
+            } else {
+                setEmailStatus(null);
+            }
+        }
+    };
 
     const handleSubmit = async (e) => {
         e.preventDefault();
@@ -68,7 +85,6 @@ export default function Login() {
             <div className="auth-bg-grid"></div>
 
             <div className="auth-content">
-                {/* Logo */}
                 <div className="auth-logo">
                     <div className="logo-wrapper">
                         <Shield size={40} strokeWidth={1.5} />
@@ -82,20 +98,26 @@ export default function Login() {
 
                 {error && <div className="auth-error">{error}</div>}
 
-                {/* Form */}
-                <form onSubmit={handleSubmit} className="auth-form">
+                <form onSubmit={handleSubmit} className="auth-form" noValidate>
                     <div className="input-group">
                         <label className="input-label">Email</label>
                         <div className="input-with-icon">
                             <Mail className="input-icon" size={20} />
                             <input
                                 type="email"
+                                name="email"
                                 className="input"
                                 placeholder="you@example.com"
                                 value={formData.email}
-                                onChange={(e) => setFormData({ ...formData, email: e.target.value })}
+                                onChange={handleInputChange}
                             />
                         </div>
+                        {emailStatus && (
+                            <div className={`validation-message ${emailStatus.isValid ? 'text-success' : 'text-error'}`}>
+                                {emailStatus.isValid ? <CheckCircle size={12} /> : <XCircle size={12} />}
+                                {emailStatus.msg}
+                            </div>
+                        )}
                     </div>
 
                     <div className="input-group">
@@ -109,10 +131,11 @@ export default function Login() {
                             <Lock className="input-icon" size={20} />
                             <input
                                 type={showPassword ? 'text' : 'password'}
+                                name="password"
                                 className="input"
                                 placeholder="Enter your password"
                                 value={formData.password}
-                                onChange={(e) => setFormData({ ...formData, password: e.target.value })}
+                                onChange={handleInputChange}
                             />
                             <button
                                 type="button"
@@ -130,12 +153,10 @@ export default function Login() {
                     </button>
                 </form>
 
-                {/* Divider */}
                 <div className="auth-divider">
                     <span>or continue with</span>
                 </div>
 
-                {/* Social Buttons */}
                 <div className="social-buttons">
                     <button className="btn-social" onClick={handleGoogleLogin}>
                         <svg viewBox="0 0 24 24" width="20" height="20">
@@ -154,10 +175,9 @@ export default function Login() {
                     </button>
                 </div>
 
-                {/* Footer */}
                 <p className="auth-footer">
                     Already have an account? <button onClick={() => navigate('/auth/signup')}>Sign Up</button>
-                    <br /><span style={{ fontSize: '0.7rem', opacity: 0.5 }}>v1.0.6 (Stable)</span>
+                    <br /><span style={{ fontSize: '0.7rem', opacity: 0.5 }}>v1.1.0 (Live Validation)</span>
                 </p>
             </div>
         </div>
