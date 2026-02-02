@@ -26,7 +26,7 @@ export const getAuthErrorMessage = (errorCode) => {
         case 'auth/popup-blocked':
             return 'Sign-in popup was blocked. Please allow popups for this site.';
         default:
-            return 'An unexpected error occurred. Please try again.';
+            return `An unexpected error occurred (${errorCode}). Please try again.`;
     }
 };
 
