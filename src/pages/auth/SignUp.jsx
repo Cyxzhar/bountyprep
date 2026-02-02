@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Shield, Bug, Mail, Lock, Eye, EyeOff, ChevronRight } from 'lucide-react';
-import { createUserWithEmailAndPassword, updateProfile, signInWithPopup, signInWithRedirect, getRedirectResult } from 'firebase/auth';
+import { createUserWithEmailAndPassword, updateProfile, signInWithPopup } from 'firebase/auth'; // Removed getRedirectResult
 import { auth, googleProvider } from '../../lib/firebase';
 import { useToast } from '../../context/ToastContext';
 import { useAuth } from '../../context/AuthContext';
@@ -11,50 +11,50 @@ import './Auth.css';
 export default function SignUp() {
     const navigate = useNavigate();
     const { success, error: toastError } = useToast();
-    const { currentUser, loading: authLoading } = useAuth();
+    const { currentUser } = useAuth();
     const [formData, setFormData] = useState({ email: '', password: '', confirmPassword: '' });
     const [showPassword, setShowPassword] = useState(false);
     const [error, setError] = useState('');
     const [loading, setLoading] = useState(false);
-    const [debugLog, setDebugLog] = useState([]);
-
-    const addLog = (msg) => setDebugLog(prev => [...prev, `${new Date().toLocaleTimeString()}: ${msg}`]);
 
     useEffect(() => {
-        addLog(`Mount. User: ${currentUser ? 'Yes' : 'No'}, AuthLoading: ${authLoading}`);
         if (currentUser) {
-            addLog('Redirecting to Home (User found)');
-            setTimeout(() => navigate('/home'), 500);
-            return;
+            navigate('/home');
         }
-    }, [navigate, currentUser, authLoading]);
+    }, [currentUser, navigate]);
 
     const handleSubmit = async (e) => {
         e.preventDefault();
         setError('');
 
-        if (formData.password !== formData.confirmPassword) {
-            const msg = 'Passwords do not match';
-            setError(msg);
-            toastError(msg);
-            return;
-        }
+        // Strict Validation Order
 
+        // 1. Email Format
         if (!isValidEmail(formData.email)) {
             const msg = 'Please enter a valid email address';
             setError(msg);
             toastError(msg);
-            return;
+            return; // Block
         }
 
+        // 2. Password Strength
         const passValidation = validatePassword(formData.password);
         if (!passValidation.isValid) {
             setError(passValidation.message);
             toastError(passValidation.message);
-            return;
+            return; // Block
+        }
+
+        // 3. Confirm Password
+        if (formData.password !== formData.confirmPassword) {
+            const msg = 'Passwords do not match';
+            setError(msg);
+            toastError(msg);
+            return; // Block
         }
 
         setLoading(true);
+
         try {
             const userCredential = await createUserWithEmailAndPassword(auth, formData.email, formData.password);
 
@@ -68,7 +68,11 @@ export default function SignUp() {
             navigate('/home');
         } catch (err) {
             console.error(err);
-            const msg = getAuthErrorMessage(err.code);
+            let msg = getAuthErrorMessage(err.code);
+            // Custom friendly message for duplicates
+            if (err.code === 'auth/email-already-in-use') {
+                msg = 'An account with this email already exists. Please log in.';
+            }
             setError(msg);
             toastError(msg);
         } finally {
@@ -78,18 +82,15 @@ export default function SignUp() {
 
     const handleGoogleSignUp = async () => {
         try {
-            addLog('Starting Google Popup...');
-            // Switch to Popup for debugging (immediate feedback)
             const result = await signInWithPopup(auth, googleProvider);
             if (result.user) {
-                addLog('Popup Success! User: ' + result.user.email);
+                // Check if user is new or existing (optional, but handled gracefully)
                 success('Account created successfully with Google!');
                 navigate('/home');
             }
         } catch (err) {
             console.error(err);
             const msg = getAuthErrorMessage(err.code);
-            addLog(`Popup Error: ${err.code} - ${err.message}`);
             setError(msg);
             toastError(msg);
         }
@@ -98,24 +99,12 @@ export default function SignUp() {
     const handleAppleLogin = async () => {
         // Apple auth temporarily disabled
         const msg = 'Apple Sign In is currently unavailable.';
-        console.log('Apple login clicked - unavailable');
         setError(msg);
         toastError(msg);
     };
 
     return (
         <div className="auth-screen">
-            {/* DEBUG OVERLAY */}
-            <div style={{
-                position: 'fixed', top: 0, left: 0, right: 0,
-                background: 'rgba(0,0,0,0.8)', color: '#0f0',
-                fontSize: '10px', padding: '5px', zIndex: 9999,
-                maxHeight: '100px', overflowY: 'auto'
-            }}>
-                <div>Auth Status: {authLoading ? 'Loading...' : (currentUser ? 'Logged In' : 'Logged Out')}</div>
-                {debugLog.map((l, i) => <div key={i}>{l}</div>)}
-            </div>
-
             <div className="auth-bg-grid"></div>
 
             <div className="auth-content">
@@ -217,7 +206,7 @@ export default function SignUp() {
                 {/* Footer */}
                 <p className="auth-footer">
                     Already have an account? <button onClick={() => navigate('/auth/login')}>Log In</button>
-                    <br /><span style={{ fontSize: '0.7rem', opacity: 0.5 }}>v1.0.4 (SignUp Fix)</span>
+                    <br /><span style={{ fontSize: '0.7rem', opacity: 0.5 }}>v1.0.6 (Stable)</span>
                 </p>
             </div>
         </div>

@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Shield, Bug, Mail, Lock, Eye, EyeOff, ChevronRight } from 'lucide-react';
-import { signInWithEmailAndPassword, signInWithPopup, signInWithRedirect, getRedirectResult } from 'firebase/auth';
+import { signInWithEmailAndPassword, signInWithPopup } from 'firebase/auth'; // Removed getRedirectResult
 import { auth, googleProvider } from '../../lib/firebase';
 import { useToast } from '../../context/ToastContext';
 import { useAuth } from '../../context/AuthContext';
@@ -11,46 +11,20 @@ import './Auth.css';
 export default function Login() {
     const navigate = useNavigate();
     const { success, error: toastError } = useToast();
-    const { currentUser, loading: authLoading } = useAuth();
+    const { currentUser } = useAuth();
     const [formData, setFormData] = useState({ email: '', password: '' });
     const [showPassword, setShowPassword] = useState(false);
     const [error, setError] = useState('');
     const [loading, setLoading] = useState(false);
-    const [debugLog, setDebugLog] = useState([]);
-
-    const addLog = (msg) => setDebugLog(prev => [...prev, `${new Date().toLocaleTimeString()}: ${msg}`]);
 
     useEffect(() => {
-        addLog(`Mount. User: ${currentUser ? 'Yes' : 'No'}, AuthLoading: ${authLoading}`);
-
         if (currentUser) {
-            addLog('Redirecting to Home (User found)');
-            setTimeout(() => navigate('/home'), 500); // Small delay to see log
-            return;
+            navigate('/home');
         }
-
-        // Handle redirect result for mobile
-        addLog('Checking getRedirectResult...');
-        getRedirectResult(auth).then((result) => {
-            if (result) {
-                addLog('Redirect Success! Google User found.');
-                success('Successfully logged in with Google!');
-                navigate('/home');
-            } else {
-                addLog('getRedirectResult returned null (No redirect data)');
-            }
-        }).catch((err) => {
-            console.error(err);
-            const msg = getAuthErrorMessage(err.code);
-            addLog(`Redirect Error: ${err.code}`);
-            setError(msg);
-            toastError(msg);
-        });
-    }, [navigate, success, toastError, currentUser, authLoading]);
+    }, [currentUser, navigate]);
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        console.log("Login Form Submitted - Preventing Default");
         setError('');
         setLoading(true);
 
@@ -70,44 +44,27 @@ export default function Login() {
 
     const handleGoogleLogin = async () => {
         try {
-            addLog('Starting Google Popup...');
-            // Switch to Popup for debugging (immediate feedback)
             const result = await signInWithPopup(auth, googleProvider);
             if (result.user) {
-                addLog('Popup Success! User: ' + result.user.email);
-                success('Successfully logged in!');
+                success('Successfully logged in with Google!');
                 navigate('/home');
             }
         } catch (err) {
             console.error(err);
             const msg = getAuthErrorMessage(err.code);
-            addLog(`Popup Error: ${err.code} - ${err.message}`);
             setError(msg);
             toastError(msg);
         }
     };
 
     const handleAppleLogin = async () => {
-        // Apple auth temporarily disabled
         const msg = 'Apple Sign In is currently unavailable.';
-        console.log('Apple login clicked - unavailable');
         setError(msg);
         toastError(msg);
     };
 
     return (
         <div className="auth-screen">
-            {/* DEBUG OVERLAY */}
-            <div style={{
-                position: 'fixed', top: 0, left: 0, right: 0,
-                background: 'rgba(0,0,0,0.8)', color: '#0f0',
-                fontSize: '10px', padding: '5px', zIndex: 9999,
-                maxHeight: '100px', overflowY: 'auto'
-            }}>
-                <div>Auth Status: {authLoading ? 'Loading...' : (currentUser ? 'Logged In' : 'Logged Out')}</div>
-                {debugLog.map((l, i) => <div key={i}>{l}</div>)}
-            </div>
-
             <div className="auth-bg-grid"></div>
 
             <div className="auth-content">
@@ -200,7 +157,7 @@ export default function Login() {
                 {/* Footer */}
                 <p className="auth-footer">
                     Already have an account? <button onClick={() => navigate('/auth/signup')}>Sign Up</button>
-                    <br /><span style={{ fontSize: '0.7rem', opacity: 0.5 }}>v1.0.3 (Repair)</span>
+                    <br /><span style={{ fontSize: '0.7rem', opacity: 0.5 }}>v1.0.6 (Stable)</span>
                 </p>
             </div>
         </div>
