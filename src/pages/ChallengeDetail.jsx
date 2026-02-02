@@ -9,7 +9,7 @@ import { useToast } from '../context/ToastContext';
 import { useAchievement } from '../context/AchievementContext';
 import { challenges } from '../data/challenges';
 import { calculateQuestionXp, checkLevelUp, getLevelTitle } from '../utils/xp';
-import { saveChallengeProgress, updateUserStats, markChallengeCompleted, updateStreak } from '../utils/firestore';
+import { getChallengeProgress, saveChallengeProgress, updateUserStats, markChallengeCompleted, updateStreak } from '../utils/firestore';
 import './ChallengeDetail.css';
 
 export default function ChallengeDetail() {
@@ -26,6 +26,7 @@ export default function ChallengeDetail() {
     const [result, setResult] = useState(null);
     const [showResult, setShowResult] = useState(false);
     const [usedHint, setUsedHint] = useState(false);
+    const [savedProgress, setSavedProgress] = useState(null);
 
     // Track session stats
     const [sessionXp, setSessionXp] = useState(0);
@@ -34,16 +35,39 @@ export default function ChallengeDetail() {
 
     const question = challenge.questions[currentQ];
 
+    // Load progress and update streak
     useEffect(() => {
-        // Update streak when starting a challenge
-        if (currentUser?.uid) {
-            updateStreak(currentUser.uid).then(result => {
-                if (result.achievements?.length > 0) {
-                    unlockMultiple(result.achievements);
+        if (!currentUser?.uid) return;
+
+        async function initChallenge() {
+            try {
+                // 1. Update streak
+                updateStreak(currentUser.uid).then(result => {
+                    if (result.achievements?.length > 0) {
+                        unlockMultiple(result.achievements);
+                    }
+                }).catch(console.error);
+
+                // 2. Load progress
+                const progress = await getChallengeProgress(currentUser.uid, challenge.id);
+                if (progress) {
+                    setSavedProgress(progress);
+                    // Resume from last unanswered question if not completed
+                    // If completed, let them start over (replay mode)
+                    if (!progress.completed && typeof progress.currentQuestion === 'number') {
+                        // Usually 'currentQuestion' is the index of the one they are ON.
+                        // But if they finished it, let's verify range.
+                        const nextQ = Math.min(progress.currentQuestion, challenge.questions.length - 1);
+                        setCurrentQ(nextQ);
+                    }
                 }
-            }).catch(console.error);
+            } catch (err) {
+                console.error("Failed to load challenge:", err);
+            }
         }
-    }, [currentUser?.uid, unlockMultiple]);
+
+        initChallenge();
+    }, [currentUser?.uid, challenge.id, challenge.questions.length, unlockMultiple]);
 
     const handleSubmit = async () => {
         if (selected === null) return;
@@ -52,13 +76,25 @@ export default function ChallengeDetail() {
         setResult(isCorrect);
         setShowResult(true);
 
-        // Calculate XP
-        const xpEarned = calculateQuestionXp(
+        // Calculate XP logic
+        // 1. If challenge already completed: 0 XP
+        // 2. If currentQ < savedProgress.currentQuestion: 0 XP (Replay of specific question)
+        const isReplay = savedProgress?.completed || (savedProgress?.currentQuestion !== undefined && currentQ < savedProgress.currentQuestion);
+
+        // Base calculation
+        let calculatedXp = calculateQuestionXp(
             challenge.xpReward,
             challenge.questions.length,
             isCorrect,
             usedHint
         );
+
+        // Apply replay logic
+        if (isReplay) {
+            calculatedXp = 0;
+        }
+
+        const xpEarned = calculatedXp;
 
         if (isCorrect) {
             setCorrectAnswers(prev => prev + 1);
