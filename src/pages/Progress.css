@@ -9,12 +9,13 @@
     display: flex;
     gap: var(--space-lg);
     padding: var(--space-lg);
-    background: linear-gradient(135deg, var(--bg-card) 0%, rgba(159, 239, 0, 0.05) 100%);
-    border: 1px solid rgba(159, 239, 0, 0.2);
+    background: linear-gradient(135deg, var(--bg-card) 0%, rgba(0, 184, 148, 0.08) 100%);
+    border: 1px solid rgba(0, 184, 148, 0.2);
     border-radius: var(--radius-xl);
     margin-bottom: var(--space-lg);
     position: relative;
     overflow: hidden;
+    box-shadow: var(--shadow-lg);
 }
 
 .level-card::before {
@@ -23,8 +24,8 @@
     top: 0;
     left: 0;
     right: 0;
-    height: 2px;
-    background: var(--gradient-primary);
+    height: 3px;
+    background: linear-gradient(90deg, #00B894, #55EFC4);
 }
 
 .level-ring {
@@ -50,7 +51,7 @@
 }
 
 .level-ring .ring-fill {
-    stroke: var(--neon-green);
+    stroke: #00B894;
     stroke-linecap: round;
     transition: stroke-dasharray var(--transition-slow);
 }
@@ -68,7 +69,7 @@
     font-size: 2rem;
     font-weight: 800;
     line-height: 1;
-    background: var(--gradient-primary);
+    background: linear-gradient(135deg, #00B894, #55EFC4);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     background-clip: text;
