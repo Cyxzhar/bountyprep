@@ -70,12 +70,18 @@ export default function Login() {
 
     const handleGoogleLogin = async () => {
         try {
-            // Use redirect for better mobile support
-            await signInWithRedirect(auth, googleProvider);
-            // redirect handles navigation on return
+            addLog('Starting Google Popup...');
+            // Switch to Popup for debugging (immediate feedback)
+            const result = await signInWithPopup(auth, googleProvider);
+            if (result.user) {
+                addLog('Popup Success! User: ' + result.user.email);
+                success('Successfully logged in!');
+                navigate('/home');
+            }
         } catch (err) {
             console.error(err);
             const msg = getAuthErrorMessage(err.code);
+            addLog(`Popup Error: ${err.code} - ${err.message}`);
             setError(msg);
             toastError(msg);
         }
