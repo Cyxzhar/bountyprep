@@ -3,10 +3,13 @@ import { useNavigate } from 'react-router-dom';
 import { Shield, Bug, Mail, Lock, Eye, EyeOff, ChevronRight } from 'lucide-react';
 import { signInWithEmailAndPassword, signInWithPopup, signInWithRedirect, getRedirectResult } from 'firebase/auth';
 import { auth, googleProvider } from '../../lib/firebase';
+import { useToast } from '../../context/ToastContext';
+import { getAuthErrorMessage } from '../../utils/validation';
 import './Auth.css';
 
 export default function Login() {
     const navigate = useNavigate();
+    const { success, error: toastError } = useToast();
     const [formData, setFormData] = useState({ email: '', password: '' });
     const [showPassword, setShowPassword] = useState(false);
     const [error, setError] = useState('');
@@ -16,13 +19,16 @@ export default function Login() {
         // Handle redirect result for mobile
         getRedirectResult(auth).then((result) => {
             if (result) {
+                success('Successfully logged in with Google!');
                 navigate('/home');
             }
         }).catch((err) => {
             console.error(err);
-            setError('Failed to log in with Google.');
+            const msg = getAuthErrorMessage(err.code);
+            setError(msg);
+            toastError(msg);
         });
-    }, [navigate]);
+    }, [navigate, success, toastError]);
 
     const handleSubmit = async (e) => {
         e.preventDefault();
@@ -31,10 +37,13 @@ export default function Login() {
 
         try {
             await signInWithEmailAndPassword(auth, formData.email, formData.password);
+            success('Welcome back!');
             navigate('/home');
         } catch (err) {
             console.error(err);
-            setError('Failed to log in. Please check your credentials.');
+            const msg = getAuthErrorMessage(err.code);
+            setError(msg);
+            toastError(msg);
         } finally {
             setLoading(false);
         }
@@ -47,14 +56,18 @@ export default function Login() {
             // redirect handles navigation on return
         } catch (err) {
             console.error(err);
-            setError('Failed to log in with Google.');
+            const msg = getAuthErrorMessage(err.code);
+            setError(msg);
+            toastError(msg);
         }
     };
 
     const handleAppleLogin = async () => {
         // Apple auth temporarily disabled
+        const msg = 'Apple Sign In is currently unavailable.';
         console.log('Apple login clicked - unavailable');
-        setError('Apple Sign In is currently unavailable.');
+        setError(msg);
+        toastError(msg);
     };
 
     return (
