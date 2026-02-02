@@ -3,10 +3,13 @@ import { useNavigate } from 'react-router-dom';
 import { Shield, Bug, Mail, Lock, Eye, EyeOff, ChevronRight } from 'lucide-react';
 import { createUserWithEmailAndPassword, updateProfile, signInWithPopup, signInWithRedirect, getRedirectResult } from 'firebase/auth';
 import { auth, googleProvider } from '../../lib/firebase';
+import { useToast } from '../../context/ToastContext';
+import { getAuthErrorMessage, validatePassword, isValidEmail } from '../../utils/validation';
 import './Auth.css';
 
 export default function SignUp() {
     const navigate = useNavigate();
+    const { success, error: toastError } = useToast();
     const [formData, setFormData] = useState({ email: '', password: '', confirmPassword: '' });
     const [showPassword, setShowPassword] = useState(false);
     const [error, setError] = useState('');
@@ -15,20 +18,39 @@ export default function SignUp() {
     useEffect(() => {
         getRedirectResult(auth).then((result) => {
             if (result) {
+                success('Account created successfully with Google!');
                 navigate('/home');
             }
         }).catch((err) => {
             console.error(err);
-            setError('Failed to sign up with Google.');
+            const msg = getAuthErrorMessage(err.code);
+            setError(msg);
+            toastError(msg);
         });
-    }, [navigate]);
+    }, [navigate, success, toastError]);
 
     const handleSubmit = async (e) => {
         e.preventDefault();
         setError('');
 
+        if (!isValidEmail(formData.email)) {
+            const msg = 'Please enter a valid email address';
+            setError(msg);
+            toastError(msg);
+            return;
+        }
+
+        const passValidation = validatePassword(formData.password);
+        if (!passValidation.isValid) {
+            setError(passValidation.message);
+            toastError(passValidation.message);
+            return;
+        }
+
         if (formData.password !== formData.confirmPassword) {
-            setError('Passwords do not match');
+            const msg = 'Passwords do not match';
+            setError(msg);
+            toastError(msg);
             return;
         }
 
@@ -41,10 +63,13 @@ export default function SignUp() {
             await updateProfile(userCredential.user, {
                 displayName: username
             });
+            success('Account created successfully!');
             navigate('/home');
         } catch (err) {
             console.error(err);
-            setError('Failed to create account. Email usage might be restricted or already in use.');
+            const msg = getAuthErrorMessage(err.code);
+            setError(msg);
+            toastError(msg);
         } finally {
             setLoading(false);
         }
@@ -55,14 +80,18 @@ export default function SignUp() {
             await signInWithRedirect(auth, googleProvider);
         } catch (err) {
             console.error(err);
-            setError('Failed to sign up with Google.');
+            const msg = getAuthErrorMessage(err.code);
+            setError(msg);
+            toastError(msg);
         }
     };
 
     const handleAppleLogin = async () => {
         // Apple auth temporarily disabled
+        const msg = 'Apple Sign In is currently unavailable.';
         console.log('Apple login clicked - unavailable');
-        setError('Apple Sign In is currently unavailable.');
+        setError(msg);
+        toastError(msg);
     };
 
     return (
