@@ -17,6 +17,7 @@ import ChallengeDetail from './pages/ChallengeDetail';
 import Interview from './pages/Interview';
 import Progress from './pages/Progress';
 import Profile from './pages/Profile';
+import AdminSeeder from './pages/AdminSeeder'; // Temporary - remove after seeding
 
 function App() {
   return (
@@ -40,6 +41,7 @@ function App() {
               <Route path="/interview" element={<Interview />} />
               <Route path="/progress" element={<Progress />} />
               <Route path="/profile" element={<Profile />} />
+              <Route path="/admin-seed" element={<AdminSeeder />} /> {/* Temporary - remove after seeding */}
               <Route path="*" element={<Navigate to="/" replace />} />
             </Routes>
           </ToastProvider>
