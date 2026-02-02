@@ -1,7 +1,7 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Shield, Bug, Mail, Lock, Eye, EyeOff, ChevronRight } from 'lucide-react';
-import { createUserWithEmailAndPassword, updateProfile, signInWithPopup } from 'firebase/auth';
+import { createUserWithEmailAndPassword, updateProfile, signInWithPopup, signInWithRedirect, getRedirectResult } from 'firebase/auth';
 import { auth, googleProvider } from '../../lib/firebase';
 import './Auth.css';
 
@@ -11,6 +11,17 @@ export default function SignUp() {
     const [showPassword, setShowPassword] = useState(false);
     const [error, setError] = useState('');
     const [loading, setLoading] = useState(false);
+
+    useEffect(() => {
+        getRedirectResult(auth).then((result) => {
+            if (result) {
+                navigate('/home');
+            }
+        }).catch((err) => {
+            console.error(err);
+            setError('Failed to sign up with Google.');
+        });
+    }, [navigate]);
 
     const handleSubmit = async (e) => {
         e.preventDefault();
@@ -41,8 +52,7 @@ export default function SignUp() {
 
     const handleGoogleLogin = async () => {
         try {
-            await signInWithPopup(auth, googleProvider);
-            navigate('/home');
+            await signInWithRedirect(auth, googleProvider);
         } catch (err) {
             console.error(err);
             setError('Failed to sign up with Google.');
