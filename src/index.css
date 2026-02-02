@@ -525,7 +525,7 @@ textarea {
 .chip.active {
   background: var(--gradient-primary);
   border-color: var(--primary);
-  color: var(--text-primary);
+  color: var(--bg-dark);
   font-weight: 600;
   box-shadow: 0 2px 8px rgba(159, 239, 0, 0.3);
   transform: scale(1.02);
