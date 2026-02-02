@@ -211,3 +211,29 @@
         padding: var(--space-2xl);
     }
 }
+
+/* Live Validation Feedback */
+.validation-message {
+    font-size: 0.75rem;
+    margin-top: 4px;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    transition: all 0.2s ease;
+}
+
+.text-success {
+    color: var(--neon-green);
+}
+
+.text-error {
+    color: #ff4444;
+}
+
+.text-warning {
+    color: #ffbb33;
+}
+
+.text-muted {
+    color: var(--text-muted);
+}
