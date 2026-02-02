@@ -138,8 +138,6 @@ export default function SignUp() {
                 <h1 className="auth-title">Create Your Account</h1>
                 <p className="auth-subtitle">Start your security journey today</p>
 
-                {error && <div className="auth-error">{error}</div>}
-
                 <form onSubmit={handleSubmit} className="auth-form" noValidate>
                     <div className="input-group">
                         <label className="input-label">Email</label>
