@@ -1,0 +1,17 @@
+{
+    "name": "BountyPrep",
+    "short_name": "BountyPrep",
+    "description": "Master Bug Bounty Hunting & Cybersecurity through interactive challenges.",
+    "start_url": "/",
+    "display": "standalone",
+    "background_color": "#0A0A0F",
+    "theme_color": "#0A0A0F",
+    "orientation": "portrait-primary",
+    "icons": [
+        {
+            "src": "/vite.svg",
+            "type": "image/svg+xml",
+            "sizes": "512x512"
+        }
+    ]
+}
