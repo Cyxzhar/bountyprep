@@ -11,6 +11,9 @@ import './Challenges.css';
 
 const filters = ['All', 'SQL Injection', 'XSS', 'CSRF', 'Auth Bypass', 'IDOR', 'File Upload'];
 
+// Cache for completed challenges
+let cachedCompletedChallenges = null;
+
 export default function Challenges() {
     const navigate = useNavigate();
     const { currentUser } = useAuth();
@@ -18,47 +21,52 @@ export default function Challenges() {
     const initialFilter = searchParams.get('filter') || 'All';
     const [searchQuery, setSearchQuery] = useState('');
     const [activeFilter, setActiveFilter] = useState(initialFilter);
+    // Start with local challenges immediately (no loading!)
     const [challenges, setChallenges] = useState(localChallenges);
-    const [completedChallenges, setCompletedChallenges] = useState(new Set());
-    const [loading, setLoading] = useState(true);
+    const [completedChallenges, setCompletedChallenges] = useState(cachedCompletedChallenges || new Set());
+    // Only show loading if we have no data at all
+    const [loading, setLoading] = useState(false);
 
-    // Load challenges from Firestore and check completed status
+    // Load completed challenges from Firestore (background sync)
     useEffect(() => {
-        async function loadData() {
+        // Skip if no user
+        if (!currentUser?.uid) return;
+
+        // Use cached data immediately
+        if (cachedCompletedChallenges) {
+            setCompletedChallenges(cachedCompletedChallenges);
+        }
+
+        async function syncData() {
             try {
-                // Load challenges from Firestore
-                const challengesRef = collection(db, 'challenges');
-                const challengesSnap = await getDocs(query(challengesRef, orderBy('id')));
+                // Load user's completed challenges with 3s timeout
+                const userChallengesRef = collection(db, 'users', currentUser.uid, 'challenges');
 
-                if (!challengesSnap.empty) {
-                    const firestoreChallenges = challengesSnap.docs.map(doc => ({
-                        ...doc.data(),
-                        firestoreId: doc.id
-                    }));
-                    setChallenges(firestoreChallenges);
-                }
+                const timeoutPromise = new Promise((_, reject) =>
+                    setTimeout(() => reject(new Error('Timeout')), 3000)
+                );
 
-                // Load user's completed challenges
-                if (currentUser?.uid) {
-                    const userChallengesRef = collection(db, 'users', currentUser.uid, 'challenges');
-                    const userChallengesSnap = await getDocs(userChallengesRef);
+                const userChallengesSnap = await Promise.race([
+                    getDocs(userChallengesRef),
+                    timeoutPromise
+                ]);
 
-                    const completed = new Set();
-                    userChallengesSnap.docs.forEach(doc => {
-                        if (doc.data().completed) {
-                            completed.add(doc.id);
-                        }
-                    });
-                    setCompletedChallenges(completed);
-                }
+                const completed = new Set();
+                userChallengesSnap.docs.forEach(doc => {
+                    if (doc.data().completed) {
+                        completed.add(doc.id);
+                    }
+                });
+
+                // Update cache and state
+                cachedCompletedChallenges = completed;
+                setCompletedChallenges(completed);
             } catch (error) {
-                console.error('Failed to load challenges:', error);
-            } finally {
-                setLoading(false);
+                console.warn('Background sync skipped:', error.message);
             }
         }
 
-        loadData();
+        syncData();
     }, [currentUser?.uid]);
 
     const filteredChallenges = challenges.filter(c => {

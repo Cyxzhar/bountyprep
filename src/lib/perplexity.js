@@ -1,38 +1,95 @@
 /**
- * Perplexity API Client (via Backend Proxy)
+ * Perplexity API Client
  * 
- * Calls our secure serverless function instead of Perplexity directly.
- * This keeps the API key server-side only.
+ * Uses backend proxy on Vercel, direct API on localhost (dev only)
  */
 
-const API_ENDPOINT = '/api/chat';
+const PERPLEXITY_API_URL = 'https://api.perplexity.ai/chat/completions';
+
+// Check if we're on localhost (development)
+const isLocalhost = typeof window !== 'undefined' &&
+    (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1');
 
 export async function generateInterviewResponse(messages, difficulty, topic) {
-    try {
-        const response = await fetch(API_ENDPOINT, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({
-                messages,
-                difficulty,
-                topic
-            })
-        });
+    const systemPrompt = `You are an expert Security Engineer conducting a FAANG-level security interview.
+    
+    Difficulty: ${difficulty || 'mid'}
+    Primary Topic: ${topic || 'General Application Security'}
+    
+    Guidelines:
+    1. Act exactly like a senior interviewer - be professional but encouraging.
+    2. Ask one question at a time.
+    3. Dig deeper into vague answers with follow-ups.
+    4. If the candidate makes a mistake, gently correct them after their answer or lead them to the right path.
+    5. Keep responses concise (under 150 words) unless explaining a complex concept.
+    
+    Your goal is to assess their depth of knowledge in AppSec, Network Security, and Threat Modeling.`;
 
-        if (!response.ok) {
-            const errorData = await response.json().catch(() => ({}));
-            throw new Error(errorData.error || `Request failed: ${response.status}`);
+    try {
+        let response;
+
+        if (isLocalhost) {
+            // Direct API call for localhost development
+            const apiKey = import.meta.env.VITE_PERPLEXITY_API_KEY;
+
+            if (!apiKey) {
+                console.warn('Missing VITE_PERPLEXITY_API_KEY in .env');
+                return {
+                    role: 'assistant',
+                    content: "API key not configured. Please add VITE_PERPLEXITY_API_KEY to your .env file."
+                };
+            }
+
+            response = await fetch(PERPLEXITY_API_URL, {
+                method: 'POST',
+                headers: {
+                    'Authorization': `Bearer ${apiKey}`,
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    model: 'sonar-pro',
+                    messages: [
+                        { role: 'system', content: systemPrompt },
+                        ...messages
+                    ],
+                    temperature: 0.2,
+                    max_tokens: 1000,
+                })
+            });
+        } else {
+            // Use serverless proxy on Vercel
+            response = await fetch('/api/chat', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    messages,
+                    difficulty,
+                    topic
+                })
+            });
         }
 
-        return await response.json();
+        if (!response.ok) {
+            const errorText = await response.text();
+            console.error('AI API Error:', response.status, errorText);
+            throw new Error(`Request failed: ${response.status}`);
+        }
+
+        const data = await response.json();
+
+        // Handle different response formats
+        if (data.choices) {
+            return data.choices[0].message;
+        }
+        return data;
 
     } catch (error) {
         console.error('AI Interview Error:', error);
         return {
             role: 'assistant',
-            content: "I'm having trouble connecting to the interview server. Please try again in a moment."
+            content: "I'm having trouble connecting to the interview server. Please check your connection and try again."
         };
     }
 }
