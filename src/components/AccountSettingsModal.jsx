@@ -1,14 +1,14 @@
 import { useState } from 'react';
 import { X, User, Mail, Camera, Loader2 } from 'lucide-react';
 import { doc, updateDoc, serverTimestamp } from 'firebase/firestore';
-import { ref, uploadBytes, getDownloadURL } from 'firebase/storage';
 import { updateProfile } from 'firebase/auth';
-import { db, storage, auth } from '../lib/firebase';
+import { db, auth } from '../lib/firebase';
 import { useToast } from '../context/ToastContext';
+import { compressImage, getBase64SizeKB } from '../utils/imageCompression';
 import './AccountSettingsModal.css';
 
 export default function AccountSettingsModal({ isOpen, onClose, currentUser, onUpdate }) {
-    const { success, error } = useToast();
+    const { success, error, info } = useToast();
     const [displayName, setDisplayName] = useState(currentUser?.displayName || '');
     const [isLoading, setIsLoading] = useState(false);
     const [isUploading, setIsUploading] = useState(false);
@@ -20,46 +20,40 @@ export default function AccountSettingsModal({ isOpen, onClose, currentUser, onU
         const file = e.target.files?.[0];
         if (!file) return;
 
-        // Validate file
+        // Validate file type
         if (!file.type.startsWith('image/')) {
             error('Please select an image file');
             return;
         }
 
-        if (file.size > 5 * 1024 * 1024) {
-            error('Image must be less than 5MB');
-            return;
-        }
-
         setIsUploading(true);
+        info('Compressing image...');
 
         try {
-            // Create preview
-            const reader = new FileReader();
-            reader.onload = (e) => setPhotoPreview(e.target.result);
-            reader.readAsDataURL(file);
+            // Compress image to base64 (max 500KB for Firestore)
+            const compressedBase64 = await compressImage(file, 500, 400);
+            const sizeKB = getBase64SizeKB(compressedBase64);
 
-            // Upload to Firebase Storage
-            const storageRef = ref(storage, `avatars/${currentUser.uid}`);
-            await uploadBytes(storageRef, file);
-            const downloadURL = await getDownloadURL(storageRef);
+            console.log(`Image compressed to ${sizeKB}KB`);
+
+            // Update preview immediately
+            setPhotoPreview(compressedBase64);
 
             // Update Firebase Auth profile
-            await updateProfile(auth.currentUser, { photoURL: downloadURL });
+            await updateProfile(auth.currentUser, { photoURL: compressedBase64 });
 
             // Update Firestore
             const userRef = doc(db, 'users', currentUser.uid);
             await updateDoc(userRef, {
-                photoURL: downloadURL,
+                photoURL: compressedBase64,
                 updatedAt: serverTimestamp()
             });
 
-            setPhotoPreview(downloadURL);
             success('Profile photo updated!');
             onUpdate?.();
         } catch (err) {
             console.error('Upload failed:', err);
-            error('Failed to upload photo');
+            error('Failed to upload photo. Try a smaller image.');
         } finally {
             setIsUploading(false);
         }
@@ -123,7 +117,7 @@ export default function AccountSettingsModal({ isOpen, onClose, currentUser, onU
                     </div>
                     <label className="photo-upload-btn">
                         <Camera size={16} />
-                        Change Photo
+                        {isUploading ? 'Uploading...' : 'Change Photo'}
                         <input
                             type="file"
                             accept="image/*"
@@ -132,6 +126,7 @@ export default function AccountSettingsModal({ isOpen, onClose, currentUser, onU
                             hidden
                         />
                     </label>
+                    <span className="photo-hint">Image will be compressed to ~500KB</span>
                 </div>
 
                 {/* Display Name */}
