@@ -103,9 +103,8 @@ export default function Profile() {
     };
 
     const handleRateApp = () => {
-        // Open app store rating or feedback form
-        window.open('https://forms.gle/BountyPrepFeedback', '_blank');
-        success('Thanks for your feedback!');
+        // Placeholder for future app store link
+        success('Rating feature coming to App Store soon!');
     };
 
     const handleExternalLink = (url, label) => {
