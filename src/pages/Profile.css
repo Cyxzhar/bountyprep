@@ -57,6 +57,25 @@
     color: var(--bg-dark);
 }
 
+.profile-avatar {
+    cursor: pointer;
+}
+
+.avatar-edit-hint {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 24px;
+    height: 24px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--neon-green);
+    border-radius: 50%;
+    border: 2px solid var(--bg-darker);
+    color: var(--bg-dark);
+}
+
 .profile-name {
     font-size: 1.5rem;
     font-weight: 700;

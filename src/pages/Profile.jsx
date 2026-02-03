@@ -1,12 +1,13 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import {
     Settings, CreditCard, Bell, Moon, Globe, Clock,
     HelpCircle, Star, Share2, Info, FileText, ChevronRight,
-    LogOut, Crown, User, Shield, Bug, ExternalLink
+    LogOut, Crown, User, Shield, Bug, ExternalLink, Camera
 } from 'lucide-react';
 import BottomNav from '../components/BottomNav';
 import UpgradeModal from '../components/UpgradeModal';
+import AccountSettingsModal from '../components/AccountSettingsModal';
 import { useAuth } from '../context/AuthContext';
 import { useToast } from '../context/ToastContext';
 import { getSettings, updateSetting, shareApp } from '../utils/settings';
@@ -14,25 +15,79 @@ import './Profile.css';
 
 export default function Profile() {
     const navigate = useNavigate();
-    const { currentUser, logout } = useAuth();
+    const { currentUser, logout, refreshUser } = useAuth();
     const { success, error, info } = useToast();
 
     const [settings, setSettings] = useState(getSettings());
     const [showUpgradeModal, setShowUpgradeModal] = useState(false);
+    const [showAccountSettings, setShowAccountSettings] = useState(false);
+    const [notificationPermission, setNotificationPermission] = useState('default');
 
     const isPremium = currentUser?.isPremium || false;
 
-    const handleToggle = (key) => {
-        const newValue = !settings[key];
-        const updated = updateSetting(key, newValue);
-        setSettings(updated);
+    // Check notification permission on mount
+    useEffect(() => {
+        if ('Notification' in window) {
+            setNotificationPermission(Notification.permission);
+        }
+    }, []);
 
-        if (key === 'darkMode') {
-            info(newValue ? 'Dark mode enabled' : 'Light mode coming soon!');
-        } else if (key === 'notifications') {
+    const handleToggle = async (key) => {
+        if (key === 'notifications') {
+            // Handle browser notification permission
+            if (!('Notification' in window)) {
+                error('Notifications not supported in this browser');
+                return;
+            }
+
+            if (Notification.permission === 'denied') {
+                error('Notifications blocked. Enable in browser settings.');
+                return;
+            }
+
+            if (Notification.permission === 'default') {
+                const permission = await Notification.requestPermission();
+                setNotificationPermission(permission);
+                if (permission === 'granted') {
+                    const updated = updateSetting('notifications', true);
+                    setSettings(updated);
+                    success('Notifications enabled!');
+                    // Show test notification
+                    new Notification('BountyPrep', {
+                        body: 'Notifications are now enabled!',
+                        icon: '/icons/icon-192x192.png'
+                    });
+                } else {
+                    error('Notification permission denied');
+                }
+                return;
+            }
+
+            // Toggle if already granted
+            const newValue = !settings[key];
+            const updated = updateSetting(key, newValue);
+            setSettings(updated);
             success(newValue ? 'Notifications enabled' : 'Notifications disabled');
+        } else if (key === 'darkMode') {
+            const newValue = !settings[key];
+            const updated = updateSetting(key, newValue);
+            setSettings(updated);
+            info(newValue ? 'Dark mode enabled' : 'Light mode coming soon!');
         } else if (key === 'learningReminders') {
-            success(newValue ? 'Reminders enabled' : 'Reminders disabled');
+            const newValue = !settings[key];
+            const updated = updateSetting(key, newValue);
+            setSettings(updated);
+
+            if (newValue) {
+                // Schedule reminder notification (if notifications enabled)
+                if (Notification.permission === 'granted' && settings.notifications) {
+                    success('Daily reminders enabled at 9 AM');
+                } else {
+                    success('Reminders enabled (enable notifications to receive them)');
+                }
+            } else {
+                success('Reminders disabled');
+            }
         }
     };
 
@@ -48,11 +103,12 @@ export default function Profile() {
     };
 
     const handleRateApp = () => {
-        // For now, just show a message
-        success('Thanks! Rating will be available on app stores soon.');
+        // Open app store rating or feedback form
+        window.open('https://forms.gle/BountyPrepFeedback', '_blank');
+        success('Thanks for your feedback!');
     };
 
-    const handleExternalLink = (url) => {
+    const handleExternalLink = (url, label) => {
         window.open(url, '_blank');
     };
 
@@ -67,6 +123,11 @@ export default function Profile() {
         }
     };
 
+    const handleProfileUpdate = () => {
+        // Refresh user data after profile update
+        refreshUser?.();
+    };
+
     const menuSections = [
         {
             title: 'Account',
@@ -74,7 +135,7 @@ export default function Profile() {
                 {
                     icon: Settings,
                     label: 'Account Settings',
-                    action: () => info('Account settings coming soon')
+                    action: () => setShowAccountSettings(true)
                 },
                 {
                     icon: CreditCard,
@@ -84,9 +145,9 @@ export default function Profile() {
                 },
                 {
                     icon: Bell,
-                    label: 'Notifications',
+                    label: 'Push Notifications',
                     toggle: true,
-                    enabled: settings.notifications,
+                    enabled: settings.notifications && notificationPermission === 'granted',
                     action: () => handleToggle('notifications')
                 },
             ]
@@ -109,7 +170,7 @@ export default function Profile() {
                 },
                 {
                     icon: Clock,
-                    label: 'Learning Reminders',
+                    label: 'Daily Reminders',
                     toggle: true,
                     enabled: settings.learningReminders,
                     action: () => handleToggle('learningReminders')
@@ -122,7 +183,7 @@ export default function Profile() {
                 {
                     icon: HelpCircle,
                     label: 'Help & Support',
-                    action: () => handleExternalLink('mailto:support@bountyprep.com')
+                    action: () => handleExternalLink('mailto:support@bountyprep.com', 'Email')
                 },
                 {
                     icon: Star,
@@ -142,17 +203,17 @@ export default function Profile() {
                 {
                     icon: Info,
                     label: 'About BountyPrep',
-                    action: () => handleExternalLink('https://bountyprep.vercel.app')
+                    action: () => handleExternalLink('https://bountyprep.vercel.app', 'Website')
                 },
                 {
                     icon: FileText,
                     label: 'Privacy Policy',
-                    action: () => handleExternalLink('https://bountyprep.vercel.app/privacy')
+                    action: () => handleExternalLink('https://bountyprep.vercel.app/privacy', 'Privacy')
                 },
                 {
                     icon: FileText,
                     label: 'Terms of Service',
-                    action: () => handleExternalLink('https://bountyprep.vercel.app/terms')
+                    action: () => handleExternalLink('https://bountyprep.vercel.app/terms', 'Terms')
                 },
             ]
         }
@@ -163,7 +224,7 @@ export default function Profile() {
             <div className="screen-content">
                 {/* Profile Header */}
                 <div className="profile-header">
-                    <div className="profile-avatar">
+                    <div className="profile-avatar" onClick={() => setShowAccountSettings(true)}>
                         <div className="avatar-ring">
                             <div className="avatar-inner">
                                 {currentUser?.photoURL ? (
@@ -172,6 +233,9 @@ export default function Profile() {
                                     <User size={32} />
                                 )}
                             </div>
+                        </div>
+                        <div className="avatar-edit-hint">
+                            <Camera size={12} />
                         </div>
                         {isPremium && (
                             <div className="premium-crown">
@@ -282,6 +346,13 @@ export default function Profile() {
             <UpgradeModal
                 isOpen={showUpgradeModal}
                 onClose={() => setShowUpgradeModal(false)}
+            />
+
+            <AccountSettingsModal
+                isOpen={showAccountSettings}
+                onClose={() => setShowAccountSettings(false)}
+                currentUser={currentUser}
+                onUpdate={handleProfileUpdate}
             />
         </div>
     );
