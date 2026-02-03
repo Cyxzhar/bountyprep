@@ -35,11 +35,112 @@ export async function getChallengeProgress(userId, challengeId) {
     }
 }
 
-// ... (processAchievements remains) ...
+/**
+ * Check and unlock achievements for a user
+ * Private helper function
+ */
+async function processAchievements(userId, userSnapshot = null) {
+    const userRef = doc(db, 'users', userId);
 
-// ... (updateUserStats remains) ...
+    // If snapshot not provided, fetch it
+    let userData;
+    if (userSnapshot) {
+        userData = userSnapshot.data();
+    } else {
+        const snap = await getDoc(userRef);
+        if (!snap.exists()) return [];
+        userData = snap.data();
+    }
 
-// ... (markChallengeCompleted remains) ...
+    // Check for new achievements
+    const newAchievements = checkNewAchievements(userData);
+
+    if (newAchievements.length > 0) {
+        // Add to user profile
+        const achievementIds = newAchievements.map(a => a.id);
+
+        try {
+            await updateDoc(userRef, {
+                achievements: arrayUnion(...achievementIds),
+                updatedAt: serverTimestamp()
+            });
+        } catch (err) {
+            // If updateDoc fails (offline), try setDoc with merge
+            await setDoc(userRef, {
+                achievements: arrayUnion(...achievementIds),
+                updatedAt: serverTimestamp()
+            }, { merge: true });
+        }
+
+        return newAchievements;
+    }
+
+    return [];
+}
+
+/**
+ * Update user XP and stats after answering a question
+ * Returns any newly unlocked achievements
+ */
+export async function updateUserStats(userId, xpEarned, isCorrect) {
+    try {
+        const userRef = doc(db, 'users', userId);
+
+        const updates = {
+            xp: increment(xpEarned),
+            totalQuestionsAnswered: increment(1),
+            updatedAt: serverTimestamp(),
+        };
+
+        if (isCorrect) {
+            updates.totalCorrectAnswers = increment(1);
+        }
+
+        await setDoc(userRef, updates, { merge: true });
+
+        // Check achievements after update
+        return await processAchievements(userId);
+    } catch (err) {
+        if (err.code === 'unavailable' || err.message.includes('offline')) {
+            console.warn('Firestore offline, skipping stats update');
+            return [];
+        }
+        throw err;
+    }
+}
+
+/**
+ * Mark a challenge as completed
+ * Returns any newly unlocked achievements
+ */
+export async function markChallengeCompleted(userId, challengeId, stats) {
+    try {
+        const userRef = doc(db, 'users', userId);
+        const progressRef = doc(db, 'users', userId, 'challenges', challengeId);
+
+        // Update challenge progress
+        await setDoc(progressRef, {
+            completed: true,
+            completedAt: serverTimestamp(),
+            ...stats,
+        }, { merge: true });
+
+        // Update user stats
+        await setDoc(userRef, {
+            totalCompleted: increment(1),
+            updatedAt: serverTimestamp(),
+        }, { merge: true });
+
+        // Check achievements after update
+        return await processAchievements(userId);
+    } catch (err) {
+        if (err.code === 'unavailable' || err.message.includes('offline')) {
+            console.warn('Firestore offline, skipping completion mark');
+            return [];
+        }
+        throw err;
+    }
+}
 
 /**
  * Update user's streak
