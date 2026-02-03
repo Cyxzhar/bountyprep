@@ -1,54 +1,60 @@
+import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import {
     Settings, CreditCard, Bell, Moon, Globe, Clock,
     HelpCircle, Star, Share2, Info, FileText, ChevronRight,
-    LogOut, Crown, User, Shield, Bug
+    LogOut, Crown, User, Shield, Bug, ExternalLink
 } from 'lucide-react';
 import BottomNav from '../components/BottomNav';
-import { FirstVisitTransition } from '../components/PageTransition';
+import UpgradeModal from '../components/UpgradeModal';
 import { useAuth } from '../context/AuthContext';
 import { useToast } from '../context/ToastContext';
+import { getSettings, updateSetting, shareApp } from '../utils/settings';
 import './Profile.css';
-
-const menuSections = [
-    {
-        title: 'Account',
-        items: [
-            { icon: Settings, label: 'Account Settings' },
-            { icon: CreditCard, label: 'Subscription', badge: 'Premium' },
-            { icon: Bell, label: 'Notifications' },
-        ]
-    },
-    {
-        title: 'Preferences',
-        items: [
-            { icon: Moon, label: 'Dark Mode', toggle: true, enabled: true },
-            { icon: Globe, label: 'Language', value: 'English' },
-            { icon: Clock, label: 'Learning Reminders' },
-        ]
-    },
-    {
-        title: 'Support',
-        items: [
-            { icon: HelpCircle, label: 'Help & Support' },
-            { icon: Star, label: 'Rate App' },
-            { icon: Share2, label: 'Share with Friends' },
-        ]
-    },
-    {
-        title: 'Legal',
-        items: [
-            { icon: Info, label: 'About BountyPrep' },
-            { icon: FileText, label: 'Privacy Policy' },
-            { icon: FileText, label: 'Terms of Service' },
-        ]
-    }
-];
 
 export default function Profile() {
     const navigate = useNavigate();
     const { currentUser, logout } = useAuth();
-    const { success, error } = useToast();
+    const { success, error, info } = useToast();
+
+    const [settings, setSettings] = useState(getSettings());
+    const [showUpgradeModal, setShowUpgradeModal] = useState(false);
+
+    const isPremium = currentUser?.isPremium || false;
+
+    const handleToggle = (key) => {
+        const newValue = !settings[key];
+        const updated = updateSetting(key, newValue);
+        setSettings(updated);
+
+        if (key === 'darkMode') {
+            info(newValue ? 'Dark mode enabled' : 'Light mode coming soon!');
+        } else if (key === 'notifications') {
+            success(newValue ? 'Notifications enabled' : 'Notifications disabled');
+        } else if (key === 'learningReminders') {
+            success(newValue ? 'Reminders enabled' : 'Reminders disabled');
+        }
+    };
+
+    const handleShare = async () => {
+        const result = await shareApp();
+        if (result.success) {
+            if (result.copied) {
+                success('Link copied to clipboard!');
+            }
+        } else {
+            error('Could not share');
+        }
+    };
+
+    const handleRateApp = () => {
+        // For now, just show a message
+        success('Thanks! Rating will be available on app stores soon.');
+    };
+
+    const handleExternalLink = (url) => {
+        window.open(url, '_blank');
+    };
 
     const handleLogout = async () => {
         try {
@@ -60,6 +66,97 @@ export default function Profile() {
             error('Failed to log out');
         }
     };
+
+    const menuSections = [
+        {
+            title: 'Account',
+            items: [
+                {
+                    icon: Settings,
+                    label: 'Account Settings',
+                    action: () => info('Account settings coming soon')
+                },
+                {
+                    icon: CreditCard,
+                    label: 'Subscription',
+                    badge: isPremium ? 'Premium' : 'Free',
+                    action: () => !isPremium && setShowUpgradeModal(true)
+                },
+                {
+                    icon: Bell,
+                    label: 'Notifications',
+                    toggle: true,
+                    enabled: settings.notifications,
+                    action: () => handleToggle('notifications')
+                },
+            ]
+        },
+        {
+            title: 'Preferences',
+            items: [
+                {
+                    icon: Moon,
+                    label: 'Dark Mode',
+                    toggle: true,
+                    enabled: settings.darkMode,
+                    action: () => handleToggle('darkMode')
+                },
+                {
+                    icon: Globe,
+                    label: 'Language',
+                    value: 'English',
+                    action: () => info('More languages coming soon')
+                },
+                {
+                    icon: Clock,
+                    label: 'Learning Reminders',
+                    toggle: true,
+                    enabled: settings.learningReminders,
+                    action: () => handleToggle('learningReminders')
+                },
+            ]
+        },
+        {
+            title: 'Support',
+            items: [
+                {
+                    icon: HelpCircle,
+                    label: 'Help & Support',
+                    action: () => handleExternalLink('mailto:support@bountyprep.com')
+                },
+                {
+                    icon: Star,
+                    label: 'Rate App',
+                    action: handleRateApp
+                },
+                {
+                    icon: Share2,
+                    label: 'Share with Friends',
+                    action: handleShare
+                },
+            ]
+        },
+        {
+            title: 'Legal',
+            items: [
+                {
+                    icon: Info,
+                    label: 'About BountyPrep',
+                    action: () => handleExternalLink('https://bountyprep.vercel.app')
+                },
+                {
+                    icon: FileText,
+                    label: 'Privacy Policy',
+                    action: () => handleExternalLink('https://bountyprep.vercel.app/privacy')
+                },
+                {
+                    icon: FileText,
+                    label: 'Terms of Service',
+                    action: () => handleExternalLink('https://bountyprep.vercel.app/terms')
+                },
+            ]
+        }
+    ];
 
     return (
         <div className="profile-screen">
@@ -76,17 +173,29 @@ export default function Profile() {
                                 )}
                             </div>
                         </div>
-                        <div className="premium-crown">
-                            <Crown size={16} />
-                        </div>
+                        {isPremium && (
+                            <div className="premium-crown">
+                                <Crown size={16} />
+                            </div>
+                        )}
                     </div>
                     <div className="profile-info">
                         <h1 className="profile-name">{currentUser?.displayName || 'Fellow Hunter'}</h1>
                         <p className="profile-email">{currentUser?.email || 'No Email'}</p>
-                        <span className="profile-badge">
-                            <Crown size={12} />
-                            Premium Member
-                        </span>
+                        {isPremium ? (
+                            <span className="profile-badge premium">
+                                <Crown size={12} />
+                                Premium Member
+                            </span>
+                        ) : (
+                            <button
+                                className="profile-badge upgrade"
+                                onClick={() => setShowUpgradeModal(true)}
+                            >
+                                <Crown size={12} />
+                                Upgrade to Premium
+                            </button>
+                        )}
                     </div>
                 </div>
 
@@ -119,7 +228,11 @@ export default function Profile() {
                                 {section.items.map((item, iIdx) => {
                                     const Icon = item.icon;
                                     return (
-                                        <button key={iIdx} className="menu-item">
+                                        <button
+                                            key={iIdx}
+                                            className="menu-item"
+                                            onClick={item.action}
+                                        >
                                             <div className="menu-icon">
                                                 <Icon size={20} />
                                             </div>
@@ -131,7 +244,9 @@ export default function Profile() {
                                             ) : item.value ? (
                                                 <span className="menu-value">{item.value}</span>
                                             ) : item.badge ? (
-                                                <span className="menu-badge">{item.badge}</span>
+                                                <span className={`menu-badge ${item.badge === 'Free' ? 'free' : ''}`}>
+                                                    {item.badge}
+                                                </span>
                                             ) : (
                                                 <ChevronRight size={18} className="menu-arrow" />
                                             )}
@@ -163,6 +278,11 @@ export default function Profile() {
             </div>
 
             <BottomNav />
+
+            <UpgradeModal
+                isOpen={showUpgradeModal}
+                onClose={() => setShowUpgradeModal(false)}
+            />
         </div>
     );
 }

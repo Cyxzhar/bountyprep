@@ -1,10 +1,11 @@
 import { useState, useEffect } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
-import { Search, Filter, Lock, ChevronRight, Clock, CheckCircle, Star } from 'lucide-react';
+import { Search, Filter, Lock, ChevronRight, Clock, CheckCircle, Star, Crown } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 import { collection, getDocs, query, orderBy } from 'firebase/firestore';
 import { db } from '../lib/firebase';
 import BottomNav from '../components/BottomNav';
+import UpgradeModal from '../components/UpgradeModal';
 import { FirstVisitTransition } from '../components/PageTransition';
 import { challenges as localChallenges } from '../data/challenges';
 import './Challenges.css';
@@ -26,6 +27,9 @@ export default function Challenges() {
     const [completedChallenges, setCompletedChallenges] = useState(cachedCompletedChallenges || new Set());
     // Only show loading if we have no data at all
     const [loading, setLoading] = useState(false);
+    const [showUpgradeModal, setShowUpgradeModal] = useState(false);
+
+    const isPremium = currentUser?.isPremium || false;
 
     // Load completed challenges from Firestore (background sync)
     useEffect(() => {
@@ -137,16 +141,26 @@ export default function Challenges() {
                     <div className="challenges-list">
                         {filteredChallenges.map((challenge, idx) => {
                             const isCompleted = completedChallenges.has(challenge.id);
+                            const isLocked = challenge.isPremium && !isPremium;
+
+                            const handleClick = () => {
+                                if (isLocked) {
+                                    setShowUpgradeModal(true);
+                                } else {
+                                    navigate(`/challenge/${challenge.id}`);
+                                }
+                            };
+
                             return (
                                 <div
                                     key={challenge.id}
-                                    className={`challenge-card ${isCompleted ? 'completed' : ''}`}
-                                    onClick={() => navigate(`/challenge/${challenge.id}`)}
+                                    className={`challenge-card ${isCompleted ? 'completed' : ''} ${isLocked ? 'locked' : ''}`}
+                                    onClick={handleClick}
                                 >
                                     <div className="card-left">
-                                        <div className={`card-icon ${isCompleted ? 'completed' : ''}`}>
+                                        <div className={`card-icon ${isCompleted ? 'completed' : ''} ${isLocked ? 'locked' : ''}`}>
                                             {isCompleted ? <CheckCircle size={22} /> :
-                                                challenge.isPremium ? <Lock size={18} /> :
+                                                isLocked ? <Lock size={18} /> :
                                                     <span className="icon-number">{idx + 1}</span>}
                                         </div>
                                     </div>
@@ -159,6 +173,11 @@ export default function Challenges() {
                                                 }`}>
                                                 {challenge.difficulty}
                                             </span>
+                                            {isLocked && (
+                                                <span className="badge badge-premium">
+                                                    <Crown size={10} /> Premium
+                                                </span>
+                                            )}
                                             {isCompleted && (
                                                 <span className="badge badge-completed">
                                                     <CheckCircle size={12} /> Done
@@ -187,6 +206,11 @@ export default function Challenges() {
                 </div>
 
                 <BottomNav />
+
+                <UpgradeModal
+                    isOpen={showUpgradeModal}
+                    onClose={() => setShowUpgradeModal(false)}
+                />
             </div>
         </FirstVisitTransition>
     );

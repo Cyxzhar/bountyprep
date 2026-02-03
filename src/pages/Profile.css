@@ -82,6 +82,24 @@
     color: #FFD700;
 }
 
+.profile-badge.upgrade {
+    cursor: pointer;
+    background: linear-gradient(135deg, var(--neon-green), #7BC700);
+    border: none;
+    color: var(--bg-darker);
+    transition: all 0.2s;
+}
+
+.profile-badge.upgrade:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(159, 239, 0, 0.3);
+}
+
+.menu-badge.free {
+    background: rgba(156, 163, 175, 0.2);
+    color: var(--text-muted);
+}
+
 /* Stats */
 .profile-stats {
     display: grid;

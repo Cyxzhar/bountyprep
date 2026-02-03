@@ -295,3 +295,30 @@
     color: var(--neon-green);
     font-weight: 600;
 }
+
+/* Locked Challenge */
+.challenge-card.locked {
+    opacity: 0.75;
+    border-color: rgba(255, 215, 0, 0.3);
+}
+
+.challenge-card.locked:hover {
+    border-color: rgba(255, 215, 0, 0.5);
+}
+
+.card-icon.locked {
+    background: linear-gradient(135deg, rgba(255, 215, 0, 0.2), rgba(255, 165, 0, 0.2));
+    border: 1px solid rgba(255, 215, 0, 0.4);
+    color: #FFD700;
+}
+
+/* Premium Badge */
+.badge-premium {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    background: linear-gradient(135deg, rgba(255, 215, 0, 0.2), rgba(255, 165, 0, 0.2));
+    color: #FFD700;
+    border: 1px solid rgba(255, 215, 0, 0.3);
+    font-weight: 600;
+}
