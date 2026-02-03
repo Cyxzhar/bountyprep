@@ -112,12 +112,30 @@ export function AuthProvider({ children }) {
     useEffect(() => {
         const unsubscribe = onAuthStateChanged(auth, async (user) => {
             if (user) {
-                const fullUser = await loadUserProfile(user);
-                setCurrentUser(fullUser);
+                // 1. IMPROVEMENT: Set user immediately with defaults to prevent blank screen delay
+                // This gives "instant" load feeling while Firestore fetches in background
+                setCurrentUser({
+                    ...user,
+                    displayName: user.displayName || user.email?.split('@')[0] || 'Hacker',
+                    ...DEFAULT_PROFILE
+                });
+
+                // Allow app to render immediately
+                setLoading(false);
+
+                // 2. Fetch full profile in background
+                loadUserProfile(user).then(fullUser => {
+                    // Only update if we got improved data (e.g. XP, level from DB)
+                    setCurrentUser(prev => ({
+                        ...prev,
+                        ...fullUser
+                    }));
+                }).catch(err => console.warn('Background profile fetch failed:', err));
+
             } else {
                 setCurrentUser(null);
+                setLoading(false);
             }
-            setLoading(false);
         });
 
         return unsubscribe;
@@ -128,7 +146,19 @@ export function AuthProvider({ children }) {
         if (auth.currentUser) {
             try {
                 const userRef = doc(db, 'users', auth.currentUser.uid);
-                const userSnap = await getDoc(userRef);
+                // Use getDocFromCache first for speed if available
+                let userSnap;
+                try {
+                    userSnap = await getDocFromCache(userRef);
+                } catch {
+                    // Fallback to network
+                    userSnap = await getDoc(userRef);
+                }
+
+                if (!userSnap?.exists()) {
+                    userSnap = await getDoc(userRef);
+                }
+
                 if (userSnap.exists()) {
                     setCurrentUser(prev => ({
                         ...prev,
