@@ -169,7 +169,7 @@ export default function Login() {
                 </div>
 
                 <p className="auth-footer">
-                    Already have an account? <button onClick={() => navigate('/auth/signup')}>Sign Up</button>
+                    Don't have an account? <button onClick={() => navigate('/auth/signup')}>Sign Up</button>
                     <br /><span style={{ fontSize: '0.7rem', opacity: 0.5 }}>v1.1.1 (Clean UI)</span>
                 </p>
             </div>
