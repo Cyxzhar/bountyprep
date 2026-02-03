@@ -47,7 +47,7 @@ export async function generateInterviewResponse(messages, difficulty, topic) {
                     'Content-Type': 'application/json',
                 },
                 body: JSON.stringify({
-                    model: 'sonar-pro',
+                    model: 'sonar',
                     messages: [
                         { role: 'system', content: systemPrompt },
                         ...messages

@@ -437,3 +437,59 @@
     font-size: 0.75rem;
     color: var(--neon-orange);
 }
+
+/* Markdown Styling */
+.message-bubble .md-paragraph {
+    margin: 0 0 0.75em 0;
+    line-height: 1.6;
+}
+
+.message-bubble .md-paragraph:last-child {
+    margin-bottom: 0;
+}
+
+.message-bubble .md-bold {
+    color: var(--neon-green);
+    font-weight: 600;
+}
+
+.message-bubble .md-list {
+    margin: 0.5em 0;
+    padding-left: 1.5em;
+}
+
+.message-bubble .md-list-item {
+    margin: 0.4em 0;
+    line-height: 1.5;
+}
+
+.message-bubble .md-list-item::marker {
+    color: var(--neon-green);
+}
+
+.message-bubble .inline-code {
+    background: rgba(159, 239, 0, 0.15);
+    border: 1px solid rgba(159, 239, 0, 0.3);
+    padding: 0.15em 0.4em;
+    border-radius: 4px;
+    font-family: 'SF Mono', 'Fira Code', monospace;
+    font-size: 0.85em;
+    color: var(--neon-green);
+}
+
+.message-bubble .code-block {
+    background: var(--bg-darker);
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    padding: 1em;
+    margin: 0.75em 0;
+    overflow-x: auto;
+}
+
+.message-bubble .code-block code {
+    font-family: 'SF Mono', 'Fira Code', monospace;
+    font-size: 0.85em;
+    color: var(--text-primary);
+    white-space: pre-wrap;
+    word-break: break-word;
+}

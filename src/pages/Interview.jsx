@@ -1,13 +1,58 @@
 import { useState, useEffect, useRef } from 'react';
 import {
     Sprout, BookOpen, Rocket, ChevronRight, Bot,
-    Mic, Send, X, Timer, Volume2, AlertCircle, Loader2
+    Mic, Send, X, Timer, AlertCircle, Loader2
 } from 'lucide-react';
+import ReactMarkdown from 'react-markdown';
 import BottomNav from '../components/BottomNav';
 import { useToast } from '../context/ToastContext';
 import { generateInterviewResponse } from '../lib/perplexity';
 import { getRemainingQuota, useQuota, getQuotaResetTime } from '../utils/interviewQuota';
 import './Interview.css';
+
+// Typing effect component for AI messages
+function TypingEffect({ text, onComplete }) {
+    const [displayedText, setDisplayedText] = useState('');
+    const [isComplete, setIsComplete] = useState(false);
+
+    useEffect(() => {
+        if (!text) return;
+
+        let index = 0;
+        const speed = 15; // ms per character
+
+        const timer = setInterval(() => {
+            if (index < text.length) {
+                setDisplayedText(text.slice(0, index + 1));
+                index++;
+            } else {
+                clearInterval(timer);
+                setIsComplete(true);
+                onComplete?.();
+            }
+        }, speed);
+
+        return () => clearInterval(timer);
+    }, [text, onComplete]);
+
+    return (
+        <ReactMarkdown
+            components={{
+                code: ({ inline, children }) => (
+                    inline
+                        ? <code className="inline-code">{children}</code>
+                        : <pre className="code-block"><code>{children}</code></pre>
+                ),
+                p: ({ children }) => <p className="md-paragraph">{children}</p>,
+                ul: ({ children }) => <ul className="md-list">{children}</ul>,
+                li: ({ children }) => <li className="md-list-item">{children}</li>,
+                strong: ({ children }) => <strong className="md-bold">{children}</strong>,
+            }}
+        >
+            {displayedText}
+        </ReactMarkdown>
+    );
+}
 
 const difficulties = [
     { id: 'junior', title: 'Junior Level', desc: '0-2 years experience', icon: Sprout },
@@ -209,18 +254,45 @@ export default function Interview() {
 
             {/* Messages */}
             <div className="messages-container">
-                {messages.map((msg, idx) => (
-                    <div key={idx} className={`message ${msg.role === 'assistant' ? 'ai' : 'user'}`}>
-                        {msg.role === 'assistant' && (
-                            <div className="message-avatar">
-                                <Bot size={20} />
+                {messages.map((msg, idx) => {
+                    const isLastAI = msg.role === 'assistant' && idx === messages.length - 1;
+                    const showTyping = isLastAI && idx > 0; // Don't animate initial greeting
+
+                    return (
+                        <div key={idx} className={`message ${msg.role === 'assistant' ? 'ai' : 'user'}`}>
+                            {msg.role === 'assistant' && (
+                                <div className="message-avatar">
+                                    <Bot size={20} />
+                                </div>
+                            )}
+                            <div className="message-bubble">
+                                {msg.role === 'assistant' ? (
+                                    showTyping ? (
+                                        <TypingEffect text={msg.content} />
+                                    ) : (
+                                        <ReactMarkdown
+                                            components={{
+                                                code: ({ inline, children }) => (
+                                                    inline
+                                                        ? <code className="inline-code">{children}</code>
+                                                        : <pre className="code-block"><code>{children}</code></pre>
+                                                ),
+                                                p: ({ children }) => <p className="md-paragraph">{children}</p>,
+                                                ul: ({ children }) => <ul className="md-list">{children}</ul>,
+                                                li: ({ children }) => <li className="md-list-item">{children}</li>,
+                                                strong: ({ children }) => <strong className="md-bold">{children}</strong>,
+                                            }}
+                                        >
+                                            {msg.content}
+                                        </ReactMarkdown>
+                                    )
+                                ) : (
+                                    <p>{msg.content}</p>
+                                )}
                             </div>
-                        )}
-                        <div className="message-bubble">
-                            <p>{msg.content}</p>
                         </div>
-                    </div>
-                ))}
+                    );
+                })}
 
                 {isLoading && (
                     <div className="message ai">
