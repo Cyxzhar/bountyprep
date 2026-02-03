@@ -3,7 +3,8 @@ import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import {
     Flame, CheckCircle, Target, ChevronRight, Clock,
-    Bot, Lock, Unlock, Syringe, Link, IdCard, RefreshCw, Upload, Star
+    Bot, Lock, Unlock, Syringe, Link, IdCard, RefreshCw, Upload, Star,
+    Trophy, Beaker, Award, Gamepad2
 } from 'lucide-react';
 import BottomNav from '../components/BottomNav';
 import { FirstVisitTransition } from '../components/PageTransition';
@@ -203,6 +204,56 @@ export default function Home() {
                                     </span>
                                 </div>
                             ))}
+                        </div>
+                    </section>
+
+                    {/* Coming Soon Section */}
+                    <section className="coming-soon-section">
+                        <div className="section-header">
+                            <h3 className="section-title">Coming Soon</h3>
+                            <span className="coming-soon-badge">Roadmap</span>
+                        </div>
+
+                        <div className="coming-soon-grid">
+                            <div className="coming-soon-card">
+                                <div className="cs-icon">
+                                    <Trophy size={24} />
+                                </div>
+                                <div className="cs-content">
+                                    <h4>Global Leaderboard</h4>
+                                    <p>Compete with hackers worldwide</p>
+                                </div>
+                            </div>
+
+                            <div className="coming-soon-card">
+                                <div className="cs-icon">
+                                    <Beaker size={24} />
+                                </div>
+                                <div className="cs-content">
+                                    <h4>Live Hacking Labs</h4>
+                                    <p>Real environments to exploit</p>
+                                </div>
+                            </div>
+
+                            <div className="coming-soon-card">
+                                <div className="cs-icon">
+                                    <Award size={24} />
+                                </div>
+                                <div className="cs-content">
+                                    <h4>Certifications</h4>
+                                    <p>Earn verified security certs</p>
+                                </div>
+                            </div>
+
+                            <div className="coming-soon-card">
+                                <div className="cs-icon">
+                                    <Gamepad2 size={24} />
+                                </div>
+                                <div className="cs-content">
+                                    <h4>CTF Simulator</h4>
+                                    <p>Practice capture-the-flag</p>
+                                </div>
+                            </div>
                         </div>
                     </section>
                 </div>

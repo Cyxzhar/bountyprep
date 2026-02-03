@@ -48,10 +48,10 @@ export default function UpgradeModal({ isOpen, onClose }) {
                 <div className="pricing-section">
                     <div className="price">
                         <span className="currency">$</span>
-                        <span className="amount">19</span>
-                        <span className="period">/lifetime</span>
+                        <span className="amount">10</span>
+                        <span className="period">/year</span>
                     </div>
-                    <p className="price-note">One-time payment, forever access</p>
+                    <p className="price-note">Less than $1/month for premium access</p>
                 </div>
 
                 <button className="upgrade-cta" onClick={handleUpgrade}>
