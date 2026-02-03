@@ -2,9 +2,72 @@
 
 .courses-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
     gap: var(--space-lg);
     margin-top: var(--space-xl);
+}
+
+/* Header Styles from Courses.jsx */
+.page-header {
+    margin-bottom: var(--space-xl);
+}
+
+.header-content {
+    margin-bottom: var(--space-lg);
+}
+
+.header-content h1 {
+    font-size: 2rem;
+    margin-bottom: var(--space-xs);
+}
+
+.header-content p {
+    color: var(--text-secondary);
+}
+
+.header-stats {
+    display: flex;
+    gap: var(--space-lg);
+    flex-wrap: wrap;
+    /* Allow wrapping on small screens */
+}
+
+.stat-card {
+    background: var(--bg-card);
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-md);
+    padding: var(--space-md) var(--space-lg);
+    display: flex;
+    align-items: center;
+    /* Center vertically */
+    gap: var(--space-md);
+    flex: 1;
+    min-width: 160px;
+    /* Prevent crushing */
+    transition: all 0.2s;
+}
+
+.stat-card:hover {
+    border-color: var(--neon-green);
+    transform: translateY(-2px);
+}
+
+.stat-info {
+    display: flex;
+    flex-direction: column;
+}
+
+.stat-value {
+    font-size: 1.25rem;
+    font-weight: 700;
+    line-height: 1.2;
+}
+
+.stat-label {
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    color: var(--text-muted);
+    letter-spacing: 0.5px;
 }
 
 .course-card {
@@ -75,6 +138,7 @@
     margin-bottom: var(--space-lg);
     display: -webkit-box;
     -webkit-line-clamp: 3;
+    line-clamp: 3;
     -webkit-box-orient: vertical;
     overflow: hidden;
     flex: 1;
@@ -168,6 +232,7 @@
 
     .course-desc {
         -webkit-line-clamp: 2;
+        line-clamp: 2;
         margin-bottom: var(--space-sm);
     }
 
