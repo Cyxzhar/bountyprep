@@ -3,7 +3,7 @@ import './UpgradeModal.css';
 
 const PREMIUM_FEATURES = [
     { icon: Shield, text: 'All 50+ Security Challenges' },
-    { icon: Bot, text: 'Unlimited AI Interview Sessions' },
+    { icon: Bot, text: '50 Daily AI Interview Sessions' },
     { icon: Zap, text: 'Advanced Exploit Techniques' },
     { icon: Check, text: 'Priority Support' },
 ];

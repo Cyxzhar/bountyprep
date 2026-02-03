@@ -7,7 +7,8 @@
  */
 
 const QUOTA_KEY = 'bountyprep_interview_quota';
-const FREE_DAILY_LIMIT = 50; // Increased for solo testing, reduce when more users join
+const FREE_DAILY_LIMIT = 5;
+const PREMIUM_DAILY_LIMIT = 50;
 
 function getQuotaData() {
     try {
@@ -27,29 +28,31 @@ function getTodayKey() {
     return new Date().toISOString().split('T')[0]; // YYYY-MM-DD
 }
 
-export function getRemainingQuota() {
+export function getRemainingQuota(isPremium = false) {
     const data = getQuotaData();
     const today = getTodayKey();
+    const limit = isPremium ? PREMIUM_DAILY_LIMIT : FREE_DAILY_LIMIT;
 
     if (!data || data.date !== today) {
         // New day or no data - reset quota
-        return FREE_DAILY_LIMIT;
+        return limit;
     }
 
-    return Math.max(0, FREE_DAILY_LIMIT - (data.used || 0));
+    return Math.max(0, limit - (data.used || 0));
 }
 
-export function useQuota() {
+export function useQuota(isPremium = false) {
     const today = getTodayKey();
     const data = getQuotaData();
+    const limit = isPremium ? PREMIUM_DAILY_LIMIT : FREE_DAILY_LIMIT;
 
     if (!data || data.date !== today) {
         // New day - start fresh
         setQuotaData({ date: today, used: 1 });
-        return { success: true, remaining: FREE_DAILY_LIMIT - 1 };
+        return { success: true, remaining: limit - 1 };
     }
 
-    if (data.used >= FREE_DAILY_LIMIT) {
+    if (data.used >= limit) {
         return { success: false, remaining: 0 };
     }
 
@@ -58,7 +61,7 @@ export function useQuota() {
 
     return {
         success: true,
-        remaining: FREE_DAILY_LIMIT - newUsed
+        remaining: limit - newUsed
     };
 }
 
