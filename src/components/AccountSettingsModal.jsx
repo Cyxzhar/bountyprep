@@ -39,8 +39,9 @@ export default function AccountSettingsModal({ isOpen, onClose, currentUser, onU
             // Update preview immediately
             setPhotoPreview(compressedBase64);
 
-            // Update Firebase Auth profile
-            await updateProfile(auth.currentUser, { photoURL: compressedBase64 });
+            // Note: We skip updateProfile(auth.currentUser) with base64 because 
+            // the string is too long for Firebase Auth profile. 
+            // We rely on Firestore as the source of truth for photoURL.
 
             // Update Firestore
             const userRef = doc(db, 'users', currentUser.uid);
