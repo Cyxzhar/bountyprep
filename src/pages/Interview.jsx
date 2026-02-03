@@ -74,11 +74,17 @@ export default function Interview() {
         setIsLoading(true);
 
         try {
-            // Format messages for API (exclude initial system message styling)
-            const apiMessages = [...messages, userMessage].map(m => ({
-                role: m.role === 'assistant' ? 'assistant' : 'user',
-                content: m.content
-            }));
+            // Build API messages - skip the initial UI greeting (first message)
+            // Perplexity requires: user -> assistant -> user -> assistant pattern
+            const conversationMessages = messages.slice(1); // Skip INITIAL_MESSAGE
+
+            // Only include actual conversation, not UI greeting
+            const apiMessages = [...conversationMessages, userMessage]
+                .filter(m => m.role === 'user' || m.role === 'assistant')
+                .map(m => ({
+                    role: m.role,
+                    content: m.content
+                }));
 
             const aiResponse = await generateInterviewResponse(
                 apiMessages,
