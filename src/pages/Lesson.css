@@ -1,0 +1,246 @@
+/* Lesson Page Styles */
+
+.lesson-page {
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    padding: 0;
+    padding-bottom: 0;
+    /* Override page-container default */
+}
+
+/* Header */
+.lesson-header {
+    height: 64px;
+    border-bottom: 1px solid var(--border-color);
+    display: flex;
+    align-items: center;
+    padding: 0 var(--space-lg);
+    gap: var(--space-md);
+    background: var(--bg-card);
+    flex-shrink: 0;
+}
+
+.lesson-header-text {
+    display: flex;
+    flex-direction: column;
+}
+
+.course-breadcrumb {
+    font-size: 0.8rem;
+    color: var(--text-muted);
+}
+
+.lesson-header-title {
+    font-size: 1.1rem;
+    margin: 0;
+    font-weight: 600;
+    color: var(--text-primary);
+}
+
+/* Layout */
+.lesson-layout {
+    flex: 1;
+    display: flex;
+    overflow: hidden;
+}
+
+/* Main Content */
+.lesson-content-wrapper {
+    flex: 1;
+    overflow-y: auto;
+    padding: var(--space-xl);
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-xl);
+    max-width: 900px;
+    margin: 0 auto;
+    width: 100%;
+}
+
+.lesson-content {
+    background: var(--bg-card);
+    padding: var(--space-xl);
+    border-radius: var(--radius-lg);
+    border: 1px solid var(--border-color);
+    line-height: 1.7;
+}
+
+/* Markdown Styles in .md-content */
+.md-content h1 {
+    font-size: 1.8rem;
+    margin-bottom: var(--space-md);
+    border-bottom: 1px solid var(--border-color);
+    padding-bottom: var(--space-sm);
+    color: var(--text-primary);
+}
+
+.md-content h2 {
+    font-size: 1.4rem;
+    margin-top: var(--space-lg);
+    margin-bottom: var(--space-md);
+    color: var(--neon-green);
+}
+
+.md-content p {
+    margin-bottom: var(--space-md);
+    color: var(--text-secondary);
+}
+
+.md-content ul,
+.md-content ol {
+    margin-bottom: var(--space-md);
+    padding-left: var(--space-lg);
+    color: var(--text-secondary);
+}
+
+.md-content li {
+    margin-bottom: 8px;
+}
+
+.md-content strong {
+    color: var(--text-primary);
+}
+
+/* Alerts */
+.alert-box {
+    margin: var(--space-md) 0;
+    padding: var(--space-md);
+    border-radius: var(--radius-md);
+    border-left: 4px solid;
+    background: rgba(255, 255, 255, 0.05);
+}
+
+.alert-important {
+    border-color: #FFA500;
+}
+
+.alert-tip {
+    border-color: var(--neon-green);
+}
+
+.alert-box blockquote {
+    border-left: none;
+    padding: 0;
+    margin: 0;
+    color: var(--text-secondary);
+}
+
+/* Actions Footer */
+.lesson-actions {
+    display: flex;
+    justify-content: space-between;
+    margin-top: auto;
+    padding-top: var(--space-lg);
+}
+
+.nav-btn {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 10px 20px;
+    background: transparent;
+    border: 1px solid var(--border-color);
+    color: var(--text-secondary);
+    border-radius: var(--radius-md);
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.nav-btn:hover:not(:disabled) {
+    border-color: var(--text-primary);
+    color: var(--text-primary);
+}
+
+.nav-btn:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+.complete-btn {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 10px 24px;
+    background: var(--neon-green);
+    color: var(--bg-darker);
+    border: none;
+    border-radius: var(--radius-md);
+    font-weight: 600;
+    cursor: pointer;
+    transition: transform 0.2s;
+}
+
+.complete-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 15px rgba(159, 239, 0, 0.4);
+}
+
+/* Sidebar */
+.lesson-sidebar {
+    width: 300px;
+    background: var(--bg-darker);
+    border-left: 1px solid var(--border-color);
+    overflow-y: auto;
+    padding: var(--space-lg);
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-lg);
+}
+
+.lesson-sidebar h3 {
+    font-size: 1rem;
+    color: var(--text-muted);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+.sidebar-module {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-sm);
+}
+
+.sidebar-module-title {
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: var(--text-primary);
+    padding: 4px 0;
+}
+
+.sidebar-lessons {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+}
+
+.sidebar-lesson {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 8px 12px;
+    border-radius: var(--radius-sm);
+    color: var(--text-secondary);
+    font-size: 0.9rem;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.sidebar-lesson:hover {
+    background: rgba(255, 255, 255, 0.05);
+    color: var(--text-primary);
+}
+
+.sidebar-lesson.active {
+    background: rgba(159, 239, 0, 0.1);
+    color: var(--neon-green);
+}
+
+@media (max-width: 1024px) {
+    .lesson-sidebar {
+        display: none;
+        /* Hide sidebar on smaller screens for now */
+        /* TODO: Make it a drawer/modal */
+    }
+}

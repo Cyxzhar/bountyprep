@@ -1,12 +1,11 @@
-import { NavLink } from 'react-router-dom';
-import { Home, Target, MessageSquare, TrendingUp, User } from 'lucide-react';
+import { Home, Target, MessageSquare, TrendingUp, User, BookOpen } from 'lucide-react';
 import './BottomNav.css';
 
 const navItems = [
     { to: '/home', icon: Home, label: 'Home' },
-    { to: '/challenges', icon: Target, label: 'Challenges' },
-    { to: '/interview', icon: MessageSquare, label: 'Interview' },
-    { to: '/progress', icon: TrendingUp, label: 'Progress' },
+    { to: '/courses', icon: BookOpen, label: 'Learn' },
+    { to: '/challenges', icon: Target, label: 'Practice' },
+    { to: '/interview', icon: MessageSquare, label: 'Coach' },
     { to: '/profile', icon: User, label: 'Profile' },
 ];
 

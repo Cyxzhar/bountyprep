@@ -1,0 +1,189 @@
+/* Courses Page Styles */
+
+.courses-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: var(--space-lg);
+    margin-top: var(--space-xl);
+}
+
+.course-card {
+    background: var(--bg-card);
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-lg);
+    overflow: hidden;
+    transition: all 0.3s ease;
+    cursor: pointer;
+    display: flex;
+    flex-direction: column;
+}
+
+.course-card:hover {
+    transform: translateY(-4px);
+    border-color: var(--neon-green);
+    box-shadow: 0 8px 24px rgba(159, 239, 0, 0.1);
+}
+
+.course-icon-wrapper {
+    height: 120px;
+    background: linear-gradient(135deg, rgba(159, 239, 0, 0.1), rgba(139, 92, 246, 0.1));
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--neon-green);
+    position: relative;
+    overflow: hidden;
+}
+
+.course-icon-wrapper::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: url("data:image/svg+xml,%3Csvg width='20' height='20' viewBox='0 0 20 20' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='%239FEF00' fill-opacity='0.05' fill-rule='evenodd'%3E%3Ccircle cx='3' cy='3' r='3'/%3E%3Ccircle cx='13' cy='13' r='3'/%3E%3C/g%3E%3C/svg%3E");
+    opacity: 0.5;
+}
+
+.course-icon-wrapper.locked {
+    background: var(--bg-darker);
+    color: var(--text-muted);
+}
+
+.course-content {
+    padding: var(--space-lg);
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+}
+
+.course-badges {
+    display: flex;
+    gap: var(--space-xs);
+    margin-bottom: var(--space-md);
+}
+
+.course-title {
+    font-size: 1.25rem;
+    font-weight: 700;
+    margin-bottom: var(--space-xs);
+    color: var(--text-primary);
+}
+
+.course-desc {
+    color: var(--text-secondary);
+    font-size: 0.9rem;
+    line-height: 1.5;
+    margin-bottom: var(--space-lg);
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    flex: 1;
+}
+
+.course-meta {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: var(--space-lg);
+    padding-bottom: var(--space-md);
+    border-bottom: 1px solid var(--border-color);
+}
+
+.meta-item {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 0.85rem;
+    color: var(--text-muted);
+}
+
+.course-progress-section {
+    margin-bottom: var(--space-md);
+}
+
+.progress-label {
+    display: flex;
+    justify-content: space-between;
+    font-size: 0.8rem;
+    color: var(--text-muted);
+    margin-bottom: 6px;
+}
+
+.start-btn {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    padding: 10px;
+    background: transparent;
+    border: 1px solid var(--neon-green);
+    color: var(--neon-green);
+    border-radius: var(--radius-md);
+    font-weight: 600;
+    transition: all 0.2s;
+}
+
+.course-card:hover .start-btn {
+    background: var(--neon-green);
+    color: var(--bg-darker);
+}
+
+.start-btn.disabled {
+    border-color: var(--border-color);
+    color: var(--text-muted);
+    cursor: not-allowed;
+}
+
+.coming-soon-card {
+    opacity: 0.7;
+    filter: grayscale(0.5);
+    cursor: default;
+}
+
+.coming-soon-card:hover {
+    transform: none;
+    box-shadow: none;
+    border-color: var(--border-color);
+}
+
+@media (max-width: 768px) {
+    .courses-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .course-card {
+        flex-direction: row;
+        align-items: stretch;
+    }
+
+    .course-icon-wrapper {
+        width: 100px;
+        height: auto;
+        flex-shrink: 0;
+    }
+
+    .course-content {
+        padding: var(--space-md);
+    }
+
+    .course-desc {
+        -webkit-line-clamp: 2;
+        margin-bottom: var(--space-sm);
+    }
+
+    .course-meta {
+        margin-bottom: var(--space-sm);
+        padding-bottom: var(--space-sm);
+    }
+}
+
+@media (max-width: 480px) {
+    .course-card {
+        flex-direction: column;
+    }
+
+    .course-icon-wrapper {
+        width: 100%;
+        height: 100px;
+    }
+}
