@@ -1,3 +1,4 @@
+import { NavLink } from 'react-router-dom';
 import { Home, Target, MessageSquare, TrendingUp, User, BookOpen } from 'lucide-react';
 import './BottomNav.css';
 
