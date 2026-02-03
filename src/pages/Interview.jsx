@@ -1,9 +1,12 @@
-import { useState } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import {
     Sprout, BookOpen, Rocket, ChevronRight, Bot,
-    Mic, Send, X, Timer, Volume2
+    Mic, Send, X, Timer, Volume2, AlertCircle, Loader2
 } from 'lucide-react';
 import BottomNav from '../components/BottomNav';
+import { useToast } from '../context/ToastContext';
+import { generateInterviewResponse } from '../lib/perplexity';
+import { getRemainingQuota, useQuota, getQuotaResetTime } from '../utils/interviewQuota';
 import './Interview.css';
 
 const difficulties = [
@@ -12,29 +15,102 @@ const difficulties = [
     { id: 'senior', title: 'Senior Level', desc: '5+ years experience', icon: Rocket }
 ];
 
-const mockMessages = [
-    { role: 'ai', text: "Hello! I'm your AI interview coach. Let's practice some FAANG-level security questions. Ready to begin?" },
-    { role: 'user', text: "Yes, I'm ready!" },
-    { role: 'ai', text: "Great! Let's start with a fundamental question: Explain the difference between XSS and CSRF attacks, and how would you prevent each one?" },
-];
+const INITIAL_MESSAGE = {
+    role: 'assistant',
+    content: "Hello! I'm your AI interview coach. Let's practice some FAANG-level security questions. Ready to begin?"
+};
 
 export default function Interview() {
     const [started, setStarted] = useState(false);
     const [difficulty, setDifficulty] = useState('mid');
-    const [messages, setMessages] = useState(mockMessages);
+    const [messages, setMessages] = useState([INITIAL_MESSAGE]);
     const [input, setInput] = useState('');
+    const [isLoading, setIsLoading] = useState(false);
+    const [quota, setQuota] = useState(getRemainingQuota());
+    const [elapsedTime, setElapsedTime] = useState(0);
+    const messagesEndRef = useRef(null);
+    const { success, error, info } = useToast();
 
-    const handleSend = () => {
-        if (!input.trim()) return;
-        setMessages([...messages, { role: 'user', text: input }]);
+    // Timer
+    useEffect(() => {
+        let interval;
+        if (started) {
+            interval = setInterval(() => {
+                setElapsedTime(prev => prev + 1);
+            }, 1000);
+        }
+        return () => clearInterval(interval);
+    }, [started]);
+
+    // Auto-scroll to bottom
+    useEffect(() => {
+        messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
+    }, [messages]);
+
+    const formatTime = (seconds) => {
+        const mins = Math.floor(seconds / 60);
+        const secs = seconds % 60;
+        return `${mins.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
+    };
+
+    const handleSend = async () => {
+        if (!input.trim() || isLoading) return;
+
+        // Check quota
+        const quotaResult = useQuota();
+        if (!quotaResult.success) {
+            error(`Daily limit reached! Resets in ${getQuotaResetTime()}`);
+            return;
+        }
+
+        setQuota(quotaResult.remaining);
+        if (quotaResult.remaining === 2) {
+            info('2 messages remaining today');
+        }
+
+        const userMessage = { role: 'user', content: input.trim() };
+        setMessages(prev => [...prev, userMessage]);
         setInput('');
+        setIsLoading(true);
 
-        setTimeout(() => {
+        try {
+            // Format messages for API (exclude initial system message styling)
+            const apiMessages = [...messages, userMessage].map(m => ({
+                role: m.role === 'assistant' ? 'assistant' : 'user',
+                content: m.content
+            }));
+
+            const aiResponse = await generateInterviewResponse(
+                apiMessages,
+                difficulty,
+                'Application Security'
+            );
+
             setMessages(prev => [...prev, {
-                role: 'ai',
-                text: "That's a solid answer! You correctly identified the core differences. XSS is client-side script injection while CSRF exploits authenticated sessions. Let me follow up: Can you describe a scenario where both vulnerabilities could be chained together?"
+                role: 'assistant',
+                content: aiResponse.content
             }]);
-        }, 1500);
+
+        } catch (err) {
+            console.error('Interview error:', err);
+            error('Failed to get AI response. Please try again.');
+        } finally {
+            setIsLoading(false);
+        }
+    };
+
+    const handleKeyPress = (e) => {
+        if (e.key === 'Enter' && !e.shiftKey) {
+            e.preventDefault();
+            handleSend();
+        }
+    };
+
+    const handleEndSession = () => {
+        setStarted(false);
+        setMessages([INITIAL_MESSAGE]);
+        setElapsedTime(0);
+        success('Interview session ended. Great practice!');
     };
 
     if (!started) {
@@ -85,8 +161,18 @@ export default function Interview() {
                         </div>
                     </div>
 
+                    {/* Quota Display */}
+                    <div className="quota-info">
+                        <AlertCircle size={16} />
+                        <span>{quota} free messages remaining today</span>
+                    </div>
+
                     <div className="cta-section">
-                        <button className="btn btn-primary btn-full" onClick={() => setStarted(true)}>
+                        <button
+                            className="btn btn-primary btn-full"
+                            onClick={() => setStarted(true)}
+                            disabled={quota === 0}
+                        >
                             Begin Interview Session
                             <ChevronRight size={20} />
                         </button>
@@ -102,7 +188,7 @@ export default function Interview() {
         <div className="interview-screen chat-mode">
             {/* Chat Header */}
             <header className="chat-header">
-                <button className="back-btn" onClick={() => setStarted(false)}>
+                <button className="back-btn" onClick={handleEndSession}>
                     <X size={20} />
                 </button>
                 <div className="chat-info">
@@ -111,30 +197,47 @@ export default function Interview() {
                 </div>
                 <div className="chat-timer">
                     <Timer size={16} />
-                    <span>12:34</span>
+                    <span>{formatTime(elapsedTime)}</span>
                 </div>
             </header>
 
             {/* Messages */}
             <div className="messages-container">
                 {messages.map((msg, idx) => (
-                    <div key={idx} className={`message ${msg.role}`}>
-                        {msg.role === 'ai' && (
+                    <div key={idx} className={`message ${msg.role === 'assistant' ? 'ai' : 'user'}`}>
+                        {msg.role === 'assistant' && (
                             <div className="message-avatar">
                                 <Bot size={20} />
                             </div>
                         )}
                         <div className="message-bubble">
-                            <p>{msg.text}</p>
-                            {msg.role === 'ai' && (
-                                <button className="speak-btn">
-                                    <Volume2 size={14} />
-                                </button>
-                            )}
+                            <p>{msg.content}</p>
                         </div>
                     </div>
                 ))}
+
+                {isLoading && (
+                    <div className="message ai">
+                        <div className="message-avatar">
+                            <Bot size={20} />
+                        </div>
+                        <div className="message-bubble typing">
+                            <Loader2 size={18} className="spin" />
+                            <span>Thinking...</span>
+                        </div>
+                    </div>
+                )}
+
+                <div ref={messagesEndRef} />
             </div>
+
+            {/* Quota Banner */}
+            {quota <= 2 && quota > 0 && (
+                <div className="quota-banner">
+                    <AlertCircle size={14} />
+                    <span>{quota} message{quota !== 1 ? 's' : ''} left today</span>
+                </div>
+            )}
 
             {/* Input Area */}
             <div className="chat-input-area">
@@ -142,17 +245,19 @@ export default function Interview() {
                     <input
                         type="text"
                         className="chat-input"
-                        placeholder="Type your answer..."
+                        placeholder={quota === 0 ? "Daily limit reached" : "Type your answer..."}
                         value={input}
                         onChange={(e) => setInput(e.target.value)}
-                        onKeyPress={(e) => e.key === 'Enter' && handleSend()}
+                        onKeyPress={handleKeyPress}
+                        disabled={isLoading || quota === 0}
                     />
-                    <button className="voice-btn">
-                        <Mic size={20} />
-                    </button>
                 </div>
-                <button className="send-btn" onClick={handleSend} disabled={!input.trim()}>
-                    <Send size={20} />
+                <button
+                    className="send-btn"
+                    onClick={handleSend}
+                    disabled={!input.trim() || isLoading || quota === 0}
+                >
+                    {isLoading ? <Loader2 size={20} className="spin" /> : <Send size={20} />}
                 </button>
             </div>
         </div>

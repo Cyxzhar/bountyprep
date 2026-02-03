@@ -386,3 +386,54 @@
         margin: 0 auto;
     }
 }
+
+/* Quota Info */
+.quota-info {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: var(--space-sm);
+    padding: var(--space-md);
+    background: rgba(255, 159, 28, 0.1);
+    border: 1px solid rgba(255, 159, 28, 0.3);
+    border-radius: var(--radius-lg);
+    font-size: 0.875rem;
+    color: var(--neon-orange);
+    margin-bottom: var(--space-md);
+}
+
+/* Typing Indicator */
+.message-bubble.typing {
+    display: flex;
+    align-items: center;
+    gap: var(--space-sm);
+    color: var(--text-muted);
+    font-size: 0.875rem;
+}
+
+.spin {
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+    from {
+        transform: rotate(0deg);
+    }
+
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+/* Quota Banner */
+.quota-banner {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: var(--space-xs);
+    padding: var(--space-sm) var(--space-md);
+    background: rgba(255, 159, 28, 0.1);
+    border-top: 1px solid rgba(255, 159, 28, 0.2);
+    font-size: 0.75rem;
+    color: var(--neon-orange);
+}
