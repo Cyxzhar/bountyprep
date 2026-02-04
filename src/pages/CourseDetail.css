@@ -261,13 +261,15 @@
 
 .lesson-item {
     display: flex;
-    align-items: center;
+    align-items: flex-start;
+    /* Better for wrapping text */
     gap: 16px;
     padding: 16px;
     background: linear-gradient(90deg, rgba(19, 19, 26, 0.6) 0%, rgba(19, 19, 26, 0.3) 100%);
     border: 1px solid rgba(255, 255, 255, 0.05);
     border-left: 2px solid transparent;
-    border-radius: 4px;
+    border-radius: 8px;
+    /* Slightly more rounded */
     cursor: pointer;
     transition: all 0.2s;
     position: relative;
@@ -301,7 +303,7 @@
 .lesson-icon {
     width: 40px;
     height: 40px;
-    border-radius: 4px;
+    border-radius: 6px;
     background: rgba(255, 255, 255, 0.03);
     display: flex;
     align-items: center;
@@ -310,8 +312,11 @@
     flex-shrink: 0;
     border: 1px solid rgba(255, 255, 255, 0.1);
     z-index: 1;
+    margin-top: 2px;
+    /* Visual alignment with text cap-height */
 }
 
+/* ... existing states ... */
 .lesson-item.completed .lesson-icon {
     background: rgba(159, 239, 0, 0.1);
     color: var(--neon-green);
@@ -333,17 +338,25 @@
     flex: 1;
     min-width: 0;
     z-index: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
 }
 
 .lesson-title {
     font-weight: 600;
     display: block;
-    margin-bottom: 4px;
+    margin-bottom: 0;
     font-size: 1rem;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
+    line-height: 1.4;
     color: var(--text-primary);
+
+    /* Text Wrapping Logic */
+    white-space: normal;
+    overflow-wrap: break-word;
+    /* Ensure wrapping */
+    word-break: normal;
+    hyphens: auto;
 }
 
 .lesson-meta {
