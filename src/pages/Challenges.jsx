@@ -24,6 +24,7 @@ export default function Challenges() {
     const [challenges, setChallenges] = useState(localChallenges);
     const [completedChallenges, setCompletedChallenges] = useState(cachedCompletedChallenges || new Set());
     const [loading, setLoading] = useState(false);
+    const [showFilters, setShowFilters] = useState(true);
 
     const isPremium = currentUser?.isPremium || false;
 
@@ -96,12 +97,17 @@ export default function Challenges() {
                             value={searchQuery}
                             onChange={(e) => setSearchQuery(e.target.value)}
                         />
-                        <button className="filter-btn">
+                        <button
+                            className={`filter-btn ${showFilters ? 'active' : ''}`}
+                            onClick={() => setShowFilters(!showFilters)}
+                            title={showFilters ? 'Hide filters' : 'Show filters'}
+                        >
                             <Filter size={18} />
                         </button>
                     </div>
 
                     {/* Filters */}
+                    {showFilters && (
                     <div className="filters-scroll">
                         {filters.map(filter => (
                             <button
@@ -113,6 +119,7 @@ export default function Challenges() {
                             </button>
                         ))}
                     </div>
+                    )}
 
                     {/* Stats Bar */}
                     <div className="challenges-stats">

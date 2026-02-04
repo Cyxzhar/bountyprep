@@ -119,6 +119,16 @@
     background: rgba(159, 239, 0, 0.05);
 }
 
+.filter-btn.active {
+    background: rgba(159, 239, 0, 0.15);
+    border-color: var(--neon-green);
+    color: var(--neon-green);
+}
+
+.filter-btn:active {
+    transform: scale(0.95);
+}
+
 /* Filters */
 .filters-scroll {
     display: flex;
