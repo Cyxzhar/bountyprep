@@ -27,7 +27,6 @@ const testimonials = [
 export default function Paywall() {
     const navigate = useNavigate();
     const { stopBGM } = useSound();
-    const [selectedPlan, setSelectedPlan] = useState('annual');
 
     const handleNavigateToSignup = () => {
         stopBGM(); // Stop onboarding music
@@ -97,32 +96,15 @@ export default function Paywall() {
 
                     {/* Pricing */}
                     <div className="pricing-cards">
-                        <div
-                            className={`pricing-card ${selectedPlan === 'annual' ? 'selected' : ''}`}
-                            onClick={() => setSelectedPlan('annual')}
-                        >
-                            <div className="popular-tag">BEST VALUE</div>
+                        <div className="pricing-card selected waitlist-card">
+                            <div className="popular-tag">EARLY BIRD</div>
                             <div className="plan-info">
-                                <div className="plan-name">Annual Access</div>
-                                <div className="plan-savings">Save 45% • $8.25/mo</div>
+                                <div className="plan-name">Bounty Hunter Pro</div>
+                                <div className="plan-savings">Limited time offer</div>
                             </div>
                             <div className="plan-price">
-                                <span className="price">$99</span>
+                                <span className="price">$10</span>
                                 <span className="period">/year</span>
-                            </div>
-                        </div>
-
-                        <div
-                            className={`pricing-card ${selectedPlan === 'monthly' ? 'selected' : ''}`}
-                            onClick={() => setSelectedPlan('monthly')}
-                        >
-                            <div className="plan-info">
-                                <div className="plan-name">Monthly Access</div>
-                                <div className="plan-savings">Flexible cancellation</div>
-                            </div>
-                            <div className="plan-price">
-                                <span className="price">$14.99</span>
-                                <span className="period">/mo</span>
                             </div>
                         </div>
                     </div>
@@ -130,13 +112,11 @@ export default function Paywall() {
 
                 {/* Footer */}
                 <div className="paywall-footer">
-                    <button className="btn btn-primary btn-full" onClick={handleNavigateToSignup}>
-                        Start 7-Day Free Trial
+                    <button className="btn btn-primary btn-full" disabled>
+                        Join Waitlist
                     </button>
-                    <p className="trial-note">No payment required • Cancel anytime</p>
+                    <p className="trial-note">Spots opening soon • Verified Pro Badge included</p>
                     <div className="footer-links">
-                        <span>Restore Purchase</span>
-                        <span>•</span>
                         <span>Terms</span>
                         <span>•</span>
                         <span>Privacy</span>

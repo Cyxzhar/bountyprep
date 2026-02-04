@@ -170,37 +170,28 @@
 }
 
 .pricing-card {
-    background: linear-gradient(180deg, rgba(255, 215, 0, 0.1) 0%, rgba(19, 19, 26, 0.6) 100%);
-    border: 1px solid rgba(255, 215, 0, 0.3);
-    border-radius: 4px;
+    background: linear-gradient(180deg, rgba(159, 239, 0, 0.1) 0%, rgba(19, 19, 26, 0.8) 100%);
+    border: 1px solid rgba(159, 239, 0, 0.3);
+    border-radius: 12px;
     padding: 24px;
     display: flex;
-    /* Horizontal layout for compact list */
     align-items: center;
     justify-content: space-between;
-    cursor: pointer;
-    transition: all 0.2s;
     position: relative;
     overflow: hidden;
+    box-shadow: 0 0 20px rgba(159, 239, 0, 0.1);
 }
 
-.pricing-card:hover {
-    border-color: #FFD700;
-    transform: translateX(4px);
-}
-
-.pricing-card.selected {
-    background: linear-gradient(90deg, rgba(255, 215, 0, 0.2) 0%, rgba(19, 19, 26, 0.8) 100%);
-    border-color: #FFD700;
-    box-shadow: 0 0 20px rgba(255, 215, 0, 0.2);
-    border-left: 4px solid #FFD700;
+.pricing-card.waitlist-card {
+    border-color: var(--neon-green);
+    background: linear-gradient(90deg, rgba(159, 239, 0, 0.1) 0%, rgba(19, 19, 26, 0.9) 100%);
 }
 
 .popular-tag {
     position: absolute;
     top: 0;
     right: 0;
-    background: #FFD700;
+    background: var(--neon-green);
     color: #000;
     font-size: 0.65rem;
     font-weight: 800;
