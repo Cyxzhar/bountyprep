@@ -99,18 +99,24 @@
 
 .xp-badge,
 .time-badge {
-    padding: 4px 12px;
-    border-radius: 100px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 6px 12px;
+    border-radius: 6px;
+    /* Tech tag look instead of pill */
     font-size: 0.8rem;
-    font-weight: 600;
+    font-weight: 700;
     text-transform: uppercase;
     letter-spacing: 0.05em;
+    line-height: 1;
 }
 
 .xp-badge {
-    background: rgba(159, 239, 0, 0.15);
+    background: rgba(159, 239, 0, 0.1);
     color: var(--local-accent-primary);
-    border: 1px solid rgba(159, 239, 0, 0.3);
+    border: 1px solid rgba(159, 239, 0, 0.1);
+    box-shadow: 0 0 15px rgba(159, 239, 0, 0.1);
 }
 
 .time-badge {
