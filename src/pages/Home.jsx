@@ -1,10 +1,11 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
+import { useSound } from '../context/SoundContext';
 import {
     Flame, CheckCircle, Target, ChevronRight, Clock,
     Bot, Lock, Unlock, Syringe, Link, IdCard, RefreshCw, Upload, Star,
-    Trophy, Beaker, Award, Gamepad2
+    Trophy, Beaker, Award, Gamepad2, Volume2, VolumeX
 } from 'lucide-react';
 import BottomNav from '../components/BottomNav';
 import { FirstVisitTransition } from '../components/PageTransition';
@@ -25,7 +26,13 @@ const iconComponents = {
 export default function Home() {
     const navigate = useNavigate();
     const { currentUser } = useAuth();
+    const { stopBGM, playSFX, toggleMute, isMuted } = useSound();
     const todayChallenge = challenges[0];
+
+    // No BGM on Home Page
+    useEffect(() => {
+        stopBGM();
+    }, [stopBGM]);
 
     // Real user stats from Firestore (via AuthContext)
     const xp = currentUser?.xp || 0;
@@ -42,6 +49,11 @@ export default function Home() {
     const dateOptions = { weekday: 'long', month: 'short', day: 'numeric' };
     const dateString = today.toLocaleDateString('en-US', dateOptions);
 
+    const handleChallengeClick = (id) => {
+        playSFX('click');
+        navigate(`/challenge/${id}`);
+    };
+
     return (
         <FirstVisitTransition pageName="home">
             <div className="home-screen">
@@ -52,9 +64,11 @@ export default function Home() {
                             <p className="greeting-date">{dateString}</p>
                             <h1 className="greeting-text">Welcome back, <span className="text-gradient">{displayName}</span></h1>
                         </div>
-                        <div className="streak-badge">
-                            <Flame size={18} />
-                            <span>{streak}</span>
+                        <div className="header-actions" style={{ display: 'flex', gap: '8px', alignItems: 'center' }}>
+                            <div className="streak-badge">
+                                <Flame size={18} />
+                                <span>{streak}</span>
+                            </div>
                         </div>
                     </header>
 
@@ -79,7 +93,7 @@ export default function Home() {
                     </section>
 
                     {/* Today's Challenge */}
-                    <section className="today-challenge card-glow" onClick={() => navigate(`/challenge/${todayChallenge.id}`)}>
+                    <section className="today-challenge card-glow" onClick={() => handleChallengeClick(todayChallenge.id)}>
                         <div className="challenge-glow"></div>
                         <div className="challenge-header">
                             <div className="challenge-badges">
@@ -130,7 +144,7 @@ export default function Home() {
                     <section className="learning-section">
                         <div className="section-header">
                             <h3 className="section-title">Your Learning Path</h3>
-                            <button className="btn-ghost" onClick={() => navigate('/challenges')}>See All</button>
+                            <button className="btn-ghost" onClick={() => { playSFX('click'); navigate('/challenges'); }}>See All</button>
                         </div>
 
                         <div className="modules-scroll">
@@ -140,7 +154,7 @@ export default function Home() {
                                     <div
                                         key={module.id}
                                         className="module-card"
-                                        onClick={() => navigate(`/challenges?filter=${encodeURIComponent(module.name)}`)}
+                                        onClick={() => { playSFX('click'); navigate(`/challenges?filter=${encodeURIComponent(module.name)}`); }}
                                     >
                                         <div className="module-icon">
                                             <IconComponent size={24} />

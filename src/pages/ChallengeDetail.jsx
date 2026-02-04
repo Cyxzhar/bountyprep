@@ -1,10 +1,22 @@
+import { useState, useEffect } from 'react';
+import { useParams, useNavigate } from 'react-router-dom';
+import { useAuth } from '../context/AuthContext';
+import { useToast } from '../context/ToastContext';
+import { useAchievement } from '../context/AchievementContext';
+import { useSound } from '../context/SoundContext';
+import { challenges } from '../data/challenges';
+import { updateStreak, getChallengeProgress, updateUserStats, saveChallengeProgress, markChallengeCompleted } from '../utils/firestore';
+import { calculateQuestionXp, checkLevelUp } from '../utils/xp';
+import { ArrowLeft, Clock, Star, Copy, CheckCircle, XCircle, Lightbulb, Award, Zap, ChevronRight } from 'lucide-react';
 import { useTimer } from '../hooks/useTimer';
+import './ChallengeDetail.css';
 
 export default function ChallengeDetail() {
     const { id } = useParams();
     const navigate = useNavigate();
     const { currentUser, refreshUser } = useAuth();
     const { success, error: showError } = useToast();
+    const { playBGM, stopBGM } = useSound(); // Use sound hook
     const { unlockMultiple } = useAchievement();
     const challenge = challenges.find(c => c.id === id) || challenges[0];
 
@@ -12,10 +24,16 @@ export default function ChallengeDetail() {
 
     useEffect(() => {
         start();
-        return () => stop();
-    }, [start, stop]);
+        // Play short focus sound
+        playBGM('focus', { loop: false, volume: 0.2 });
+        return () => {
+            stop();
+            stopBGM();
+        };
+    }, [start, stop, playBGM, stopBGM]);
 
     // ... (rest of imports and state)
+    const [currentQ, setCurrentQ] = useState(0);
     const [selected, setSelected] = useState(null);
     const [showHint, setShowHint] = useState(false);
     const [result, setResult] = useState(null);
@@ -70,6 +88,12 @@ export default function ChallengeDetail() {
         const isCorrect = selected === question.correctAnswer;
         setResult(isCorrect);
         setShowResult(true);
+
+        if (isCorrect) {
+            playSFX('success');
+        } else {
+            playSFX('error');
+        }
 
         // Calculate XP logic
         // 1. If challenge already completed: 0 XP
@@ -132,11 +156,13 @@ export default function ChallengeDetail() {
     };
 
     const handleShowHint = () => {
+        playSFX('click');
         setShowHint(true);
         setUsedHint(true);
     };
 
     const handleNext = async () => {
+        playSFX('click');
         if (currentQ < challenge.questions.length - 1) {
             setCurrentQ(prev => prev + 1);
             setSelected(null);
@@ -179,7 +205,7 @@ export default function ChallengeDetail() {
         <div className="detail-screen">
             {/* Header */}
             <header className="detail-header">
-                <button className="back-btn" onClick={() => navigate('/challenges')}>
+                <button className="back-btn" onClick={() => { playSFX('click'); navigate('/challenges'); }}>
                     <ArrowLeft size={20} />
                 </button>
                 <div className="header-info">
@@ -247,7 +273,7 @@ export default function ChallengeDetail() {
                                 key={idx}
                                 className={`option-btn ${selected === idx ? 'selected' : ''} ${showResult && idx === question.correctAnswer ? 'correct' : ''
                                     } ${showResult && selected === idx && selected !== question.correctAnswer ? 'incorrect' : ''}`}
-                                onClick={() => !showResult && setSelected(idx)}
+                                onClick={() => { if (!showResult) { playSFX('click'); setSelected(idx); } }}
                                 disabled={showResult}
                             >
                                 <span className="option-letter">{String.fromCharCode(65 + idx)}</span>

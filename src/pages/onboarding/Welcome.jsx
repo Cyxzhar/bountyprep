@@ -1,10 +1,17 @@
+import { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Shield, Bug, ChevronRight, Star, Users, Zap } from 'lucide-react';
+import { useSound } from '../../context/SoundContext';
 import PageTransition, { FADE } from '../../components/PageTransition';
 import './Onboarding.css';
 
 export default function Welcome() {
     const navigate = useNavigate();
+    const { playBGM } = useSound();
+
+    useEffect(() => {
+        playBGM('intro', { loop: false, volume: 0.3 });
+    }, [playBGM]);
 
     return (
         <PageTransition pageName="onboarding-welcome" direction={FADE} duration={500}>

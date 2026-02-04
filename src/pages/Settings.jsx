@@ -2,14 +2,16 @@ import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import { useToast } from '../context/ToastContext'; // Added useToast
+import { useSound } from '../context/SoundContext';
 import { refreshUserProfile } from '../utils/firestore';
 import { updateProfile, sendPasswordResetEmail, deleteUser } from 'firebase/auth';
 import { getStorage, ref, uploadString, getDownloadURL } from 'firebase/storage';
 import { doc, updateDoc, deleteDoc } from 'firebase/firestore';
-import { db } from '../lib/firebase';
+import { db, auth } from '../lib/firebase';
 import {
     Camera, User, Mail, Bell, Shield, Lock, LogOut,
-    ChevronRight, Moon, Sun, Loader2, Check, ChevronLeft
+    ChevronRight, Moon, Sun, Loader2, Check, ChevronLeft,
+    Volume2, VolumeX
 } from 'lucide-react';
 import './Settings.css';
 
@@ -19,6 +21,7 @@ export default function Settings() {
     const navigate = useNavigate();
     const { currentUser, logout, setCurrentUser } = useAuth(); // Assuming 'auth' is accessible via currentUser or import
     const { success, error: showError } = useToast(); // Using Toast context
+    const { isMuted, toggleMute } = useSound();
 
     const [displayName, setDisplayName] = useState('');
     const [theme, setTheme] = useState('dark');
@@ -109,15 +112,24 @@ export default function Settings() {
             if (user) {
                 await deleteUser(user);
             }
-            // 3. UI Cleanup
-            navigate('/');
-            success('Account deleted.');
+            // 3. Complete Cleanup
+            success('Account deleted successfully.');
+
+            // Clear local cache/storage to ensure fresh start
+            localStorage.clear();
+            sessionStorage.clear();
+
+            // Hard reload to clear memory state
+            setTimeout(() => {
+                window.location.replace('/');
+            }, 1000);
+
         } catch (err) {
             console.error('Delete failed:', err);
             if (err.code === 'auth/requires-recent-login') {
-                showError('Please log out and log in again to delete account.');
+                showError('Security check: Please log out and log in again to delete account.');
             } else {
-                showError('Failed to delete account.');
+                showError('Failed to delete account. Please try again.');
             }
         } finally {
             setSaving(false);
@@ -247,6 +259,26 @@ export default function Settings() {
                                 type="checkbox"
                                 checked={notifications}
                                 onChange={() => setNotifications(!notifications)}
+                            />
+                            <span className="slider round"></span>
+                        </label>
+                    </div>
+
+                    <div className="setting-item">
+                        <div className="setting-info">
+                            <div className="setting-icon">
+                                {isMuted ? <VolumeX size={20} /> : <Volume2 size={20} />}
+                            </div>
+                            <div>
+                                <h3>Sound Effects</h3>
+                                <p>Enable background music and effects</p>
+                            </div>
+                        </div>
+                        <label className="toggle-switch">
+                            <input
+                                type="checkbox"
+                                checked={!isMuted}
+                                onChange={toggleMute}
                             />
                             <span className="slider round"></span>
                         </label>
