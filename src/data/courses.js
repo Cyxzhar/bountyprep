@@ -250,7 +250,8 @@ If I change \`1001\` to \`1002\` and see someone else's data, that's an IDOR.
                     {
                         id: 'nmap-basics',
                         title: 'Nmap Scanning',
-                        type: 'text',
+                        type: 'text', // Keeping 'text' as primary type, but video acts as enhancement
+                        videoUrl: 'https://www.youtube.com/watch?v=dQw4w9WgXcQ', // TODO: Replace with your actual unlisted YouTube URL
                         duration: '20m',
                         xp: 75,
                         content: `# Nmap: Network Mapper\n\nLearn how to discover hosts and services on a computer network.`
