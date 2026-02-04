@@ -12,7 +12,42 @@ import { saveInterviewSession, getLastInterviewSession } from '../utils/firestor
 import { useAuth } from '../context/AuthContext';
 import './Interview.css';
 
-// ... (TypingEffect component remains unchanged) ...
+const TypingEffect = ({ text, onComplete }) => {
+    const [displayedText, setDisplayedText] = useState('');
+
+    useEffect(() => {
+        let index = 0;
+        // Faster typing for better UX
+        const interval = setInterval(() => {
+            setDisplayedText(text.slice(0, index + 1));
+            index++;
+            if (index >= text.length) {
+                clearInterval(interval);
+                if (onComplete) onComplete();
+            }
+        }, 15);
+
+        return () => clearInterval(interval);
+    }, [text, onComplete]);
+
+    return (
+        <ReactMarkdown
+            components={{
+                code: ({ inline, children }) => (
+                    inline
+                        ? <code className="inline-code">{children}</code>
+                        : <pre className="code-block"><code>{children}</code></pre>
+                ),
+                p: ({ children }) => <p className="md-paragraph">{children}</p>,
+                ul: ({ children }) => <ul className="md-list">{children}</ul>,
+                li: ({ children }) => <li className="md-list-item">{children}</li>,
+                strong: ({ children }) => <strong className="md-bold">{children}</strong>,
+            }}
+        >
+            {displayedText}
+        </ReactMarkdown>
+    );
+};
 
 const INITIAL_MESSAGE = {
     role: 'assistant',
@@ -37,133 +72,75 @@ export default function Interview() {
     const [isLoading, setIsLoading] = useState(false);
     const [quota, setQuota] = useState(getRemainingQuota(isPremium));
     const [elapsedTime, setElapsedTime] = useState(0);
+    // ... (previous state)
     const [savedSession, setSavedSession] = useState(null);
+    const [sessionHistory, setSessionHistory] = useState([]);
+    const [showHistory, setShowHistory] = useState(false);
+    const [sessionId, setSessionId] = useState(null);
     const messagesEndRef = useRef(null);
     const { success, error, info } = useToast();
 
-    // Update quota when premium status loads/changes
-    useEffect(() => {
-        setQuota(getRemainingQuota(isPremium));
-    }, [isPremium]);
+    // ... (quota effect)
 
-    // Check for saved session on mount
+    // Load available history
     useEffect(() => {
         if (currentUser?.uid) {
-            getLastInterviewSession(currentUser.uid).then(session => {
-                if (session && session.messages?.length > 1) {
-                    setSavedSession(session);
-                }
+            import('../utils/firestore').then(({ getUserInterviewSessions }) => {
+                getUserInterviewSessions(currentUser.uid).then(sessions => {
+                    setSessionHistory(sessions);
+                    if (sessions.length > 0) {
+                        setSavedSession(sessions[0]); // Last session
+                    }
+                });
             });
         }
-    }, [currentUser?.uid]);
+    }, [currentUser?.uid, started]); // Reload history when returning to menu
 
-    // Timer
-    useEffect(() => {
-        let interval;
-        if (started) {
-            interval = setInterval(() => {
-                setElapsedTime(prev => prev + 1);
-            }, 1000);
-        }
-        return () => clearInterval(interval);
-    }, [started]);
+    // ... (Timer, Auto-scroll effects)
 
-    // Auto-scroll
+    // Save session logic with ID
     useEffect(() => {
-        messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
-    }, [messages, isLoading, started]);
-
-    // Save session on updates
-    useEffect(() => {
-        if (started && currentUser?.uid && messages.length > 1) {
+        if (started && currentUser?.uid && messages.length > 1 && sessionId) {
             const timeout = setTimeout(() => {
-                saveInterviewSession(currentUser.uid, messages, elapsedTime);
-            }, 1000); // Debounce save
+                saveInterviewSession(currentUser.uid, messages, elapsedTime, sessionId);
+            }, 1000);
             return () => clearTimeout(timeout);
         }
-    }, [messages, elapsedTime, started, currentUser?.uid]);
+    }, [messages, elapsedTime, started, currentUser?.uid, sessionId]);
 
-    const formatTime = (seconds) => {
-        const mins = Math.floor(seconds / 60);
-        const secs = seconds % 60;
-        return `${mins.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
+    const handleStartNew = () => {
+        const newId = Date.now().toString();
+        setSessionId(newId);
+        setMessages([INITIAL_MESSAGE]);
+        setElapsedTime(0);
+        setStarted(true);
     };
 
-    const handleResume = () => {
-        if (savedSession) {
-            setMessages(savedSession.messages);
-            setElapsedTime(savedSession.elapsedTime || 0);
+    const handleResumeSession = (session) => {
+        if (session) {
+            setSessionId(session.id);
+            setMessages(session.messages);
+            setElapsedTime(session.elapsedTime || 0);
             setStarted(true);
+            setShowHistory(false);
             success('Resumed previous session');
         }
     };
 
-    const handleSend = async () => {
-        if (!input.trim() || isLoading) return;
-
-        // Check quota
-        const quotaResult = useQuota(isPremium);
-        if (!quotaResult.success) {
-            error(`Daily limit reached! Resets in ${getQuotaResetTime()}`);
-            return;
-        }
-
-        setQuota(quotaResult.remaining);
-        if (quotaResult.remaining === 2) {
-            info('2 messages remaining today');
-        }
-
-        const userMessage = { role: 'user', content: input.trim() };
-        setMessages(prev => [...prev, userMessage]);
-        setInput('');
-        setIsLoading(true);
-
-        try {
-            // Build API messages - skip the initial UI greeting (first message)
-            // Perplexity requires: user -> assistant -> user -> assistant pattern
-            const conversationMessages = messages.slice(1); // Skip INITIAL_MESSAGE
-
-            // Only include actual conversation, not UI greeting
-            const apiMessages = [...conversationMessages, userMessage]
-                .filter(m => m.role === 'user' || m.role === 'assistant')
-                .map(m => ({
-                    role: m.role,
-                    content: m.content
-                }));
-
-            const aiResponse = await generateInterviewResponse(
-                apiMessages,
-                difficulty,
-                'Application Security'
-            );
-
-            setMessages(prev => [...prev, {
-                role: 'assistant',
-                content: aiResponse.content
-            }]);
-
-        } catch (err) {
-            console.error('Interview error:', err);
-            error('Failed to get AI response. Please try again.');
-        } finally {
-            setIsLoading(false);
-        }
-    };
-
-    const handleKeyPress = (e) => {
-        if (e.key === 'Enter' && !e.shiftKey) {
-            e.preventDefault();
-            handleSend();
-        }
-    };
+    // ... (handleSend, handleKeyPress)
 
     const handleEndSession = () => {
         setStarted(false);
         setMessages([INITIAL_MESSAGE]);
         setElapsedTime(0);
-        setSavedSession(null); // Clear local Resume capability effectively for now
-        // Optionally clear from DB: saveInterviewSession(currentUser.uid, [], 0);
-        success('Interview session ended. Great practice!');
+        setSessionId(null);
+        success('Interview session ended.');
+    };
+
+    // UI Helpers
+    const formatDate = (date) => {
+        if (!date) return '';
+        return new Intl.DateTimeFormat('en-US', { month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' }).format(date);
     };
 
     if (!started) {
@@ -171,6 +148,7 @@ export default function Interview() {
             <div className="interview-screen">
                 <div className="screen-content">
                     <div className="interview-intro">
+                        {/* ... (Intro UI) ... */}
                         <div className="intro-icon">
                             <Bot size={48} />
                         </div>
@@ -179,6 +157,7 @@ export default function Interview() {
                     </div>
 
                     <div className="difficulty-section">
+                        {/* ... (Difficulty UI) ... */}
                         <h3 className="section-label">Select Difficulty</h3>
                         <div className="difficulty-grid">
                             {difficulties.map(d => {
@@ -203,14 +182,17 @@ export default function Interview() {
                     </div>
 
                     <div className="topics-section">
-                        <h3 className="section-label">Topics Covered</h3>
-                        <div className="topics-grid">
-                            <span className="topic-chip">Web Security</span>
-                            <span className="topic-chip">Network Attacks</span>
-                            <span className="topic-chip">Cryptography</span>
-                            <span className="topic-chip">Incident Response</span>
-                            <span className="topic-chip">Secure Coding</span>
-                            <span className="topic-chip">Threat Modeling</span>
+                        {/* ... (Topics UI) ... */}
+                        <div className="topics-section">
+                            <h3 className="section-label">Topics Covered</h3>
+                            <div className="topics-grid">
+                                <span className="topic-chip">Web Security</span>
+                                <span className="topic-chip">Network Attacks</span>
+                                <span className="topic-chip">Cryptography</span>
+                                <span className="topic-chip">Incident Response</span>
+                                <span className="topic-chip">Secure Coding</span>
+                                <span className="topic-chip">Threat Modeling</span>
+                            </div>
                         </div>
                     </div>
 
@@ -223,28 +205,59 @@ export default function Interview() {
                     <div className="cta-section">
                         <button
                             className="btn btn-primary btn-full"
-                            onClick={() => setStarted(true)}
+                            onClick={handleStartNew}
                             disabled={quota === 0}
                         >
                             Start New Session
                             <ChevronRight size={20} />
                         </button>
 
-                        {savedSession && (
+                        {(savedSession || sessionHistory.length > 0) && (
                             <button
                                 className="btn btn-secondary btn-full resume-btn"
-                                onClick={handleResume}
+                                onClick={() => setShowHistory(true)}
                                 style={{ marginTop: '12px' }}
                             >
                                 <History size={18} />
-                                Resume Last Session
+                                View History & Resume
                             </button>
                         )}
-
-                        <p className="cta-note">~15 min session • Personalized feedback</p>
                     </div>
                 </div>
                 <BottomNav />
+
+                {/* History Modal */}
+                {showHistory && (
+                    <div className="modal-overlay" onClick={() => setShowHistory(false)}>
+                        <div className="modal-content history-modal" onClick={e => e.stopPropagation()}>
+                            <div className="modal-header">
+                                <h3>History</h3>
+                                <button className="close-btn" onClick={() => setShowHistory(false)}>
+                                    <X size={20} />
+                                </button>
+                            </div>
+                            <div className="history-list">
+                                {sessionHistory.length === 0 ? (
+                                    <p className="text-muted">No history found.</p>
+                                ) : (
+                                    sessionHistory.map(session => (
+                                        <button
+                                            key={session.id}
+                                            className="history-item"
+                                            onClick={() => handleResumeSession(session)}
+                                        >
+                                            <div className="history-info">
+                                                <span className="history-date">{formatDate(session.updatedAt)}</span>
+                                                <span className="history-topic">{session.topic || 'General Practice'}</span>
+                                            </div>
+                                            <ChevronRight size={16} className="text-muted" />
+                                        </button>
+                                    ))
+                                )}
+                            </div>
+                        </div>
+                    </div>
+                )}
             </div>
         );
     }

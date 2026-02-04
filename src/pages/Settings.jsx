@@ -104,8 +104,11 @@ export default function Settings() {
         try {
             // 1. Delete Firestore Data
             await deleteDoc(doc(db, 'users', currentUser.uid));
-            // 2. Delete Auth User
-            await deleteUser(currentUser);
+            // 2. Delete Auth User (Must use the real auth instance, not the context copy)
+            const user = auth.currentUser;
+            if (user) {
+                await deleteUser(user);
+            }
             // 3. UI Cleanup
             navigate('/');
             success('Account deleted.');

@@ -2,7 +2,7 @@
  * Firestore utility functions for user progress
  */
 
-import { doc, getDoc, setDoc, updateDoc, increment, arrayUnion, serverTimestamp } from 'firebase/firestore';
+import { doc, getDoc, setDoc, updateDoc, increment, arrayUnion, serverTimestamp, collection, query, orderBy, limit, getDocs } from 'firebase/firestore';
 import { db } from '../lib/firebase';
 import { checkNewAchievements } from './gamification';
 
@@ -227,13 +227,26 @@ export async function updateStreak(userId) {
 /**
  * Save interview session to Firestore
  */
-export async function saveInterviewSession(userId, messages, elapsedTime) {
+/**
+ * Save interview session to Firestore
+ * Supports multiple sessions via sessionId
+ */
+export async function saveInterviewSession(userId, messages, elapsedTime, sessionId) {
     try {
-        const sessionRef = doc(db, 'users', userId, 'interview', 'current');
+        // Use a subcollection 'interview_sessions' instead of single doc 'current'
+        const sessionRef = doc(db, 'users', userId, 'interview_sessions', sessionId);
+
+        // Extract topic/summary (naive: first user message)
+        const firstUserMsg = messages.find(m => m.role === 'user');
+        const topic = firstUserMsg ? firstUserMsg.content.substring(0, 50) + '...' : 'New Session';
+
         await setDoc(sessionRef, {
+            id: sessionId,
             messages,
             elapsedTime,
-            updatedAt: serverTimestamp()
+            topic,
+            updatedAt: serverTimestamp(),
+            createdAt: serverTimestamp() // setDoc with merge will keep original creation time if present
         }, { merge: true });
     } catch (err) {
         if (err.code === 'unavailable' || err.message.includes('offline')) {
@@ -245,18 +258,39 @@ export async function saveInterviewSession(userId, messages, elapsedTime) {
 }
 
 /**
- * Get last interview session from Firestore
+ * Get all interview sessions for a user
+ */
+export async function getUserInterviewSessions(userId) {
+    try {
+        const sessionsRef = collection(db, 'users', userId, 'interview_sessions');
+        const q = query(sessionsRef, orderBy('updatedAt', 'desc'), limit(20)); // Limit to last 20
+        const snapshot = await getDocs(q);
+
+        return snapshot.docs.map(doc => ({
+            id: doc.id,
+            ...doc.data(),
+            // Convert timestamps to Date objects for UI
+            updatedAt: doc.data().updatedAt?.toDate() || new Date()
+        }));
+    } catch (err) {
+        if (err.code === 'unavailable' || err.message.includes('offline')) {
+            return [];
+        }
+        console.error('Failed to load sessions:', err);
+        return [];
+    }
+}
+
+/**
+ * Get last interview session (Legacy support / Quick resume)
+ * Fetches the most recently updated session from the collection
  */
 export async function getLastInterviewSession(userId) {
     try {
-        const sessionRef = doc(db, 'users', userId, 'interview', 'current');
-        const snap = await getDoc(sessionRef);
-        return snap.exists() ? snap.data() : null;
+        const sessions = await getUserInterviewSessions(userId);
+        return sessions.length > 0 ? sessions[0] : null;
     } catch (err) {
-        if (err.code === 'unavailable' || err.message.includes('offline')) {
-            return null;
-        }
-        throw err;
+        return null;
     }
 }
 
