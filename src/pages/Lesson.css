@@ -73,8 +73,8 @@
     overflow-wrap: break-word;
     word-break: normal;
     white-space: normal;
+    /* Allow wrapping when needed */
     hyphens: auto;
-
     min-width: 0;
     max-width: 100%;
     padding-right: 0;
@@ -108,17 +108,17 @@
     line-height: 1.8;
 }
 
-/* Sidebar - Tech List */
+/* Sidebar - Tech ListRefined */
 .lesson-sidebar {
     width: 320px;
     background: var(--bg-darker);
     border-left: 1px solid rgba(255, 255, 255, 0.05);
     overflow-y: auto;
-    /* Match Header Padding: left/right 24px */
     padding: 32px 24px;
     display: flex;
     flex-direction: column;
-    gap: 24px;
+    gap: 32px;
+    flex-shrink: 0;
 }
 
 .lesson-sidebar h3 {
@@ -129,65 +129,115 @@
     font-weight: 700;
     padding-bottom: 16px;
     border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-    margin-bottom: 24px;
-    /* Increased margin */
+    margin-bottom: 16px;
 }
 
 .sidebar-module {
     display: flex;
     flex-direction: column;
-    gap: 12px;
+    gap: 16px;
 }
 
 .sidebar-module-title {
     font-size: 0.85rem;
-    font-weight: 600;
+    font-weight: 700;
     color: var(--neon-green);
-    /* Highlight module titles */
     padding: 4px 0;
     text-transform: uppercase;
     letter-spacing: 0.05em;
     overflow-wrap: break-word;
     /* Wrap long module names */
+    line-height: 1.4;
 }
 
 .sidebar-lessons {
     display: flex;
     flex-direction: column;
-    gap: 4px;
+    gap: 8px;
+    /* Consistent gap between lessons */
 }
 
+/* Lesson Item Container */
 .sidebar-lesson {
     display: flex;
     align-items: flex-start;
-    /* Align icon/text top for wrapping */
+    /* Align icon top with first line of title */
     gap: 12px;
     padding: 12px;
-    border-radius: 6px;
+    border-radius: 8px;
     color: var(--text-secondary);
-    font-size: 0.95rem;
-    /* Larger text */
     cursor: pointer;
-    transition: all 0.2s;
-    border-left: 2px solid transparent;
-    line-height: 1.4;
-}
-
-.sidebar-lesson span {
-    overflow-wrap: break-word;
-    word-break: break-word;
+    transition: all 0.2s ease;
+    border: 1px solid transparent;
+    /* Prepare for border hover */
+    background: rgba(255, 255, 255, 0.02);
 }
 
 .sidebar-lesson:hover {
     background: rgba(255, 255, 255, 0.05);
     color: var(--text-primary);
+    border-color: rgba(255, 255, 255, 0.05);
 }
 
 .sidebar-lesson.active {
-    background: rgba(159, 239, 0, 0.1);
+    background: rgba(159, 239, 0, 0.08);
+    /* Subtle green tint */
+    color: #fff;
+    border-color: var(--neon-green);
+    box-shadow: 0 4px 12px rgba(159, 239, 0, 0.1);
+}
+
+/* Icon Wrapper */
+.lesson-status-icon {
+    margin-top: 2px;
+    /* Visual alignment with clickable text cap-height */
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 20px;
+    height: 20px;
+}
+
+/* Info Column (Title + Meta) */
+.lesson-info {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    flex: 1;
+    min-width: 0;
+    /* Allow text wrapping inside flex item */
+}
+
+/* Lesson Title */
+.lesson-title {
+    font-size: 0.95rem;
+    font-weight: 500;
+    line-height: 1.4;
+    overflow-wrap: break-word;
+    word-break: normal;
+    /* Don't split words mid-way */
+}
+
+.active .lesson-title {
+    font-weight: 700;
     color: var(--neon-green);
-    border-left-color: var(--neon-green);
-    font-weight: 600;
+}
+
+/* Metadata Row (Time • XP) */
+.lesson-meta {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 0.75rem;
+    color: var(--text-muted);
+    font-family: 'JetBrains Mono', monospace;
+    opacity: 0.8;
+}
+
+.active .lesson-meta {
+    color: var(--neon-green);
+    opacity: 1;
 }
 
 @media (max-width: 1024px) {
