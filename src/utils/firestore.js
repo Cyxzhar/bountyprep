@@ -216,8 +216,47 @@ export async function updateStreak(userId) {
     }
 }
 
+// ... (existing export)
+
+/**
+ * Save interview session to Firestore
+ */
+export async function saveInterviewSession(userId, messages, elapsedTime) {
+    try {
+        const sessionRef = doc(db, 'users', userId, 'interview', 'current');
+        await setDoc(sessionRef, {
+            messages,
+            elapsedTime,
+            updatedAt: serverTimestamp()
+        }, { merge: true });
+    } catch (err) {
+        if (err.code === 'unavailable' || err.message.includes('offline')) {
+            console.warn('Firestore offline, skipping session save');
+            return;
+        }
+        console.error('Failed to save interview session:', err);
+    }
+}
+
+/**
+ * Get last interview session from Firestore
+ */
+export async function getLastInterviewSession(userId) {
+    try {
+        const sessionRef = doc(db, 'users', userId, 'interview', 'current');
+        const snap = await getDoc(sessionRef);
+        return snap.exists() ? snap.data() : null;
+    } catch (err) {
+        if (err.code === 'unavailable' || err.message.includes('offline')) {
+            return null;
+        }
+        throw err;
+    }
+}
+
 /**
  * Refresh user profile from Firestore
+ * ... (existing refreshUserProfile)
  */
 export async function refreshUserProfile(userId) {
     try {

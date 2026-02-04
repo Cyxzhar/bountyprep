@@ -144,6 +144,19 @@
     margin-top: var(--space-md);
 }
 
+.resume-btn {
+    background: rgba(0, 212, 255, 0.1);
+    border: 1px solid var(--neon-blue);
+    color: var(--neon-blue);
+    transition: all var(--transition-base);
+}
+
+.resume-btn:hover {
+    background: rgba(0, 212, 255, 0.2);
+    box-shadow: 0 0 15px rgba(0, 212, 255, 0.2);
+    transform: translateY(-1px);
+}
+
 /* Chat Mode */
 .chat-mode {
     display: flex;

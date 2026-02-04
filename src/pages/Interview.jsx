@@ -1,17 +1,29 @@
 import { useState, useEffect, useRef } from 'react';
 import {
     Sprout, BookOpen, Rocket, ChevronRight, Bot,
-    Mic, Send, X, Timer, AlertCircle, Loader2
+    Mic, Send, X, Timer, AlertCircle, Loader2, History
 } from 'lucide-react';
 import ReactMarkdown from 'react-markdown';
 import BottomNav from '../components/BottomNav';
 import { useToast } from '../context/ToastContext';
 import { generateInterviewResponse } from '../lib/perplexity';
 import { getRemainingQuota, useQuota, getQuotaResetTime } from '../utils/interviewQuota';
+import { saveInterviewSession, getLastInterviewSession } from '../utils/firestore';
 import { useAuth } from '../context/AuthContext';
 import './Interview.css';
 
 // ... (TypingEffect component remains unchanged) ...
+
+const INITIAL_MESSAGE = {
+    role: 'assistant',
+    content: "Hello! I'm your AI security interviewer. I'm here to help you practice for your next big role. What topic would you like to focus on today? (e.g., XSS, SQL Injection, Incident Response)"
+};
+
+const difficulties = [
+    { id: 'easy', title: 'Junior', desc: 'Fundamentals & Basic Concepts', icon: Sprout },
+    { id: 'mid', title: 'Mid-Level', desc: 'Real-world Scenarios', icon: BookOpen },
+    { id: 'senior', title: 'Senior', desc: 'Architecture & Strategy', icon: Rocket }
+];
 
 export default function Interview() {
     const { currentUser } = useAuth();
@@ -24,6 +36,7 @@ export default function Interview() {
     const [isLoading, setIsLoading] = useState(false);
     const [quota, setQuota] = useState(getRemainingQuota(isPremium));
     const [elapsedTime, setElapsedTime] = useState(0);
+    const [savedSession, setSavedSession] = useState(null);
     const messagesEndRef = useRef(null);
     const { success, error, info } = useToast();
 
@@ -32,17 +45,56 @@ export default function Interview() {
         setQuota(getRemainingQuota(isPremium));
     }, [isPremium]);
 
+    // Check for saved session on mount
+    useEffect(() => {
+        if (currentUser?.uid) {
+            getLastInterviewSession(currentUser.uid).then(session => {
+                if (session && session.messages?.length > 1) {
+                    setSavedSession(session);
+                }
+            });
+        }
+    }, [currentUser?.uid]);
+
     // Timer
     useEffect(() => {
-        // ... (timer logic unchanged)
+        let interval;
+        if (started) {
+            interval = setInterval(() => {
+                setElapsedTime(prev => prev + 1);
+            }, 1000);
+        }
+        return () => clearInterval(interval);
     }, [started]);
 
-    // ... (auto-scroll unchanged) ...
+    // Auto-scroll
+    useEffect(() => {
+        messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
+    }, [messages, isLoading, started]);
+
+    // Save session on updates
+    useEffect(() => {
+        if (started && currentUser?.uid && messages.length > 1) {
+            const timeout = setTimeout(() => {
+                saveInterviewSession(currentUser.uid, messages, elapsedTime);
+            }, 1000); // Debounce save
+            return () => clearTimeout(timeout);
+        }
+    }, [messages, elapsedTime, started, currentUser?.uid]);
 
     const formatTime = (seconds) => {
         const mins = Math.floor(seconds / 60);
         const secs = seconds % 60;
         return `${mins.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
+    };
+
+    const handleResume = () => {
+        if (savedSession) {
+            setMessages(savedSession.messages);
+            setElapsedTime(savedSession.elapsedTime || 0);
+            setStarted(true);
+            success('Resumed previous session');
+        }
     };
 
     const handleSend = async () => {
@@ -108,6 +160,8 @@ export default function Interview() {
         setStarted(false);
         setMessages([INITIAL_MESSAGE]);
         setElapsedTime(0);
+        setSavedSession(null); // Clear local Resume capability effectively for now
+        // Optionally clear from DB: saveInterviewSession(currentUser.uid, [], 0);
         success('Interview session ended. Great practice!');
     };
 
@@ -171,9 +225,21 @@ export default function Interview() {
                             onClick={() => setStarted(true)}
                             disabled={quota === 0}
                         >
-                            Begin Interview Session
+                            Start New Session
                             <ChevronRight size={20} />
                         </button>
+
+                        {savedSession && (
+                            <button
+                                className="btn btn-secondary btn-full resume-btn"
+                                onClick={handleResume}
+                                style={{ marginTop: '12px' }}
+                            >
+                                <History size={18} />
+                                Resume Last Session
+                            </button>
+                        )}
+
                         <p className="cta-note">~15 min session • Personalized feedback</p>
                     </div>
                 </div>
