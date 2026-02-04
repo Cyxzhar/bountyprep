@@ -26,38 +26,39 @@ export default function ChallengeDetail() {
     const hasShownToastRef = useRef(false);
     const audioStartedRef = useRef(false);
 
+    // Local audio state (independent of global profile settings)
+    const [localMuted, setLocalMuted] = useState(false);
+
+    // Initial play
     useEffect(() => {
         start();
 
-        // Play challenge music once (will play the full track)
-        playBGM('challenge', {
-            loop: false,  // Play once completely
-            volume: 0.3
-        });
+        // Play if not locally muted (default unmuted on entry)
+        if (!localMuted) {
+            playBGM('challenge', { loop: false, volume: 0.3 });
+        }
 
-        // Show toast only once
-        if (!hasShownToastRef.current && !isMuted) {
-            setTimeout(() => info('Challenge music playing', Music), 100);
+        if (!hasShownToastRef.current) {
             hasShownToastRef.current = true;
         }
 
-        audioStartedRef.current = true;
+        return () => stopBGM(true);
+    }, []);
 
-        return () => {
-            stop();
-            stopBGM(true); // Stop immediately on unmount (navigation away)
-        };
-    }, []); // Empty deps to run only once on mount
-
-    // Handle audio control button - toggleMute now handles pause/resume automatically
+    // Toggle local audio only
     const handleAudioToggle = () => {
-        const willBeMuted = !isMuted;
-        toggleMute(); // This now pauses when muting, resumes when unmuting
+        const newMutedState = !localMuted;
+        setLocalMuted(newMutedState);
 
-        if (willBeMuted) {
-            info('Sound muted', VolumeX);
+        if (newMutedState) {
+            // Mute: Stop/Pause current track or Set Volume 0
+            // Since context doesn't expose track volume sets easily, we stop BGM
+            stopBGM();
+            info('Challenge audio muted', VolumeX);
         } else {
-            info('Sound enabled - resuming playback', Volume2);
+            // Unmute: Resume/Play
+            playBGM('challenge', { loop: false, volume: 0.3 });
+            info('Challenge audio playing', Volume2);
         }
     };
 
@@ -252,147 +253,144 @@ export default function ChallengeDetail() {
                 <div className="header-controls">
                     {/* Only show audio control if sound is globally enabled in settings */}
                     {localStorage.getItem('sound_muted') !== 'true' && (
-                        <button
-                            className="audio-control-btn"
-                            onClick={handleAudioToggle}
-                            title={isMuted ? 'Unmute & Play Music' : 'Mute Music'}
-                        >
-                            {isMuted ? <VolumeX size={18} /> : <Volume2 size={18} />}
-                        </button>
+                        {/* Audio Toggle (Local) */ }
+                        < button className="icon-btn" onClick={handleAudioToggle}>
+                    {localMuted ? <VolumeX size={20} /> : <Volume2 size={20} />}
+                </button>
                     )}
-                    <div className="header-time">
-                        <Clock size={16} />
-                        <span className="mono-font">{formattedTime}</span>
-                        <span className="text-muted"> / {challenge.estimatedTime}m</span>
-                    </div>
+                <div className="header-time">
+                    <Clock size={16} />
+                    <span className="mono-font">{formattedTime}</span>
+                    <span className="text-muted"> / {challenge.estimatedTime}m</span>
                 </div>
-            </header>
-
-            <div className="detail-content">
-                {/* Progress */}
-                <div className="question-progress">
-                    <span>Question {currentQ + 1} of {challenge.questions.length}</span>
-                    <div className="progress-bar">
-                        <div
-                            className="progress-fill"
-                            style={{ width: `${((currentQ + 1) / challenge.questions.length) * 100}%` }}
-                        ></div>
-                    </div>
-                </div>
-
-                {/* Session XP indicator */}
-                {sessionXp > 0 && (
-                    <div className="session-xp">
-                        <Star size={14} />
-                        <span>+{sessionXp} XP this session</span>
-                    </div>
-                )}
-
-                {/* Scenario */}
-                <div className="scenario-card">
-                    <h2 className="scenario-title">{challenge.title}</h2>
-                    {question.scenario && (
-                        <p className="scenario-text">{question.scenario}</p>
-                    )}
-
-                    {question.codeBlock && (
-                        <div className="code-block">
-                            <div className="code-header">
-                                <span>{question.codeLanguage || 'code'}</span>
-                                <button className="copy-btn">
-                                    <Copy size={14} />
-                                </button>
-                            </div>
-                            <pre><code>{question.codeBlock}</code></pre>
-                        </div>
-                    )}
-                </div>
-
-                {/* Question */}
-                <div className="question-section">
-                    <h3 className="question-text">{question.question}</h3>
-
-                    <div className="options-list">
-                        {question.options.map((option, idx) => (
-                            <button
-                                key={idx}
-                                className={`option-btn ${selected === idx ? 'selected' : ''} ${showResult && idx === question.correctAnswer ? 'correct' : ''
-                                    } ${showResult && selected === idx && selected !== question.correctAnswer ? 'incorrect' : ''}`}
-                                onClick={() => { if (!showResult) { playSFX('click'); setSelected(idx); } }}
-                                disabled={showResult}
-                            >
-                                <span className="option-letter">{String.fromCharCode(65 + idx)}</span>
-                                <span className="option-text">{option}</span>
-                                {showResult && idx === question.correctAnswer && <CheckCircle size={20} />}
-                                {showResult && selected === idx && selected !== question.correctAnswer && <XCircle size={20} />}
-                            </button>
-                        ))}
-                    </div>
-                </div>
-
-                {/* Hint */}
-                {!showResult && (
-                    <button
-                        className={`hint-btn ${usedHint ? 'used' : ''}`}
-                        onClick={handleShowHint}
-                        disabled={showHint}
-                    >
-                        <Lightbulb size={18} />
-                        {showHint ? 'Hint Used (-50% XP)' : 'Show Hint (-50% XP)'}
-                    </button>
-                )}
-
-                {showHint && !showResult && (
-                    <div className="hint-box">
-                        <p>{question.hint}</p>
-                    </div>
-                )}
-
-                {/* Result */}
-                {showResult && (
-                    <div className={`result-box ${result ? 'success' : 'error'}`}>
-                        <div className="result-header">
-                            {result ? <CheckCircle size={24} /> : <XCircle size={24} />}
-                            <span>{result ? 'Correct!' : 'Incorrect'}</span>
-                        </div>
-                        <p className="result-explanation">{question.explanation}</p>
-                        {result && (
-                            <div className="xp-earned">
-                                <Award size={18} />
-                                <span>
-                                    {savedProgress?.completed || (savedProgress?.currentQuestion !== undefined && currentQ < savedProgress.currentQuestion)
-                                        ? '+0 XP (Replay)'
-                                        : `+${calculateQuestionXp(challenge.xpReward, challenge.questions.length, true, usedHint)} XP earned`
-                                    }
-                                    {usedHint && !savedProgress?.completed && ' (hint penalty applied)'}
-                                </span>
-                            </div>
-                        )}
-                    </div>
-                )}
-            </div>
-
-            {/* Footer */}
-            <div className="detail-footer">
-                {!showResult ? (
-                    <button
-                        className="btn btn-primary btn-full"
-                        disabled={selected === null}
-                        onClick={handleSubmit}
-                    >
-                        Submit Answer
-                        <Zap size={20} />
-                    </button>
-                ) : (
-                    <button
-                        className="btn btn-primary btn-full"
-                        onClick={handleNext}
-                    >
-                        {currentQ < challenge.questions.length - 1 ? 'Next Question' : 'Complete Challenge'}
-                        <ChevronRight size={20} />
-                    </button>
-                )}
-            </div>
         </div>
+            </header >
+
+        <div className="detail-content">
+            {/* Progress */}
+            <div className="question-progress">
+                <span>Question {currentQ + 1} of {challenge.questions.length}</span>
+                <div className="progress-bar">
+                    <div
+                        className="progress-fill"
+                        style={{ width: `${((currentQ + 1) / challenge.questions.length) * 100}%` }}
+                    ></div>
+                </div>
+            </div>
+
+            {/* Session XP indicator */}
+            {sessionXp > 0 && (
+                <div className="session-xp">
+                    <Star size={14} />
+                    <span>+{sessionXp} XP this session</span>
+                </div>
+            )}
+
+            {/* Scenario */}
+            <div className="scenario-card">
+                <h2 className="scenario-title">{challenge.title}</h2>
+                {question.scenario && (
+                    <p className="scenario-text">{question.scenario}</p>
+                )}
+
+                {question.codeBlock && (
+                    <div className="code-block">
+                        <div className="code-header">
+                            <span>{question.codeLanguage || 'code'}</span>
+                            <button className="copy-btn">
+                                <Copy size={14} />
+                            </button>
+                        </div>
+                        <pre><code>{question.codeBlock}</code></pre>
+                    </div>
+                )}
+            </div>
+
+            {/* Question */}
+            <div className="question-section">
+                <h3 className="question-text">{question.question}</h3>
+
+                <div className="options-list">
+                    {question.options.map((option, idx) => (
+                        <button
+                            key={idx}
+                            className={`option-btn ${selected === idx ? 'selected' : ''} ${showResult && idx === question.correctAnswer ? 'correct' : ''
+                                } ${showResult && selected === idx && selected !== question.correctAnswer ? 'incorrect' : ''}`}
+                            onClick={() => { if (!showResult) { playSFX('click'); setSelected(idx); } }}
+                            disabled={showResult}
+                        >
+                            <span className="option-letter">{String.fromCharCode(65 + idx)}</span>
+                            <span className="option-text">{option}</span>
+                            {showResult && idx === question.correctAnswer && <CheckCircle size={20} />}
+                            {showResult && selected === idx && selected !== question.correctAnswer && <XCircle size={20} />}
+                        </button>
+                    ))}
+                </div>
+            </div>
+
+            {/* Hint */}
+            {!showResult && (
+                <button
+                    className={`hint-btn ${usedHint ? 'used' : ''}`}
+                    onClick={handleShowHint}
+                    disabled={showHint}
+                >
+                    <Lightbulb size={18} />
+                    {showHint ? 'Hint Used (-50% XP)' : 'Show Hint (-50% XP)'}
+                </button>
+            )}
+
+            {showHint && !showResult && (
+                <div className="hint-box">
+                    <p>{question.hint}</p>
+                </div>
+            )}
+
+            {/* Result */}
+            {showResult && (
+                <div className={`result-box ${result ? 'success' : 'error'}`}>
+                    <div className="result-header">
+                        {result ? <CheckCircle size={24} /> : <XCircle size={24} />}
+                        <span>{result ? 'Correct!' : 'Incorrect'}</span>
+                    </div>
+                    <p className="result-explanation">{question.explanation}</p>
+                    {result && (
+                        <div className="xp-earned">
+                            <Award size={18} />
+                            <span>
+                                {savedProgress?.completed || (savedProgress?.currentQuestion !== undefined && currentQ < savedProgress.currentQuestion)
+                                    ? '+0 XP (Replay)'
+                                    : `+${calculateQuestionXp(challenge.xpReward, challenge.questions.length, true, usedHint)} XP earned`
+                                }
+                                {usedHint && !savedProgress?.completed && ' (hint penalty applied)'}
+                            </span>
+                        </div>
+                    )}
+                </div>
+            )}
+        </div>
+
+    {/* Footer */ }
+    <div className="detail-footer">
+        {!showResult ? (
+            <button
+                className="btn btn-primary btn-full"
+                disabled={selected === null}
+                onClick={handleSubmit}
+            >
+                Submit Answer
+                <Zap size={20} />
+            </button>
+        ) : (
+            <button
+                className="btn btn-primary btn-full"
+                onClick={handleNext}
+            >
+                {currentQ < challenge.questions.length - 1 ? 'Next Question' : 'Complete Challenge'}
+                <ChevronRight size={20} />
+            </button>
+        )}
+    </div>
+        </div >
     );
 }

@@ -101,28 +101,29 @@ export default function Paywall() {
                             className={`pricing-card ${selectedPlan === 'annual' ? 'selected' : ''}`}
                             onClick={() => setSelectedPlan('annual')}
                         >
-                            <div className="popular-tag">
-                                <Sparkles size={12} />
-                                BEST VALUE
+                            <div className="popular-tag">BEST VALUE</div>
+                            <div className="plan-info">
+                                <div className="plan-name">Annual Access</div>
+                                <div className="plan-savings">Save 45% • $8.25/mo</div>
                             </div>
-                            <div className="plan-name">Annual</div>
                             <div className="plan-price">
                                 <span className="price">$99</span>
                                 <span className="period">/year</span>
                             </div>
-                            <div className="plan-savings">$8.25/mo • Save 45%</div>
                         </div>
 
                         <div
                             className={`pricing-card ${selectedPlan === 'monthly' ? 'selected' : ''}`}
                             onClick={() => setSelectedPlan('monthly')}
                         >
-                            <div className="plan-name">Monthly</div>
+                            <div className="plan-info">
+                                <div className="plan-name">Monthly Access</div>
+                                <div className="plan-savings">Flexible cancellation</div>
+                            </div>
                             <div className="plan-price">
                                 <span className="price">$14.99</span>
                                 <span className="period">/mo</span>
                             </div>
-                            <div className="plan-savings">Cancel anytime</div>
                         </div>
                     </div>
                 </div>
