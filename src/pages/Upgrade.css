@@ -95,147 +95,161 @@
 
 /* Pricing Card - Holographic Panel */
 .pricing-card {
-    background: linear-gradient(180deg, rgba(159, 239, 0, 0.1) 0%, rgba(19, 19, 26, 0.6) 100%);
-    border: 1px solid rgba(159, 239, 0, 0.3);
-    border-radius: 4px;
-    padding: 32px;
+    background: linear-gradient(180deg, rgba(159, 239, 0, 0.05) 0%, rgba(19, 19, 26, 0.8) 100%);
+    border: 1px solid rgba(159, 239, 0, 0.2);
+    border-radius: 12px;
+    padding: 40px;
+    /* Increased padding */
     margin-bottom: 32px;
     position: relative;
     overflow: hidden;
+    backdrop-filter: blur(10px);
 }
 
 .pricing-card::before {
-    content: 'RECOMMENDED';
+    content: 'EARLY BIRD';
+    /* Updated label */
     position: absolute;
     top: 12px;
     right: -30px;
     background: var(--neon-green);
     color: #000;
-    font-size: 0.6rem;
+    font-size: 0.65rem;
     font-weight: 800;
     padding: 4px 30px;
     transform: rotate(45deg);
     z-index: 2;
+    letter-spacing: 0.05em;
 }
 
 .price-tag {
-    margin-bottom: 8px;
+    margin-bottom: 24px;
+    /* More breathing room */
 }
 
 .currency {
     font-size: 1.5rem;
     vertical-align: top;
     color: var(--neon-green);
+    margin-top: 8px;
+    display: inline-block;
 }
 
 .amount {
-    font-size: 3.5rem;
+    font-size: 4rem;
+    /* Larger */
     font-weight: 800;
     color: #fff;
     line-height: 1;
-    text-shadow: 0 0 20px rgba(159, 239, 0, 0.3);
+    text-shadow: 0 0 30px rgba(159, 239, 0, 0.2);
+    letter-spacing: -0.02em;
 }
 
 .period {
-    font-size: 1rem;
+    font-size: 1.1rem;
     color: var(--text-muted);
+    font-weight: 500;
+    margin-left: 4px;
 }
 
 .billing-note {
-    font-size: 0.85rem;
+    font-size: 0.9rem;
     color: var(--text-secondary);
+    margin-top: 8px;
 }
 
 /* Upgrade Button - Neon Solid */
 .upgrade-btn {
     width: 100%;
-    padding: 16px;
+    padding: 18px;
+    /* Taller button */
     background: var(--neon-green);
     color: #000;
     font-size: 1.1rem;
-    font-weight: 700;
+    font-weight: 800;
     text-transform: uppercase;
     letter-spacing: 0.05em;
     border: none;
-    border-radius: 4px;
+    border-radius: 6px;
     cursor: pointer;
     transition: all 0.2s;
     display: flex;
     align-items: center;
     justify-content: center;
     gap: 8px;
+    margin-top: 32px;
+    /* Separation from features */
 }
 
-.upgrade-btn:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 0 30px rgba(159, 239, 0, 0.5);
-    background: #B8FF33;
+.upgrade-btn:disabled {
+    background: rgba(255, 255, 255, 0.1);
+    color: var(--text-muted);
+    cursor: not-allowed;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    box-shadow: none;
+    transform: none;
 }
 
 .restore-link {
     display: block;
-    margin-top: 16px;
+    margin-top: 20px;
     color: var(--text-muted);
     font-size: 0.85rem;
     text-decoration: underline;
     cursor: pointer;
+    opacity: 0.7;
+    transition: opacity 0.2s;
 }
 
 .restore-link:hover {
     color: #fff;
+    opacity: 1;
 }
 
 /* Features List */
 .features-list {
     display: flex;
     flex-direction: column;
-    gap: var(--space-md);
-    margin-bottom: var(--space-xl);
+    gap: 16px;
+    /* consistent vertical rhythm */
+    margin-bottom: 32px;
     flex: 1;
 }
 
 .feature-item {
     display: flex;
     align-items: center;
-    gap: 12px;
+    gap: 16px;
     color: var(--text-secondary);
-    font-size: 0.95rem;
+    font-size: 1rem;
+    line-height: 1.5;
 }
 
 .check-icon {
     color: var(--neon-green);
     flex-shrink: 0;
+    filter: drop-shadow(0 0 8px rgba(159, 239, 0, 0.3));
 }
 
 .feature-item.disabled {
     color: var(--text-disabled);
     text-decoration: line-through;
-    opacity: 0.7;
+    opacity: 0.5;
 }
 
 .feature-item.highlight {
-    color: var(--text-primary);
-}
-
-.upgrade-btn {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 8px;
-    font-size: 1rem;
-    font-weight: 700;
-    box-shadow: 0 4px 20px rgba(159, 239, 0, 0.25);
+    color: #fff;
 }
 
 .guarantee-text {
     text-align: center;
-    font-size: 0.8rem;
+    font-size: 0.85rem;
     color: var(--text-muted);
-    margin-top: var(--space-md);
+    margin-top: 24px;
     display: flex;
     align-items: center;
     justify-content: center;
-    gap: 6px;
+    gap: 8px;
 }
 
 /* Feature Deep Dive Grid */

@@ -84,8 +84,8 @@ export default function Upgrade() {
                             <Crown size={24} className="text-neon" />
                         </div>
                         <div className="price">
-                            <span className="amount">$9.99</span>
-                            <span className="period">/month</span>
+                            <span className="amount">$10</span>
+                            <span className="period">/year</span>
                         </div>
                         <p>Everything you need to master hacking</p>
                     </div>
@@ -119,11 +119,9 @@ export default function Upgrade() {
 
                     <button
                         className="btn btn-primary btn-full upgrade-btn"
-                        onClick={handleUpgrade}
-                        disabled={isPremium}
+                        disabled={true}
                     >
-                        {isPremium ? 'Plan Active' : 'Upgrade Now'}
-                        {!isPremium && <Zap size={18} />}
+                        Coming Soon
                     </button>
                     <div className="guarantee-text">
                         <Shield size={14} /> 7-day money-back guarantee
