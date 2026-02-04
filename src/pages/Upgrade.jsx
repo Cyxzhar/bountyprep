@@ -5,14 +5,16 @@ import {
     MessageSquare, ChevronRight, HelpCircle, ChevronDown
 } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
+import { useToast } from '../context/ToastContext';
 import './Upgrade.css';
 
 export default function Upgrade() {
     const navigate = useNavigate();
-    const { currentUser } = useAuth();
+    const { currentUser, refreshUser } = useAuth();
+    const { success, error } = useToast();
     const isPremium = currentUser?.isPremium;
     const [loading, setLoading] = useState(false);
-    const [joined, setJoined] = useState(false);
+    const [joined, setJoined] = useState(currentUser?.onWaitlist || false);
     const [openFaqIndex, setOpenFaqIndex] = useState(-1);
 
     const faqs = [
@@ -39,9 +41,59 @@ export default function Upgrade() {
 
         if (result.success) {
             setJoined(true);
+            await refreshUser(); // Force update global context
+            success("You've been added to the waitlist!");
+        } else {
+            error("Could not join waitlist. Please try again.");
         }
         setLoading(false);
     };
+
+    // If already on waitlist, show Success View instead of Pricing
+    if (currentUser?.onWaitlist || joined) {
+        return (
+            <div className="page-container upgrade-page">
+                <header className="page-header-nav">
+                    <button className="icon-btn" onClick={() => navigate(-1)}>
+                        <X size={24} />
+                    </button>
+                    <div className="header-badge success">
+                        <Check size={14} className="text-neon" />
+                        <span>Waitlist Confirmed</span>
+                    </div>
+                </header>
+
+                <div className="upgrade-hero waitlist-hero">
+                    <div className="waitlist-icon">
+                        <Rocket size={64} className="text-neon" />
+                    </div>
+                    <h1>Request Received</h1>
+                    <p>You are on the list! We will notify you as soon as your spot opens up.</p>
+
+                    <div className="waitlist-card-success">
+                        <div className="w-param">
+                            <span className="w-label">Status</span>
+                            <span className="w-value on-list">
+                                <span className="status-dot"></span> On Waitlist
+                            </span>
+                        </div>
+                        <div className="w-param">
+                            <span className="w-label">Estimated Wait</span>
+                            <span className="w-value">1-2 weeks</span>
+                        </div>
+                        <div className="w-param">
+                            <span className="w-label">Priority</span>
+                            <span className="w-value highlight">High</span>
+                        </div>
+                    </div>
+
+                    <button className="btn btn-secondary btn-full" onClick={() => navigate('/challenges')}>
+                        Continue Learning
+                    </button>
+                </div>
+            </div>
+        );
+    }
 
     return (
         <div className="page-container upgrade-page">

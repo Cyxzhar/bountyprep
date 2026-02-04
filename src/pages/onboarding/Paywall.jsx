@@ -21,9 +21,13 @@ const features = [
 
 
 
+import { useAuth } from '../../context/AuthContext';
+
 export default function Paywall() {
     const navigate = useNavigate();
     const { stopBGM } = useSound();
+    const { currentUser } = useAuth();
+    const isOnWaitlist = currentUser?.onWaitlist || false;
 
     const handleNavigateToSignup = () => {
         stopBGM(); // Stop onboarding music
@@ -98,8 +102,12 @@ export default function Paywall() {
 
                 {/* Footer */}
                 <div className="paywall-footer">
-                    <button className="btn btn-primary btn-full" onClick={handleNavigateToSignup}>
-                        Join Waitlist
+                    <button
+                        className="btn btn-primary btn-full"
+                        onClick={handleNavigateToSignup}
+                        disabled={isOnWaitlist}
+                    >
+                        {isOnWaitlist ? 'Request Received' : 'Join Waitlist'}
                     </button>
                     <p className="trial-note">Spots opening soon • Verified Pro Badge included</p>
                     <div className="footer-links">

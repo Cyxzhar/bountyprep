@@ -25,7 +25,7 @@ const Courses = lazy(() => import('./pages/Courses'));
 const CourseDetail = lazy(() => import('./pages/CourseDetail'));
 const Lesson = lazy(() => import('./pages/Lesson'));
 const Challenges = lazy(() => import('./pages/Challenges'));
-const ChallengeDetail = lazy(() => import('./pages/ChallengeDetail'));
+const ChallengeDetail = lazy(() => import('./pages/ChallengeDetailNew'));
 const Interview = lazy(() => import('./pages/Interview'));
 const Progress = lazy(() => import('./pages/Progress'));
 const Profile = lazy(() => import('./pages/Profile'));

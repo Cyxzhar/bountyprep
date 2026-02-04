@@ -84,23 +84,27 @@
 .avatar-edit-hint {
     position: absolute;
     bottom: 0;
-    left: 0;
-    width: 28px;
-    height: 28px;
+    right: 0;
+    left: auto;
+    /* Position bottom-right */
+    width: 32px;
+    height: 32px;
     display: flex;
     align-items: center;
     justify-content: center;
-    background: var(--bg-card);
+    background: var(--bg-dark);
     border-radius: 50%;
-    border: 1px solid var(--border-color);
-    color: var(--text-muted);
+    border: 1px solid var(--neon-green);
+    color: var(--neon-green);
     transition: all 0.2s;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.5);
+    z-index: 5;
 }
 
 .profile-avatar:hover .avatar-edit-hint {
     background: var(--neon-green);
-    color: var(--bg-dark);
-    border-color: var(--neon-green);
+    color: #000;
+    transform: scale(1.1);
 }
 
 .profile-name {

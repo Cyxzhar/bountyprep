@@ -418,6 +418,14 @@ export async function addToWaitlist(userId, email, source = 'upgrade_page') {
             joinedAt: serverTimestamp(),
             status: 'pending' // pending, notified, converted
         }, { merge: true });
+
+        // Also update user profile for immediate UI feedback
+        const userRef = doc(db, 'users', userId);
+        await setDoc(userRef, {
+            onWaitlist: true,
+            updatedAt: serverTimestamp()
+        }, { merge: true });
+
         return { success: true };
     } catch (error) {
         console.error('Error adding to waitlist:', error);

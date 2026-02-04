@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
-import { Search, Filter, Lock, ChevronRight, Clock, CheckCircle, Star, Crown } from 'lucide-react';
+import { Search, Filter, Lock, ChevronRight, Clock, CheckCircle, Star, Crown, Code, FlaskConical, Layers, BookOpen } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 import { collection, getDocs } from 'firebase/firestore';
 import { db } from '../lib/firebase';
@@ -9,7 +9,16 @@ import { FirstVisitTransition } from '../components/PageTransition';
 import { challenges as localChallenges } from '../data/challenges';
 import './Challenges.css';
 
-const filters = ['All', 'SQL Injection', 'XSS', 'CSRF', 'Auth Bypass', 'IDOR', 'File Upload'];
+// Challenge type filters with icons
+const challengeTypeFilters = [
+    { id: 'all', label: 'All', icon: Layers },
+    { id: 'quiz', label: 'Quiz', icon: BookOpen },
+    { id: 'coding', label: 'Coding', icon: Code },
+    { id: 'lab', label: 'Lab', icon: FlaskConical },
+    { id: 'practical', label: 'Practical', icon: Layers }
+];
+
+const vulnerabilityFilters = ['All', 'SQL Injection', 'XSS', 'CSRF', 'Auth Bypass', 'IDOR', 'File Upload', 'Coding'];
 
 // Cache for completed challenges
 let cachedCompletedChallenges = null;
@@ -20,7 +29,8 @@ export default function Challenges() {
     const [searchParams] = useSearchParams();
     const initialFilter = searchParams.get('filter') || 'All';
     const [searchQuery, setSearchQuery] = useState('');
-    const [activeFilter, setActiveFilter] = useState(initialFilter);
+    const [activeChallengeType, setActiveChallengeType] = useState('all');
+    const [activeVulnFilter, setActiveVulnFilter] = useState(initialFilter);
     const [challenges, setChallenges] = useState(localChallenges);
     const [completedChallenges, setCompletedChallenges] = useState(cachedCompletedChallenges || new Set());
     const [loading, setLoading] = useState(false);
@@ -67,12 +77,21 @@ export default function Challenges() {
     }, [currentUser?.uid]);
 
     const filteredChallenges = challenges.filter(c => {
-        const matchesSearch = c.title.toLowerCase().includes(searchQuery.toLowerCase());
-        const matchesFilter = activeFilter === 'All' ||
-            c.type === activeFilter ||
-            c.type.toLowerCase().includes(activeFilter.toLowerCase()) ||
-            activeFilter.toLowerCase().includes(c.type.toLowerCase());
-        return matchesSearch && matchesFilter;
+        const matchesSearch = c.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
+            c.description?.toLowerCase().includes(searchQuery.toLowerCase());
+
+        // Filter by challenge type (quiz, coding, lab, practical)
+        const matchesChallengeType = activeChallengeType === 'all' ||
+            (c.challengeType && c.challengeType === activeChallengeType) ||
+            (activeChallengeType === 'quiz' && !c.challengeType); // Old challenges without challengeType are quizzes
+
+        // Filter by vulnerability type (SQL Injection, XSS, etc.)
+        const matchesVulnFilter = activeVulnFilter === 'All' ||
+            c.type === activeVulnFilter ||
+            c.type.toLowerCase().includes(activeVulnFilter.toLowerCase()) ||
+            activeVulnFilter.toLowerCase().includes(c.type.toLowerCase());
+
+        return matchesSearch && matchesChallengeType && matchesVulnFilter;
     });
 
     const totalCompleted = currentUser?.totalCompleted || completedChallenges.size;
@@ -106,19 +125,44 @@ export default function Challenges() {
                         </button>
                     </div>
 
-                    {/* Filters */}
+                    {/* Challenge Type Filters */}
                     {showFilters && (
-                    <div className="filters-scroll">
-                        {filters.map(filter => (
-                            <button
-                                key={filter}
-                                className={`chip ${activeFilter === filter ? 'active' : ''}`}
-                                onClick={() => setActiveFilter(filter)}
-                            >
-                                {filter}
-                            </button>
-                        ))}
-                    </div>
+                    <>
+                        <div className="filter-section">
+                            <h3 className="filter-title">Challenge Type</h3>
+                            <div className="type-filters">
+                                {challengeTypeFilters.map(filter => {
+                                    const Icon = filter.icon;
+                                    return (
+                                        <button
+                                            key={filter.id}
+                                            className={`type-filter-btn ${activeChallengeType === filter.id ? 'active' : ''}`}
+                                            onClick={() => setActiveChallengeType(filter.id)}
+                                        >
+                                            <Icon size={18} />
+                                            <span>{filter.label}</span>
+                                        </button>
+                                    );
+                                })}
+                            </div>
+                        </div>
+
+                        {/* Vulnerability Filters */}
+                        <div className="filter-section">
+                            <h3 className="filter-title">Vulnerability</h3>
+                            <div className="filters-scroll">
+                                {vulnerabilityFilters.map(filter => (
+                                    <button
+                                        key={filter}
+                                        className={`chip ${activeVulnFilter === filter ? 'active' : ''}`}
+                                        onClick={() => setActiveVulnFilter(filter)}
+                                    >
+                                        {filter}
+                                    </button>
+                                ))}
+                            </div>
+                        </div>
+                    </>
                     )}
 
                     {/* Stats Bar */}
