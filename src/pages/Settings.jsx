@@ -1,10 +1,11 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
+import { useToast } from '../context/ToastContext'; // Added useToast
 import { refreshUserProfile } from '../utils/firestore';
-import { updateProfile } from 'firebase/auth';
+import { updateProfile, sendPasswordResetEmail, deleteUser } from 'firebase/auth';
 import { getStorage, ref, uploadString, getDownloadURL } from 'firebase/storage';
-import { doc, updateDoc } from 'firebase/firestore';
+import { doc, updateDoc, deleteDoc } from 'firebase/firestore';
 import { db } from '../lib/firebase';
 import {
     Camera, User, Mail, Bell, Shield, Lock, LogOut,
@@ -12,13 +13,13 @@ import {
 } from 'lucide-react';
 import './Settings.css';
 
-const storage = getStorage();
+// ...
 
 export default function Settings() {
     const navigate = useNavigate();
-    const { currentUser, logout, setCurrentUser } = useAuth();
+    const { currentUser, logout, setCurrentUser } = useAuth(); // Assuming 'auth' is accessible via currentUser or import
+    const { success, error: showError } = useToast(); // Using Toast context
 
-    // Local state for edits
     const [displayName, setDisplayName] = useState('');
     const [theme, setTheme] = useState('dark');
     const [notifications, setNotifications] = useState(true);
@@ -28,15 +29,12 @@ export default function Settings() {
     useEffect(() => {
         if (currentUser) {
             setDisplayName(currentUser.displayName || '');
-            // Load other prefs if available in profile
         }
     }, [currentUser]);
 
     const handlePhotoUpload = async (e) => {
         const file = e.target.files[0];
         if (!file) return;
-
-        // Simple validation
         if (file.size > 2 * 1024 * 1024) {
             alert('File too large (max 2MB)');
             return;
@@ -44,30 +42,19 @@ export default function Settings() {
 
         setUploading(true);
         const reader = new FileReader();
-
         reader.onloadend = async () => {
             try {
-                // Compress image roughly by using canvas (skipped for brevity, uploading raw first)
                 const base64String = reader.result;
-
-                // Upload to Firebase Storage
-                const storageRef = ref(storage, `avatars/${currentUser.uid}`);
+                const storageRef = ref(getStorage(), `avatars/${currentUser.uid}`);
                 await uploadString(storageRef, base64String, 'data_url');
                 const photoURL = await getDownloadURL(storageRef);
-
-                // Update Auth Profile
                 await updateProfile(currentUser, { photoURL });
-
-                // Update Firestore
-                const userRef = doc(db, 'users', currentUser.uid);
-                await updateDoc(userRef, { photoURL });
-
-                // Update Local State
+                await updateDoc(doc(db, 'users', currentUser.uid), { photoURL });
                 const updatedUser = await refreshUserProfile(currentUser.uid);
                 setCurrentUser(prev => ({ ...prev, ...updatedUser, photoURL }));
             } catch (err) {
                 console.error('Upload failed:', err);
-                alert('Failed to upload photo');
+                showError('Failed to upload photo');
             } finally {
                 setUploading(false);
             }
@@ -77,23 +64,61 @@ export default function Settings() {
 
     const handleSaveProfile = async () => {
         if (!displayName.trim() || displayName === currentUser.displayName) return;
-
         setSaving(true);
         try {
-            // Update Auth
             await updateProfile(currentUser, { displayName });
-
-            // Update Firestore
-            const userRef = doc(db, 'users', currentUser.uid);
-            await updateDoc(userRef, { displayName });
-
-            // Update Local State
+            await updateDoc(doc(db, 'users', currentUser.uid), { displayName });
             const updatedUser = await refreshUserProfile(currentUser.uid);
             setCurrentUser(prev => ({ ...prev, ...updatedUser }));
+            success('Profile updated');
         } catch (err) {
             console.error('Save failed:', err);
+            showError('Failed to save profile');
         } finally {
             setSaving(false);
+        }
+    };
+
+    const handlePasswordReset = async () => {
+        if (!currentUser?.email) return;
+        try {
+            await sendPasswordResetEmail(currentUser.auth, currentUser.email);
+            success(`Password reset email sent to ${currentUser.email}`);
+        } catch (err) {
+            console.error('Password reset failed:', err);
+            showError('Failed to send reset email.');
+        }
+    };
+
+
+
+    // Toggle modal instead of confirm
+    const [showDeleteModal, setShowDeleteModal] = useState(false);
+
+    const handleDeleteClick = () => {
+        setShowDeleteModal(true);
+    };
+
+    const confirmDelete = async () => {
+        setSaving(true);
+        try {
+            // 1. Delete Firestore Data
+            await deleteDoc(doc(db, 'users', currentUser.uid));
+            // 2. Delete Auth User
+            await deleteUser(currentUser);
+            // 3. UI Cleanup
+            navigate('/');
+            success('Account deleted.');
+        } catch (err) {
+            console.error('Delete failed:', err);
+            if (err.code === 'auth/requires-recent-login') {
+                showError('Please log out and log in again to delete account.');
+            } else {
+                showError('Failed to delete account.');
+            }
+        } finally {
+            setSaving(false);
+            setShowDeleteModal(false);
         }
     };
 
@@ -116,6 +141,7 @@ export default function Settings() {
             </header>
 
             <div className="settings-grid">
+                {/* ... (existing sections) ... */}
                 {/* Profile Section */}
                 <section className="settings-card">
                     <h2>Profile</h2>
@@ -229,13 +255,13 @@ export default function Settings() {
                     <h2>Account</h2>
 
                     <div className="action-list">
-                        <button className="action-btn">
+                        <button className="action-btn" onClick={handlePasswordReset}>
                             <Lock size={18} />
                             <span>Change Password</span>
                             <ChevronRight size={16} className="action-arrow" />
                         </button>
 
-                        <button className="action-btn text-error">
+                        <button className="action-btn text-error" onClick={handleDeleteClick}>
                             <Shield size={18} />
                             <span>Delete Account</span>
                             <ChevronRight size={16} className="action-arrow" />
@@ -247,7 +273,28 @@ export default function Settings() {
                         </button>
                     </div>
                 </section>
-            </div>
-        </div>
+            </div >
+
+            {/* Custom Delete Modal */}
+            {
+                showDeleteModal && (
+                    <div className="modal-overlay">
+                        <div className="modal-content">
+                            <Shield size={48} className="text-error" style={{ marginBottom: '16px' }} />
+                            <h3>Delete Account?</h3>
+                            <p>
+                                This action is permanent and cannot be undone. All your progress, XP, and badges will be lost forever.
+                            </p>
+                            <div className="modal-actions">
+                                <button className="btn-cancel" onClick={() => setShowDeleteModal(false)}>Cancel</button>
+                                <button className="btn-delete" onClick={confirmDelete} disabled={saving}>
+                                    {saving ? 'Deleting...' : 'Delete Forever'}
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                )
+            }
+        </div >
     );
 }

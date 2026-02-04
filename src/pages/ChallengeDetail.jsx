@@ -16,23 +16,6 @@ export default function ChallengeDetail() {
     }, [start, stop]);
 
     // ... (rest of imports and state)
-
-    // ... (in handleNext, stop timer)
-    const handleNext = async () => {
-        if (currentQ < challenge.questions.length - 1) {
-            // ...
-        } else {
-            stop(); // Stop the timer
-            // ...
-        }
-    };
-
-    // ... (in JSX)
-    <div className="header-time">
-        <Clock size={16} />
-        <span className="mono-font">{formattedTime}</span>
-        <span className="text-muted"> / {challenge.estimatedTime}m</span>
-    </div>
     const [selected, setSelected] = useState(null);
     const [showHint, setShowHint] = useState(false);
     const [result, setResult] = useState(null);
@@ -163,6 +146,7 @@ export default function ChallengeDetail() {
             setUsedHint(false);
         } else {
             // Challenge complete!
+            stop();
             if (currentUser?.uid) {
                 try {
                     const accuracy = Math.round((correctAnswers / challenge.questions.length) * 100);
@@ -208,7 +192,8 @@ export default function ChallengeDetail() {
                 </div>
                 <div className="header-time">
                     <Clock size={16} />
-                    <span>{challenge.estimatedTime}m</span>
+                    <span className="mono-font">{formattedTime}</span>
+                    <span className="text-muted"> / {challenge.estimatedTime}m</span>
                 </div>
             </header>
 
