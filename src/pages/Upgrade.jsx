@@ -1,7 +1,8 @@
+import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import {
     Check, X, Zap, Crown, Shield, Rocket, Star,
-    MessageSquare, ChevronRight, HelpCircle
+    MessageSquare, ChevronRight, HelpCircle, ChevronDown
 } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 import './Upgrade.css';
@@ -10,6 +11,22 @@ export default function Upgrade() {
     const navigate = useNavigate();
     const { currentUser } = useAuth();
     const isPremium = currentUser?.isPremium;
+    const [openFaqIndex, setOpenFaqIndex] = useState(-1);
+
+    const faqs = [
+        {
+            question: "Can I cancel anytime?",
+            answer: "Yes, you can cancel your subscription instantly from your settings page. No questions asked."
+        },
+        {
+            question: "Do you offer student discounts?",
+            answer: "Yes! Contact support with your .edu email for 50% off."
+        },
+        {
+            question: "Is the AI coach really useful?",
+            answer: "Our AI is fine-tuned on thousands of bug reports and CTF writeups to give you expert-level guidance."
+        }
+    ];
 
     const handleUpgrade = () => {
         // TODO: Integrate Gumroad/Stripe here
@@ -161,18 +178,21 @@ export default function Upgrade() {
             <section className="faq-section">
                 <h2>Frequently Asked Questions</h2>
                 <div className="faq-grid">
-                    <div className="faq-item">
-                        <h4>Can I cancel anytime?</h4>
-                        <p>Yes, you can cancel your subscription instantly from your settings page. No questions asked.</p>
-                    </div>
-                    <div className="faq-item">
-                        <h4>Do you offer student discounts?</h4>
-                        <p>Yes! Contact support with your .edu email for 50% off.</p>
-                    </div>
-                    <div className="faq-item">
-                        <h4>Is the AI coach really useful?</h4>
-                        <p>Our AI is fine-tuned on thousands of bug reports and CTF writeups to give you expert-level guidance.</p>
-                    </div>
+                    {faqs.map((faq, index) => (
+                        <div
+                            key={index}
+                            className={`faq-item ${openFaqIndex === index ? 'open' : ''}`}
+                            onClick={() => setOpenFaqIndex(openFaqIndex === index ? -1 : index)}
+                        >
+                            <div className="faq-question">
+                                <h4>{faq.question}</h4>
+                                <ChevronDown size={20} className={`faq-chevron ${openFaqIndex === index ? 'rotate' : ''}`} />
+                            </div>
+                            <div className="faq-answer">
+                                <p>{faq.answer}</p>
+                            </div>
+                        </div>
+                    ))}
                 </div>
             </section>
         </div>

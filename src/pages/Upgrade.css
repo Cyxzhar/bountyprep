@@ -5,6 +5,50 @@
 }
 
 /* Header Nav */
+.page-header-nav {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 24px var(--space-lg);
+    /* increased padding */
+    width: 100%;
+}
+
+.icon-btn {
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    color: var(--text-secondary);
+    cursor: pointer;
+    padding: 10px;
+    border-radius: 50%;
+    transition: all 0.2s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.icon-btn:hover {
+    background: rgba(255, 255, 255, 0.15);
+    color: #fff;
+    border-color: rgba(255, 255, 255, 0.2);
+}
+
+.header-badge {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 16px;
+    background: rgba(159, 239, 0, 0.1);
+    border: 1px solid rgba(159, 239, 0, 0.2);
+    border-radius: 100px;
+    font-size: 0.9rem;
+    font-weight: 700;
+    color: var(--neon-green);
+    letter-spacing: 0.05em;
+    backdrop-filter: blur(4px);
+}
+
+/* Upgrade Page - Holographic HUD Style */
 /* Upgrade Page - Holographic HUD Style */
 .upgrade-screen {
     min-height: 100vh;
@@ -302,58 +346,61 @@
     font-size: 0.9rem;
 }
 
-/* FAQ */
-.faq-section {
-    max-width: 800px;
-    margin: 0 auto;
+/* Header Nav */
+.page-header-nav {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: var(--space-lg);
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    backdrop-filter: blur(10px);
+    background: rgba(10, 10, 15, 0.8);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
 }
 
-.faq-section h2 {
-    text-align: center;
-    margin-bottom: var(--space-xl);
+.icon-btn {
+    background: transparent;
+    border: none;
+    color: var(--text-muted);
+    cursor: pointer;
+    padding: 8px;
+    border-radius: 50%;
+    transition: all 0.2s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
-.faq-grid {
-    display: grid;
-    gap: var(--space-lg);
-    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+.icon-btn:hover {
+    background: rgba(255, 255, 255, 0.1);
+    color: #fff;
 }
 
-.faq-item h4 {
-    color: var(--text-primary);
-    margin-bottom: 8px;
-    font-size: 1.1rem;
+.header-badge {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 6px 12px;
+    background: rgba(159, 239, 0, 0.1);
+    border: 1px solid rgba(159, 239, 0, 0.2);
+    border-radius: 100px;
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: var(--neon-green);
 }
 
-.faq-item p {
-    color: var(--text-secondary);
-    font-size: 0.95rem;
-}
+/* Upgrade Page - Holographic HUD Style */
+/* ... (existing styles) ... */
 
-/* Mobile Responsive */
-@media (max-width: 768px) {
-    .pricing-container {
-        flex-direction: column;
-        gap: var(--space-xl);
-    }
-
-    .premium-tier {
-        transform: none;
-    }
-
-    .premium-tier:hover {
-        transform: translateY(-5px);
-    }
-
-    .pricing-card {
-        padding: var(--space-lg);
-    }
-
-    .upgrade-hero h1 {
-        font-size: 2rem;
-    }
-
-    .features-grid {
-        grid-template-columns: 1fr;
-    }
-}
+/* [Skipped existing styles related to hero, features, etc. - kept intact implicitly by where I insert/replace] 
+   Actually, the REPLACE block overwrites. I need to be careful not to lose existing styles if I'm replacing a huge chunk.
+   The user asked to FIX styling. I will re-write the FAQ section at the bottom and insert the Header styles at the top.
+   Since I am replacing lines 306-359 (FAQ + Mobile), I need to verify I'm not clobbering anything else important or inserting in the wrong place.
+   The `page-header-nav` styles should go near the top. But this tool call targets the bottom for FAQ.
+   I should split this into two edits if I want to be safe, or just append header styles...
+   Wait, the user said "lost styling". It's better to add the header styles at the TOP of the file or where they logically belong.
+   I will use MultiReplace to do both correctly.
+*/
+/* See next tool call */
