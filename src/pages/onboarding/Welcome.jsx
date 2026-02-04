@@ -11,7 +11,6 @@ export default function Welcome() {
 
     // Try to play audio on mount
     useEffect(() => {
-        console.log('[Welcome] Attempting to play cyber theme');
         playBGM('cyber', { loop: true, volume: 0.3 });
     }, []); // Run once on mount
 
@@ -19,7 +18,6 @@ export default function Welcome() {
     useEffect(() => {
         const enableAudio = () => {
             if (!isPlaying) {
-                console.log('[Welcome] User clicked, retrying audio');
                 retryPendingAudio();
             }
         };

@@ -253,7 +253,6 @@ export async function saveInterviewSession(userId, messages, elapsedTime, sessio
             return;
         }
         if (err.code === 'permission-denied') {
-            console.debug('Access denied saving interview session (check auth rules).');
             return;
         }
         console.error('Failed to save interview session:', err);
@@ -280,7 +279,6 @@ export async function getUserInterviewSessions(userId) {
             return [];
         }
         if (err.code === 'permission-denied') {
-            console.debug('Access denied to interview sessions (check auth rules).');
             return [];
         }
         console.error('Failed to load sessions:', err);

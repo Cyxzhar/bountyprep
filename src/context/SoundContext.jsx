@@ -65,17 +65,13 @@ export function SoundProvider({ children }) {
             return;
         }
 
-        console.log(`[Audio] playBGM called: ${name}, muted: ${isMuted}, currentTrack: ${currentTrack}, isPlaying: ${isPlaying}`);
-
         // Don't start new audio if muted (can resume existing via toggleMute)
         if (isMuted && !bgmRef.current) {
-            console.log('[Audio] Skipping playBGM - sound is muted');
             return;
         }
 
         // Only skip if actually playing (not just paused/blocked)
         if (currentTrack === name && isPlaying && bgmRef.current && !bgmRef.current.paused) {
-            console.log('[Audio] Track already playing, skipping');
             return;
         }
 
@@ -101,8 +97,6 @@ export function SoundProvider({ children }) {
     };
 
     const startNewTrack = (path, name, loop, relativeVol) => {
-        console.log(`[Audio] Starting track: ${name}, path: ${path}, loop: ${loop}`);
-
         const audio = new Audio(path);
         audio.loop = loop;
         audio.volume = 0; // Start at 0 for fade in
@@ -114,7 +108,6 @@ export function SoundProvider({ children }) {
 
         if (playPromise !== undefined) {
             playPromise.then(() => {
-                console.log(`[Audio] ✓ Playing: ${name}`);
                 // If the current track changed while we were loading, stop this one
                 if (bgmRef.current !== audio) {
                     audio.pause();
@@ -130,13 +123,11 @@ export function SoundProvider({ children }) {
             }).catch(e => {
                 // Ignore "interrupted by pause" errors (common during rapid navigation)
                 if (e.name === 'AbortError' || e.message.includes('interrupted')) {
-                    console.log('[Audio] Playback interrupted (normal during navigation)');
                     return;
                 }
                 // Handle Autoplay policy errors (User didn't interact yet)
                 if (e.name === 'NotAllowedError') {
                     console.warn("⚠️ [Audio] Autoplay blocked - waiting for user interaction");
-                    console.warn("💡 [Audio] Tip: Click anywhere on the page to enable audio");
                     // Don't set as current track since it didn't play
                     setCurrentTrack(null);
                     setIsPlaying(false);
@@ -151,7 +142,6 @@ export function SoundProvider({ children }) {
     };
 
     const stopBGM = (immediate = false) => {
-        console.log(`[Audio] stopBGM called (immediate: ${immediate})`);
         // Clear periodic timer
         if (periodicTimerRef.current) {
             clearInterval(periodicTimerRef.current);
@@ -166,11 +156,9 @@ export function SoundProvider({ children }) {
                 bgmRef.current = null;
                 setCurrentTrack(null);
                 setIsPlaying(false);
-                console.log('[Audio] ✓ Stopped immediately');
             } else {
                 // Fade out gracefully
                 fadeOutAndStop(bgmRef.current, () => {
-                    console.log('[Audio] ✓ Stopped with fade');
                     bgmRef.current = null;
                     setCurrentTrack(null);
                     setIsPlaying(false);
@@ -195,25 +183,15 @@ export function SoundProvider({ children }) {
 
     const retryPendingAudio = () => {
         if (pendingTrackRef.current) {
-            console.log('[Audio] Retrying pending audio after user interaction');
             const { name, path, loop, volume } = pendingTrackRef.current;
             startNewTrack(path, name, loop, volume);
         }
     };
 
     // Fade helpers
-    const fadeIn = (audio, relativeVol = 1.0) => {
-        let vol = 0;
-        const target = globalVolume * relativeVol; // BGM is softer than SFX
-        const interval = setInterval(() => {
-            if (!audio || audio.paused) {
-                clearInterval(interval);
-                return;
-            }
-            vol = Math.min(vol + 0.05, target);
-            audio.volume = vol;
-            if (vol >= target) clearInterval(interval);
-        }, 100);
+    const fadeIn = (audio, targetVol) => {
+        // Instant play for snap
+        audio.volume = globalVolume * targetVol;
     };
 
     const fadeOutAndStop = (audio, callback) => {
@@ -222,16 +200,8 @@ export function SoundProvider({ children }) {
             return;
         }
 
-        let vol = audio.volume;
-        const interval = setInterval(() => {
-            vol = Math.max(0, vol - 0.05);
-            audio.volume = vol;
-            if (vol <= 0) {
-                clearInterval(interval);
-                audio.pause();
-                if (callback) callback();
-            }
-        }, 50);
+        callback(); // Immediate stop for snap
+        audio.pause();
     };
 
     const toggleMute = () => {
@@ -241,16 +211,13 @@ export function SoundProvider({ children }) {
         // Actually pause/resume audio when toggling, not just mute
         if (bgmRef.current) {
             if (newMutedState) {
-                console.log('[Audio] Muting - pausing audio');
                 bgmRef.current.pause();
                 setIsPlaying(false);
             } else {
-                console.log('[Audio] Unmuting - resuming audio');
                 const resumePromise = bgmRef.current.play();
                 if (resumePromise !== undefined) {
                     resumePromise.then(() => {
                         setIsPlaying(true);
-                        console.log('[Audio] ✓ Resumed');
                     }).catch(e => {
                         console.warn('[Audio] Resume failed:', e.message);
                     });

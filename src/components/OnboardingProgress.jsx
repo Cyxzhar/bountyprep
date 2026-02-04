@@ -13,8 +13,7 @@ export default function OnboardingProgress({ currentStep }) {
 
     const handleStepClick = (step) => {
         // Only allow clicking on previous steps or current step
-        if (step.id <= currentStep) {
-            console.log(`[Onboarding] Navigating back to step ${step.id}`);
+        if (step.id < currentStep) {
             navigate(step.path, { state: { direction: 'back' } });
         }
     };
@@ -34,7 +33,7 @@ export default function OnboardingProgress({ currentStep }) {
                         <div className={`step-dot ${step.id === currentStep ? 'active' : step.id < currentStep ? 'completed' : ''}`}>
                             {step.id < currentStep && (
                                 <svg width="12" height="12" viewBox="0 0 12 12" fill="none">
-                                    <path d="M2 6L5 9L10 3" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                                    <path d="M2 6L5 9L10 3" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
                                 </svg>
                             )}
                         </div>
