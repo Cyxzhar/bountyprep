@@ -16,7 +16,7 @@ export default function ChallengeDetail() {
     const { id } = useParams();
     const navigate = useNavigate();
     const { currentUser, refreshUser } = useAuth();
-    const { showToast } = useToast();
+    const { success, error: showError } = useToast();
     const { unlockMultiple } = useAchievement();
     const challenge = challenges.find(c => c.id === id) || challenges[0];
 
@@ -126,10 +126,8 @@ export default function ChallengeDetail() {
                 const levelUpResult = checkLevelUp(previousUserXp, newTotalXp);
 
                 if (levelUpResult.leveledUp) {
-                    showToast(
-                        `🎉 Level Up! You're now Level ${levelUpResult.newLevel}: ${levelUpResult.newTitle}!`,
-                        'success',
-                        5000
+                    success(
+                        `🎉 Level Up! You're now Level ${levelUpResult.newLevel}: ${levelUpResult.newTitle}!`
                     );
                 }
             } catch (error) {
@@ -167,9 +165,8 @@ export default function ChallengeDetail() {
                         unlockMultiple(newAchievements);
                     }
 
-                    showToast(
-                        `🏆 Challenge Complete! +${sessionXp} XP (${accuracy}% accuracy)`,
-                        'success'
+                    success(
+                        `🏆 Challenge Complete! +${sessionXp} XP (${accuracy}% accuracy)`
                     );
 
                     // Refresh user data so stats update immediately
@@ -295,8 +292,11 @@ export default function ChallengeDetail() {
                             <div className="xp-earned">
                                 <Award size={18} />
                                 <span>
-                                    +{calculateQuestionXp(challenge.xpReward, challenge.questions.length, true, usedHint)} XP earned
-                                    {usedHint && ' (hint penalty applied)'}
+                                    {savedProgress?.completed || (savedProgress?.currentQuestion !== undefined && currentQ < savedProgress.currentQuestion)
+                                        ? '+0 XP (Replay)'
+                                        : `+${calculateQuestionXp(challenge.xpReward, challenge.questions.length, true, usedHint)} XP earned`
+                                    }
+                                    {usedHint && !savedProgress?.completed && ' (hint penalty applied)'}
                                 </span>
                             </div>
                         )}
