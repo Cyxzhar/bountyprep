@@ -4,12 +4,35 @@ import {
     AlertCircle, RotateCcw
 } from 'lucide-react';
 import ReactMarkdown from 'react-markdown';
+import { useState, useEffect } from 'react';
+import { useAuth } from '../context/AuthContext';
+import { useToast } from '../context/ToastContext';
+import { saveLessonProgress, getCourseProgress } from '../utils/firestore';
 import { courses } from '../data/courses';
 import './Lesson.css';
 
 export default function Lesson() {
     const { id, lessonId } = useParams();
     const navigate = useNavigate();
+
+    const { currentUser, refreshUser } = useAuth();
+    const { success, error: showError } = useToast();
+    const [courseProgress, setCourseProgress] = useState(null);
+    const [isCompleted, setIsCompleted] = useState(false);
+
+    // Fetch progress to check completion status
+    useEffect(() => {
+        const fetchProgress = async () => {
+            if (currentUser && id) {
+                const data = await getCourseProgress(currentUser.uid, id);
+                if (data) {
+                    setCourseProgress(data);
+                    setIsCompleted(data.completedLessons?.includes(lessonId));
+                }
+            }
+        };
+        fetchProgress();
+    }, [currentUser, id, lessonId]);
 
     // Find course and lesson
     const course = courses.find(c => c.id === id);
@@ -43,13 +66,45 @@ export default function Lesson() {
         );
     }
 
-    const handleComplete = () => {
-        // TODO: Save to Firestore
-        if (nextLessonId) {
-            navigate(`/course/${id}/lesson/${nextLessonId}`);
-        } else {
-            // Course Complete!
-            navigate(`/course/${id}`);
+    const handleComplete = async () => {
+        if (!currentUser) return;
+
+        // If already completed, just navigate
+        if (isCompleted) {
+            if (nextLessonId) {
+                navigate(`/course/${id}/lesson/${nextLessonId}`);
+            } else {
+                navigate(`/course/${id}`);
+            }
+            return;
+        }
+
+        setSaving(true);
+        try {
+            const { success: saveSuccess, xpAwarded } = await saveLessonProgress(currentUser.uid, id, lessonId, lesson.xp || 50);
+
+            if (saveSuccess) {
+                if (xpAwarded > 0) {
+                    success(`Lesson Completed! +${xpAwarded} XP`);
+                    refreshUser();
+                } else {
+                    success('Lesson Completed!');
+                }
+
+                if (nextLessonId) {
+                    navigate(`/course/${id}/lesson/${nextLessonId}`);
+                } else {
+                    success('Course Completed! 🎉');
+                    navigate(`/course/${id}`);
+                }
+            } else {
+                showError('Failed to save progress');
+            }
+        } catch (error) {
+            console.error(error);
+            showError('Something went wrong');
+        } finally {
+            setSaving(false);
         }
     };
 
@@ -102,11 +157,11 @@ export default function Lesson() {
                         </button>
 
                         <button className="complete-btn" onClick={handleComplete}>
-                            {nextLessonId ? 'Complete & Next' : 'Finish Course'}
-                            {nextLessonId ? <ChevronRight size={18} /> : <CheckCircle size={18} />}
+                            {isCompleted ? 'Next Lesson' : (nextLessonId ? 'Complete & Next' : 'Finish Course')}
+                            {isCompleted ? <ChevronRight size={18} /> : (nextLessonId ? <ChevronRight size={18} /> : <CheckCircle size={18} />)}
                         </button>
-                    </div>
-                </main>
+                    </div >
+                </main >
 
                 <aside className="lesson-sidebar">
                     <h3>Course Content</h3>
@@ -133,7 +188,7 @@ export default function Lesson() {
                         ))}
                     </div>
                 </aside>
-            </div>
-        </div>
+            </div >
+        </div >
     );
 }

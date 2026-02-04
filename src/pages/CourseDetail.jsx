@@ -3,8 +3,10 @@ import {
     Clock, Trophy, ChevronLeft, PlayCircle, Lock, CheckCircle,
     BookOpen, Zap, Target
 } from 'lucide-react';
+import { useState, useEffect } from 'react';
 import { courses } from '../data/courses';
 import { useAuth } from '../context/AuthContext';
+import { getCourseProgress } from '../utils/firestore';
 import './CourseDetail.css';
 
 export default function CourseDetail() {
@@ -26,9 +28,29 @@ export default function CourseDetail() {
         );
     }
 
-    // Mock progress - connect to real Firestore later
+    const [courseProgress, setCourseProgress] = useState(null);
+
+    useEffect(() => {
+        const fetchProgress = async () => {
+            if (currentUser && id) {
+                const data = await getCourseProgress(currentUser.uid, id);
+                if (data) setCourseProgress(data);
+            }
+        };
+        fetchProgress();
+    }, [currentUser, id]);
+
+    // Determine lesson status based on progress
     const getLessonStatus = (lessonId) => {
-        // 'locked', 'available', 'completed'
+        if (!courseProgress) return 'available'; // Default to unlocked for now, or 'locked' if strict
+
+        // Check if completed
+        if (courseProgress.completedLessons?.includes(lessonId)) {
+            return 'completed';
+        }
+
+        // Logic for locking/unlocking next lessons could go here
+        // For now, keep everything available or check if previous was completed
         return 'available';
     };
 

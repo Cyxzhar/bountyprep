@@ -118,6 +118,10 @@ export async function markChallengeCompleted(userId, challengeId, stats) {
         const userRef = doc(db, 'users', userId);
         const progressRef = doc(db, 'users', userId, 'challenges', challengeId);
 
+        // Check if already completed to prevent double counting
+        const progressSnap = await getDoc(progressRef);
+        const isAlreadyCompleted = progressSnap.exists() && progressSnap.data().completed;
+
         // Update challenge progress
         await setDoc(progressRef, {
             completed: true,
@@ -125,11 +129,13 @@ export async function markChallengeCompleted(userId, challengeId, stats) {
             ...stats,
         }, { merge: true });
 
-        // Update user stats
-        await setDoc(userRef, {
-            totalCompleted: increment(1),
-            updatedAt: serverTimestamp(),
-        }, { merge: true });
+        // Update user stats ONLY if not already completed
+        if (!isAlreadyCompleted) {
+            await setDoc(userRef, {
+                totalCompleted: increment(1),
+                updatedAt: serverTimestamp(),
+            }, { merge: true });
+        }
 
         // Check achievements after update
         return await processAchievements(userId);
@@ -267,4 +273,56 @@ export async function refreshUserProfile(userId) {
         console.warn('Refresh user profile failed:', err);
         return null; // Return null instead of throwing on refresh failure
     }
+}
+
+/**
+ * Save lesson progress
+ * Tracks completed lessons and updates course progress
+ */
+export async function saveLessonProgress(userId, courseId, lessonId, xp = 0) {
+    try {
+        const courseRef = doc(db, 'users', userId, 'courses', courseId);
+
+        // Atomically add lesson to completed array and update timestamp
+        await setDoc(courseRef, {
+            completedLessons: arrayUnion(lessonId),
+            lastLessonId: lessonId,
+            lastAccessedAt: serverTimestamp(),
+            courseId: courseId // redundancy for queries
+        }, { merge: true });
+
+        // If XP provided, update global user stats
+        if (xp > 0) {
+            await updateUserStats(userId, xp, true); // true = counts as "correct" action (simpler stat tracking)
+        }
+
+        return true;
+    } catch (err) {
+        console.error('Failed to save lesson progress:', err);
+        return false;
+    }
+}
+
+/**
+ * Get progress for a specific course
+ */
+export async function getCourseProgress(userId, courseId) {
+    try {
+        const courseRef = doc(db, 'users', userId, 'courses', courseId);
+        const snap = await getDoc(courseRef);
+        return snap.exists() ? snap.data() : null;
+    } catch (err) {
+        console.warn('Failed to get course progress:', err);
+        return null;
+    }
+}
+
+/**
+ * Get all course progress for user
+ * Returns map of courseId -> progressData
+ */
+export async function getAllCoursesProgress(userId) {
+    // TODO: Implement using collection query if needed for dashboard
+    // For now returning empty object as placeholder or implementing simpler version
+    return {};
 }
