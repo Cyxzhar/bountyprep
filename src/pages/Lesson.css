@@ -7,76 +7,91 @@
     overflow: hidden;
     padding: 0;
     padding-bottom: 0;
-    /* Override page-container default */
+    background: #050507;
+    /* Deepest black-blue */
 }
 
-/* Header */
-/* Header - HUD Style */
-/* Header - HUD Style */
-/* Header - HUD Style */
+/* Header - Premium HUD Style */
 .lesson-header {
     height: auto;
-    min-height: 100px;
-    /* Increased min-height */
-    padding-top: calc(env(safe-area-inset-top) + 24px);
-    /* More top space */
-    padding-bottom: 24px;
-    /* More bottom space */
-    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+    min-height: 80px;
+    padding-top: calc(env(safe-area-inset-top) + 20px);
+    padding-bottom: 20px;
+    padding-left: 32px;
+    padding-right: 32px;
     display: flex;
     align-items: flex-start;
-    padding-left: 24px;
-    /* Increased side padding */
-    padding-right: 24px;
-    gap: 20px;
-    background: rgba(10, 10, 15, 0.98);
-    /* Almost fully opaque */
+    gap: 24px;
+    background: rgba(10, 10, 15, 0.85);
+    border-bottom: 1px solid rgba(159, 239, 0, 0.1);
+    box-shadow: 0 4px 30px rgba(0, 0, 0, 0.5);
     flex-shrink: 0;
-    backdrop-filter: blur(12px);
-    z-index: 10;
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    z-index: 50;
     width: 100%;
     box-sizing: border-box;
+    position: relative;
+}
+
+/* Neon glow line under header */
+.lesson-header::after {
+    content: '';
+    position: absolute;
+    bottom: -1px;
+    left: 0;
+    width: 100%;
+    height: 1px;
+    background: linear-gradient(90deg,
+            transparent 0%,
+            var(--neon-green) 20%,
+            var(--neon-blue) 50%,
+            var(--neon-green) 80%,
+            transparent 100%);
+    opacity: 0.5;
 }
 
 .lesson-header-text {
     display: flex;
     flex-direction: column;
-    gap: 12px;
-    /* Increased gap between breadcrumb and title */
-    padding-top: 4px;
+    gap: 8px;
+    padding-top: 2px;
     flex: 1;
     min-width: 0;
-    /* CRITICAL: Allows flex child to shrink/wrap text */
 }
 
 .course-breadcrumb {
     font-size: 0.75rem;
-    color: var(--neon-green);
+    color: var(--neon-blue);
     text-transform: uppercase;
-    letter-spacing: 0.1em;
+    letter-spacing: 0.15em;
     font-family: 'JetBrains Mono', monospace;
-    line-height: 1.5;
-    white-space: normal;
-    /* Allow breadcrumb to wrap if needed */
-    overflow: visible;
-    text-overflow: ellipsis;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.course-breadcrumb::before {
+    content: '>';
+    color: var(--neon-green);
+    font-weight: bold;
 }
 
 .lesson-header-title {
-    font-size: 1.5rem;
-    /* Larger */
+    font-size: 1.75rem;
     margin: 0;
     font-weight: 800;
     color: #fff;
-    line-height: 1.3;
-    /* Clean wrapping: only break if line is full, preserve words */
+    line-height: 1.2;
     overflow-wrap: break-word;
-    word-break: normal;
-    white-space: nowrap;
+    word-break: break-word;
+    /* Ensure wrapping */
+    white-space: normal;
     hyphens: auto;
-    min-width: 0;
-    max-width: 100%;
-    padding-right: 0;
+    text-shadow: 0 0 20px rgba(255, 255, 255, 0.1);
+    font-family: 'Outfit', sans-serif;
+    letter-spacing: -0.01em;
 }
 
 /* Layout */
@@ -84,20 +99,42 @@
     flex: 1;
     display: flex;
     overflow: hidden;
-    background: var(--bg-dark);
+    background: radial-gradient(circle at 50% 0%, #111118 0%, #050507 100%);
+    position: relative;
+}
+
+/* Background Grid Effect */
+.lesson-layout::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-image:
+        linear-gradient(rgba(255, 255, 255, 0.02) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255, 255, 255, 0.02) 1px, transparent 1px);
+    background-size: 40px 40px;
+    pointer-events: none;
+    z-index: 0;
 }
 
 /* Main Content */
 .lesson-content-wrapper {
     flex: 1;
     overflow-y: auto;
-    padding: 40px;
+    padding: 48px 64px;
     display: flex;
     flex-direction: column;
-    gap: 32px;
-    max-width: 900px;
+    gap: 40px;
+    max-width: 960px;
+    /* Slightly wider for modern feel */
     margin: 0 auto;
     width: 100%;
+    z-index: 1;
+    /* Above grid */
+    scrollbar-width: thin;
+    scrollbar-color: rgba(159, 239, 0, 0.2) transparent;
 }
 
 .lesson-content {
@@ -219,124 +256,126 @@
         border-radius: 0;
     }
 
-    /* Markdown Styles in .md-content - Premium HUD Upgrade */
+    /* Markdown Styles in .md-content */
 
-    /* Typography & Layout */
     .md-content {
-        font-family: 'Outfit', sans-serif;
-        /* Ensure primary font */
-        color: #e0e0e0;
-        max-width: 100%;
+        font-family: 'Inter', sans-serif;
+        color: #d0d0d5;
+        font-size: 16px;
+        line-height: 1.7;
     }
 
     .md-content>*+* {
         margin-top: 1.5em;
-        /* consistent vertical rhythm */
     }
 
     /* Headings */
     .md-content h1 {
-        font-size: 2.2rem;
+        font-family: 'Outfit', sans-serif;
+        font-size: 2.5rem;
         font-weight: 800;
         margin-bottom: 32px;
-        padding-bottom: 16px;
+        padding-bottom: 24px;
         border-bottom: 1px solid rgba(255, 255, 255, 0.1);
         color: #fff;
+        position: relative;
         letter-spacing: -0.02em;
-        background: linear-gradient(90deg, #fff, #aaa);
+        background: linear-gradient(135deg, #ffffff 0%, #a0a0a0 100%);
         -webkit-background-clip: text;
-        background-clip: text;
-        /* Standard property */
         -webkit-text-fill-color: transparent;
     }
 
+    .md-content h1::after {
+        content: '';
+        position: absolute;
+        bottom: -1px;
+        left: 0;
+        width: 60px;
+        height: 3px;
+        background: var(--neon-green);
+        box-shadow: 0 0 15px var(--neon-green);
+    }
+
     .md-content h2 {
-        font-size: 1.75rem;
-        margin-top: 48px;
+        font-family: 'Outfit', sans-serif;
+        font-size: 1.8rem;
+        margin-top: 56px;
         margin-bottom: 24px;
-        color: var(--neon-green);
+        color: #fff;
         font-weight: 700;
-        letter-spacing: -0.01em;
         display: flex;
         align-items: center;
-        gap: 12px;
+        gap: 16px;
     }
 
     .md-content h2::before {
-        content: '';
-        display: block;
-        width: 6px;
-        height: 24px;
-        background: var(--neon-green);
-        border-radius: 2px;
-        box-shadow: 0 0 10px var(--neon-green);
+        content: '//';
+        color: var(--neon-green);
+        font-family: 'JetBrains Mono', monospace;
+        font-weight: bold;
+        font-size: 1.2rem;
+        text-shadow: 0 0 5px var(--neon-green);
     }
 
     .md-content h3 {
         font-size: 1.4rem;
-        margin-top: 32px;
+        margin-top: 40px;
         margin-bottom: 16px;
         color: #fff;
         font-weight: 600;
         border-left: 3px solid var(--neon-blue);
-        padding-left: 12px;
+        padding-left: 16px;
+        background: linear-gradient(90deg, rgba(8, 247, 254, 0.05) 0%, transparent 100%);
+        padding-top: 4px;
+        padding-bottom: 4px;
     }
 
-    .md-content h4 {
-        font-size: 1.1rem;
-        font-weight: 700;
-        margin-top: 24px;
-        color: var(--text-primary);
-        text-transform: uppercase;
-        letter-spacing: 0.05em;
-    }
-
-    /* Paragraphs */
     .md-content p {
         font-size: 1.05rem;
         line-height: 1.8;
-        color: var(--text-secondary);
-        /* Slightly off-white for reading comfort */
+        color: #c0c0c5;
         margin-bottom: 24px;
         max-width: 75ch;
-        /* Optimal reading line length */
     }
 
     .md-content strong {
         color: #fff;
         font-weight: 700;
+        text-shadow: 0 0 10px rgba(255, 255, 255, 0.2);
     }
 
     .md-content em {
         color: var(--neon-blue);
         font-style: normal;
-        /* Modern look */
+        font-family: 'JetBrains Mono', monospace;
+        font-size: 0.9em;
     }
 
     /* Lists */
     .md-content ul,
     .md-content ol {
-        padding-left: 20px;
+        padding-left: 0;
         margin-bottom: 32px;
     }
 
     .md-content li {
         margin-bottom: 12px;
-        padding-left: 8px;
-        line-height: 1.6;
-        color: var(--text-secondary);
+        padding-left: 32px;
         position: relative;
         list-style: none;
-        /* Custom markers */
+        color: #d0d0d5;
     }
 
     .md-content ul>li::before {
-        content: '>';
+        content: '';
         position: absolute;
-        left: -20px;
-        color: var(--neon-green);
-        font-weight: bold;
-        font-family: monospace;
+        left: 10px;
+        top: 10px;
+        width: 6px;
+        height: 6px;
+        background: var(--neon-green);
+        border-radius: 50%;
+        box-shadow: 0 0 5px var(--neon-green);
     }
 
     .md-content ol {
@@ -347,24 +386,41 @@
         content: counter(item) ".";
         counter-increment: item;
         position: absolute;
-        left: -24px;
+        left: 0;
         color: var(--neon-blue);
+        font-family: 'JetBrains Mono', monospace;
         font-weight: bold;
-        font-family: monospace;
     }
 
     /* Code Blocks */
     .md-content pre {
-        background: #0f0f13;
-        /* Darker than bg */
+        background: #08080a;
         border: 1px solid rgba(255, 255, 255, 0.1);
         border-radius: 8px;
-        padding: 20px;
+        padding: 24px;
         margin: 32px 0;
         overflow-x: auto;
-        width: 100%;
         position: relative;
-        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+    }
+
+    /* Mock Terminal Header for code blocks */
+    .md-content pre::before {
+        content: 'TERMINAL';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 24px;
+        background: rgba(255, 255, 255, 0.05);
+        border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+        font-family: 'JetBrains Mono', monospace;
+        font-size: 10px;
+        color: rgba(255, 255, 255, 0.4);
+        display: flex;
+        align-items: center;
+        padding-left: 12px;
+        letter-spacing: 1px;
     }
 
     .md-content pre code {
@@ -372,62 +428,101 @@
         font-size: 0.9rem;
         line-height: 1.5;
         color: #a9b7c6;
-        /* IDE text color */
         background: transparent;
         padding: 0;
         border: none;
+        display: block;
+        margin-top: 12px;
+        /* Space for the terminal header */
     }
 
     .md-content .inline-code {
-        background: rgba(255, 255, 255, 0.08);
-        color: var(--neon-orange);
+        background: rgba(159, 239, 0, 0.1);
+        color: var(--neon-green);
         padding: 2px 6px;
         border-radius: 4px;
         font-family: 'JetBrains Mono', monospace;
         font-size: 0.9em;
-        border: 1px solid rgba(255, 255, 255, 0.05);
+        border: 1px solid rgba(159, 239, 0, 0.2);
     }
 
-    /* Blockquotes / Callouts */
+    /* Blockquotes / Alerts */
     .md-content blockquote {
-        background: rgba(255, 215, 0, 0.05);
-        /* Gold tint */
-        border-left: 4px solid #FFD700;
+        background: rgba(255, 255, 255, 0.03);
+        border-left: 4px solid rgba(255, 255, 255, 0.2);
         padding: 24px;
         margin: 32px 0;
         border-radius: 0 8px 8px 0;
-        color: #fff;
+        color: #e0e0e0;
         font-style: italic;
-        position: relative;
+        backdrop-filter: blur(5px);
+    }
+
+    .alert-box {
+        padding: 20px;
+        margin: 24px 0;
+        border-radius: 8px;
+        border-left: 4px solid;
+        background: rgba(0, 0, 0, 0.2);
+        backdrop-filter: blur(10px);
+    }
+
+    .alert-important {
+        border-color: #ff3366;
+        background: linear-gradient(90deg, rgba(255, 51, 102, 0.1) 0%, transparent 100%);
+    }
+
+    .alert-tip {
+        border-color: var(--neon-green);
+        background: linear-gradient(90deg, rgba(159, 239, 0, 0.1) 0%, transparent 100%);
     }
 
     /* Links */
     .md-content a {
         color: var(--neon-blue);
         text-decoration: none;
-        border-bottom: 1px dashed var(--neon-blue);
-        transition: all 0.2s;
+        position: relative;
+        font-weight: 500;
+        transition: all 0.3s ease;
+    }
+
+    .md-content a::after {
+        content: '';
+        position: absolute;
+        bottom: -2px;
+        left: 0;
+        width: 100%;
+        height: 1px;
+        background: var(--neon-blue);
+        transform: scaleX(0.5);
+        transform-origin: left;
+        transition: transform 0.3s ease;
     }
 
     .md-content a:hover {
         color: #fff;
-        border-bottom-style: solid;
         text-shadow: 0 0 8px var(--neon-blue);
+    }
+
+    .md-content a:hover::after {
+        transform: scaleX(1);
+        box-shadow: 0 0 8px var(--neon-blue);
     }
 
     /* Images */
     .md-content img {
         max-width: 100%;
-        border-radius: 8px;
+        border-radius: 12px;
         border: 1px solid rgba(255, 255, 255, 0.1);
         margin: 32px 0;
-        box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3);
-        transition: transform 0.3s ease;
+        box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
+        transition: all 0.3s ease;
     }
 
     .md-content img:hover {
         transform: scale(1.01);
-        border-color: rgba(255, 255, 255, 0.3);
+        border-color: var(--neon-blue);
+        box-shadow: 0 0 20px rgba(8, 247, 254, 0.2);
     }
 
     /* Mobile Adjustments */
