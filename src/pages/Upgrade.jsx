@@ -11,7 +11,8 @@ export default function Upgrade() {
     const navigate = useNavigate();
     const { currentUser } = useAuth();
     const isPremium = currentUser?.isPremium;
-    const [openFaqIndex, setOpenFaqIndex] = useState(-1);
+    const [loading, setLoading] = useState(false);
+    const [joined, setJoined] = useState(false);
 
     const faqs = [
         {
@@ -28,9 +29,17 @@ export default function Upgrade() {
         }
     ];
 
-    const handleUpgrade = () => {
-        // TODO: Integrate Gumroad/Stripe here
-        window.open('https://gumroad.com/l/bountyprep-pro', '_blank');
+    const handleJoinWaitlist = async () => {
+        if (!currentUser) return;
+        setLoading(true);
+        // Add to waitlist logic
+        const { addToWaitlist } = await import('../utils/firestore');
+        const result = await addToWaitlist(currentUser.uid, currentUser.email, 'upgrade_page');
+
+        if (result.success) {
+            setJoined(true);
+        }
+        setLoading(false);
     };
 
     return (
@@ -136,12 +145,13 @@ export default function Upgrade() {
 
                     <button
                         className="btn btn-primary btn-full upgrade-btn"
-                        disabled={true}
+                        onClick={handleJoinWaitlist}
+                        disabled={loading || joined}
                     >
-                        Coming Soon
+                        {loading ? 'Joining...' : joined ? 'Joined Waitlist!' : 'Join Waitlist'}
                     </button>
                     <div className="guarantee-text">
-                        <Shield size={14} /> 7-day money-back guarantee
+                        <Shield size={14} /> Spots opening soon
                     </div>
                 </div>
             </div>

@@ -232,5 +232,73 @@ If I change \`1001\` to \`1002\` and see someone else's data, that's an IDOR.
                 ]
             }
         ]
+    },
+    {
+        id: 'network-security-101',
+        title: 'Network Security',
+        description: 'Master the art of network mapping, packet analysis, and exploiting common services.',
+        icon: Server,
+        level: 'Intermediate',
+        duration: '3h 15m',
+        xp: 800,
+        modules: [
+            {
+                id: 'net-m1',
+                title: 'Network Fundamentals',
+                duration: '45m',
+                lessons: [
+                    {
+                        id: 'nmap-basics',
+                        title: 'Nmap Scanning',
+                        type: 'text',
+                        duration: '20m',
+                        xp: 75,
+                        content: `# Nmap: Network Mapper\n\nLearn how to discover hosts and services on a computer network.`
+                    },
+                    {
+                        id: 'wireshark-intro',
+                        title: 'Packet Analysis with Wireshark',
+                        type: 'text',
+                        duration: '25m',
+                        xp: 75,
+                        content: `# Wireshark\n\nThe world's foremost network protocol analyzer.`
+                    }
+                ]
+            }
+        ]
+    },
+    {
+        id: 'python-for-pentesters',
+        title: 'Python for Pentesters',
+        description: 'Automate your attacks and build custom tools using Python.',
+        icon: Terminal,
+        level: 'Advanced',
+        duration: '4h',
+        xp: 1200,
+        modules: [
+            {
+                id: 'py-m1',
+                title: 'Python Basics for Hacking',
+                duration: '60m',
+                lessons: [
+                    {
+                        id: 'python-requests',
+                        title: 'Automating HTTP with Requests',
+                        type: 'text',
+                        duration: '30m',
+                        xp: 100,
+                        content: `# Python Requests\n\nHow to send HTTP requests using Python code.`
+                    },
+                    {
+                        id: 'writing-exploits',
+                        title: 'Writing Custom Exploits',
+                        type: 'text',
+                        duration: '30m',
+                        xp: 100,
+                        content: `# Custom Exploits\n\nTranslating manual attacks into automated Python scripts.`
+                    }
+                ]
+            }
+        ]
     }
 ];

@@ -405,3 +405,22 @@ export async function getAllCoursesProgress(userId) {
         return {};
     }
 }
+/**
+ * Add user to waitlist
+ */
+export async function addToWaitlist(userId, email, source = 'upgrade_page') {
+    try {
+        const waitlistRef = doc(db, 'waitlist', userId);
+        await setDoc(waitlistRef, {
+            userId,
+            email,
+            source,
+            joinedAt: serverTimestamp(),
+            status: 'pending' // pending, notified, converted
+        }, { merge: true });
+        return { success: true };
+    } catch (error) {
+        console.error('Error adding to waitlist:', error);
+        return { success: false, error };
+    }
+}
