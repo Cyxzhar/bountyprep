@@ -70,20 +70,17 @@
     color: #fff;
     line-height: 1.4;
     /* looser line height */
-    overflow-wrap: break-word;
-    /* Standard */
-    word-wrap: break-word;
-    /* Legacy */
+    overflow-wrap: anywhere;
+    /* Stronger than break-word */
     word-break: break-word;
-    /* Catch-all */
+    /* Fallback */
     hyphens: auto;
-    /* Break long words naturally */
+    white-space: normal;
+    /* Force wrapping */
     min-width: 0;
-    /* Allow shrinking */
     max-width: 100%;
-    /* Prevent overflow */
-    padding-right: 16px;
-    /* Extra breathing room on right */
+    padding-right: 0;
+    /* Let container gap handle spacing */
 }
 
 /* Layout */
@@ -120,26 +117,23 @@
     background: var(--bg-darker);
     border-left: 1px solid rgba(255, 255, 255, 0.05);
     overflow-y: auto;
+    /* Match Header Padding: left/right 24px */
     padding: 32px 24px;
-    /* Increased top/bottom padding to match Header */
     display: flex;
     flex-direction: column;
-    gap: 32px;
-    /* Increased gap */
+    gap: 24px;
 }
 
 .lesson-sidebar h3 {
     font-size: 0.9rem;
-    /* Slightly larger */
     color: var(--text-primary);
-    /* Brighter */
     text-transform: uppercase;
     letter-spacing: 0.1em;
     font-weight: 700;
     padding-bottom: 16px;
     border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-    /* More visible divider */
-    margin-bottom: 16px;
+    margin-bottom: 24px;
+    /* Increased margin */
 }
 
 .sidebar-module {
@@ -551,3 +545,4 @@
         transform: scale(1.05);
         box-shadow: 0 0 15px rgba(255, 255, 255, 0.1);
     }
+}
