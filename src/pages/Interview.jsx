@@ -10,7 +10,27 @@ import { generateInterviewResponse } from '../lib/perplexity';
 import { getRemainingQuota, useQuota, getQuotaResetTime } from '../utils/interviewQuota';
 import { saveInterviewSession, getLastInterviewSession } from '../utils/firestore';
 import { useAuth } from '../context/AuthContext';
+import { useSound } from '../context/SoundContext'; // Import sound
 import './Interview.css';
+
+// Helper to sanitize corrupt message history
+const getSafeMessageContent = (content) => {
+    let text = '';
+    if (typeof content === 'string') {
+        text = content;
+    } else if (typeof content === 'object' && content !== null) {
+        if (content.content && typeof content.content === 'string') {
+            text = content.content;
+        } else {
+            text = JSON.stringify(content);
+        }
+    } else {
+        text = String(content || '');
+    }
+
+    // Remove citations like [1], [1][2], [1, 2]
+    return text.replace(/\[\d+(?:,\s*\d+)*\]/g, '');
+};
 
 const TypingEffect = ({ text, onComplete }) => {
     const [displayedText, setDisplayedText] = useState('');
@@ -19,9 +39,10 @@ const TypingEffect = ({ text, onComplete }) => {
         let index = 0;
         // Faster typing for better UX
         const interval = setInterval(() => {
-            setDisplayedText(text.slice(0, index + 1));
+            const safeText = String(text || '');
+            setDisplayedText(safeText.slice(0, index + 1));
             index++;
-            if (index >= text.length) {
+            if (index >= safeText.length) {
                 clearInterval(interval);
                 if (onComplete) onComplete();
             }
@@ -78,7 +99,18 @@ export default function Interview() {
     const [showHistory, setShowHistory] = useState(false);
     const [sessionId, setSessionId] = useState(null);
     const messagesEndRef = useRef(null);
-    const { success, error, info } = useToast();
+    const { playSFX } = useSound(); // Use sound hook
+
+    // Timer effect
+    useEffect(() => {
+        let interval;
+        if (started) {
+            interval = setInterval(() => {
+                setElapsedTime(prev => prev + 1);
+            }, 1000);
+        }
+        return () => clearInterval(interval);
+    }, [started]);
 
     // ... (quota effect)
 
@@ -127,7 +159,50 @@ export default function Interview() {
         }
     };
 
-    // ... (handleSend, handleKeyPress)
+    const handleSend = async () => {
+        if (!input.trim() || isLoading) return;
+
+        // Check quota (unless premium)
+        const quotaResult = useQuota(isPremium);
+        if (!quotaResult.success) {
+            setQuota(0);
+            error('Daily interview quota reached. Upgrade to Premium for unlimited practice.');
+            return;
+        }
+
+        setQuota(quotaResult.remaining);
+
+        const userMsg = { role: 'user', content: input };
+        const newMessages = [...messages, userMsg];
+
+        setMessages(newMessages);
+        setInput('');
+        setIsLoading(true);
+
+        try {
+            // Get AI response
+            const response = await generateInterviewResponse(newMessages, difficulty);
+
+            if (response) {
+                const aiMsg = { role: 'assistant', content: response };
+                setMessages(prev => [...prev, aiMsg]);
+            } else {
+                error('Failed to get response from AI coach.');
+            }
+        } catch (err) {
+            console.error('Interview error:', err);
+            error('Connection error. Please try again.');
+        } finally {
+            setIsLoading(false);
+        }
+    };
+
+    const handleKeyPress = (e) => {
+        if (e.key === 'Enter' && !e.shiftKey) {
+            e.preventDefault();
+            handleSend();
+        }
+    };
 
     const handleEndSession = () => {
         setStarted(false);
@@ -141,6 +216,12 @@ export default function Interview() {
     const formatDate = (date) => {
         if (!date) return '';
         return new Intl.DateTimeFormat('en-US', { month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' }).format(date);
+    };
+
+    const formatTime = (seconds) => {
+        const mins = Math.floor(seconds / 60);
+        const secs = seconds % 60;
+        return `${mins}:${secs.toString().padStart(2, '0')}`;
     };
 
     if (!started) {
@@ -284,6 +365,7 @@ export default function Interview() {
                 {messages.map((msg, idx) => {
                     const isLastAI = msg.role === 'assistant' && idx === messages.length - 1;
                     const showTyping = isLastAI && idx > 0; // Don't animate initial greeting
+                    const safeContent = getSafeMessageContent(msg.content);
 
                     return (
                         <div key={idx} className={`message ${msg.role === 'assistant' ? 'ai' : 'user'}`}>
@@ -295,7 +377,7 @@ export default function Interview() {
                             <div className="message-bubble">
                                 {msg.role === 'assistant' ? (
                                     showTyping ? (
-                                        <TypingEffect text={msg.content} />
+                                        <TypingEffect text={safeContent} />
                                     ) : (
                                         <ReactMarkdown
                                             components={{
@@ -310,11 +392,11 @@ export default function Interview() {
                                                 strong: ({ children }) => <strong className="md-bold">{children}</strong>,
                                             }}
                                         >
-                                            {msg.content}
+                                            {safeContent}
                                         </ReactMarkdown>
                                     )
                                 ) : (
-                                    <p>{msg.content}</p>
+                                    <p>{safeContent}</p>
                                 )}
                             </div>
                         </div>

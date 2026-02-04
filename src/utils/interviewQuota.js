@@ -7,7 +7,7 @@
  */
 
 const QUOTA_KEY = 'bountyprep_interview_quota';
-const FREE_DAILY_LIMIT = 5;
+const FREE_DAILY_LIMIT = 10;
 const PREMIUM_DAILY_LIMIT = 50;
 
 function getQuotaData() {

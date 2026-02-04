@@ -98,6 +98,11 @@ export function SoundProvider({ children }) {
                 if (e.name === 'AbortError' || e.message.includes('interrupted')) {
                     return;
                 }
+                // Ignore Autoplay policy errors (User didn't interact yet)
+                if (e.name === 'NotAllowedError') {
+                    // console.debug("Autoplay waiting for interaction");
+                    return;
+                }
                 console.warn("BGM Playback failed:", e.message);
             });
         }

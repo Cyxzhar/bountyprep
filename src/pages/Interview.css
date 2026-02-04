@@ -453,8 +453,12 @@
 
 /* Markdown Styling */
 .message-bubble .md-paragraph {
-    margin: 0 0 0.75em 0;
-    line-height: 1.6;
+    margin: 0 0 1em 0;
+    line-height: 1.7;
+    font-size: 0.95rem;
+    /* Slightly larger text */
+    text-align: left;
+    letter-spacing: 0.01em;
 }
 
 .message-bubble .md-paragraph:last-child {

@@ -40,6 +40,17 @@ export async function generateInterviewResponse(messages, difficulty, topic) {
                 };
             }
 
+            // Ensure proper message alternation (System -> User -> Assistant...)
+            // Remove initial assistant greeting if it exists to strictly follow System -> User
+            let apiMessages = messages.map(m => ({
+                role: m.role,
+                content: typeof m.content === 'string' ? m.content : JSON.stringify(m.content || '')
+            }));
+
+            if (apiMessages.length > 0 && apiMessages[0].role === 'assistant') {
+                apiMessages.shift();
+            }
+
             response = await fetch(PERPLEXITY_API_URL, {
                 method: 'POST',
                 headers: {
@@ -50,7 +61,7 @@ export async function generateInterviewResponse(messages, difficulty, topic) {
                     model: 'sonar',
                     messages: [
                         { role: 'system', content: systemPrompt },
-                        ...messages
+                        ...apiMessages
                     ],
                     temperature: 0.2,
                     max_tokens: 1000,
@@ -58,13 +69,18 @@ export async function generateInterviewResponse(messages, difficulty, topic) {
             });
         } else {
             // Use serverless proxy on Vercel
+            let apiMessages = [...messages];
+            if (apiMessages.length > 0 && apiMessages[0].role === 'assistant') {
+                apiMessages.shift();
+            }
+
             response = await fetch('/api/chat', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
                 },
                 body: JSON.stringify({
-                    messages,
+                    messages: apiMessages,
                     difficulty,
                     topic
                 })

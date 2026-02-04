@@ -16,7 +16,7 @@ export default function ChallengeDetail() {
     const navigate = useNavigate();
     const { currentUser, refreshUser } = useAuth();
     const { success, error: showError } = useToast();
-    const { playBGM, stopBGM } = useSound(); // Use sound hook
+    const { playBGM, stopBGM, playSFX } = useSound(); // Use sound hook (v2 confirmed)
     const { unlockMultiple } = useAchievement();
     const challenge = challenges.find(c => c.id === id) || challenges[0];
 
@@ -26,7 +26,14 @@ export default function ChallengeDetail() {
         start();
         // Play short focus sound
         playBGM('focus', { loop: false, volume: 0.2 });
+
+        // Auto-stop after 4 seconds (per user request "few seconds only")
+        const timer = setTimeout(() => {
+            stopBGM();
+        }, 4000);
+
         return () => {
+            clearTimeout(timer);
             stop();
             stopBGM();
         };
@@ -205,7 +212,7 @@ export default function ChallengeDetail() {
         <div className="detail-screen">
             {/* Header */}
             <header className="detail-header">
-                <button className="back-btn" onClick={() => { playSFX('click'); navigate('/challenges'); }}>
+                <button className="back-btn" onClick={() => { stopBGM(); playSFX('click'); navigate('/challenges'); }}>
                     <ArrowLeft size={20} />
                 </button>
                 <div className="header-info">
