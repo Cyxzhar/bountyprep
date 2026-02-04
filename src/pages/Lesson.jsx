@@ -18,10 +18,10 @@ export default function Lesson() {
 
     const { currentUser, refreshUser } = useAuth();
     const { success, error: showError } = useToast();
-    const { playSFX } = useSound(); // Add sound context
+    const { playSFX } = useSound();
     const [courseProgress, setCourseProgress] = useState(null);
     const [isCompleted, setIsCompleted] = useState(false);
-    const [saving, setSaving] = useState(false); // Add saving state
+    const [saving, setSaving] = useState(false);
 
     // Fetch progress to check completion status
     useEffect(() => {
