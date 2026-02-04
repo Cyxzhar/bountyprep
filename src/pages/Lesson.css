@@ -1,4 +1,15 @@
-/* Lesson Page Styles */
+/* Lesson Page Styles - Reference Design */
+
+:root {
+    --ref-bg: #0b0c15;
+    --ref-card-bg: #13141f;
+    --ref-text-main: #e0e0e0;
+    --ref-text-muted: #a0a0aa;
+    --ref-accent-lime: #cfef00;
+    /* Bright Lime from screenshot */
+    --ref-accent-blue: #38bdf8;
+    /* Sky blue for numbers */
+}
 
 .lesson-page {
     height: 100vh;
@@ -6,650 +17,374 @@
     flex-direction: column;
     overflow: hidden;
     padding: 0;
-    padding-bottom: 0;
-    background: #050507;
-    /* Deepest black-blue */
+    background: var(--ref-bg);
+    color: var(--ref-text-main);
 }
 
-/* Header - Premium HUD Style */
+/* --- Header --- */
 .lesson-header {
     height: auto;
-    min-height: 80px;
-    padding-top: calc(env(safe-area-inset-top) + 20px);
-    padding-bottom: 20px;
-    padding-left: 32px;
-    padding-right: 32px;
+    min-height: auto;
+    padding: calc(env(safe-area-inset-top) + 24px) 32px 24px 32px;
+    background: var(--ref-bg);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
     display: flex;
     align-items: flex-start;
-    gap: 24px;
-    background: rgba(10, 10, 15, 0.85);
-    border-bottom: 1px solid rgba(159, 239, 0, 0.1);
-    box-shadow: 0 4px 30px rgba(0, 0, 0, 0.5);
+    gap: 20px;
     flex-shrink: 0;
-    backdrop-filter: blur(16px);
-    -webkit-backdrop-filter: blur(16px);
-    z-index: 50;
-    width: 100%;
-    box-sizing: border-box;
+    z-index: 10;
     position: relative;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
 }
 
-/* Neon glow line under header */
-.lesson-header::after {
-    content: '';
-    position: absolute;
-    bottom: -1px;
-    left: 0;
-    width: 100%;
-    height: 1px;
-    background: linear-gradient(90deg,
-            transparent 0%,
-            var(--neon-green) 20%,
-            var(--neon-blue) 50%,
-            var(--neon-green) 80%,
-            transparent 100%);
-    opacity: 0.5;
+.icon-btn {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--ref-text-muted);
+    cursor: pointer;
+    transition: all 0.2s ease;
+    flex-shrink: 0;
+}
+
+.icon-btn:hover {
+    background: rgba(255, 255, 255, 0.1);
+    color: #fff;
+    border-color: rgba(255, 255, 255, 0.2);
 }
 
 .lesson-header-text {
+    flex: 1;
     display: flex;
     flex-direction: column;
     gap: 8px;
-    padding-top: 2px;
-    flex: 1;
     min-width: 0;
 }
 
 .course-breadcrumb {
-    font-size: 0.75rem;
-    color: var(--neon-blue);
-    text-transform: uppercase;
-    letter-spacing: 0.15em;
     font-family: 'JetBrains Mono', monospace;
+    font-size: 0.75rem;
+    color: var(--ref-accent-lime);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
     font-weight: 600;
-    display: flex;
-    align-items: center;
-    gap: 8px;
-}
-
-.course-breadcrumb::before {
-    content: '>';
-    color: var(--neon-green);
-    font-weight: bold;
+    word-spacing: 0.1em;
 }
 
 .lesson-header-title {
+    font-family: 'Outfit', sans-serif;
     font-size: 1.75rem;
-    margin: 0;
     font-weight: 800;
     color: #fff;
     line-height: 1.2;
-    overflow-wrap: break-word;
-    word-break: break-word;
-    /* Ensure wrapping */
-    white-space: normal;
-    hyphens: auto;
-    text-shadow: 0 0 20px rgba(255, 255, 255, 0.1);
-    font-family: 'Outfit', sans-serif;
-    letter-spacing: -0.01em;
+    margin: 0;
 }
 
-/* Layout */
+/* --- Layout --- */
 .lesson-layout {
     flex: 1;
     display: flex;
     overflow: hidden;
-    background: radial-gradient(circle at 50% 0%, #111118 0%, #050507 100%);
     position: relative;
 }
 
-/* Background Grid Effect */
-.lesson-layout::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background-image:
-        linear-gradient(rgba(255, 255, 255, 0.02) 1px, transparent 1px),
-        linear-gradient(90deg, rgba(255, 255, 255, 0.02) 1px, transparent 1px);
-    background-size: 40px 40px;
-    pointer-events: none;
-    z-index: 0;
-}
-
-/* Main Content */
 .lesson-content-wrapper {
     flex: 1;
     overflow-y: auto;
-    padding: 48px 64px;
-    display: flex;
-    flex-direction: column;
-    gap: 40px;
-    max-width: 960px;
-    /* Slightly wider for modern feel */
+    padding: 40px 64px;
+    max-width: 800px;
     margin: 0 auto;
     width: 100%;
-    z-index: 1;
-    /* Above grid */
-    scrollbar-width: thin;
-    scrollbar-color: rgba(159, 239, 0, 0.2) transparent;
+    box-sizing: border-box;
 }
 
-.lesson-content {
-    background: transparent;
-    padding: 0;
-    border: none;
-    line-height: 1.8;
+/* --- MarkDown Content --- */
+.md-content {
+    font-family: 'Inter', sans-serif;
+    color: #c9c9cf;
+    font-size: 1.05rem;
+    line-height: 1.75;
 }
 
-/* Video Container - Cyber Frame */
-.video-container {
-    border: 1px solid rgba(255, 255, 255, 0.1);
-    box-shadow: 0 0 30px rgba(0, 0, 0, 0.5);
-    transition: all 0.3s ease;
+.md-content>*+* {
+    margin-top: 1.5em;
 }
 
-.video-container:hover {
-    border-color: var(--neon-blue);
-    box-shadow: 0 0 40px rgba(8, 247, 254, 0.2);
-}
-
-/* Sidebar - Tech List */
-.lesson-sidebar {
-    width: 320px;
-    background: rgba(10, 10, 15, 0.6);
-    backdrop-filter: blur(10px);
-    border-left: 1px solid rgba(255, 255, 255, 0.05);
-    overflow-y: auto;
-    padding: 32px 24px;
-    display: flex;
-    flex-direction: column;
-    gap: 24px;
-    z-index: 2;
-}
-
-.lesson-sidebar h3 {
-    font-size: 0.9rem;
-    color: #fff;
-    text-transform: uppercase;
-    letter-spacing: 0.15em;
+/* Headings (H1/H2 match styles) */
+.md-content h1,
+.md-content h2 {
+    font-family: 'Outfit', sans-serif;
     font-weight: 700;
-    padding-bottom: 16px;
-    border-bottom: 1px solid rgba(159, 239, 0, 0.2);
+    color: var(--ref-accent-lime);
+    margin-top: 48px;
     margin-bottom: 24px;
-    text-shadow: 0 0 10px rgba(159, 239, 0, 0.3);
+    display: flex;
+    align-items: center;
+    font-size: 1.5rem;
+    line-height: 1.3;
 }
 
-.sidebar-module {
+/* Vertical Pill Indicator */
+.md-content h1::before,
+.md-content h2::before {
+    content: '';
+    display: inline-block;
+    width: 6px;
+    height: 24px;
+    background: var(--ref-accent-lime);
+    margin-right: 16px;
+    border-radius: 4px;
+    box-shadow: 0 0 10px rgba(207, 239, 0, 0.4);
+    flex-shrink: 0;
+}
+
+/* H3 - Smaller, White */
+.md-content h3 {
+    font-size: 1.2rem;
+    color: #fff;
+    font-weight: 600;
+    margin-top: 32px;
+    margin-bottom: 16px;
+}
+
+/* Typography elements */
+.md-content p {
+    margin-bottom: 24px;
+}
+
+.md-content strong {
+    color: #fff;
+    font-weight: 700;
+}
+
+/* Lists */
+.md-content ul,
+.md-content ol {
+    padding-left: 0;
+    margin-bottom: 32px;
+}
+
+.md-content li {
+    list-style: none;
+    margin-bottom: 16px;
+    padding-left: 28px;
+    position: relative;
+}
+
+/* Unordered: ">" marker */
+.md-content ul>li::before {
+    content: '>';
+    position: absolute;
+    left: 0;
+    top: 0;
+    color: var(--ref-accent-lime);
+    font-weight: bold;
+    font-family: monospace;
+    font-size: 1.1em;
+}
+
+/* Ordered: "1." marker (Blue) */
+.md-content ol {
+    counter-reset: item;
+}
+
+.md-content ol>li::before {
+    content: counter(item) ".";
+    counter-increment: item;
+    position: absolute;
+    left: 0;
+    top: 0;
+    color: var(--ref-accent-blue);
+    font-weight: bold;
+    font-family: 'JetBrains Mono', monospace;
+}
+
+/* Blockquotes */
+.md-content blockquote {
+    border-left: 3px solid var(--ref-accent-lime);
+    padding-left: 24px;
+    margin: 32px 0;
+    color: var(--ref-text-muted);
+    font-style: italic;
+    background: transparent;
+}
+
+/* Code Blocks */
+.md-content pre {
+    background: var(--ref-card-bg);
+    border-radius: 8px;
+    padding: 24px;
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    overflow-x: auto;
+    font-size: 0.9em;
+}
+
+.md-content code {
+    font-family: 'JetBrains Mono', monospace;
+    color: #e0e0e0;
+}
+
+.md-content .inline-code {
+    background: rgba(255, 255, 255, 0.1);
+    padding: 2px 6px;
+    border-radius: 4px;
+    color: var(--ref-accent-lime);
+    font-size: 0.9em;
+}
+
+/* Actions Footer */
+.lesson-actions {
+    display: flex;
+    justify-content: space-between;
+    margin-top: auto;
+    padding-top: 32px;
+    border-top: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.nav-btn {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 12px 24px;
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    color: var(--ref-text-muted);
+    border-radius: 4px;
+    cursor: pointer;
+    transition: all 0.2s;
+    font-size: 0.9rem;
+    font-weight: 600;
+}
+
+.nav-btn:hover:not(:disabled) {
+    background: rgba(255, 255, 255, 0.1);
+    border-color: #fff;
+    color: #fff;
+}
+
+.nav-btn:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+.complete-btn {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 12px 32px;
+    background: var(--ref-accent-lime);
+    color: #000;
+    border: none;
+    border-radius: 4px;
+    font-weight: 800;
+    cursor: pointer;
+    transition: all 0.2s;
+    font-size: 0.9rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    box-shadow: 0 0 15px rgba(207, 239, 0, 0.2);
+}
+
+.complete-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 0 25px rgba(207, 239, 0, 0.4);
+    background: #eaff00;
+}
+
+/* --- Sidebar --- */
+.lesson-sidebar {
+    width: 300px;
+    background: #0f1016;
+    border-left: 1px solid rgba(255, 255, 255, 0.08);
     display: flex;
     flex-direction: column;
-    gap: 16px;
+    padding: 32px;
+    overflow-y: auto;
 }
 
 .sidebar-module-title {
-    font-size: 0.85rem;
-    font-weight: 600;
-    color: var(--neon-green);
-    /* Highlight module titles */
-    padding: 4px 0;
+    color: var(--ref-accent-lime);
+    font-size: 0.75rem;
     text-transform: uppercase;
     letter-spacing: 0.05em;
-    overflow-wrap: break-word;
-    /* Wrap long module names */
-}
-
-.sidebar-lessons {
-    display: flex;
-    flex-direction: column;
-    gap: 4px;
+    font-weight: 700;
+    margin-bottom: 8px;
 }
 
 .sidebar-lesson {
-    display: flex;
-    align-items: flex-start;
-    gap: 12px;
-    padding: 12px;
+    padding: 10px 12px;
     border-radius: 4px;
-    color: #888;
+    color: var(--ref-text-muted);
     font-size: 0.9rem;
     cursor: pointer;
     transition: all 0.2s;
-    border-left: 2px solid transparent;
-    line-height: 1.4;
+    display: flex;
+    gap: 12px;
     position: relative;
-    overflow: hidden;
-}
-
-.sidebar-lesson span {
-    overflow-wrap: break-word;
-    word-break: break-word;
+    border-left: 2px solid transparent;
 }
 
 .sidebar-lesson:hover {
-    background: rgba(255, 255, 255, 0.05);
     color: #fff;
-    padding-left: 16px;
-    /* Subtle slide effect */
+    background: rgba(255, 255, 255, 0.03);
 }
 
 .sidebar-lesson.active {
-    background: linear-gradient(90deg, rgba(159, 239, 0, 0.1) 0%, transparent 100%);
     color: #fff;
-    border-left-color: var(--neon-green);
     font-weight: 600;
-    box-shadow: inset 0 0 20px rgba(159, 239, 0, 0.05);
+    border-left-color: var(--ref-accent-lime);
+    background: rgba(207, 239, 0, 0.05);
 }
 
-@media (max-width: 1024px) {
-    .lesson-sidebar {
-        display: none;
-    }
+/* Video Container */
+.video-container {
+    border-radius: 8px;
+    overflow: hidden;
+    background: #000;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
 }
 
+/* --- Mobile Responsiveness --- */
 @media (max-width: 768px) {
-    .lesson-page {
-        height: 100vh;
-        height: 100dvh;
+    .lesson-header {
+        padding: 16px 20px;
+        min-height: 60px;
+        align-items: center;
     }
 
-    .lesson-header {
-        padding: 0 var(--space-md);
-        height: 56px;
+    .lesson-header-text {
+        gap: 4px;
+    }
+
+    .lesson-header-title {
+        font-size: 1.25rem;
+    }
+
+    .course-breadcrumb {
+        font-size: 0.65rem;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        display: block;
+        max-width: 100%;
     }
 
     .lesson-content-wrapper {
-        padding: 0;
-        /* Flush on mobile */
+        padding: 24px;
     }
 
-    .lesson-content {
-        border: none;
-        background: transparent;
-        padding: var(--space-md) var(--space-md);
-        /* Standard 16px padding */
-        border-radius: 0;
+    .lesson-sidebar {
+        display: none;
     }
 
-    /* Markdown Styles in .md-content */
-
-    .md-content {
-        font-family: 'Inter', sans-serif;
-        color: #d0d0d5;
-        font-size: 16px;
-        line-height: 1.7;
-    }
-
-    .md-content>*+* {
-        margin-top: 1.5em;
-    }
-
-    /* Headings */
-    .md-content h1 {
-        font-family: 'Outfit', sans-serif;
-        font-size: 2.5rem;
-        font-weight: 800;
-        margin-bottom: 32px;
-        padding-bottom: 24px;
-        border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-        color: #fff;
-        position: relative;
-        letter-spacing: -0.02em;
-        background: linear-gradient(135deg, #ffffff 0%, #a0a0a0 100%);
-        -webkit-background-clip: text;
-        -webkit-text-fill-color: transparent;
-    }
-
-    .md-content h1::after {
-        content: '';
-        position: absolute;
-        bottom: -1px;
-        left: 0;
-        width: 60px;
-        height: 3px;
-        background: var(--neon-green);
-        box-shadow: 0 0 15px var(--neon-green);
-    }
-
+    .md-content h1,
     .md-content h2 {
-        font-family: 'Outfit', sans-serif;
-        font-size: 1.8rem;
-        margin-top: 56px;
-        margin-bottom: 24px;
-        color: #fff;
-        font-weight: 700;
-        display: flex;
-        align-items: center;
-        gap: 16px;
-    }
-
-    .md-content h2::before {
-        content: '//';
-        color: var(--neon-green);
-        font-family: 'JetBrains Mono', monospace;
-        font-weight: bold;
-        font-size: 1.2rem;
-        text-shadow: 0 0 5px var(--neon-green);
-    }
-
-    .md-content h3 {
-        font-size: 1.4rem;
-        margin-top: 40px;
-        margin-bottom: 16px;
-        color: #fff;
-        font-weight: 600;
-        border-left: 3px solid var(--neon-blue);
-        padding-left: 16px;
-        background: linear-gradient(90deg, rgba(8, 247, 254, 0.05) 0%, transparent 100%);
-        padding-top: 4px;
-        padding-bottom: 4px;
-    }
-
-    .md-content p {
-        font-size: 1.05rem;
-        line-height: 1.8;
-        color: #c0c0c5;
-        margin-bottom: 24px;
-        max-width: 75ch;
-    }
-
-    .md-content strong {
-        color: #fff;
-        font-weight: 700;
-        text-shadow: 0 0 10px rgba(255, 255, 255, 0.2);
-    }
-
-    .md-content em {
-        color: var(--neon-blue);
-        font-style: normal;
-        font-family: 'JetBrains Mono', monospace;
-        font-size: 0.9em;
-    }
-
-    /* Lists */
-    .md-content ul,
-    .md-content ol {
-        padding-left: 0;
-        margin-bottom: 32px;
-    }
-
-    .md-content li {
-        margin-bottom: 12px;
-        padding-left: 32px;
-        position: relative;
-        list-style: none;
-        color: #d0d0d5;
-    }
-
-    .md-content ul>li::before {
-        content: '';
-        position: absolute;
-        left: 10px;
-        top: 10px;
-        width: 6px;
-        height: 6px;
-        background: var(--neon-green);
-        border-radius: 50%;
-        box-shadow: 0 0 5px var(--neon-green);
-    }
-
-    .md-content ol {
-        counter-reset: item;
-    }
-
-    .md-content ol>li::before {
-        content: counter(item) ".";
-        counter-increment: item;
-        position: absolute;
-        left: 0;
-        color: var(--neon-blue);
-        font-family: 'JetBrains Mono', monospace;
-        font-weight: bold;
-    }
-
-    /* Code Blocks */
-    .md-content pre {
-        background: #08080a;
-        border: 1px solid rgba(255, 255, 255, 0.1);
-        border-radius: 8px;
-        padding: 24px;
-        margin: 32px 0;
-        overflow-x: auto;
-        position: relative;
-        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
-    }
-
-    /* Mock Terminal Header for code blocks */
-    .md-content pre::before {
-        content: 'TERMINAL';
-        position: absolute;
-        top: 0;
-        left: 0;
-        right: 0;
-        height: 24px;
-        background: rgba(255, 255, 255, 0.05);
-        border-bottom: 1px solid rgba(255, 255, 255, 0.05);
-        font-family: 'JetBrains Mono', monospace;
-        font-size: 10px;
-        color: rgba(255, 255, 255, 0.4);
-        display: flex;
-        align-items: center;
-        padding-left: 12px;
-        letter-spacing: 1px;
-    }
-
-    .md-content pre code {
-        font-family: 'JetBrains Mono', monospace;
-        font-size: 0.9rem;
-        line-height: 1.5;
-        color: #a9b7c6;
-        background: transparent;
-        padding: 0;
-        border: none;
-        display: block;
-        margin-top: 12px;
-        /* Space for the terminal header */
-    }
-
-    .md-content .inline-code {
-        background: rgba(159, 239, 0, 0.1);
-        color: var(--neon-green);
-        padding: 2px 6px;
-        border-radius: 4px;
-        font-family: 'JetBrains Mono', monospace;
-        font-size: 0.9em;
-        border: 1px solid rgba(159, 239, 0, 0.2);
-    }
-
-    /* Blockquotes / Alerts */
-    .md-content blockquote {
-        background: rgba(255, 255, 255, 0.03);
-        border-left: 4px solid rgba(255, 255, 255, 0.2);
-        padding: 24px;
-        margin: 32px 0;
-        border-radius: 0 8px 8px 0;
-        color: #e0e0e0;
-        font-style: italic;
-        backdrop-filter: blur(5px);
-    }
-
-    .alert-box {
-        padding: 20px;
-        margin: 24px 0;
-        border-radius: 8px;
-        border-left: 4px solid;
-        background: rgba(0, 0, 0, 0.2);
-        backdrop-filter: blur(10px);
-    }
-
-    .alert-important {
-        border-color: #ff3366;
-        background: linear-gradient(90deg, rgba(255, 51, 102, 0.1) 0%, transparent 100%);
-    }
-
-    .alert-tip {
-        border-color: var(--neon-green);
-        background: linear-gradient(90deg, rgba(159, 239, 0, 0.1) 0%, transparent 100%);
-    }
-
-    /* Links */
-    .md-content a {
-        color: var(--neon-blue);
-        text-decoration: none;
-        position: relative;
-        font-weight: 500;
-        transition: all 0.3s ease;
-    }
-
-    .md-content a::after {
-        content: '';
-        position: absolute;
-        bottom: -2px;
-        left: 0;
-        width: 100%;
-        height: 1px;
-        background: var(--neon-blue);
-        transform: scaleX(0.5);
-        transform-origin: left;
-        transition: transform 0.3s ease;
-    }
-
-    .md-content a:hover {
-        color: #fff;
-        text-shadow: 0 0 8px var(--neon-blue);
-    }
-
-    .md-content a:hover::after {
-        transform: scaleX(1);
-        box-shadow: 0 0 8px var(--neon-blue);
-    }
-
-    /* Images */
-    .md-content img {
-        max-width: 100%;
-        border-radius: 12px;
-        border: 1px solid rgba(255, 255, 255, 0.1);
-        margin: 32px 0;
-        box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
-        transition: all 0.3s ease;
-    }
-
-    .md-content img:hover {
-        transform: scale(1.01);
-        border-color: var(--neon-blue);
-        box-shadow: 0 0 20px rgba(8, 247, 254, 0.2);
-    }
-
-    /* Mobile Adjustments */
-    @media (max-width: 768px) {
-        .md-content h1 {
-            font-size: 1.8rem;
-        }
-
-        .md-content h2 {
-            font-size: 1.5rem;
-        }
-
-        .md-content p {
-            font-size: 1rem;
-        }
-
-        .md-content pre {
-            padding: 16px;
-            margin: 24px 0;
-        }
-
-        /* Footer spacing handled in lesson-actions */
-    }
-
-    /* Actions Footer */
-    .lesson-actions {
-        display: flex;
-        justify-content: space-between;
-        margin-top: auto;
-        padding-top: 32px;
-        border-top: 1px solid rgba(255, 255, 255, 0.05);
-    }
-
-    .nav-btn {
-        display: flex;
-        align-items: center;
-        gap: 8px;
-        padding: 12px 24px;
-        background: rgba(255, 255, 255, 0.05);
-        border: 1px solid rgba(255, 255, 255, 0.1);
-        color: var(--text-secondary);
-        border-radius: 4px;
-        cursor: pointer;
-        transition: all 0.2s;
-        font-size: 0.9rem;
-        font-weight: 600;
-    }
-
-    .nav-btn:hover:not(:disabled) {
-        background: rgba(255, 255, 255, 0.1);
-        border-color: #fff;
-        color: #fff;
-        transform: translateX(-2px);
-    }
-
-    .nav-btn:disabled {
-        opacity: 0.5;
-        cursor: not-allowed;
-    }
-
-    .complete-btn {
-        display: flex;
-        align-items: center;
-        gap: 8px;
-        padding: 12px 32px;
-        background: var(--neon-green);
-        color: #000;
-        border: none;
-        border-radius: 4px;
-        font-weight: 700;
-        cursor: pointer;
-        transition: all 0.2s;
-        font-size: 0.9rem;
-        text-transform: uppercase;
-        letter-spacing: 0.05em;
-        box-shadow: 0 0 15px rgba(159, 239, 0, 0.3);
-    }
-
-    .complete-btn:hover {
-        transform: translateY(-2px);
-        box-shadow: 0 0 25px rgba(159, 239, 0, 0.5);
-        background: #B8FF33;
-    }
-
-    /* Header Back Button */
-    .icon-btn {
-        width: 42px;
-        height: 42px;
-        min-width: 42px;
-        /* Prevent squeezing */
-        min-height: 42px;
-        flex-shrink: 0;
-        /* Prevent squeezing */
-        border-radius: 50%;
-        background: rgba(255, 255, 255, 0.05);
-        border: 1px solid rgba(255, 255, 255, 0.1);
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        color: var(--text-secondary);
-        cursor: pointer;
-        transition: all 0.2s;
-        margin-top: 4px;
-        /* Align with first line of text */
-    }
-
-    .icon-btn:hover {
-        background: rgba(255, 255, 255, 0.1);
-        border-color: #fff;
-        color: #fff;
-        transform: scale(1.05);
-        box-shadow: 0 0 15px rgba(255, 255, 255, 0.1);
+        font-size: 1.3rem;
+        margin-top: 32px;
     }
 }
