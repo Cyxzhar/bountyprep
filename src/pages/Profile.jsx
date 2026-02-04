@@ -49,7 +49,7 @@ export default function Profile() {
                     setSettings(updated);
                     success('Notifications enabled!');
                     // Show test notification
-                    new Notification('BountyPrep', {
+                    new Notification('Bugora', {
                         body: 'Notifications are now enabled!',
                         icon: '/icons/icon-192x192.png'
                     });
@@ -173,7 +173,7 @@ export default function Profile() {
                 {
                     icon: HelpCircle,
                     label: 'Help & Support',
-                    action: () => handleExternalLink('mailto:support@bountyprep.com', 'Email')
+                    action: () => handleExternalLink('mailto:support@bugora.app', 'Email')
                 },
                 {
                     icon: Star,
@@ -192,18 +192,18 @@ export default function Profile() {
             items: [
                 {
                     icon: Info,
-                    label: 'About BountyPrep',
-                    action: () => handleExternalLink('https://bountyprep.vercel.app', 'Website')
+                    label: 'About Bugora',
+                    action: () => handleExternalLink('https://bugora.app', 'Website')
                 },
                 {
                     icon: FileText,
                     label: 'Privacy Policy',
-                    action: () => handleExternalLink('https://bountyprep.vercel.app/privacy', 'Privacy')
+                    action: () => handleExternalLink('https://bugora.app/privacy', 'Privacy')
                 },
                 {
                     icon: FileText,
                     label: 'Terms of Service',
-                    action: () => handleExternalLink('https://bountyprep.vercel.app/terms', 'Terms')
+                    action: () => handleExternalLink('https://bugora.app/terms', 'Terms')
                 },
             ]
         }
@@ -327,7 +327,7 @@ export default function Profile() {
                         <Shield size={20} />
                         <Bug size={10} className="logo-bug" />
                     </div>
-                    <span className="app-name">BountyPrep v1.0.0</span>
+                    <span className="app-name">Bugora v1.0.0</span>
                 </div>
             </div>
 

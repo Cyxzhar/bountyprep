@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Shield, Bug, ChevronRight, Star, Users, Zap } from 'lucide-react';
+import { Shield, Bug, ChevronRight, Calculator, Terminal, Award, Zap, Bot, Target, LockOpen } from 'lucide-react';
 import { useSound } from '../../context/SoundContext';
 import PageTransition, { FADE } from '../../components/PageTransition';
 import './Onboarding.css';
@@ -59,8 +59,7 @@ export default function Welcome() {
                         <div className="hero-illustration">
                             <div className="hero-glow"></div>
                             <div className="hero-icon-main">
-                                <Shield size={80} strokeWidth={1.5} />
-                                <Bug className="hero-bug" size={32} />
+                                <img src="/logo.svg" alt="Bugora" style={{ width: '100px', height: '100px' }} />
                             </div>
                             <div className="hero-particles">
                                 <span style={{ top: '10%', left: '20%', animationDelay: '0s' }}></span>
@@ -83,29 +82,35 @@ export default function Welcome() {
                     {/* Stats */}
                     <div className="welcome-stats">
                         <div className="stat-item">
-                            <Users size={18} />
-                            <span className="stat-value">10K+</span>
-                            <span className="stat-label">Learners</span>
+                            <Target size={18} />
+                            <span className="stat-value">50+</span>
+                            <span className="stat-label">Labs</span>
                         </div>
                         <div className="stat-divider"></div>
                         <div className="stat-item">
-                            <Star size={18} />
-                            <span className="stat-value">4.9</span>
-                            <span className="stat-label">Rating</span>
+                            <Bot size={18} />
+                            <span className="stat-value">AI</span>
+                            <span className="stat-label">Coach</span>
                         </div>
                         <div className="stat-divider"></div>
                         <div className="stat-item">
-                            <Zap size={18} />
-                            <span className="stat-value">200+</span>
-                            <span className="stat-label">Challenges</span>
+                            <Award size={18} />
+                            <span className="stat-value">Pro</span>
+                            <span className="stat-label">Certs</span>
                         </div>
                     </div>
 
                     {/* Trust Badges */}
                     <div className="trust-badges">
-                        <div className="trust-badge">🔒 Beginner Friendly</div>
-                        <div className="trust-badge">🎯 Hands-on Practice</div>
-                        <div className="trust-badge">🏆 Industry Recognized</div>
+                        <div className="trust-badge">
+                            <LockOpen size={14} /> Beginner Friendly
+                        </div>
+                        <div className="trust-badge">
+                            <Terminal size={14} /> Hands-on Practice
+                        </div>
+                        <div className="trust-badge">
+                            <Award size={14} /> Industry Standard
+                        </div>
                     </div>
                 </div>
 

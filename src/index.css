@@ -2,48 +2,59 @@
 @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap');
 
 :root {
-  /* Primary Accent Colors - Vibrant Lime Green (Hacker Theme) */
+  /* Primary Accent Colors - Bugora Cyberpunk Theme */
   --primary: #9FEF00;
   --primary-dark: #7BC100;
   --primary-light: #B8FF33;
-  --accent-cyan: #00D9FF;
-  --accent-green: #00B894;
-  --accent-orange: #FF6B35;
-  --accent-yellow: #FDCB6E;
-  --accent-red: #D63031;
+  --accent-cyan: #00F0FF;
+  /* Cyber Blue */
+  --accent-green: #00FF9D;
+  /* Matrix Green */
+  --accent-orange: #FF5E00;
+  /* Warning Orange */
+  --accent-yellow: #FAFF00;
+  /* Hazard Yellow */
+  --accent-red: #FF003C;
+  /* Error Red */
+  --accent-purple: #BC13FE;
+  /* Neon Purple */
 
-  /* Legacy neon (kept for compatibility) */
+  /* Legacy neon (updated to match new palette) */
   --neon-green: #9FEF00;
   --neon-green-dark: #7BC100;
-  --neon-blue: #00D4FF;
-  --neon-purple: #9B59B6;
-  --neon-pink: #FF2D6A;
-  --neon-orange: #FF9F1C;
+  --neon-blue: #00F0FF;
+  --neon-purple: #BC13FE;
+  --neon-pink: #FF0055;
+  --neon-orange: #FF5E00;
 
-  /* Background Colors - Deeper, richer */
-  --bg-dark: #0F0F1E;
-  --bg-darker: #0A0A14;
-  --bg-card: #1A1A2E;
-  --bg-card-hover: #252541;
-  --bg-elevated: #202035;
+  /* Background Colors - Deep Void */
+  --bg-dark: #05050A;
+  /* Near Black */
+  --bg-darker: #000000;
+  /* Absolute Black */
+  --bg-card: rgba(20, 20, 30, 0.6);
+  --bg-card-hover: rgba(30, 30, 45, 0.8);
+  --bg-elevated: #151520;
+  --bg-glass: rgba(15, 15, 25, 0.7);
 
-  /* Text Colors - Better contrast */
+  /* Text Colors */
   --text-primary: #FFFFFF;
-  --text-secondary: #A0A0B3;
-  --text-muted: #8E8EA0;
-  --text-disabled: #606073;
+  --text-secondary: #9494A8;
+  --text-muted: #5A5A6E;
+  --text-disabled: #3A3A4A;
 
-  /* Border Colors - Subtle with green accent */
+  /* Border Colors */
   --border-color: rgba(255, 255, 255, 0.08);
-  --border-light: rgba(255, 255, 255, 0.12);
-  --border-active: rgba(159, 239, 0, 0.5);
-  --border-glow: rgba(159, 239, 0, 0.3);
+  --border-light: rgba(255, 255, 255, 0.15);
+  --border-active: var(--primary);
+  --border-glow: rgba(159, 239, 0, 0.4);
 
-  /* Gradients - Premium green feel */
+  /* Gradients */
   --gradient-primary: linear-gradient(135deg, #9FEF00 0%, #7BC100 100%);
-  --gradient-accent: linear-gradient(135deg, #9FEF00 0%, #00D9FF 100%);
-  --gradient-card: linear-gradient(180deg, rgba(159, 239, 0, 0.08) 0%, transparent 100%);
-  --gradient-dark: linear-gradient(180deg, #0F0F1E 0%, #0A0A14 100%);
+  --gradient-accent: linear-gradient(135deg, #00F0FF 0%, #9FEF00 100%);
+  --gradient-card: linear-gradient(180deg, rgba(255, 255, 255, 0.03) 0%, rgba(255, 255, 255, 0.01) 100%);
+  --gradient-dark: linear-gradient(180deg, #05050A 0%, #000000 100%);
+  --gradient-glow: radial-gradient(circle at center, rgba(159, 239, 0, 0.15) 0%, transparent 70%);
 
   /* Spacing - 8px grid system */
   --space-xs: 4px;
@@ -55,8 +66,13 @@
   --space-3xl: 64px;
 
   /* Typography */
-  --font-main: 'Poppins', -apple-system, BlinkMacSystemFont, sans-serif;
-  --font-mono: 'JetBrains Mono', 'Fira Code', monospace;
+  --font-main: 'Poppins',
+    -apple-system,
+    BlinkMacSystemFont,
+    sans-serif;
+  --font-mono: 'JetBrains Mono',
+    'Fira Code',
+    monospace;
 
   /* Border Radius - Rounder = more premium */
   --radius-sm: 8px;

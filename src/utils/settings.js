@@ -3,7 +3,7 @@
  * Persists user preferences to localStorage
  */
 
-const SETTINGS_KEY = 'bountyprep_settings';
+const SETTINGS_KEY = 'bugora_settings';
 
 const DEFAULT_SETTINGS = {
     darkMode: true, // Default is dark
@@ -43,9 +43,9 @@ export function getSetting(key) {
 // Share functionality using Web Share API
 export async function shareApp() {
     const shareData = {
-        title: 'BountyPrep',
+        title: 'Bugora',
         text: 'Master Bug Bounty Hunting with interactive security challenges!',
-        url: 'https://bountyprep.vercel.app',
+        url: 'https://bugora.app',
     };
 
     try {

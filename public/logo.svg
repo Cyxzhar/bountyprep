@@ -1,0 +1,40 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" fill="none">
+  <defs>
+    <filter id="glow" x="-20%" y="-20%" width="140%" height="140%">
+      <feGaussianBlur stdDeviation="5" result="blur" />
+      <feComposite in="SourceGraphic" in2="blur" operator="over" />
+    </filter>
+  </defs>
+  
+  <!-- Target Scope Rings -->
+  <circle cx="256" cy="256" r="240" stroke="#9FEF00" stroke-width="8" stroke-opacity="0.3" />
+  <circle cx="256" cy="256" r="200" stroke="#9FEF00" stroke-width="12" />
+  <circle cx="256" cy="256" r="160" stroke="#00F0FF" stroke-width="4" stroke-dasharray="40 20" />
+  
+  <!-- Crosshairs -->
+  <line x1="256" y1="16" x2="256" y2="86" stroke="#9FEF00" stroke-width="12" />
+  <line x1="256" y1="426" x2="256" y2="496" stroke="#9FEF00" stroke-width="12" />
+  <line x1="16" y1="256" x2="86" y2="256" stroke="#9FEF00" stroke-width="12" />
+  <line x1="426" y1="256" x2="496" y2="256" stroke="#9FEF00" stroke-width="12" />
+  
+  <!-- Bug Body -->
+  <g transform="translate(146, 146) scale(0.43)">
+    <!-- Shield/Body Outline -->
+    <path d="M256 50 C150 50 100 150 100 250 L100 350 L256 500 L412 350 L412 250 C412 150 362 50 256 50 Z" 
+          stroke="#00F0FF" stroke-width="20" fill="none" />
+    
+    <!-- Wings/Circuitry -->
+    <path d="M256 120 L256 500" stroke="#9FEF00" stroke-width="15" />
+    <path d="M256 120 L150 250 L150 380 L256 460" stroke="#9FEF00" stroke-width="15" fill="none" />
+    <path d="M256 120 L362 250 L362 380 L256 460" stroke="#9FEF00" stroke-width="15" fill="none" />
+    
+    <!-- Circuit Nodes -->
+    <circle cx="150" cy="250" r="15" fill="#9FEF00" />
+    <circle cx="362" cy="250" r="15" fill="#9FEF00" />
+    <circle cx="256" cy="120" r="20" fill="#00F0FF" />
+    
+    <!-- Antennae -->
+    <path d="M200 80 L180 20" stroke="#00F0FF" stroke-width="15" stroke-linecap="round" />
+    <path d="M312 80 L332 20" stroke="#00F0FF" stroke-width="15" stroke-linecap="round" />
+  </g>
+</svg>

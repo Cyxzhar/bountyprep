@@ -19,10 +19,7 @@ const features = [
     { icon: Clock, text: 'Lifetime Updates' },
 ];
 
-const testimonials = [
-    { quote: 'Landed cybersecurity role at Google in 4 months', author: 'Sarah T.', role: 'Security Engineer' },
-    { quote: 'Made $2,400 my first month bug hunting', author: 'Mike L.', role: 'Bug Hunter' },
-];
+
 
 export default function Paywall() {
     const navigate = useNavigate();
@@ -81,18 +78,7 @@ export default function Paywall() {
                         ))}
                     </div>
 
-                    {/* Testimonials */}
-                    <div className="testimonials">
-                        {testimonials.map((t, idx) => (
-                            <div key={idx} className="testimonial">
-                                <p className="testimonial-quote">"{t.quote}"</p>
-                                <div className="testimonial-author">
-                                    <span className="author-name">{t.author}</span>
-                                    <span className="author-role">{t.role}</span>
-                                </div>
-                            </div>
-                        ))}
-                    </div>
+
 
                     {/* Pricing */}
                     <div className="pricing-cards">
@@ -100,7 +86,7 @@ export default function Paywall() {
                             <div className="popular-tag">EARLY BIRD</div>
                             <div className="plan-info">
                                 <div className="plan-name">Bounty Hunter Pro</div>
-                                <div className="plan-savings">Limited time offer</div>
+                                <div className="plan-savings">COMING SOON</div>
                             </div>
                             <div className="plan-price">
                                 <span className="price">$10</span>
@@ -112,7 +98,7 @@ export default function Paywall() {
 
                 {/* Footer */}
                 <div className="paywall-footer">
-                    <button className="btn btn-primary btn-full" disabled>
+                    <button className="btn btn-primary btn-full" onClick={handleNavigateToSignup}>
                         Join Waitlist
                     </button>
                     <p className="trial-note">Spots opening soon • Verified Pro Badge included</p>

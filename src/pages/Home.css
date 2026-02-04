@@ -678,9 +678,9 @@
     font-size: 0.7rem;
     font-weight: 600;
     padding: 4px 10px;
-    background: rgba(139, 92, 246, 0.2);
-    color: #A78BFA;
-    border: 1px solid rgba(139, 92, 246, 0.3);
+    background: rgba(188, 19, 254, 0.15);
+    color: var(--neon-purple);
+    border: 1px solid rgba(188, 19, 254, 0.3);
     border-radius: var(--radius-full);
     text-transform: uppercase;
     letter-spacing: 0.5px;
@@ -699,8 +699,8 @@
     text-align: center;
     padding: var(--space-lg) var(--space-md);
     min-height: 140px;
-    background: rgba(139, 92, 246, 0.05);
-    border: 1px solid rgba(139, 92, 246, 0.2);
+    background: rgba(188, 19, 254, 0.05);
+    border: 1px solid rgba(188, 19, 254, 0.2);
     border-radius: var(--radius-lg);
     opacity: 0.85;
     transition: all 0.2s;
@@ -715,7 +715,7 @@
 
 .coming-soon-card:hover {
     opacity: 1;
-    border-color: rgba(139, 92, 246, 0.4);
+    border-color: var(--neon-purple);
     transform: translateY(-2px);
 }
 
@@ -725,9 +725,9 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    background: linear-gradient(135deg, rgba(139, 92, 246, 0.2), rgba(168, 85, 247, 0.1));
+    background: linear-gradient(135deg, rgba(188, 19, 254, 0.2), rgba(188, 19, 254, 0.1));
     border-radius: var(--radius-md);
-    color: #A78BFA;
+    color: var(--neon-purple);
     margin-bottom: var(--space-sm);
 }
 

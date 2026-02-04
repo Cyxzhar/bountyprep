@@ -6,7 +6,7 @@
  * Premium users: Unlimited (TODO: implement premium check)
  */
 
-const QUOTA_KEY = 'bountyprep_interview_quota';
+const QUOTA_KEY = 'bugora_interview_quota';
 const FREE_DAILY_LIMIT = 10;
 const PREMIUM_DAILY_LIMIT = 50;
 

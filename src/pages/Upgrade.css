@@ -137,8 +137,21 @@
     color: var(--text-secondary);
 }
 
+/* Pricing Layout */
+.pricing-container {
+    display: flex;
+    justify-content: center;
+    gap: 32px;
+    max-width: 1000px;
+    margin: 0 auto 64px;
+    align-items: stretch;
+}
+
 /* Pricing Card - Holographic Panel */
 .pricing-card {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
     background: linear-gradient(180deg, rgba(159, 239, 0, 0.05) 0%, rgba(19, 19, 26, 0.8) 100%);
     border: 1px solid rgba(159, 239, 0, 0.2);
     border-radius: 12px;

@@ -37,16 +37,13 @@ export default function Splash() {
             <div className="splash-content">
                 {/* Logo */}
                 <div className="splash-logo animate-float">
-                    <div className="logo-icon-wrapper">
-                        <Shield className="logo-shield" size={64} strokeWidth={1.5} />
-                        <Bug className="logo-bug" size={28} />
-                    </div>
+                    <img src="/logo.svg" alt="Bugora" style={{ width: '80px', height: '80px' }} />
                 </div>
 
                 {/* Brand */}
                 <h1 className="splash-brand">
-                    <span className="brand-text">Bounty</span>
-                    <span className="brand-accent">Prep</span>
+                    <span className="brand-text">Bug</span>
+                    <span className="brand-accent">ora</span>
                 </h1>
 
                 <p className="splash-tagline">Master Bug Bounty Hunting</p>
