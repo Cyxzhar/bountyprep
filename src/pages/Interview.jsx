@@ -540,6 +540,9 @@ export default function Interview() {
                 <div className="input-wrapper">
                     <input
                         type="text"
+                        id="chat-input"
+                        name="chat-message"
+                        aria-label="Type your answer"
                         className="chat-input"
                         placeholder={quota === 0 ? "Daily limit reached" : "Type your answer..."}
                         value={input}

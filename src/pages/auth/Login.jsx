@@ -125,8 +125,10 @@ export default function Login() {
                             <input
                                 type={showPassword ? 'text' : 'password'}
                                 name="password"
+                                id="password"
+                                aria-label="Password"
                                 className="input"
-                                placeholder="Enter your password"
+                                placeholder="Password"
                                 value={formData.password}
                                 onChange={handleInputChange}
                             />
