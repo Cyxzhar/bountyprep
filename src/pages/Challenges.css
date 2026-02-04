@@ -6,25 +6,33 @@
 
 /* Page Header - HUD Style */
 .page-header {
-    margin-bottom: 40px;
-    padding-top: 20px;
+    margin-bottom: var(--space-2xl);
+    padding-top: max(var(--space-lg), env(safe-area-inset-top));
 }
 
 .page-header h1 {
-    font-size: 3rem;
+    font-size: clamp(2rem, 6vw, 3rem);
     font-weight: 800;
-    margin-bottom: 8px;
+    margin-bottom: var(--space-sm);
     letter-spacing: -0.05em;
     color: #fff;
+    line-height: 1.1;
     text-shadow: 0 0 40px rgba(159, 239, 0, 0.1);
 }
 
 .header-subtitle {
-    font-size: 1.125rem;
+    font-size: clamp(0.95rem, 2.5vw, 1.125rem);
     color: var(--text-secondary);
     border-left: 2px solid var(--neon-green);
-    padding-left: 16px;
+    padding-left: var(--space-md);
     max-width: 600px;
+    line-height: 1.6;
+}
+
+@media (max-width: 480px) {
+    .page-header {
+        margin-bottom: var(--space-xl);
+    }
 }
 
 /* Search */
@@ -49,16 +57,23 @@
 
 .search-input {
     flex: 1;
+    min-height: 52px;
     height: 56px;
     background: rgba(19, 19, 26, 0.6);
     border: 1px solid rgba(255, 255, 255, 0.1);
-    border-radius: 4px;
-    /* Tech feel */
+    border-radius: var(--radius-md);
     padding: 0 var(--space-md);
     padding-left: 48px;
-    font-size: 1rem;
+    font-size: clamp(0.9rem, 2.5vw, 1rem);
     color: var(--text-primary);
     transition: all var(--transition-base);
+}
+
+@media (max-width: 480px) {
+    .search-input {
+        min-height: 48px;
+        height: 48px;
+    }
 }
 
 .search-input:focus {
@@ -73,17 +88,29 @@
 }
 
 .filter-btn {
+    min-width: 52px;
     width: 56px;
+    min-height: 52px;
     height: 56px;
     background: rgba(19, 19, 26, 0.6);
     border: 1px solid rgba(255, 255, 255, 0.1);
-    border-radius: 4px;
+    border-radius: var(--radius-md);
     color: var(--text-secondary);
     cursor: pointer;
     display: flex;
     align-items: center;
     justify-content: center;
     transition: all var(--transition-base);
+    flex-shrink: 0;
+}
+
+@media (max-width: 480px) {
+    .filter-btn {
+        min-width: 48px;
+        width: 48px;
+        min-height: 48px;
+        height: 48px;
+    }
 }
 
 .filter-btn:hover {
@@ -103,14 +130,18 @@
 }
 
 .chip {
-    padding: 6px 16px;
+    padding: var(--space-sm) var(--space-md);
+    min-height: 36px;
     background: transparent;
     border: 1px solid rgba(255, 255, 255, 0.1);
-    border-radius: 4px;
+    border-radius: var(--radius-sm);
     color: var(--text-secondary);
-    font-size: 0.85rem;
+    font-size: clamp(0.8rem, 2vw, 0.85rem);
     cursor: pointer;
     transition: all 0.2s;
+    white-space: nowrap;
+    display: inline-flex;
+    align-items: center;
 }
 
 .chip.active {
@@ -151,15 +182,24 @@
     display: flex;
     align-items: center;
     gap: var(--space-md);
-    padding: var(--space-md) var(--space-lg);
+    padding: var(--space-lg);
+    min-height: 96px;
     background: linear-gradient(90deg, rgba(19, 19, 26, 0.6) 0%, rgba(19, 19, 26, 0.3) 100%);
     border: 1px solid rgba(255, 255, 255, 0.05);
     border-left: 2px solid transparent;
-    border-radius: 4px;
+    border-radius: var(--radius-md);
     cursor: pointer;
     transition: all var(--transition-base);
     position: relative;
     overflow: hidden;
+}
+
+@media (max-width: 480px) {
+    .challenge-card {
+        padding: var(--space-md);
+        gap: var(--space-sm);
+        min-height: 88px;
+    }
 }
 
 .challenge-card::before {
@@ -193,18 +233,30 @@
 }
 
 .card-icon {
-    width: 48px;
-    height: 48px;
+    min-width: 52px;
+    width: 52px;
+    min-height: 52px;
+    height: 52px;
     display: flex;
     align-items: center;
     justify-content: center;
     background: rgba(255, 255, 255, 0.03);
     border: 1px solid rgba(255, 255, 255, 0.1);
-    border-radius: 4px;
+    border-radius: var(--radius-sm);
     color: var(--text-muted);
     font-family: var(--font-mono);
-    font-size: 1rem;
+    font-size: clamp(0.9rem, 2.5vw, 1rem);
     font-weight: 700;
+    flex-shrink: 0;
+}
+
+@media (pointer: coarse) {
+    .card-icon {
+        min-width: 56px;
+        width: 56px;
+        min-height: 56px;
+        height: 56px;
+    }
 }
 
 .card-icon.completed {
@@ -279,26 +331,24 @@
 }
 
 .card-title {
-    font-size: 1.1rem;
+    font-size: clamp(1rem, 2.5vw, 1.1rem);
     font-weight: 700;
-    margin-bottom: 4px;
+    margin-bottom: var(--space-xs);
     white-space: normal;
-    /* Allow wrapping */
-    line-height: 1.3;
+    line-height: 1.4;
     color: #fff;
 }
 
 .card-desc {
-    font-size: 0.85rem;
+    font-size: clamp(0.8rem, 2vw, 0.85rem);
     color: var(--text-secondary);
-    margin-bottom: 8px;
+    margin-bottom: var(--space-sm);
     display: -webkit-box;
     -webkit-line-clamp: 2;
-    /* Show 2 lines */
     line-clamp: 2;
     -webkit-box-orient: vertical;
     overflow: hidden;
-    line-height: 1.4;
+    line-height: 1.5;
 }
 
 .card-meta {
@@ -335,14 +385,25 @@
     .challenges-list {
         display: grid;
         grid-template-columns: repeat(2, 1fr);
-        gap: 20px;
+        gap: var(--space-lg);
     }
 }
 
 @media (min-width: 1024px) {
-    .screen-content {
-        max-width: 800px;
+    .challenges-screen .screen-content {
+        max-width: 900px;
         margin: 0 auto;
+    }
+}
+
+@media (max-width: 480px) {
+    .card-meta {
+        flex-wrap: wrap;
+        gap: var(--space-sm);
+    }
+
+    .meta-item {
+        font-size: clamp(0.7rem, 2vw, 0.75rem);
     }
 }
 
