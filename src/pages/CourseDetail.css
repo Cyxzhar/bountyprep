@@ -13,30 +13,49 @@
     display: flex;
     align-items: center;
     gap: var(--space-md);
-    margin-bottom: var(--space-md);
     position: sticky;
     top: 0;
-    padding-top: max(var(--space-sm), env(safe-area-inset-top));
+    left: 0;
+    right: 0;
+    padding: max(var(--space-md), env(safe-area-inset-top)) var(--space-lg) var(--space-md);
+    margin-bottom: 0;
     z-index: 100;
     background: rgba(10, 10, 15, 0.95);
-    backdrop-filter: blur(10px);
-    -webkit-backdrop-filter: blur(10px);
-    padding: var(--space-sm) 0;
-    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+@media (max-width: 480px) {
+    .course-header-nav {
+        padding: max(var(--space-sm), env(safe-area-inset-top)) var(--space-md) var(--space-sm);
+    }
 }
 
 .icon-btn {
     background: var(--bg-card);
     border: 1px solid var(--border-color);
     color: var(--text-primary);
-    width: 40px;
-    height: 40px;
+    min-width: 44px;
+    width: 44px;
+    min-height: 44px;
+    height: 44px;
     border-radius: 50%;
     display: flex;
     align-items: center;
     justify-content: center;
     cursor: pointer;
     transition: all 0.2s;
+    flex-shrink: 0;
+}
+
+@media (pointer: coarse) {
+    .icon-btn {
+        min-width: 48px;
+        width: 48px;
+        min-height: 48px;
+        height: 48px;
+    }
 }
 
 .icon-btn:hover {
@@ -53,15 +72,26 @@
 /* Hero Section - HUD Style */
 .course-hero {
     background: transparent;
-    margin-bottom: 0;
-    padding: 120px var(--space-lg) 60px;
-    /* Large top padding for immersive feel */
+    margin-bottom: var(--space-lg);
+    padding: var(--space-3xl) var(--space-lg) var(--space-2xl);
     background: linear-gradient(180deg,
             rgba(10, 10, 15, 0.8) 0%,
             var(--bg-dark) 100%);
     border-bottom: 1px solid rgba(255, 255, 255, 0.05);
     position: relative;
     width: 100%;
+}
+
+@media (max-width: 768px) {
+    .course-hero {
+        padding: var(--space-xl) var(--space-md) var(--space-xl);
+    }
+}
+
+@media (max-width: 480px) {
+    .course-hero {
+        padding: var(--space-lg) var(--space-md) var(--space-lg);
+    }
 }
 
 /* Optional: Add a subtle grid or glow behind hero */
@@ -105,9 +135,21 @@
 
 /* Content Container - Restore padding here */
 .course-content {
-    padding: 40px var(--space-lg);
+    padding: var(--space-xl) var(--space-lg);
     max-width: 1200px;
     margin: 0 auto;
+}
+
+@media (max-width: 768px) {
+    .course-content {
+        padding: var(--space-lg) var(--space-md);
+    }
+}
+
+@media (max-width: 480px) {
+    .course-content {
+        padding: var(--space-md);
+    }
 }
 
 .course-hero-content {
@@ -121,40 +163,50 @@
 }
 
 .course-hero h1 {
-    font-size: 2.5rem;
+    font-size: clamp(1.75rem, 5vw, 2.5rem);
     font-weight: 800;
-    margin-bottom: 12px;
+    margin-bottom: var(--space-md);
     color: #fff;
     letter-spacing: -0.03em;
-    line-height: 1.1;
+    line-height: 1.2;
     text-shadow: 0 0 30px rgba(255, 255, 255, 0.1);
 }
 
 .course-hero p {
     color: var(--text-secondary);
-    font-size: 1.1rem;
-    margin-bottom: 32px;
+    font-size: clamp(0.95rem, 2.5vw, 1.1rem);
+    margin-bottom: var(--space-xl);
     max-width: 600px;
     line-height: 1.6;
-    font-weight: 300;
+    font-weight: 400;
 }
 
 .start-course-btn {
     display: inline-flex;
     align-items: center;
-    gap: 12px;
-    padding: 16px 32px;
+    justify-content: center;
+    gap: var(--space-sm);
+    padding: 0 var(--space-xl);
+    min-height: 56px;
+    height: 56px;
     background: var(--neon-green);
     color: #000;
     border: none;
-    border-radius: 4px;
+    border-radius: var(--radius-md);
     font-weight: 700;
-    font-size: 1rem;
+    font-size: clamp(0.875rem, 2.5vw, 1rem);
     cursor: pointer;
     transition: all 0.2s;
     text-transform: uppercase;
     letter-spacing: 0.05em;
     box-shadow: 0 0 20px rgba(159, 239, 0, 0.3);
+}
+
+@media (max-width: 480px) {
+    .start-course-btn {
+        width: 100%;
+        padding: 0 var(--space-lg);
+    }
 }
 
 .start-course-btn:hover {
@@ -201,12 +253,26 @@
 .modules-list {
     display: flex;
     flex-direction: column;
-    gap: 40px;
+    gap: var(--space-2xl);
+    padding: var(--space-xl) var(--space-lg) calc(var(--space-xl) + env(safe-area-inset-bottom));
+}
+
+@media (max-width: 768px) {
+    .modules-list {
+        padding: var(--space-lg) var(--space-md) calc(var(--space-lg) + env(safe-area-inset-bottom));
+        gap: var(--space-xl);
+    }
+}
+
+@media (max-width: 480px) {
+    .modules-list {
+        padding: var(--space-md) var(--space-md) calc(var(--space-lg) + env(safe-area-inset-bottom));
+    }
 }
 
 .section-title {
-    font-size: 1.5rem;
-    margin-bottom: 24px;
+    font-size: clamp(1.25rem, 4vw, 1.5rem);
+    margin-bottom: var(--space-lg);
     padding-left: 0;
     font-weight: 800;
     color: #fff;
@@ -220,37 +286,41 @@
 }
 
 .module-header {
-    margin-bottom: 16px;
+    margin-bottom: var(--space-md);
     padding-left: 0;
 }
 
 .module-number {
-    font-size: 0.8rem;
+    font-size: clamp(0.75rem, 2vw, 0.8rem);
     text-transform: uppercase;
     color: var(--neon-green);
     font-weight: 700;
     letter-spacing: 0.1em;
     display: block;
-    margin-bottom: 4px;
+    margin-bottom: var(--space-xs);
 }
 
 .module-title-row {
     display: flex;
     justify-content: space-between;
     align-items: flex-end;
+    gap: var(--space-md);
+    flex-wrap: wrap;
 }
 
 .module-title-row h3 {
     margin: 0;
-    font-size: 1.25rem;
+    font-size: clamp(1.1rem, 3.5vw, 1.25rem);
     color: #fff;
     font-weight: 600;
+    line-height: 1.3;
 }
 
 .module-duration {
-    font-size: 0.85rem;
+    font-size: clamp(0.75rem, 2vw, 0.85rem);
     color: var(--text-muted);
     font-family: 'JetBrains Mono', monospace;
+    flex-shrink: 0;
 }
 
 .lessons-list {
@@ -262,16 +332,25 @@
 .lesson-item {
     display: flex;
     align-items: center;
-    gap: 16px;
-    padding: 16px;
+    gap: var(--space-md);
+    padding: var(--space-lg) var(--space-md);
+    min-height: 72px;
     background: linear-gradient(90deg, rgba(19, 19, 26, 0.6) 0%, rgba(19, 19, 26, 0.3) 100%);
     border: 1px solid rgba(255, 255, 255, 0.05);
     border-left: 2px solid transparent;
-    border-radius: 4px;
+    border-radius: var(--radius-md);
     cursor: pointer;
     transition: all 0.2s;
     position: relative;
     overflow: hidden;
+}
+
+@media (max-width: 480px) {
+    .lesson-item {
+        padding: var(--space-md);
+        gap: var(--space-sm);
+        min-height: 64px;
+    }
 }
 
 .lesson-item::before {
@@ -299,9 +378,11 @@
 }
 
 .lesson-icon {
-    width: 40px;
-    height: 40px;
-    border-radius: 4px;
+    min-width: 44px;
+    width: 44px;
+    min-height: 44px;
+    height: 44px;
+    border-radius: var(--radius-sm);
     background: rgba(255, 255, 255, 0.03);
     display: flex;
     align-items: center;
@@ -310,6 +391,15 @@
     flex-shrink: 0;
     border: 1px solid rgba(255, 255, 255, 0.1);
     z-index: 1;
+}
+
+@media (pointer: coarse) {
+    .lesson-icon {
+        min-width: 48px;
+        width: 48px;
+        min-height: 48px;
+        height: 48px;
+    }
 }
 
 .lesson-item.completed .lesson-icon {
@@ -338,21 +428,28 @@
 .lesson-title {
     font-weight: 600;
     display: block;
-    margin-bottom: 4px;
-    font-size: 1rem;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
+    margin-bottom: var(--space-xs);
+    font-size: clamp(0.9rem, 2.5vw, 1rem);
+    line-height: 1.4;
     color: var(--text-primary);
+}
+
+@media (min-width: 768px) {
+    .lesson-title {
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
 }
 
 .lesson-meta {
     display: flex;
     align-items: center;
-    gap: 8px;
-    font-size: 0.75rem;
+    gap: var(--space-sm);
+    font-size: clamp(0.7rem, 2vw, 0.75rem);
     color: var(--text-muted);
     font-family: 'JetBrains Mono', monospace;
+    flex-wrap: wrap;
 }
 
 .xp-badge {
