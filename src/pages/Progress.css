@@ -4,6 +4,28 @@
     background: var(--gradient-dark);
 }
 
+.progress-screen .screen-content {
+    padding: var(--space-xl) var(--space-lg);
+    padding-top: max(var(--space-2xl), env(safe-area-inset-top) + var(--space-lg));
+    padding-bottom: calc(88px + var(--space-2xl) + env(safe-area-inset-bottom));
+}
+
+@media (max-width: 768px) {
+    .progress-screen .screen-content {
+        padding: var(--space-lg) var(--space-md);
+        padding-top: max(var(--space-xl), env(safe-area-inset-top) + var(--space-md));
+        padding-bottom: calc(88px + var(--space-xl) + env(safe-area-inset-bottom));
+    }
+}
+
+@media (max-width: 480px) {
+    .progress-screen .screen-content {
+        padding: var(--space-md);
+        padding-top: max(var(--space-lg), env(safe-area-inset-top) + var(--space-sm));
+        padding-bottom: calc(88px + var(--space-lg) + env(safe-area-inset-bottom));
+    }
+}
+
 /* Level Card */
 /* Level Section - HUD Style (No Box) */
 .level-card {
@@ -85,13 +107,12 @@
 }
 
 .level-title {
-    font-size: 2rem;
-    /* Matches user screenshot desired size */
+    font-size: clamp(1.5rem, 4vw, 2rem);
     font-weight: 800;
-    margin-bottom: 12px;
+    margin-bottom: var(--space-md);
     color: #fff;
     letter-spacing: 0.02em;
-    line-height: 1.1;
+    line-height: 1.2;
     width: 100%;
 }
 
@@ -141,8 +162,15 @@
 .quick-stats {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
-    gap: 16px;
-    margin-bottom: 48px;
+    gap: var(--space-md);
+    margin-bottom: var(--space-2xl);
+}
+
+@media (max-width: 480px) {
+    .quick-stats {
+        gap: var(--space-sm);
+        margin-bottom: var(--space-xl);
+    }
 }
 
 .qs-card {
@@ -150,58 +178,92 @@
     flex-direction: column;
     align-items: center;
     text-align: center;
-    padding: 16px;
+    padding: var(--space-lg) var(--space-md);
+    min-height: 100px;
     background: linear-gradient(180deg, rgba(19, 19, 26, 0.6) 0%, rgba(19, 19, 26, 0.3) 100%);
     border: 1px solid rgba(255, 255, 255, 0.05);
-    border-radius: 4px;
+    border-radius: var(--radius-md);
+    position: relative;
+    overflow: hidden;
+}
+
+.qs-card::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background-image:
+        linear-gradient(rgba(255, 255, 255, 0.02) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255, 255, 255, 0.02) 1px, transparent 1px);
+    background-size: 20px 20px;
+    opacity: 0.3;
+    pointer-events: none;
+}
+
+@media (max-width: 480px) {
+    .qs-card {
+        padding: var(--space-md) var(--space-sm);
+        min-height: 88px;
+    }
 }
 
 .qs-card svg {
     color: var(--neon-green);
-    margin-bottom: 8px;
+    margin-bottom: var(--space-sm);
+    z-index: 1;
 }
 
 .qs-value {
-    font-size: 1.5rem;
+    font-size: clamp(1.25rem, 4vw, 1.5rem);
     font-weight: 700;
     line-height: 1;
     color: #fff;
+    margin-bottom: var(--space-xs);
+    z-index: 1;
 }
 
 .qs-label {
-    font-size: 0.7rem;
+    font-size: clamp(0.65rem, 1.8vw, 0.7rem);
     text-transform: uppercase;
     letter-spacing: 0.1em;
     color: var(--text-muted);
-    margin-top: 4px;
+    z-index: 1;
 }
 
 /* Sections */
 .section {
-    margin-bottom: 48px;
+    margin-bottom: var(--space-2xl);
+}
+
+@media (max-width: 480px) {
+    .section {
+        margin-bottom: var(--space-xl);
+    }
 }
 
 .section-header {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    margin-bottom: 16px;
+    margin-bottom: var(--space-lg);
+    gap: var(--space-md);
 }
 
 .section-title {
-    font-size: 1.1rem;
+    font-size: clamp(1rem, 3vw, 1.125rem);
     font-weight: 700;
     color: #fff;
     letter-spacing: -0.02em;
+    line-height: 1.3;
 }
 
 .section-meta {
-    font-size: 0.85rem;
+    font-size: clamp(0.75rem, 2vw, 0.85rem);
     color: var(--text-muted);
     font-family: 'JetBrains Mono', monospace;
+    white-space: nowrap;
 }
 
-/* Heatmap - Tech Grid */
+/* Heatmap - Tech Grid with Enhanced Indicators */
 .heatmap-container {
     background: transparent;
     border: none;
@@ -212,65 +274,140 @@
 .heatmap-grid {
     display: grid;
     grid-template-columns: repeat(13, 1fr);
-    gap: 4px;
-    margin-bottom: 12px;
+    gap: var(--space-xs);
+    margin-bottom: var(--space-md);
+}
+
+@media (max-width: 480px) {
+    .heatmap-grid {
+        gap: 3px;
+    }
 }
 
 .heat-cell {
     aspect-ratio: 1;
-    border-radius: 2px;
+    border-radius: 3px;
     background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.02);
+    transition: all 0.2s;
+}
+
+.heat-cell:hover {
+    transform: scale(1.2);
+    z-index: 10;
+}
+
+.heat-cell.level-0 {
+    background: rgba(255, 255, 255, 0.05);
+    border-color: rgba(255, 255, 255, 0.08);
 }
 
 .heat-cell.level-1 {
     background: rgba(159, 239, 0, 0.2);
+    border-color: rgba(159, 239, 0, 0.3);
 }
 
 .heat-cell.level-2 {
     background: rgba(159, 239, 0, 0.5);
+    border-color: rgba(159, 239, 0, 0.6);
 }
 
 .heat-cell.level-3 {
     background: var(--neon-green);
-    box-shadow: 0 0 10px var(--neon-green);
+    border-color: var(--neon-green);
+    box-shadow: 0 0 10px rgba(159, 239, 0, 0.4);
 }
 
+/* Enhanced Heatmap Legend with Clear Indicators */
 .heatmap-legend {
     display: flex;
     align-items: center;
     justify-content: flex-end;
-    gap: 12px;
-    font-size: 0.75rem;
+    gap: var(--space-sm);
+    padding: var(--space-sm) var(--space-md);
+    background: rgba(255, 255, 255, 0.02);
+    border-radius: var(--radius-sm);
+    font-size: clamp(0.7rem, 2vw, 0.75rem);
     color: var(--text-muted);
+    font-weight: 500;
+}
+
+.heatmap-legend span {
+    font-family: 'JetBrains Mono', monospace;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+}
+
+.legend-cells {
+    display: flex;
+    gap: var(--space-xs);
+    padding: 0 var(--space-xs);
+}
+
+.legend-cells .heat-cell {
+    width: 14px;
+    height: 14px;
+    aspect-ratio: 1;
 }
 
 /* Skills */
 .skills-list {
     display: flex;
     flex-direction: column;
-    gap: 12px;
+    gap: var(--space-md);
 }
 
 .skill-row {
     display: flex;
     align-items: center;
-    gap: 16px;
-    padding: 12px;
-    background: rgba(255, 255, 255, 0.02);
-    border-radius: 4px;
+    gap: var(--space-md);
+    padding: var(--space-lg) var(--space-md);
+    min-height: 72px;
+    background: linear-gradient(90deg, rgba(19, 19, 26, 0.6) 0%, rgba(19, 19, 26, 0.3) 100%);
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    border-left: 2px solid transparent;
+    border-radius: var(--radius-md);
+    transition: all 0.2s;
+    cursor: pointer;
+}
+
+.skill-row:hover {
+    border-color: rgba(159, 239, 0, 0.3);
+    border-left-color: var(--neon-green);
+    transform: translateX(4px);
+    background: linear-gradient(90deg, rgba(19, 19, 26, 0.8) 0%, rgba(19, 19, 26, 0.5) 100%);
+}
+
+@media (max-width: 480px) {
+    .skill-row {
+        padding: var(--space-md);
+        gap: var(--space-sm);
+        min-height: 64px;
+    }
 }
 
 .skill-icon-wrapper {
-    width: 40px;
-    height: 40px;
+    min-width: 44px;
+    width: 44px;
+    min-height: 44px;
+    height: 44px;
     display: flex;
     align-items: center;
     justify-content: center;
     background: rgba(159, 239, 0, 0.1);
     border: 1px solid rgba(159, 239, 0, 0.2);
-    border-radius: 4px;
+    border-radius: var(--radius-sm);
     color: var(--neon-green);
     flex-shrink: 0;
+}
+
+@media (pointer: coarse) {
+    .skill-icon-wrapper {
+        min-width: 48px;
+        width: 48px;
+        min-height: 48px;
+        height: 48px;
+    }
 }
 
 .skill-info {
@@ -285,29 +422,40 @@
 }
 
 .skill-name {
-    font-size: 0.95rem;
-    font-weight: 500;
+    font-size: clamp(0.875rem, 2.5vw, 0.95rem);
+    font-weight: 600;
     color: #fff;
+    line-height: 1.3;
 }
 
 .skill-level {
-    font-size: 0.75rem;
+    font-size: clamp(0.7rem, 2vw, 0.75rem);
     color: var(--text-muted);
+    font-family: 'JetBrains Mono', monospace;
 }
 
 .skill-percent {
-    width: 40px;
+    min-width: 48px;
     text-align: right;
-    font-size: 0.9rem;
-    font-weight: 600;
+    font-size: clamp(0.85rem, 2.5vw, 0.9rem);
+    font-weight: 700;
     color: var(--neon-green);
+    font-family: 'JetBrains Mono', monospace;
+    flex-shrink: 0;
 }
 
 /* Achievements */
 .achievements-grid {
     display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 12px;
+    grid-template-columns: repeat(auto-fill, minmax(min(100%, 120px), 1fr));
+    gap: var(--space-md);
+}
+
+@media (max-width: 480px) {
+    .achievements-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: var(--space-sm);
+    }
 }
 
 .achievement-card {
@@ -315,23 +463,32 @@
     display: flex;
     flex-direction: column;
     align-items: center;
-    padding: 16px;
+    padding: var(--space-lg) var(--space-md);
+    min-height: 120px;
     background: linear-gradient(180deg, rgba(19, 19, 26, 0.6) 0%, rgba(19, 19, 26, 0.3) 100%);
     border: 1px solid rgba(255, 255, 255, 0.05);
-    border-radius: 4px;
+    border-radius: var(--radius-md);
     text-align: center;
     transition: all 0.3s ease;
+    cursor: pointer;
 }
 
 .achievement-card:hover {
     border-color: rgba(159, 239, 0, 0.3);
-    transform: translateY(-2px);
+    transform: translateY(-4px);
     background: linear-gradient(180deg, rgba(19, 19, 26, 0.8) 0%, rgba(19, 19, 26, 0.5) 100%);
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3);
 }
 
 .achievement-card.locked {
-    opacity: 0.4;
+    opacity: 0.5;
     filter: grayscale(1);
+    cursor: default;
+}
+
+.achievement-card.locked:hover {
+    transform: none;
+    box-shadow: none;
 }
 
 /* Responsive */
