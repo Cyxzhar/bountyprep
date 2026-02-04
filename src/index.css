@@ -214,15 +214,13 @@ textarea {
   text-shadow: 0 0 20px rgba(159, 239, 0, 0.5);
 }
 
-/* Page Container - Global Wrapper */
+/* Page Container - Global Wrapper with Fluid Spacing */
 .page-container {
   width: 100%;
   max-width: var(--max-width);
   margin: 0 auto;
-  padding: 0 var(--space-md);
-  /* Mobile side padding */
-  padding-bottom: calc(80px + env(safe-area-inset-bottom));
-  /* Bottom nav space */
+  padding: max(var(--space-md), env(safe-area-inset-top)) var(--space-md) calc(88px + env(safe-area-inset-bottom)) var(--space-md);
+  /* Proper safe area handling for notch devices */
 }
 
 /* Screen Layout */
@@ -234,15 +232,19 @@ textarea {
 }
 
 .screen-content {
-  padding: var(--space-md);
-  /* Reduced from lg for mobile */
-  padding-bottom: calc(80px + var(--space-lg) + env(safe-area-inset-bottom));
+  padding: var(--space-lg) var(--space-md);
+  padding-top: max(var(--space-lg), env(safe-area-inset-top));
+  padding-bottom: calc(88px + var(--space-lg) + env(safe-area-inset-bottom));
 }
 
 @media (min-width: 768px) {
   .page-container {
-    padding: 0 var(--space-lg);
-    padding-bottom: var(--space-xl);
+    padding: max(var(--space-xl), env(safe-area-inset-top)) var(--space-xl) var(--space-xl) var(--space-xl);
+  }
+
+  .screen-content {
+    padding: var(--space-xl);
+    padding-bottom: calc(88px + var(--space-xl) + env(safe-area-inset-bottom));
   }
 }
 
@@ -295,7 +297,7 @@ textarea {
   opacity: 1;
 }
 
-/* Buttons */
+/* Buttons - Improved Touch Targets (min 44x44px) */
 .btn {
   display: inline-flex;
   align-items: center;
@@ -305,6 +307,7 @@ textarea {
   font-size: 0.9375rem;
   font-weight: 600;
   padding: 0 var(--space-lg);
+  min-height: 52px;
   height: 52px;
   border-radius: var(--radius-md);
   border: none;
@@ -312,6 +315,23 @@ textarea {
   transition: all var(--transition-base);
   text-decoration: none;
   white-space: nowrap;
+  position: relative;
+}
+
+/* Touch target enhancement for mobile */
+.btn::before {
+  content: '';
+  position: absolute;
+  inset: -4px;
+  /* Expand touch area */
+}
+
+@media (pointer: coarse) {
+  .btn {
+    min-height: 48px;
+    /* Ensure minimum touch target */
+    padding: 0 var(--space-lg);
+  }
 }
 
 .btn-primary {
