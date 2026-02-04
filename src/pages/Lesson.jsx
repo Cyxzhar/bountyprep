@@ -101,159 +101,173 @@ export default function Lesson() {
             return;
         }
 
-        setSaving(true);
-        try {
-            const { success: saveSuccess, xpAwarded } = await saveLessonProgress(currentUser.uid, id, lessonId, lesson.xp || 50);
+        const { unlockMultiple } = useAchievement();
 
-            if (saveSuccess) {
-                playSFX('success'); // Success sound
-                if (xpAwarded > 0) {
-                    success(`Lesson Completed! +${xpAwarded} XP`);
-                    refreshUser();
-                } else {
-                    success('Lesson Completed!');
-                }
+        const handleComplete = async () => {
+            if (!currentUser || isCompleted || saving) return;
 
-                if (nextLessonId) {
-                    navigate(`/course/${id}/lesson/${nextLessonId}`);
+            setSaving(true);
+            // Play success sound
+            playSFX('success');
+
+            try {
+                const { success: saved, xpAwarded, achievements } = await saveLessonProgress(currentUser.uid, id, lesson.id, lesson.xp || 50);
+
+                if (saved) {
+                    setIsCompleted(true);
+                    setCourseProgress(prev => ({
+                        ...prev,
+                        completedLessons: [...(prev?.completedLessons || []), lesson.id]
+                    }));
+
+                    if (xpAwarded > 0) {
+                        success(`Lesson Completed! +${xpAwarded} XP`);
+                    }
+
+                    // Trigger achievement unlocks if any
+                    if (achievements && achievements.length > 0) {
+                        unlockMultiple(achievements);
+                    }
+
+                    // Refresh user profile to update Level/XP in UI
+                    await refreshUser();
+
+                    // Show "Next Lesson" button state immediately
+                    // Note: Navigation logic can happen after state updates
                 } else {
-                    success('Course Completed! 🎉');
-                    navigate(`/course/${id}`);
+                    showError('Failed to save progress');
                 }
-            } else {
+            } catch (err) {
+                console.error(err);
                 showError('Failed to save progress');
+            } finally {
+                setSaving(false);
             }
-        } catch (error) {
-            console.error(error);
-            showError('Something went wrong');
-        } finally {
-            setSaving(false);
-        }
-    };
+        };
 
-    return (
-        <div className="page-container lesson-page">
-            {/* Sticky Progress Bar */}
-            <div className="scroll-progress-container">
-                <div
-                    className="scroll-progress-bar"
-                    style={{ width: `${scrollProgress}%` }}
-                />
-            </div>
-
-            {/* Modern Header / Hero */}
-            <header className="lesson-hero">
-                <div className="hero-top-nav">
-                    <button className="icon-btn-back" onClick={() => { playSFX('click'); navigate(`/course/${id}`); }}>
-                        <ChevronLeft size={20} /> Back to Course
-                    </button>
-                    <div className="lesson-meta-badge">
-                        <span className="xp-badge">+{lesson.xp || 50} XP</span>
-                        <span className="time-badge">{lesson.duration || '5 min'} read</span>
-                    </div>
+        return (
+            <div className="page-container lesson-page">
+                {/* Sticky Progress Bar */}
+                <div className="scroll-progress-container">
+                    <div
+                        className="scroll-progress-bar"
+                        style={{ width: `${scrollProgress}%` }}
+                    />
                 </div>
 
-                <div className="hero-content">
-                    <div className="module-tag">{currentModule?.title || 'Course Module'}</div>
-                    <h1 className="hero-title">{lesson.title}</h1>
-                </div>
-            </header>
-
-            <div className="lesson-layout-modern">
-                <main className="lesson-content-modern">
-
-                    {/* Video Player */}
-                    {lesson.videoUrl && (
-                        <div className="video-section">
-                            <div className="video-container">
-                                <iframe
-                                    src={lesson.videoUrl.replace('watch?v=', 'embed/')}
-                                    title={lesson.title}
-                                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                                    allowFullScreen
-                                ></iframe>
-                            </div>
+                {/* Modern Header / Hero */}
+                <header className="lesson-hero">
+                    <div className="hero-top-nav">
+                        <button className="icon-btn-back" onClick={() => { playSFX('click'); navigate(`/course/${id}`); }}>
+                            <ChevronLeft size={20} /> Back to Course
+                        </button>
+                        <div className="lesson-meta-badge">
+                            <span className="xp-badge">+{lesson.xp || 50} XP</span>
+                            <span className="time-badge">{lesson.duration || '5 min'} read</span>
                         </div>
-                    )}
-
-                    <div className="markdown-modern">
-                        <ReactMarkdown
-                            components={{
-                                code: ({ inline, children }) => (
-                                    inline
-                                        ? <code className="inline-code">{children}</code>
-                                        : <pre className="code-block"><code>{children}</code></pre>
-                                ),
-                                blockquote: ({ children }) => {
-                                    const text = children?.[1]?.props?.children?.[0] || '';
-                                    if (typeof text === 'string' && text.includes('[!IMPORTANT]')) {
-                                        return <div className="callout callout-important">{children}</div>
-                                    }
-                                    if (typeof text === 'string' && text.includes('[!TIP]')) {
-                                        return <div className="callout callout-tip">{children}</div>
-                                    }
-                                    return <blockquote className="modern-blockquote">{children}</blockquote>
-                                },
-                                // H2 becomes a Section Card
-                                h2: ({ children }) => <div className="section-header"><h2>{children}</h2></div>
-                            }}
-                        >
-                            {lesson.content}
-                        </ReactMarkdown>
                     </div>
 
-                    {/* Enhanced Footer Navigation */}
-                    <div className="lesson-footer">
-                        <div className="footer-actions">
-                            <button
-                                className="nav-btn-secondary"
-                                disabled={!prevLessonId}
-                                onClick={() => {
-                                    if (prevLessonId) {
-                                        playSFX('click');
-                                        navigate(`/course/${id}/lesson/${prevLessonId}`);
-                                    }
+                    <div className="hero-content">
+                        <div className="module-tag">{currentModule?.title || 'Course Module'}</div>
+                        <h1 className="hero-title">{lesson.title}</h1>
+                    </div>
+                </header>
+
+                <div className="lesson-layout-modern">
+                    <main className="lesson-content-modern">
+
+                        {/* Video Player */}
+                        {lesson.videoUrl && (
+                            <div className="video-section">
+                                <div className="video-container">
+                                    <iframe
+                                        src={lesson.videoUrl.replace('watch?v=', 'embed/')}
+                                        title={lesson.title}
+                                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                                        allowFullScreen
+                                    ></iframe>
+                                </div>
+                            </div>
+                        )}
+
+                        <div className="markdown-modern">
+                            <ReactMarkdown
+                                components={{
+                                    code: ({ inline, children }) => (
+                                        inline
+                                            ? <code className="inline-code">{children}</code>
+                                            : <pre className="code-block"><code>{children}</code></pre>
+                                    ),
+                                    blockquote: ({ children }) => {
+                                        const text = children?.[1]?.props?.children?.[0] || '';
+                                        if (typeof text === 'string' && text.includes('[!IMPORTANT]')) {
+                                            return <div className="callout callout-important">{children}</div>
+                                        }
+                                        if (typeof text === 'string' && text.includes('[!TIP]')) {
+                                            return <div className="callout callout-tip">{children}</div>
+                                        }
+                                        return <blockquote className="modern-blockquote">{children}</blockquote>
+                                    },
+                                    // H2 becomes a Section Card
+                                    h2: ({ children }) => <div className="section-header"><h2>{children}</h2></div>
                                 }}
                             >
-                                <ChevronLeft size={16} /> Previous Lesson
-                            </button>
-
-                            <button className="complete-btn-primary" onClick={handleComplete} disabled={saving}>
-                                <div className="btn-content">
-                                    <span className="btn-label">
-                                        {saving ? 'Saving...' : (isCompleted ? 'Next Lesson' : 'Mark Complete')}
-                                    </span>
-                                    {nextLessonTitle && <span className="btn-subtext">Up Next: {nextLessonTitle}</span>}
-                                </div>
-                                <ChevronRight size={20} />
-                            </button>
+                                {lesson.content}
+                            </ReactMarkdown>
                         </div>
-                    </div>
-                </main >
 
-                {/* Desktop Sidebar (Optional TOC) */}
-                <aside className="lesson-sidebar-desktop">
-                    <div className="sidebar-sticky">
-                        <h3>In this Module</h3>
-                        <div className="sidebar-list">
-                            {currentModule?.lessons.map(l => (
-                                <div
-                                    key={l.id}
-                                    className={`sidebar-item ${l.id === lessonId ? 'active' : ''} ${courseProgress?.completedLessons?.includes(l.id) ? 'completed' : ''}`}
-                                    onClick={() => navigate(`/course/${id}/lesson/${l.id}`)}
-                                >
-                                    <div className="status-indicator">
-                                        {l.id === lessonId ? <div className="pulsing-dot" /> :
-                                            (courseProgress?.completedLessons?.includes(l.id) ? <CheckCircle size={14} /> : <div className="empty-dot" />)
+                        {/* Enhanced Footer Navigation */}
+                        <div className="lesson-footer">
+                            <div className="footer-actions">
+                                <button
+                                    className="nav-btn-secondary"
+                                    disabled={!prevLessonId}
+                                    onClick={() => {
+                                        if (prevLessonId) {
+                                            playSFX('click');
+                                            navigate(`/course/${id}/lesson/${prevLessonId}`);
                                         }
+                                    }}
+                                >
+                                    <ChevronLeft size={16} /> Previous Lesson
+                                </button>
+
+                                <button className="complete-btn-primary" onClick={handleComplete} disabled={saving}>
+                                    <div className="btn-content">
+                                        <span className="btn-label">
+                                            {saving ? 'Saving...' : (isCompleted ? 'Next Lesson' : 'Mark Complete')}
+                                        </span>
+                                        {nextLessonTitle && <span className="btn-subtext">Up Next: {nextLessonTitle}</span>}
                                     </div>
-                                    <span className="item-title">{l.title}</span>
-                                </div>
-                            ))}
+                                    <ChevronRight size={20} />
+                                </button>
+                            </div>
                         </div>
-                    </div>
-                </aside>
+                    </main >
+
+                    {/* Desktop Sidebar (Optional TOC) */}
+                    <aside className="lesson-sidebar-desktop">
+                        <div className="sidebar-sticky">
+                            <h3>In this Module</h3>
+                            <div className="sidebar-list">
+                                {currentModule?.lessons.map(l => (
+                                    <div
+                                        key={l.id}
+                                        className={`sidebar-item ${l.id === lessonId ? 'active' : ''} ${courseProgress?.completedLessons?.includes(l.id) ? 'completed' : ''}`}
+                                        onClick={() => navigate(`/course/${id}/lesson/${l.id}`)}
+                                    >
+                                        <div className="status-indicator">
+                                            {l.id === lessonId ? <div className="pulsing-dot" /> :
+                                                (courseProgress?.completedLessons?.includes(l.id) ? <CheckCircle size={14} /> : <div className="empty-dot" />)
+                                            }
+                                        </div>
+                                        <span className="item-title">{l.title}</span>
+                                    </div>
+                                ))}
+                            </div>
+                        </div>
+                    </aside>
+                </div >
             </div >
-        </div >
-    );
-}
+        );
+    }
