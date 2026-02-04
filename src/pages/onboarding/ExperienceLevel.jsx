@@ -1,7 +1,8 @@
 import { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 import { Sprout, BookOpen, Rocket, ChevronRight } from 'lucide-react';
-import PageTransition, { SLIDE_LEFT } from '../../components/PageTransition';
+import PageTransition, { SLIDE_LEFT, SLIDE_RIGHT } from '../../components/PageTransition';
+import OnboardingProgress from '../../components/OnboardingProgress';
 import './Onboarding.css';
 
 const levels = [
@@ -12,23 +13,18 @@ const levels = [
 
 export default function ExperienceLevel() {
     const navigate = useNavigate();
+    const location = useLocation();
     const [selected, setSelected] = useState(null);
 
+    const direction = location.state?.direction === 'back' ? SLIDE_RIGHT : SLIDE_LEFT;
+
     return (
-        <PageTransition pageName="onboarding-experience" direction={SLIDE_LEFT}>
+        <PageTransition pageName="onboarding-experience" direction={direction}>
             <div className="onboarding-screen">
                 <div className="onboarding-bg-grid"></div>
 
                 <div className="onboarding-content">
-                    <div className="progress-steps">
-                        <div className="step"><div className="step-dot completed"></div></div>
-                        <div className="step-line completed"></div>
-                        <div className="step"><div className="step-dot active"></div></div>
-                        <div className="step-line"></div>
-                        <div className="step"><div className="step-dot"></div></div>
-                        <div className="step-line"></div>
-                        <div className="step"><div className="step-dot"></div></div>
-                    </div>
+                    <OnboardingProgress currentStep={2} />
 
                     <h2 className="question-title">What's your experience level?</h2>
                     <p className="question-subtitle">This helps us tailor content difficulty</p>

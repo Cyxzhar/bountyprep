@@ -1,7 +1,8 @@
 import { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 import { Cpu, Check, Circle, BookOpen, Target, Trophy, ChevronRight } from 'lucide-react';
-import PageTransition, { SLIDE_UP, FADE } from '../../components/PageTransition';
+import PageTransition, { SLIDE_UP, FADE, SLIDE_LEFT, SLIDE_RIGHT } from '../../components/PageTransition';
+import OnboardingProgress from '../../components/OnboardingProgress';
 import './Onboarding.css';
 
 const loadingSteps = [
@@ -12,8 +13,11 @@ const loadingSteps = [
 
 export default function Analysis() {
     const navigate = useNavigate();
+    const location = useLocation();
     const [loading, setLoading] = useState(true);
     const [currentStep, setCurrentStep] = useState(0);
+
+    const direction = location.state?.direction === 'back' ? SLIDE_RIGHT : SLIDE_LEFT;
 
     useEffect(() => {
         const stepInterval = setInterval(() => {
@@ -57,20 +61,13 @@ export default function Analysis() {
     }
 
     return (
-        <PageTransition pageName="onboarding-analysis" direction={FADE} duration={500}>
+        <PageTransition pageName="onboarding-analysis" direction={direction} duration={400}>
             <div className="onboarding-screen">
                 <div className="onboarding-bg-grid"></div>
 
                 <div className="onboarding-content">
-                    <div className="progress-steps">
-                        <div className="step"><div className="step-dot completed"></div></div>
-                        <div className="step-line completed"></div>
-                        <div className="step"><div className="step-dot completed"></div></div>
-                        <div className="step-line completed"></div>
-                        <div className="step"><div className="step-dot completed"></div></div>
-                        <div className="step-line completed"></div>
-                        <div className="step"><div className="step-dot active"></div></div>
-                    </div>
+                    <OnboardingProgress currentStep={4} />
+
 
                     <h2 className="question-title">Your Personalized Plan</h2>
 

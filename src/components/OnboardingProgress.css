@@ -1,0 +1,67 @@
+.progress-steps {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: var(--space-xl);
+    padding: 0 var(--space-lg);
+}
+
+.step-wrapper {
+    display: flex;
+    align-items: center;
+}
+
+.step {
+    position: relative;
+    z-index: 1;
+}
+
+.step.clickable {
+    cursor: pointer;
+}
+
+.step.clickable:hover .step-dot {
+    transform: scale(1.15);
+    box-shadow: 0 0 15px rgba(0, 212, 255, 0.4);
+}
+
+.step-dot {
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    background: var(--bg-card);
+    border: 2px solid var(--border-color);
+    transition: all var(--transition-fast);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.step-dot.active {
+    width: 16px;
+    height: 16px;
+    background: var(--neon-green);
+    border-color: var(--neon-green);
+    box-shadow: 0 0 12px rgba(159, 239, 0, 0.4);
+}
+
+.step-dot.completed {
+    background: var(--neon-blue);
+    border-color: var(--neon-blue);
+    width: 14px;
+    height: 14px;
+}
+
+.step-line {
+    width: 40px;
+    height: 2px;
+    background: var(--border-color);
+    margin: 0 8px;
+}
+
+/* Responsive */
+@media (max-width: 480px) {
+    .step-line {
+        width: 30px;
+    }
+}

@@ -1,7 +1,8 @@
 import { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 import { Zap, Star, Flame, ChevronRight } from 'lucide-react';
-import PageTransition, { SLIDE_LEFT } from '../../components/PageTransition';
+import PageTransition, { SLIDE_LEFT, SLIDE_RIGHT } from '../../components/PageTransition';
+import OnboardingProgress from '../../components/OnboardingProgress';
 import './Onboarding.css';
 
 const commitments = [
@@ -12,23 +13,18 @@ const commitments = [
 
 export default function DailyCommitment() {
     const navigate = useNavigate();
+    const location = useLocation();
     const [selected, setSelected] = useState('10');
 
+    const direction = location.state?.direction === 'back' ? SLIDE_RIGHT : SLIDE_LEFT;
+
     return (
-        <PageTransition pageName="onboarding-commitment" direction={SLIDE_LEFT}>
+        <PageTransition pageName="onboarding-commitment" direction={direction}>
             <div className="onboarding-screen">
                 <div className="onboarding-bg-grid"></div>
 
                 <div className="onboarding-content">
-                    <div className="progress-steps">
-                        <div className="step"><div className="step-dot completed"></div></div>
-                        <div className="step-line completed"></div>
-                        <div className="step"><div className="step-dot completed"></div></div>
-                        <div className="step-line completed"></div>
-                        <div className="step"><div className="step-dot active"></div></div>
-                        <div className="step-line"></div>
-                        <div className="step"><div className="step-dot"></div></div>
-                    </div>
+                    <OnboardingProgress currentStep={3} />
 
                     <h2 className="question-title">How much time can you commit?</h2>
                     <p className="question-subtitle">Consistency is key to mastery</p>

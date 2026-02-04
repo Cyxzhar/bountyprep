@@ -1,7 +1,8 @@
 import { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 import { DollarSign, Briefcase, Target, Wrench, ChevronRight } from 'lucide-react';
-import PageTransition, { SLIDE_LEFT } from '../../components/PageTransition';
+import PageTransition, { SLIDE_LEFT, SLIDE_RIGHT } from '../../components/PageTransition';
+import OnboardingProgress from '../../components/OnboardingProgress';
 import './Onboarding.css';
 
 const goals = [
@@ -13,24 +14,20 @@ const goals = [
 
 export default function GoalSelection() {
     const navigate = useNavigate();
+    const location = useLocation();
     const [selected, setSelected] = useState(null);
 
+    // Use SLIDE_RIGHT if coming from a future step (back navigation)
+    const direction = location.state?.direction === 'back' ? SLIDE_RIGHT : SLIDE_LEFT;
+
     return (
-        <PageTransition pageName="onboarding-goal" direction={SLIDE_LEFT}>
+        <PageTransition pageName="onboarding-goal" direction={direction}>
             <div className="onboarding-screen">
                 <div className="onboarding-bg-grid"></div>
 
                 <div className="onboarding-content">
                     {/* Progress */}
-                    <div className="progress-steps">
-                        <div className="step"><div className="step-dot active"></div></div>
-                        <div className="step-line"></div>
-                        <div className="step"><div className="step-dot"></div></div>
-                        <div className="step-line"></div>
-                        <div className="step"><div className="step-dot"></div></div>
-                        <div className="step-line"></div>
-                        <div className="step"><div className="step-dot"></div></div>
-                    </div>
+                    <OnboardingProgress currentStep={1} />
 
                     <h2 className="question-title">What's your primary goal?</h2>
                     <p className="question-subtitle">We'll personalize your learning path</p>
