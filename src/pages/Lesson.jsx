@@ -7,6 +7,7 @@ import ReactMarkdown from 'react-markdown';
 import { useState, useEffect } from 'react';
 import { useAuth } from '../context/AuthContext';
 import { useToast } from '../context/ToastContext';
+import { useSound } from '../context/SoundContext';
 import { saveLessonProgress, getCourseProgress } from '../utils/firestore';
 import { courses } from '../data/courses';
 import './Lesson.css';
@@ -17,8 +18,10 @@ export default function Lesson() {
 
     const { currentUser, refreshUser } = useAuth();
     const { success, error: showError } = useToast();
+    const { playSFX } = useSound(); // Add sound context
     const [courseProgress, setCourseProgress] = useState(null);
     const [isCompleted, setIsCompleted] = useState(false);
+    const [saving, setSaving] = useState(false); // Add saving state
 
     // Fetch progress to check completion status
     useEffect(() => {
@@ -67,6 +70,7 @@ export default function Lesson() {
     }
 
     const handleComplete = async () => {
+        playSFX('click'); // Sound effect
         if (!currentUser) return;
 
         // If already completed, just navigate
@@ -84,6 +88,7 @@ export default function Lesson() {
             const { success: saveSuccess, xpAwarded } = await saveLessonProgress(currentUser.uid, id, lessonId, lesson.xp || 50);
 
             if (saveSuccess) {
+                playSFX('success'); // Success sound
                 if (xpAwarded > 0) {
                     success(`Lesson Completed! +${xpAwarded} XP`);
                     refreshUser();
@@ -111,7 +116,7 @@ export default function Lesson() {
     return (
         <div className="page-container lesson-page">
             <header className="lesson-header">
-                <button className="icon-btn" onClick={() => navigate(`/course/${id}`)}>
+                <button className="icon-btn" onClick={() => { playSFX('click'); navigate(`/course/${id}`); }}>
                     <ChevronLeft size={24} />
                 </button>
                 <div className="lesson-header-text">
@@ -151,13 +156,18 @@ export default function Lesson() {
                         <button
                             className="nav-btn prev"
                             disabled={!prevLessonId}
-                            onClick={() => prevLessonId && navigate(`/course/${id}/lesson/${prevLessonId}`)}
+                            onClick={() => {
+                                if (prevLessonId) {
+                                    playSFX('click');
+                                    navigate(`/course/${id}/lesson/${prevLessonId}`);
+                                }
+                            }}
                         >
                             <ChevronLeft size={18} /> Previous
                         </button>
 
-                        <button className="complete-btn" onClick={handleComplete}>
-                            {isCompleted ? 'Next Lesson' : (nextLessonId ? 'Complete & Next' : 'Finish Course')}
+                        <button className="complete-btn" onClick={handleComplete} disabled={saving}>
+                            {saving ? 'Completing...' : (isCompleted ? 'Next Lesson' : (nextLessonId ? 'Complete & Next' : 'Finish Course'))}
                             {isCompleted ? <ChevronRight size={18} /> : (nextLessonId ? <ChevronRight size={18} /> : <CheckCircle size={18} />)}
                         </button>
                     </div >
