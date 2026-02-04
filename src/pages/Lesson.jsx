@@ -7,6 +7,7 @@ import ReactMarkdown from 'react-markdown';
 import { useState, useEffect } from 'react';
 import { useAuth } from '../context/AuthContext';
 import { useToast } from '../context/ToastContext';
+import { useAchievement } from '../context/AchievementContext';
 import { useSound } from '../context/SoundContext';
 import { saveLessonProgress, getCourseProgress } from '../utils/firestore';
 import { courses } from '../data/courses';
@@ -178,18 +179,11 @@ export default function Lesson() {
                     <div className="markdown-modern">
                         <ReactMarkdown
                             components={{
-                                code: ({ inline, className, children }) => {
-                                    // Fix: Do not render <pre> here. ReactMarkdown wraps block code in <pre> automatically.
-                                    // Just render <code> with appropriate classes.
-                                    if (inline) {
-                                        return <code className="inline-code">{children}</code>;
-                                    }
-                                    return <code className={className}>{children}</code>;
-                                },
-                                pre: ({ children }) => {
-                                    // Customize the outer <pre> block
-                                    return <pre className="code-block">{children}</pre>;
-                                },
+                                code: ({ inline, children }) => (
+                                    inline
+                                        ? <code className="inline-code">{children}</code>
+                                        : <pre className="code-block"><code>{children}</code></pre>
+                                ),
                                 blockquote: ({ children }) => {
                                     const text = children?.[1]?.props?.children?.[0] || '';
                                     if (typeof text === 'string' && text.includes('[!IMPORTANT]')) {
@@ -200,6 +194,7 @@ export default function Lesson() {
                                     }
                                     return <blockquote className="modern-blockquote">{children}</blockquote>
                                 },
+                                // H2 becomes a Section Card
                                 h2: ({ children }) => <div className="section-header"><h2>{children}</h2></div>
                             }}
                         >
