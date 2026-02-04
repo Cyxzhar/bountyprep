@@ -37,7 +37,7 @@ service cloud.firestore {
       }
 
       // User interview sessions
-      match /interview/{sessionId} {
+      match /interview_sessions/{sessionId} {
         allow read, write: if isOwner(userId);
       }
     }

@@ -84,6 +84,7 @@ const difficulties = [
 
 export default function Interview() {
     const { currentUser } = useAuth();
+    const { success, error } = useToast();
     const isPremium = currentUser?.isPremium || false;
 
     const [started, setStarted] = useState(false);
@@ -98,6 +99,8 @@ export default function Interview() {
     const [sessionHistory, setSessionHistory] = useState([]);
     const [showHistory, setShowHistory] = useState(false);
     const [sessionId, setSessionId] = useState(null);
+    const [viewingSession, setViewingSession] = useState(null); // For view-only mode
+    const [showSessionViewer, setShowSessionViewer] = useState(false);
     const messagesEndRef = useRef(null);
     const { playSFX } = useSound(); // Use sound hook
 
@@ -128,7 +131,10 @@ export default function Interview() {
         }
     }, [currentUser?.uid, started]); // Reload history when returning to menu
 
-    // ... (Timer, Auto-scroll effects)
+    // Auto-scroll to bottom on new messages
+    useEffect(() => {
+        messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
+    }, [messages]);
 
     // Save session logic with ID
     useEffect(() => {
@@ -155,8 +161,20 @@ export default function Interview() {
             setElapsedTime(session.elapsedTime || 0);
             setStarted(true);
             setShowHistory(false);
-            success('Resumed previous session');
         }
+    };
+
+    const handleViewSession = (session) => {
+        if (session) {
+            setViewingSession(session);
+            setShowHistory(false);
+            setShowSessionViewer(true);
+        }
+    };
+
+    const handleCloseViewer = () => {
+        setShowSessionViewer(false);
+        setViewingSession(null);
     };
 
     const handleSend = async () => {
@@ -312,7 +330,7 @@ export default function Interview() {
                     <div className="modal-overlay" onClick={() => setShowHistory(false)}>
                         <div className="modal-content history-modal" onClick={e => e.stopPropagation()}>
                             <div className="modal-header">
-                                <h3>History</h3>
+                                <h3>Session History</h3>
                                 <button className="close-btn" onClick={() => setShowHistory(false)}>
                                     <X size={20} />
                                 </button>
@@ -321,20 +339,111 @@ export default function Interview() {
                                 {sessionHistory.length === 0 ? (
                                     <p className="text-muted">No history found.</p>
                                 ) : (
-                                    sessionHistory.map(session => (
-                                        <button
-                                            key={session.id}
-                                            className="history-item"
-                                            onClick={() => handleResumeSession(session)}
-                                        >
-                                            <div className="history-info">
-                                                <span className="history-date">{formatDate(session.updatedAt)}</span>
-                                                <span className="history-topic">{session.topic || 'General Practice'}</span>
+                                    sessionHistory.map(session => {
+                                        const messageCount = session.messages?.length || 0;
+                                        const userMessages = session.messages?.filter(m => m.role === 'user').length || 0;
+                                        return (
+                                            <div key={session.id} className="history-item-wrapper">
+                                                <div className="history-info">
+                                                    <div className="history-header">
+                                                        <span className="history-date">{formatDate(session.updatedAt)}</span>
+                                                        <span className="history-meta">{userMessages} exchanges</span>
+                                                    </div>
+                                                    <span className="history-topic">{session.topic || 'General Practice'}</span>
+                                                </div>
+                                                <div className="history-actions">
+                                                    <button
+                                                        className="btn-icon"
+                                                        onClick={() => handleViewSession(session)}
+                                                        title="View conversation"
+                                                    >
+                                                        <History size={18} />
+                                                    </button>
+                                                    <button
+                                                        className="btn-icon primary"
+                                                        onClick={() => handleResumeSession(session)}
+                                                        title="Resume session"
+                                                    >
+                                                        <ChevronRight size={18} />
+                                                    </button>
+                                                </div>
                                             </div>
-                                            <ChevronRight size={16} className="text-muted" />
-                                        </button>
-                                    ))
+                                        );
+                                    })
                                 )}
+                            </div>
+                        </div>
+                    </div>
+                )}
+
+                {/* Session Viewer Modal (Read-only) */}
+                {showSessionViewer && viewingSession && (
+                    <div className="modal-overlay" onClick={handleCloseViewer}>
+                        <div className="modal-content session-viewer-modal" onClick={e => e.stopPropagation()}>
+                            <div className="modal-header">
+                                <div className="viewer-header-info">
+                                    <h3>Session Details</h3>
+                                    <div className="viewer-meta">
+                                        <span className="viewer-date">{formatDate(viewingSession.updatedAt)}</span>
+                                        <span className="viewer-time">{formatTime(viewingSession.elapsedTime || 0)}</span>
+                                    </div>
+                                </div>
+                                <button className="close-btn" onClick={handleCloseViewer}>
+                                    <X size={20} />
+                                </button>
+                            </div>
+                            <div className="viewer-messages">
+                                {viewingSession.messages?.map((msg, idx) => {
+                                    const safeContent = getSafeMessageContent(msg.content);
+                                    return (
+                                        <div key={idx} className={`message ${msg.role === 'assistant' ? 'ai' : 'user'}`}>
+                                            {msg.role === 'assistant' && (
+                                                <div className="message-avatar">
+                                                    <Bot size={20} />
+                                                </div>
+                                            )}
+                                            <div className="message-bubble">
+                                                {msg.role === 'assistant' ? (
+                                                    <ReactMarkdown
+                                                        components={{
+                                                            code: ({ inline, children }) => (
+                                                                inline
+                                                                    ? <code className="inline-code">{children}</code>
+                                                                    : <pre className="code-block"><code>{children}</code></pre>
+                                                            ),
+                                                            p: ({ children }) => <p className="md-paragraph">{children}</p>,
+                                                            ul: ({ children }) => <ul className="md-list">{children}</ul>,
+                                                            li: ({ children }) => <li className="md-list-item">{children}</li>,
+                                                            strong: ({ children }) => <strong className="md-bold">{children}</strong>,
+                                                        }}
+                                                    >
+                                                        {safeContent}
+                                                    </ReactMarkdown>
+                                                ) : (
+                                                    <p>{safeContent}</p>
+                                                )}
+                                            </div>
+                                        </div>
+                                    );
+                                })}
+                            </div>
+                            <div className="viewer-footer">
+                                <button
+                                    className="btn btn-secondary"
+                                    onClick={handleCloseViewer}
+                                >
+                                    Close
+                                </button>
+                                <button
+                                    className="btn btn-primary"
+                                    onClick={() => {
+                                        handleResumeSession(viewingSession);
+                                        handleCloseViewer();
+                                    }}
+                                >
+                                    Resume Session
+                                    <ChevronRight size={18} />
+                                </button>
                             </div>
                         </div>
                     </div>
