@@ -240,7 +240,53 @@
 @media (max-width: 1024px) {
     .lesson-sidebar {
         display: none;
-        /* Hide sidebar on smaller screens for now */
-        /* TODO: Make it a drawer/modal */
+    }
+}
+
+@media (max-width: 768px) {
+    .lesson-page {
+        height: 100vh;
+        height: 100dvh;
+    }
+
+    .lesson-header {
+        padding: 0 var(--space-md);
+        height: 56px;
+    }
+
+    .lesson-content-wrapper {
+        padding: 0;
+        /* Flush on mobile */
+    }
+
+    .lesson-content {
+        border: none;
+        background: transparent;
+        padding: var(--space-md) var(--space-lg);
+        /* Mobile consistent reading padding */
+        border-radius: 0;
+    }
+
+    /* Improve typography for mobile reading */
+    .md-content p {
+        font-size: 1.05rem;
+        line-height: 1.6;
+        color: var(--text-secondary);
+    }
+
+    .md-content h1 {
+        font-size: 1.5rem;
+        margin-top: 0;
+    }
+
+    .md-content h2 {
+        font-size: 1.25rem;
+    }
+
+    .lesson-actions {
+        padding: var(--space-lg) var(--space-md);
+        background: var(--bg-dark);
+        border-top: 1px solid var(--border-color);
+        /* Sticky footer feel */
     }
 }

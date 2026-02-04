@@ -67,7 +67,7 @@ export default function Lesson() {
 
             <div className="lesson-layout">
                 <main className="lesson-content-wrapper">
-                    <div className="lesson-content card-glow md-content">
+                    <div className="lesson-content md-content">
                         <ReactMarkdown
                             components={{
                                 code: ({ inline, children }) => (
