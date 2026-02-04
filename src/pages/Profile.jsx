@@ -6,8 +6,6 @@ import {
     LogOut, Crown, User, Shield, Bug, ExternalLink, Camera
 } from 'lucide-react';
 import BottomNav from '../components/BottomNav';
-import UpgradeModal from '../components/UpgradeModal';
-import AccountSettingsModal from '../components/AccountSettingsModal';
 import { useAuth } from '../context/AuthContext';
 import { useToast } from '../context/ToastContext';
 import { getSettings, updateSetting, shareApp } from '../utils/settings';
@@ -19,8 +17,6 @@ export default function Profile() {
     const { success, error, info } = useToast();
 
     const [settings, setSettings] = useState(getSettings());
-    const [showUpgradeModal, setShowUpgradeModal] = useState(false);
-    const [showAccountSettings, setShowAccountSettings] = useState(false);
     const [notificationPermission, setNotificationPermission] = useState('default');
 
     const isPremium = currentUser?.isPremium || false;
@@ -122,11 +118,6 @@ export default function Profile() {
         }
     };
 
-    const handleProfileUpdate = () => {
-        // Refresh user data after profile update
-        refreshUser?.();
-    };
-
     const menuSections = [
         {
             title: 'Account',
@@ -134,13 +125,13 @@ export default function Profile() {
                 {
                     icon: Settings,
                     label: 'Account Settings',
-                    action: () => setShowAccountSettings(true)
+                    action: () => navigate('/settings')
                 },
                 {
                     icon: CreditCard,
                     label: 'Subscription',
                     badge: isPremium ? 'Premium' : 'Free',
-                    action: () => !isPremium && setShowUpgradeModal(true)
+                    action: () => !isPremium && navigate('/upgrade')
                 },
                 {
                     icon: Bell,
@@ -223,7 +214,7 @@ export default function Profile() {
             <div className="screen-content">
                 {/* Profile Header */}
                 <div className="profile-header">
-                    <div className="profile-avatar" onClick={() => setShowAccountSettings(true)}>
+                    <div className="profile-avatar" onClick={() => navigate('/settings')}>
                         <div className="avatar-ring">
                             <div className="avatar-inner">
                                 {currentUser?.photoURL ? (
@@ -234,7 +225,7 @@ export default function Profile() {
                             </div>
                         </div>
                         <div className="avatar-edit-hint">
-                            <Camera size={12} />
+                            <Settings size={12} />
                         </div>
                         {isPremium && (
                             <div className="premium-crown">
@@ -253,7 +244,7 @@ export default function Profile() {
                         ) : (
                             <button
                                 className="profile-badge upgrade"
-                                onClick={() => setShowUpgradeModal(true)}
+                                onClick={() => navigate('/upgrade')}
                             >
                                 <Crown size={12} />
                                 Upgrade to Premium
@@ -341,18 +332,6 @@ export default function Profile() {
             </div>
 
             <BottomNav />
-
-            <UpgradeModal
-                isOpen={showUpgradeModal}
-                onClose={() => setShowUpgradeModal(false)}
-            />
-
-            <AccountSettingsModal
-                isOpen={showAccountSettings}
-                onClose={() => setShowAccountSettings(false)}
-                currentUser={currentUser}
-                onUpdate={handleProfileUpdate}
-            />
         </div>
     );
 }

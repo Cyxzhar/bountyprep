@@ -2,10 +2,9 @@ import { useState, useEffect } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import { Search, Filter, Lock, ChevronRight, Clock, CheckCircle, Star, Crown } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
-import { collection, getDocs, query, orderBy } from 'firebase/firestore';
+import { collection, getDocs } from 'firebase/firestore';
 import { db } from '../lib/firebase';
 import BottomNav from '../components/BottomNav';
-import UpgradeModal from '../components/UpgradeModal';
 import { FirstVisitTransition } from '../components/PageTransition';
 import { challenges as localChallenges } from '../data/challenges';
 import './Challenges.css';
@@ -22,28 +21,22 @@ export default function Challenges() {
     const initialFilter = searchParams.get('filter') || 'All';
     const [searchQuery, setSearchQuery] = useState('');
     const [activeFilter, setActiveFilter] = useState(initialFilter);
-    // Start with local challenges immediately (no loading!)
     const [challenges, setChallenges] = useState(localChallenges);
     const [completedChallenges, setCompletedChallenges] = useState(cachedCompletedChallenges || new Set());
-    // Only show loading if we have no data at all
     const [loading, setLoading] = useState(false);
-    const [showUpgradeModal, setShowUpgradeModal] = useState(false);
 
     const isPremium = currentUser?.isPremium || false;
 
     // Load completed challenges from Firestore (background sync)
     useEffect(() => {
-        // Skip if no user
         if (!currentUser?.uid) return;
 
-        // Use cached data immediately
         if (cachedCompletedChallenges) {
             setCompletedChallenges(cachedCompletedChallenges);
         }
 
         async function syncData() {
             try {
-                // Load user's completed challenges with 3s timeout
                 const userChallengesRef = collection(db, 'users', currentUser.uid, 'challenges');
 
                 const timeoutPromise = new Promise((_, reject) =>
@@ -62,7 +55,6 @@ export default function Challenges() {
                     }
                 });
 
-                // Update cache and state
                 cachedCompletedChallenges = completed;
                 setCompletedChallenges(completed);
             } catch (error) {
@@ -145,7 +137,7 @@ export default function Challenges() {
 
                             const handleClick = () => {
                                 if (isLocked) {
-                                    setShowUpgradeModal(true);
+                                    navigate('/upgrade');
                                 } else {
                                     navigate(`/challenge/${challenge.id}`);
                                 }
@@ -206,11 +198,6 @@ export default function Challenges() {
                 </div>
 
                 <BottomNav />
-
-                <UpgradeModal
-                    isOpen={showUpgradeModal}
-                    onClose={() => setShowUpgradeModal(false)}
-                />
             </div>
         </FirstVisitTransition>
     );
