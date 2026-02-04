@@ -3,6 +3,7 @@ import {
     BookOpen, Trophy, Clock, ChevronRight, Play, CheckCircle
 } from 'lucide-react';
 import { courses } from '../data/courses';
+import BottomNav from '../components/BottomNav';
 import './Courses.css';
 
 export default function Courses() {
@@ -113,6 +114,7 @@ export default function Courses() {
                     </div>
                 </div>
             </div>
+            <BottomNav />
         </div>
     );
 }
