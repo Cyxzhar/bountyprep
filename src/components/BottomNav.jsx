@@ -6,6 +6,7 @@ const navItems = [
     { to: '/home', icon: Home, label: 'Home' },
     { to: '/courses', icon: BookOpen, label: 'Learn' },
     { to: '/challenges', icon: Target, label: 'Practice' },
+    { to: '/progress', icon: TrendingUp, label: 'Progress' },
     { to: '/interview', icon: MessageSquare, label: 'Coach' },
     { to: '/profile', icon: User, label: 'Profile' },
 ];

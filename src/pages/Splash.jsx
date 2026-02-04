@@ -19,7 +19,7 @@ export default function Splash() {
         }, 80);
 
         const timer = setTimeout(() => {
-            navigate('/onboarding/welcome');
+            navigate('/onboarding/welcome', { replace: true });
         }, 2500);
 
         return () => {
