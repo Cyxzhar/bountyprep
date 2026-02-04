@@ -68,19 +68,16 @@
     margin: 0;
     font-weight: 800;
     color: #fff;
-    line-height: 1.4;
-    /* looser line height */
-    overflow-wrap: anywhere;
-    /* Stronger than break-word */
-    word-break: break-word;
-    /* Fallback */
-    hyphens: auto;
+    line-height: 1.3;
+    /* Clean wrapping: only break if line is full, preserve words */
+    overflow-wrap: break-word;
+    word-break: normal;
     white-space: normal;
-    /* Force wrapping */
+    hyphens: auto;
+
     min-width: 0;
     max-width: 100%;
     padding-right: 0;
-    /* Let container gap handle spacing */
 }
 
 /* Layout */
