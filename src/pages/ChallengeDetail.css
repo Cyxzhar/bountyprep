@@ -68,7 +68,8 @@
 .header-controls {
     display: flex;
     align-items: center;
-    gap: var(--space-sm);
+    gap: 24px;
+    /* Increased gap */
 }
 
 .audio-control-btn {
@@ -79,8 +80,9 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    background: var(--bg-darker);
-    border: 1px solid var(--border-color);
+    background: transparent;
+    /* Cleaner consistent look */
+    border: 1px solid rgba(255, 255, 255, 0.1);
     border-radius: var(--radius-md);
     color: var(--text-secondary);
     cursor: pointer;
@@ -131,9 +133,14 @@
 .header-time {
     display: flex;
     align-items: center;
-    gap: 4px;
-    font-size: 0.875rem;
-    color: var(--text-muted);
+    gap: 8px;
+    font-size: 0.9rem;
+    color: var(--text-secondary);
+    font-family: var(--font-mono);
+    /* Fix jitter */
+    font-variant-numeric: tabular-nums;
+    min-width: 80px;
+    /* Pre-reserve space */
 }
 
 /* Content */
@@ -512,6 +519,7 @@
         height: 40px;
     }
 }
+
 /* Session XP Indicator */
 .session-xp {
     display: flex;
@@ -529,8 +537,15 @@
 }
 
 @keyframes pulse-glow {
-    0%, 100% { box-shadow: 0 0 10px rgba(159, 239, 0, 0.2); }
-    50% { box-shadow: 0 0 20px rgba(159, 239, 0, 0.4); }
+
+    0%,
+    100% {
+        box-shadow: 0 0 10px rgba(159, 239, 0, 0.2);
+    }
+
+    50% {
+        box-shadow: 0 0 20px rgba(159, 239, 0, 0.4);
+    }
 }
 
 .hint-btn.used {
