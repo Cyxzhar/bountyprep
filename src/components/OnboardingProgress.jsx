@@ -23,7 +23,9 @@ export default function OnboardingProgress({ currentStep }) {
         <div className="progress-steps">
             {ONBOARDING_STEPS.map((step, index) => (
                 <div key={step.id} className="step-wrapper">
-                    {index > 0 && <div className="step-line"></div>}
+                    {index > 0 && (
+                        <div className={`step-line ${step.id <= currentStep ? 'completed' : ''}`}></div>
+                    )}
                     <div
                         className={`step ${step.id <= currentStep ? 'clickable' : ''}`}
                         onClick={() => handleStepClick(step)}

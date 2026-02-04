@@ -46,10 +46,11 @@
 }
 
 .step-dot.completed {
-    background: var(--neon-blue);
-    border-color: var(--neon-blue);
+    background: linear-gradient(135deg, #00d4ff, #0099cc);
+    border-color: #00d4ff;
     width: 14px;
     height: 14px;
+    box-shadow: 0 0 10px rgba(0, 212, 255, 0.3);
 }
 
 .step-line {
@@ -57,6 +58,12 @@
     height: 2px;
     background: var(--border-color);
     margin: 0 8px;
+    transition: all var(--transition-fast);
+}
+
+.step-line.completed {
+    background: linear-gradient(90deg, #00d4ff, #0099cc);
+    box-shadow: 0 0 4px rgba(0, 212, 255, 0.4);
 }
 
 /* Responsive */

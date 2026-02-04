@@ -250,13 +250,16 @@ export default function ChallengeDetail() {
                     </span>
                 </div>
                 <div className="header-controls">
-                    <button
-                        className="audio-control-btn"
-                        onClick={handleAudioToggle}
-                        title={isMuted ? 'Unmute & Play Music' : 'Mute Music'}
-                    >
-                        {isMuted ? <VolumeX size={18} /> : <Volume2 size={18} />}
-                    </button>
+                    {/* Only show audio control if sound is globally enabled in settings */}
+                    {localStorage.getItem('sound_muted') !== 'true' && (
+                        <button
+                            className="audio-control-btn"
+                            onClick={handleAudioToggle}
+                            title={isMuted ? 'Unmute & Play Music' : 'Mute Music'}
+                        >
+                            {isMuted ? <VolumeX size={18} /> : <Volume2 size={18} />}
+                        </button>
+                    )}
                     <div className="header-time">
                         <Clock size={16} />
                         <span className="mono-font">{formattedTime}</span>
