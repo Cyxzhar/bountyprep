@@ -44,15 +44,18 @@
 /* Today's Challenge - Premium Hero Card */
 .today-challenge {
     position: relative;
-    background: linear-gradient(135deg, var(--bg-card), var(--bg-elevated));
-    border: 1px solid var(--border-color);
+    background: linear-gradient(135deg, rgba(30, 30, 40, 0.8), rgba(20, 20, 25, 0.9));
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    /* Sophisticated glass border */
     border-radius: var(--radius-xl);
     padding: var(--space-lg) var(--space-lg) var(--space-md);
     margin-bottom: var(--space-lg);
     cursor: pointer;
     overflow: hidden;
     transition: all var(--transition-base);
-    box-shadow: var(--shadow-lg);
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
 }
 
 .today-challenge::before {
@@ -133,6 +136,99 @@
     white-space: nowrap;
 }
 
+/* Level Section - NO CARD / HUD STYLE */
+.level-card {
+    display: flex;
+    /* Ensure it's visible and flex */
+    flex-direction: column;
+    gap: 16px;
+    margin-bottom: 32px;
+    padding: 0 4px;
+    /* Slight alignment fix */
+    background: transparent;
+    /* No box */
+    border: none;
+    backdrop-filter: none;
+}
+
+.level-info {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+}
+
+.level-badge {
+    /* Transform Badge into Hero Text */
+    background: transparent;
+    padding: 0;
+    border: none;
+    box-shadow: none;
+
+    display: flex;
+    align-items: center;
+    /* Keep star icon aligned */
+    gap: 12px;
+
+    font-size: 2.5rem;
+    /* Massive */
+    font-weight: 800;
+    letter-spacing: -0.05em;
+    color: #fff;
+    text-shadow: 0 0 30px rgba(159, 239, 0, 0.3);
+    /* Green Glow */
+}
+
+/* Style the Star Icon inside spacing */
+.level-badge svg {
+    width: 32px;
+    height: 32px;
+    color: var(--neon-green);
+    filter: drop-shadow(0 0 10px var(--neon-green));
+}
+
+.level-title {
+    /* Rank Title as Subtitle */
+    font-size: 0.875rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.15em;
+    color: var(--text-secondary);
+    margin-bottom: 8px;
+    /* Align with bottom of big text */
+}
+
+.xp-progress {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+}
+
+.xp-bar {
+    flex: 1;
+    height: 4px;
+    /* Ultra thin laser line */
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 2px;
+    overflow: hidden;
+}
+
+.xp-fill {
+    height: 100%;
+    background: var(--neon-green);
+    box-shadow: 0 0 15px var(--neon-green);
+    /* Glowing line */
+    border-radius: 2px;
+    transition: width 1s cubic-bezier(0.25, 1, 0.5, 1);
+}
+
+.xp-text {
+    font-size: 0.8rem;
+    font-weight: 700;
+    color: var(--neon-green);
+    font-family: 'JetBrains Mono', monospace;
+    opacity: 0.8;
+}
+
 /* Stats Grid - Larger Touch Targets */
 .stats-grid {
     display: grid;
@@ -149,7 +245,9 @@
     padding: var(--space-md) var(--space-sm);
     min-height: 110px;
     background: rgba(255, 255, 255, 0.03);
-    border: 1px solid var(--border-color);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    border: 1px solid rgba(255, 255, 255, 0.05);
     border-radius: var(--radius-lg);
     transition: all var(--transition-base);
 }
@@ -239,7 +337,7 @@
     width: 140px;
     padding: var(--space-md);
     background: var(--bg-card);
-    border: 2px solid var(--border-color);
+    border: 1px solid rgba(255, 255, 255, 0.08);
     border-radius: var(--radius-lg);
     text-align: center;
     scroll-snap-align: start;
