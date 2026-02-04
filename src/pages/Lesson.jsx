@@ -167,26 +167,27 @@ export default function Lesson() {
                                 {lesson.content}
                             </ReactMarkdown>
                         </div>
+                    </div>
 
-                        <div className="lesson-actions">
-                            <button
-                                className="nav-btn prev"
-                                disabled={!prevLessonId}
-                                onClick={() => {
-                                    if (prevLessonId) {
-                                        playSFX('click');
-                                        navigate(`/course/${id}/lesson/${prevLessonId}`);
-                                    }
-                                }}
-                            >
-                                <ChevronLeft size={18} /> Previous
-                            </button>
+                    <div className="lesson-actions">
+                        <button
+                            className="nav-btn prev"
+                            disabled={!prevLessonId}
+                            onClick={() => {
+                                if (prevLessonId) {
+                                    playSFX('click');
+                                    navigate(`/course/${id}/lesson/${prevLessonId}`);
+                                }
+                            }}
+                        >
+                            <ChevronLeft size={18} /> Previous
+                        </button>
 
-                            <button className="complete-btn" onClick={handleComplete} disabled={saving}>
-                                {saving ? 'Completing...' : (isCompleted ? 'Next Lesson' : (nextLessonId ? 'Complete & Next' : 'Finish Course'))}
-                                {isCompleted ? <ChevronRight size={18} /> : (nextLessonId ? <ChevronRight size={18} /> : <CheckCircle size={18} />)}
-                            </button>
-                        </div >
+                        <button className="complete-btn" onClick={handleComplete} disabled={saving}>
+                            {saving ? 'Completing...' : (isCompleted ? 'Next Lesson' : (nextLessonId ? 'Complete & Next' : 'Finish Course'))}
+                            {isCompleted ? <ChevronRight size={18} /> : (nextLessonId ? <ChevronRight size={18} /> : <CheckCircle size={18} />)}
+                        </button>
+                    </div >
                 </main >
 
                 <aside className="lesson-sidebar">
