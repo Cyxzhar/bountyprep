@@ -144,35 +144,48 @@
     line-height: 1.8;
 }
 
+/* Video Container - Cyber Frame */
+.video-container {
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    box-shadow: 0 0 30px rgba(0, 0, 0, 0.5);
+    transition: all 0.3s ease;
+}
+
+.video-container:hover {
+    border-color: var(--neon-blue);
+    box-shadow: 0 0 40px rgba(8, 247, 254, 0.2);
+}
+
 /* Sidebar - Tech List */
 .lesson-sidebar {
     width: 320px;
-    background: var(--bg-darker);
+    background: rgba(10, 10, 15, 0.6);
+    backdrop-filter: blur(10px);
     border-left: 1px solid rgba(255, 255, 255, 0.05);
     overflow-y: auto;
-    /* Match Header Padding: left/right 24px */
     padding: 32px 24px;
     display: flex;
     flex-direction: column;
     gap: 24px;
+    z-index: 2;
 }
 
 .lesson-sidebar h3 {
     font-size: 0.9rem;
-    color: var(--text-primary);
+    color: #fff;
     text-transform: uppercase;
-    letter-spacing: 0.1em;
+    letter-spacing: 0.15em;
     font-weight: 700;
     padding-bottom: 16px;
-    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    border-bottom: 1px solid rgba(159, 239, 0, 0.2);
     margin-bottom: 24px;
-    /* Increased margin */
+    text-shadow: 0 0 10px rgba(159, 239, 0, 0.3);
 }
 
 .sidebar-module {
     display: flex;
     flex-direction: column;
-    gap: 12px;
+    gap: 16px;
 }
 
 .sidebar-module-title {
@@ -196,17 +209,17 @@
 .sidebar-lesson {
     display: flex;
     align-items: flex-start;
-    /* Align icon/text top for wrapping */
     gap: 12px;
     padding: 12px;
-    border-radius: 6px;
-    color: var(--text-secondary);
-    font-size: 0.95rem;
-    /* Larger text */
+    border-radius: 4px;
+    color: #888;
+    font-size: 0.9rem;
     cursor: pointer;
     transition: all 0.2s;
     border-left: 2px solid transparent;
     line-height: 1.4;
+    position: relative;
+    overflow: hidden;
 }
 
 .sidebar-lesson span {
@@ -216,14 +229,17 @@
 
 .sidebar-lesson:hover {
     background: rgba(255, 255, 255, 0.05);
-    color: var(--text-primary);
+    color: #fff;
+    padding-left: 16px;
+    /* Subtle slide effect */
 }
 
 .sidebar-lesson.active {
-    background: rgba(159, 239, 0, 0.1);
-    color: var(--neon-green);
+    background: linear-gradient(90deg, rgba(159, 239, 0, 0.1) 0%, transparent 100%);
+    color: #fff;
     border-left-color: var(--neon-green);
     font-weight: 600;
+    box-shadow: inset 0 0 20px rgba(159, 239, 0, 0.05);
 }
 
 @media (max-width: 1024px) {
