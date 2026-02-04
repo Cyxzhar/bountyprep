@@ -13,6 +13,7 @@ export default function Upgrade() {
     const isPremium = currentUser?.isPremium;
     const [loading, setLoading] = useState(false);
     const [joined, setJoined] = useState(false);
+    const [openFaqIndex, setOpenFaqIndex] = useState(-1);
 
     const faqs = [
         {
