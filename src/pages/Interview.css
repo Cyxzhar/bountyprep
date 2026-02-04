@@ -5,81 +5,106 @@
 }
 
 /* Intro Screen */
+/* Intro Screen - HUD Style */
 .interview-intro {
     text-align: center;
-    margin-bottom: var(--space-xl);
+    margin-bottom: 48px;
+    padding-top: 20px;
 }
 
 .intro-icon {
-    width: 96px;
-    height: 96px;
+    width: 80px;
+    height: 80px;
     display: flex;
     align-items: center;
     justify-content: center;
-    background: linear-gradient(135deg, rgba(0, 212, 255, 0.2), rgba(155, 89, 182, 0.2));
-    border: 2px solid rgba(0, 212, 255, 0.3);
-    border-radius: var(--radius-xl);
-    margin: 0 auto var(--space-lg);
+    background: rgba(0, 212, 255, 0.1);
+    border: 1px solid rgba(0, 212, 255, 0.3);
+    border-radius: 50%;
+    margin: 0 auto 24px;
     color: var(--neon-blue);
-    animation: float 3s ease-in-out infinite;
+    box-shadow: 0 0 30px rgba(0, 212, 255, 0.15);
 }
 
 .intro-title {
-    font-size: 1.75rem;
-    font-weight: 700;
-    margin-bottom: var(--space-sm);
+    font-size: 3rem;
+    font-weight: 800;
+    margin-bottom: 12px;
+    color: #fff;
+    letter-spacing: -0.05em;
+    text-shadow: 0 0 40px rgba(0, 212, 255, 0.2);
 }
 
 .intro-subtitle {
     color: var(--text-secondary);
-    font-size: 0.9375rem;
-    max-width: 300px;
+    font-size: 1.1rem;
+    max-width: 480px;
     margin: 0 auto;
+    font-weight: 300;
 }
 
 /* Sections */
 .difficulty-section,
 .topics-section {
-    margin-bottom: var(--space-xl);
+    margin-bottom: 48px;
 }
 
 .section-label {
-    font-size: 0.8125rem;
+    font-size: 0.8rem;
     font-weight: 600;
-    color: var(--text-muted);
+    color: var(--neon-blue);
     text-transform: uppercase;
-    letter-spacing: 0.05em;
-    margin-bottom: var(--space-md);
+    letter-spacing: 0.1em;
+    margin-bottom: 16px;
+    display: block;
+    text-align: center;
 }
 
-/* Difficulty Grid */
+/* Difficulty Grid - Data Panels */
 .difficulty-grid {
     display: flex;
     flex-direction: column;
-    gap: var(--space-sm);
+    gap: 16px;
 }
 
 .diff-card {
     display: flex;
     align-items: center;
     gap: var(--space-md);
-    padding: var(--space-lg);
-    background: var(--bg-card);
-    border: 2px solid var(--border-color);
-    border-radius: var(--radius-lg);
+    padding: 20px;
+    background: linear-gradient(90deg, rgba(19, 19, 26, 0.6) 0%, rgba(19, 19, 26, 0.3) 100%);
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    border-left: 2px solid transparent;
+    border-radius: 4px;
     cursor: pointer;
-    transition: all var(--transition-base);
+    transition: all 0.3s ease;
     text-align: left;
+    position: relative;
+    overflow: hidden;
+}
+
+.diff-card::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background-image:
+        linear-gradient(rgba(255, 255, 255, 0.02) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255, 255, 255, 0.02) 1px, transparent 1px);
+    background-size: 20px 20px;
+    opacity: 0.4;
+    pointer-events: none;
 }
 
 .diff-card:hover {
     border-color: rgba(0, 212, 255, 0.3);
-    background: var(--bg-card-hover);
+    border-left-color: var(--neon-blue);
+    background: linear-gradient(90deg, rgba(19, 19, 26, 0.8) 0%, rgba(19, 19, 26, 0.5) 100%);
+    transform: translateX(4px);
 }
 
 .diff-card.selected {
     border-color: var(--neon-blue);
-    background: rgba(0, 212, 255, 0.08);
+    background: rgba(0, 212, 255, 0.05);
     box-shadow: 0 0 20px rgba(0, 212, 255, 0.1);
 }
 
@@ -89,52 +114,87 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    background: var(--bg-darker);
-    border-radius: var(--radius-md);
-    color: var(--neon-blue);
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 4px;
+    color: var(--text-muted);
     flex-shrink: 0;
+    z-index: 1;
 }
 
 .diff-card.selected .diff-icon {
-    background: var(--neon-blue);
-    color: var(--bg-dark);
+    background: rgba(0, 212, 255, 0.2);
+    border-color: var(--neon-blue);
+    color: var(--neon-blue);
 }
 
 .diff-content {
     display: flex;
     flex-direction: column;
+    z-index: 1;
 }
 
 .diff-title {
-    font-size: 1rem;
-    font-weight: 600;
-    color: var(--text-primary);
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: #fff;
+    margin-bottom: 2px;
 }
 
 .diff-desc {
-    font-size: 0.8125rem;
+    font-size: 0.85rem;
     color: var(--text-secondary);
 }
 
 /* Topics */
-.topics-grid {
+/* CTA Section - Professional Panel */
+.cta-section {
+    padding-top: 24px;
     display: flex;
-    flex-wrap: wrap;
-    gap: var(--space-sm);
+    flex-direction: column;
+    gap: 16px;
 }
 
-.topic-chip {
-    padding: var(--space-sm) var(--space-md);
-    background: var(--bg-card);
-    border: 1px solid var(--border-color);
-    border-radius: var(--radius-full);
-    font-size: 0.8125rem;
+.btn-full {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+    padding: 16px;
+    border-radius: 4px;
+    font-size: 1rem;
+    font-weight: 700;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.btn-primary.btn-full {
+    background: var(--neon-blue);
+    color: #000;
+    border: none;
+    box-shadow: 0 0 20px rgba(0, 212, 255, 0.3);
+}
+
+.btn-primary.btn-full:hover {
+    background: #4de1ff;
+    box-shadow: 0 0 30px rgba(0, 212, 255, 0.5);
+    transform: translateY(-2px);
+}
+
+.resume-btn {
+    background: transparent;
+    border: 1px solid rgba(255, 255, 255, 0.2);
     color: var(--text-secondary);
 }
 
-/* CTA */
-.cta-section {
-    padding-top: var(--space-md);
+.resume-btn:hover {
+    border-color: #fff;
+    color: #fff;
+    background: rgba(255, 255, 255, 0.05);
+    transform: translateY(-2px);
 }
 
 .cta-note {
@@ -144,17 +204,28 @@
     margin-top: var(--space-md);
 }
 
-.resume-btn {
-    background: rgba(0, 212, 255, 0.1);
-    border: 1px solid var(--neon-blue);
-    color: var(--neon-blue);
-    transition: all var(--transition-base);
+/* Topics Chips - Tech Style */
+.topics-grid {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    justify-content: center;
 }
 
-.resume-btn:hover {
-    background: rgba(0, 212, 255, 0.2);
-    box-shadow: 0 0 15px rgba(0, 212, 255, 0.2);
-    transform: translateY(-1px);
+.topic-chip {
+    padding: 8px 16px;
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 4px;
+    /* Squared off */
+    font-size: 0.85rem;
+    color: var(--text-secondary);
+    font-family: 'JetBrains Mono', monospace;
+}
+
+.topic-chip:hover {
+    border-color: var(--neon-blue);
+    color: var(--neon-blue);
 }
 
 /* Chat Mode */

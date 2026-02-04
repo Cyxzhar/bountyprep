@@ -230,11 +230,41 @@
 }
 
 /* Stats Grid - Larger Touch Targets */
+/* Stats Grid - Larger Touch Targets */
 .stats-grid {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
     gap: var(--space-md);
     margin-bottom: var(--space-xl);
+}
+
+/* Mobile: Horizontal Scroll for Stats to prevent overflow */
+@media (max-width: 480px) {
+    .stats-grid {
+        display: flex;
+        overflow-x: auto;
+        scroll-snap-type: x mandatory;
+        padding-bottom: 12px;
+        /* Space for scrollbar/shadows */
+        margin-right: calc(-1 * var(--space-lg));
+        /* Negative margin to bleed edge */
+        padding-right: var(--space-lg);
+        /* Padding to keep content aligned */
+        -webkit-overflow-scrolling: touch;
+        gap: var(--space-md);
+        scrollbar-width: none;
+    }
+
+    .stats-grid::-webkit-scrollbar {
+        display: none;
+    }
+
+    .stat-card {
+        min-width: 120px;
+        /* Ensure cards have width */
+        scroll-snap-align: start;
+        flex: 0 0 auto;
+    }
 }
 
 .stat-card {

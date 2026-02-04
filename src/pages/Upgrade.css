@@ -5,142 +5,184 @@
 }
 
 /* Header Nav */
-.page-header-nav {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: var(--space-md) var(--space-sm);
-    margin-bottom: var(--space-lg);
-    position: sticky;
-    top: 0;
-    z-index: 100;
-    background: rgba(10, 10, 15, 0.9);
-    backdrop-filter: blur(12px);
-    -webkit-backdrop-filter: blur(12px);
-    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
-}
-
-.upgrade-page .page-header-nav h1 {
-    font-size: 1.25rem;
-    margin: 0;
-}
-
-.header-badge {
-    display: inline-flex;
-    align-items: center;
-    gap: 6px;
-    background: rgba(255, 215, 0, 0.1);
-    color: #FFD700;
-    padding: 4px 12px;
-    border-radius: var(--radius-full);
-    font-size: 0.75rem;
-    font-weight: 600;
-    border: 1px solid rgba(255, 215, 0, 0.2);
-}
-
-/* Hero */
-.upgrade-hero {
-    text-align: center;
-    margin-bottom: var(--space-2xl);
-    padding: 0 var(--space-md);
-}
-
-/* Pricing Layout */
-.pricing-container {
-    display: flex;
-    gap: var(--space-xl);
-    margin-bottom: var(--space-3xl);
-    align-items: flex-start;
-}
-
-.pricing-card {
-    background: var(--bg-card);
-    border: 1px solid var(--border-color);
-    border-radius: var(--radius-xl);
-    padding: var(--space-xl);
-    flex: 1;
+/* Upgrade Page - Holographic HUD Style */
+.upgrade-screen {
+    min-height: 100vh;
+    min-height: 100dvh;
+    background: var(--gradient-dark);
     display: flex;
     flex-direction: column;
-    position: relative;
-    transition: transform 0.3s ease;
 }
 
-.pricing-card:hover {
-    transform: translateY(-5px);
-}
-
-/* Premium Card specific */
-.premium-tier {
-    border-color: rgba(159, 239, 0, 0.3);
-    background: linear-gradient(180deg, rgba(159, 239, 0, 0.05) 0%, var(--bg-card) 100%);
-    transform: scale(1.02);
-    /* Slightly larger */
-}
-
-.premium-tier:hover {
-    transform: scale(1.02) translateY(-5px);
-}
-
-.popular-tag {
-    position: absolute;
-    top: -12px;
-    left: 50%;
-    transform: translateX(-50%);
-    background: var(--neon-green);
-    color: var(--bg-darker);
-    font-size: 0.75rem;
-    font-weight: 700;
-    padding: 4px 12px;
-    border-radius: var(--radius-full);
-    text-transform: uppercase;
-    letter-spacing: 0.5px;
-    box-shadow: 0 4px 12px rgba(159, 239, 0, 0.4);
-}
-
-/* Card Header */
-.card-header {
+.upgrade-content {
+    flex: 1;
+    padding: 40px var(--space-lg);
     text-align: center;
-    margin-bottom: var(--space-xl);
-    padding-bottom: var(--space-lg);
-    border-bottom: 1px solid var(--border-color);
+    max-width: 600px;
+    margin: 0 auto;
 }
 
-.header-title-row {
+.upgrade-icon {
+    width: 64px;
+    height: 64px;
+    margin: 0 auto 24px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: linear-gradient(135deg, #FFD700, #FFA500);
+    border-radius: 50%;
+    color: var(--bg-dark);
+    box-shadow: 0 0 30px rgba(255, 215, 0, 0.3);
+}
+
+.upgrade-title {
+    font-size: 2.5rem;
+    font-weight: 800;
+    margin-bottom: 12px;
+    color: #fff;
+    letter-spacing: -0.03em;
+    text-shadow: 0 0 30px rgba(255, 215, 0, 0.2);
+}
+
+.upgrade-subtitle {
+    font-size: 1.1rem;
+    color: var(--text-secondary);
+    margin-bottom: 48px;
+    font-weight: 300;
+}
+
+/* Feature Grid - Tech List */
+.features-grid {
+    display: grid;
+    gap: 16px;
+    margin-bottom: 48px;
+    text-align: left;
+}
+
+.feature-item {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    padding: 16px;
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    border-radius: 4px;
+}
+
+.feature-icon-wrapper {
+    width: 40px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(159, 239, 0, 0.1);
+    border-radius: 4px;
+    color: var(--neon-green);
+    flex-shrink: 0;
+}
+
+.feature-info h3 {
+    font-size: 1rem;
+    font-weight: 600;
+    color: #fff;
+    margin-bottom: 2px;
+}
+
+.feature-info p {
+    font-size: 0.85rem;
+    color: var(--text-secondary);
+}
+
+/* Pricing Card - Holographic Panel */
+.pricing-card {
+    background: linear-gradient(180deg, rgba(255, 215, 0, 0.1) 0%, rgba(19, 19, 26, 0.6) 100%);
+    border: 1px solid rgba(255, 215, 0, 0.3);
+    border-radius: 4px;
+    padding: 32px;
+    margin-bottom: 32px;
+    position: relative;
+    overflow: hidden;
+}
+
+.pricing-card::before {
+    content: 'RECOMMENDED';
+    position: absolute;
+    top: 12px;
+    right: -30px;
+    background: #FFD700;
+    color: #000;
+    font-size: 0.6rem;
+    font-weight: 800;
+    padding: 4px 30px;
+    transform: rotate(45deg);
+    z-index: 2;
+}
+
+.price-tag {
+    margin-bottom: 8px;
+}
+
+.currency {
+    font-size: 1.5rem;
+    vertical-align: top;
+    color: #FFD700;
+}
+
+.amount {
+    font-size: 3.5rem;
+    font-weight: 800;
+    color: #fff;
+    line-height: 1;
+    text-shadow: 0 0 20px rgba(255, 215, 0, 0.3);
+}
+
+.period {
+    font-size: 1rem;
+    color: var(--text-muted);
+}
+
+.billing-note {
+    font-size: 0.85rem;
+    color: var(--text-secondary);
+}
+
+/* Upgrade Button - Neon Solid */
+.upgrade-btn {
+    width: 100%;
+    padding: 16px;
+    background: #FFD700;
+    color: #000;
+    font-size: 1.1rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: all 0.2s;
     display: flex;
     align-items: center;
     justify-content: center;
     gap: 8px;
-    margin-bottom: var(--space-sm);
 }
 
-.card-header h3 {
-    font-size: 1.25rem;
-    color: var(--text-primary);
-    margin: 0;
+.upgrade-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 0 30px rgba(255, 215, 0, 0.4);
+    background: #FFE44D;
 }
 
-.price {
-    display: flex;
-    align-items: baseline;
-    justify-content: center;
-    margin-bottom: 8px;
-}
-
-.amount {
-    font-size: 2.5rem;
-    font-weight: 700;
-    color: var(--text-primary);
-}
-
-.period {
+.restore-link {
+    display: block;
+    margin-top: 16px;
     color: var(--text-muted);
-    font-size: 1rem;
-    margin-left: 4px;
+    font-size: 0.85rem;
+    text-decoration: underline;
+    cursor: pointer;
 }
 
-.card-header p {
-    color: var(--text-secondary);
-    font-size: 0.9rem;
+.restore-link:hover {
+    color: #fff;
 }
 
 /* Features List */

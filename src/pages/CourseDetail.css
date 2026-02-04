@@ -45,16 +45,17 @@
 }
 
 /* Hero Section */
+/* Hero Section - HUD Style */
 .course-hero {
-    background: linear-gradient(135deg, rgba(159, 239, 0, 0.05), rgba(0, 0, 0, 0.2));
-    border: 1px solid var(--border-color);
-    border-radius: var(--radius-lg);
-    padding: var(--space-lg);
-    margin-bottom: var(--space-xl);
+    background: transparent;
+    border: none;
+    border-radius: 0;
+    padding: 0;
+    margin-bottom: 48px;
     display: flex;
     justify-content: space-between;
     align-items: flex-start;
-    gap: var(--space-lg);
+    gap: 32px;
 }
 
 .course-hero-content {
@@ -63,56 +64,65 @@
 
 .hero-badges {
     display: flex;
-    gap: var(--space-sm);
-    margin-bottom: var(--space-md);
+    gap: 8px;
+    margin-bottom: 16px;
 }
 
 .course-hero h1 {
-    font-size: 2rem;
-    margin-bottom: var(--space-sm);
-    color: var(--text-primary);
+    font-size: 2.5rem;
+    font-weight: 800;
+    margin-bottom: 12px;
+    color: #fff;
+    letter-spacing: -0.03em;
+    line-height: 1.1;
+    text-shadow: 0 0 30px rgba(255, 255, 255, 0.1);
 }
 
 .course-hero p {
     color: var(--text-secondary);
-    font-size: 1rem;
-    margin-bottom: var(--space-lg);
+    font-size: 1.1rem;
+    margin-bottom: 32px;
     max-width: 600px;
     line-height: 1.6;
+    font-weight: 300;
 }
 
 .start-course-btn {
     display: inline-flex;
     align-items: center;
-    gap: 8px;
-    padding: 12px 24px;
+    gap: 12px;
+    padding: 16px 32px;
     background: var(--neon-green);
-    color: var(--bg-darker);
+    color: #000;
     border: none;
-    border-radius: var(--radius-md);
+    border-radius: 4px;
     font-weight: 700;
     font-size: 1rem;
     cursor: pointer;
-    transition: transform 0.2s;
+    transition: all 0.2s;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    box-shadow: 0 0 20px rgba(159, 239, 0, 0.3);
 }
 
 .start-course-btn:hover {
     transform: translateY(-2px);
-    box-shadow: 0 4px 15px rgba(159, 239, 0, 0.4);
+    box-shadow: 0 0 30px rgba(159, 239, 0, 0.5);
+    background: #B8FF33;
 }
 
 .course-hero-stats {
     display: flex;
     flex-direction: column;
-    gap: var(--space-md);
-    padding-left: var(--space-lg);
-    border-left: 1px solid var(--border-color);
+    gap: 24px;
+    padding-left: 32px;
+    border-left: 1px solid rgba(255, 255, 255, 0.1);
 }
 
 .hero-stat {
     display: flex;
     align-items: center;
-    gap: var(--space-sm);
+    gap: 12px;
 }
 
 .stat-text {
@@ -121,47 +131,55 @@
 }
 
 .stat-text .value {
-    font-size: 1.25rem;
+    font-size: 1.5rem;
     font-weight: 700;
-    color: var(--text-primary);
+    color: #fff;
+    line-height: 1;
 }
 
 .stat-text .label {
-    font-size: 0.8rem;
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
     color: var(--text-muted);
+    margin-top: 4px;
 }
 
-/* Modules List (Redesigned) */
+/* Modules List - Tech Panels */
 .modules-list {
     display: flex;
     flex-direction: column;
-    gap: var(--space-xl);
+    gap: 40px;
 }
 
 .section-title {
-    font-size: 1.25rem;
-    margin-bottom: var(--space-md);
-    padding-left: 4px;
+    font-size: 1.5rem;
+    margin-bottom: 24px;
+    padding-left: 0;
+    font-weight: 800;
+    color: #fff;
+    letter-spacing: -0.02em;
 }
 
 .module-group {
     display: flex;
     flex-direction: column;
+    position: relative;
 }
 
 .module-header {
-    margin-bottom: var(--space-md);
-    padding-left: 4px;
+    margin-bottom: 16px;
+    padding-left: 0;
 }
 
 .module-number {
-    font-size: 0.75rem;
+    font-size: 0.8rem;
     text-transform: uppercase;
     color: var(--neon-green);
-    font-weight: 600;
-    letter-spacing: 1px;
+    font-weight: 700;
+    letter-spacing: 0.1em;
     display: block;
-    margin-bottom: 2px;
+    margin-bottom: 4px;
 }
 
 .module-title-row {
@@ -172,93 +190,117 @@
 
 .module-title-row h3 {
     margin: 0;
-    font-size: 1.1rem;
-    color: var(--text-primary);
+    font-size: 1.25rem;
+    color: #fff;
+    font-weight: 600;
 }
 
 .module-duration {
-    font-size: 0.8rem;
+    font-size: 0.85rem;
     color: var(--text-muted);
+    font-family: 'JetBrains Mono', monospace;
 }
 
 .lessons-list {
     display: flex;
     flex-direction: column;
-    gap: var(--space-sm);
+    gap: 8px;
 }
 
 .lesson-item {
     display: flex;
     align-items: center;
-    gap: var(--space-md);
-    padding: var(--space-md);
-    background: var(--bg-card);
-    border: 1px solid var(--border-color);
-    border-radius: var(--radius-md);
+    gap: 16px;
+    padding: 16px;
+    background: linear-gradient(90deg, rgba(19, 19, 26, 0.6) 0%, rgba(19, 19, 26, 0.3) 100%);
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    border-left: 2px solid transparent;
+    border-radius: 4px;
     cursor: pointer;
     transition: all 0.2s;
+    position: relative;
+    overflow: hidden;
 }
 
-.lesson-item:active {
+.lesson-item::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background-image:
+        linear-gradient(rgba(255, 255, 255, 0.02) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255, 255, 255, 0.02) 1px, transparent 1px);
+    background-size: 20px 20px;
+    opacity: 0.3;
+    pointer-events: none;
+}
+
+.lesson-item:hover {
+    border-color: rgba(159, 239, 0, 0.3);
+    border-left-color: var(--neon-green);
+    transform: translateX(4px);
+    background: linear-gradient(90deg, rgba(19, 19, 26, 0.8) 0%, rgba(19, 19, 26, 0.5) 100%);
+}
+
+.lesson-item.active {
     background: var(--bg-card-hover);
     transform: scale(0.99);
 }
 
 .lesson-icon {
-    width: 38px;
-    height: 38px;
-    border-radius: 12px;
-    background: var(--bg-darker);
+    width: 40px;
+    height: 40px;
+    border-radius: 4px;
+    background: rgba(255, 255, 255, 0.03);
     display: flex;
     align-items: center;
     justify-content: center;
     color: var(--text-muted);
     flex-shrink: 0;
-    border: 1px solid transparent;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    z-index: 1;
 }
 
 .lesson-item.completed .lesson-icon {
     background: rgba(159, 239, 0, 0.1);
     color: var(--neon-green);
-    border-color: rgba(159, 239, 0, 0.3);
+    border-color: var(--neon-green);
 }
 
 .lesson-item.available .lesson-icon {
     background: rgba(255, 255, 255, 0.05);
-    color: var(--text-primary);
-    border-color: var(--border-color);
+    color: #fff;
+    border-color: rgba(255, 255, 255, 0.2);
 }
 
 .lesson-item.locked {
-    opacity: 0.7;
-}
-
-.lesson-item.locked .lesson-icon {
-    background: transparent;
-    border: 1px solid var(--border-color);
+    opacity: 0.5;
+    pointer-events: none;
 }
 
 .lesson-info {
     flex: 1;
     min-width: 0;
+    z-index: 1;
 }
 
 .lesson-title {
-    font-weight: 500;
+    font-weight: 600;
     display: block;
     margin-bottom: 4px;
-    font-size: 0.9375rem;
+    font-size: 1rem;
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
+    color: var(--text-primary);
 }
 
 .lesson-meta {
     display: flex;
     align-items: center;
-    gap: 6px;
+    gap: 8px;
     font-size: 0.75rem;
     color: var(--text-muted);
+    font-family: 'JetBrains Mono', monospace;
 }
 
 .xp-badge {
