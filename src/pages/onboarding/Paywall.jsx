@@ -1,9 +1,10 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import {
     X, Check, Shield, Bot, Flame, BarChart3, Award,
     MessageCircle, Rocket, Clock, Crown, Sparkles
 } from 'lucide-react';
+import { useSound } from '../../context/SoundContext';
 import PageTransition, { SLIDE_UP } from '../../components/PageTransition';
 import './Paywall.css';
 
@@ -25,7 +26,13 @@ const testimonials = [
 
 export default function Paywall() {
     const navigate = useNavigate();
+    const { stopBGM } = useSound();
     const [selectedPlan, setSelectedPlan] = useState('annual');
+
+    const handleNavigateToSignup = () => {
+        stopBGM(); // Stop onboarding music
+        navigate('/auth/signup');
+    };
 
     return (
         <PageTransition pageName="onboarding-paywall" direction={SLIDE_UP} duration={450}>
@@ -33,7 +40,7 @@ export default function Paywall() {
                 <div className="paywall-bg"></div>
 
                 {/* Close Button */}
-                <button className="close-btn" onClick={() => navigate('/auth/signup')}>
+                <button className="close-btn" onClick={handleNavigateToSignup}>
                     <X size={20} />
                 </button>
 
@@ -122,7 +129,7 @@ export default function Paywall() {
 
                 {/* Footer */}
                 <div className="paywall-footer">
-                    <button className="btn btn-primary btn-full" onClick={() => navigate('/auth/signup')}>
+                    <button className="btn btn-primary btn-full" onClick={handleNavigateToSignup}>
                         Start 7-Day Free Trial
                     </button>
                     <p className="trial-note">No payment required • Cancel anytime</p>

@@ -1,4 +1,4 @@
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Shield, Bug, ChevronRight, Star, Users, Zap } from 'lucide-react';
 import { useSound } from '../../context/SoundContext';
@@ -7,11 +7,42 @@ import './Onboarding.css';
 
 export default function Welcome() {
     const navigate = useNavigate();
-    const { playBGM } = useSound();
+    const { playBGM, stopBGM, retryPendingAudio, isPlaying } = useSound();
 
+    // Try to play audio on mount
     useEffect(() => {
-        playBGM('intro', { loop: false, volume: 0.3 });
-    }, [playBGM]);
+        console.log('[Welcome] Attempting to play cyber theme');
+        playBGM('cyber', { loop: true, volume: 0.3 });
+    }, []); // Run once on mount
+
+    // Retry audio on first user interaction if autoplay was blocked
+    useEffect(() => {
+        const enableAudio = () => {
+            if (!isPlaying) {
+                console.log('[Welcome] User clicked, retrying audio');
+                retryPendingAudio();
+            }
+        };
+
+        // Listen for any user interaction
+        document.addEventListener('click', enableAudio, { once: true });
+        document.addEventListener('touchstart', enableAudio, { once: true });
+
+        return () => {
+            document.removeEventListener('click', enableAudio);
+            document.removeEventListener('touchstart', enableAudio);
+        };
+    }, [isPlaying, retryPendingAudio]);
+
+    const handleSkip = () => {
+        stopBGM(); // Stop audio when skipping
+        navigate('/auth/signup');
+    };
+
+    const handleContinue = () => {
+        // Don't stop audio, let it continue to next page
+        navigate('/onboarding/goal');
+    };
 
     return (
         <PageTransition pageName="onboarding-welcome" direction={FADE} duration={500}>
@@ -19,7 +50,7 @@ export default function Welcome() {
                 <div className="onboarding-bg-grid"></div>
 
                 {/* Skip Button */}
-                <button className="skip-btn" onClick={() => navigate('/auth/signup')}>
+                <button className="skip-btn" onClick={handleSkip}>
                     Skip
                     <ChevronRight size={16} />
                 </button>
@@ -82,7 +113,7 @@ export default function Welcome() {
 
                 {/* Footer CTA */}
                 <div className="onboarding-footer">
-                    <button className="btn btn-primary btn-full" onClick={() => navigate('/onboarding/goal')}>
+                    <button className="btn btn-primary btn-full" onClick={handleContinue}>
                         Start Your Journey
                         <ChevronRight size={20} />
                     </button>

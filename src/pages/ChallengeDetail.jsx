@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import { useToast } from '../context/ToastContext';
@@ -7,7 +7,7 @@ import { useSound } from '../context/SoundContext';
 import { challenges } from '../data/challenges';
 import { updateStreak, getChallengeProgress, updateUserStats, saveChallengeProgress, markChallengeCompleted } from '../utils/firestore';
 import { calculateQuestionXp, checkLevelUp } from '../utils/xp';
-import { ArrowLeft, Clock, Star, Copy, CheckCircle, XCircle, Lightbulb, Award, Zap, ChevronRight } from 'lucide-react';
+import { ArrowLeft, Clock, Star, Copy, CheckCircle, XCircle, Lightbulb, Award, Zap, ChevronRight, Volume2, VolumeX, Music } from 'lucide-react';
 import { useTimer } from '../hooks/useTimer';
 import './ChallengeDetail.css';
 
@@ -15,29 +15,51 @@ export default function ChallengeDetail() {
     const { id } = useParams();
     const navigate = useNavigate();
     const { currentUser, refreshUser } = useAuth();
-    const { success, error: showError } = useToast();
-    const { playBGM, stopBGM, playSFX } = useSound(); // Use sound hook (v2 confirmed)
+    const { success, error: showError, info } = useToast();
+    const { playBGM, stopBGM, playSFX, isMuted, toggleMute } = useSound();
     const { unlockMultiple } = useAchievement();
     const challenge = challenges.find(c => c.id === id) || challenges[0];
 
     const { elapsedTime, formattedTime, start, stop } = useTimer();
 
+    // Track if we've shown the toast already
+    const hasShownToastRef = useRef(false);
+    const audioStartedRef = useRef(false);
+
     useEffect(() => {
         start();
-        // Play short focus sound
-        playBGM('focus', { loop: false, volume: 0.2 });
 
-        // Auto-stop after 4 seconds (per user request "few seconds only")
-        const timer = setTimeout(() => {
-            stopBGM();
-        }, 4000);
+        // Play challenge music once (will play the full track)
+        playBGM('challenge', {
+            loop: false,  // Play once completely
+            volume: 0.3
+        });
+
+        // Show toast only once
+        if (!hasShownToastRef.current && !isMuted) {
+            setTimeout(() => info('Challenge music playing', Music), 100);
+            hasShownToastRef.current = true;
+        }
+
+        audioStartedRef.current = true;
 
         return () => {
-            clearTimeout(timer);
             stop();
-            stopBGM();
+            stopBGM(true); // Stop immediately on unmount (navigation away)
         };
-    }, [start, stop, playBGM, stopBGM]);
+    }, []); // Empty deps to run only once on mount
+
+    // Handle audio control button - toggleMute now handles pause/resume automatically
+    const handleAudioToggle = () => {
+        const willBeMuted = !isMuted;
+        toggleMute(); // This now pauses when muting, resumes when unmuting
+
+        if (willBeMuted) {
+            info('Sound muted', VolumeX);
+        } else {
+            info('Sound enabled - resuming playback', Volume2);
+        }
+    };
 
     // ... (rest of imports and state)
     const [currentQ, setCurrentQ] = useState(0);
@@ -212,7 +234,11 @@ export default function ChallengeDetail() {
         <div className="detail-screen">
             {/* Header */}
             <header className="detail-header">
-                <button className="back-btn" onClick={() => { stopBGM(); playSFX('click'); navigate('/challenges'); }}>
+                <button className="back-btn" onClick={() => {
+                    stopBGM(true); // Stop immediately when clicking back
+                    playSFX('click');
+                    navigate('/challenges');
+                }}>
                     <ArrowLeft size={20} />
                 </button>
                 <div className="header-info">
@@ -223,10 +249,19 @@ export default function ChallengeDetail() {
                         {challenge.difficulty}
                     </span>
                 </div>
-                <div className="header-time">
-                    <Clock size={16} />
-                    <span className="mono-font">{formattedTime}</span>
-                    <span className="text-muted"> / {challenge.estimatedTime}m</span>
+                <div className="header-controls">
+                    <button
+                        className="audio-control-btn"
+                        onClick={handleAudioToggle}
+                        title={isMuted ? 'Unmute & Play Music' : 'Mute Music'}
+                    >
+                        {isMuted ? <VolumeX size={18} /> : <Volume2 size={18} />}
+                    </button>
+                    <div className="header-time">
+                        <Clock size={16} />
+                        <span className="mono-font">{formattedTime}</span>
+                        <span className="text-muted"> / {challenge.estimatedTime}m</span>
+                    </div>
                 </div>
             </header>
 

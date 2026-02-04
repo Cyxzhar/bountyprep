@@ -7,7 +7,6 @@ export function useSound() {
 }
 
 // Audio assets configuration
-// In a real app, these would be paths to files in /public/sounds/
 const SOUNDS = {
     // SFX
     click: '/sounds/click.mp3',
@@ -17,9 +16,10 @@ const SOUNDS = {
     notification: '/sounds/notification.mp3',
 
     // BGM
-    ambient: '/sounds/ambient-cyber.mp3',
-    focus: '/sounds/ambient-cyber.mp3', // Fallback as deep-focus is missing
-    intro: '/sounds/candy-clouds-beats.mp3',
+    cyber: '/sounds/ambient-cyber.mp3',        // Main theme for onboarding
+    challenge: '/sounds/candy-clouds-beats.mp3', // Challenge theme
+    ambient: '/sounds/ambient-cyber.mp3',      // Kept for backward compatibility
+    intro: '/sounds/candy-clouds-beats.mp3',   // Kept for backward compatibility
 };
 
 export function SoundProvider({ children }) {
@@ -30,13 +30,14 @@ export function SoundProvider({ children }) {
     const [globalVolume, setGlobalVolume] = useState(0.5);
     const bgmRef = useRef(null);
     const [currentTrack, setCurrentTrack] = useState(null);
+    const [isPlaying, setIsPlaying] = useState(false);
+    const periodicTimerRef = useRef(null);
+    const pendingTrackRef = useRef(null); // Track pending audio info for retry
 
-    // Persist mute state
+    // Persist mute state to localStorage
     useEffect(() => {
         localStorage.setItem('sound_muted', isMuted);
-        if (bgmRef.current) {
-            bgmRef.current.muted = isMuted;
-        }
+        // Note: We now pause/resume in toggleMute() instead of using audio.muted
     }, [isMuted]);
 
     const playSFX = (name) => {
@@ -57,63 +58,146 @@ export function SoundProvider({ children }) {
     };
 
     const playBGM = (name, options = {}) => {
-        const { loop = true, volume = 1.0 } = options;
+        const { loop = true, volume = 1.0, periodic = false, periodInterval = 600000 } = options;
         const path = SOUNDS[name];
-        if (!path) return;
+        if (!path) {
+            console.warn(`[Audio] Sound "${name}" not found`);
+            return;
+        }
 
-        // If already playing this track, do nothing
-        if (currentTrack === name && bgmRef.current && !bgmRef.current.paused) return;
+        console.log(`[Audio] playBGM called: ${name}, muted: ${isMuted}, currentTrack: ${currentTrack}, isPlaying: ${isPlaying}`);
 
-        // Stop current if different
+        // Don't start new audio if muted (can resume existing via toggleMute)
+        if (isMuted && !bgmRef.current) {
+            console.log('[Audio] Skipping playBGM - sound is muted');
+            return;
+        }
+
+        // Only skip if actually playing (not just paused/blocked)
+        if (currentTrack === name && isPlaying && bgmRef.current && !bgmRef.current.paused) {
+            console.log('[Audio] Track already playing, skipping');
+            return;
+        }
+
+        // Store pending track info for retry after user interaction
+        pendingTrackRef.current = { name, path, loop, volume, options };
+
+        // Clear any existing periodic timer
+        if (periodicTimerRef.current) {
+            clearInterval(periodicTimerRef.current);
+            periodicTimerRef.current = null;
+        }
+
+        // Stop current if exists
         if (bgmRef.current) {
-            fadeOutAndStop(bgmRef.current, () => {
-                startNewTrack(path, name, loop, volume);
-            });
-        } else {
-            startNewTrack(path, name, loop, volume);
+            bgmRef.current.pause();
+            bgmRef.current = null;
+        }
+
+        startNewTrack(path, name, loop, volume);
+        if (periodic) {
+            setupPeriodicPlayback(name, options);
         }
     };
 
     const startNewTrack = (path, name, loop, relativeVol) => {
+        console.log(`[Audio] Starting track: ${name}, path: ${path}, loop: ${loop}`);
+
         const audio = new Audio(path);
         audio.loop = loop;
         audio.volume = 0; // Start at 0 for fade in
-        audio.muted = isMuted;
+        // Don't set muted here - we use pause/resume for mute control
 
         bgmRef.current = audio;
-        setCurrentTrack(name);
 
         const playPromise = audio.play();
 
         if (playPromise !== undefined) {
             playPromise.then(() => {
+                console.log(`[Audio] ✓ Playing: ${name}`);
                 // If the current track changed while we were loading, stop this one
                 if (bgmRef.current !== audio) {
                     audio.pause();
                     return;
                 }
+                // Only set as current track if it actually started playing
+                setCurrentTrack(name);
+                setIsPlaying(true);
                 fadeIn(audio, relativeVol);
+
+                // Clear pending track since it's now playing
+                pendingTrackRef.current = null;
             }).catch(e => {
                 // Ignore "interrupted by pause" errors (common during rapid navigation)
                 if (e.name === 'AbortError' || e.message.includes('interrupted')) {
+                    console.log('[Audio] Playback interrupted (normal during navigation)');
                     return;
                 }
-                // Ignore Autoplay policy errors (User didn't interact yet)
+                // Handle Autoplay policy errors (User didn't interact yet)
                 if (e.name === 'NotAllowedError') {
-                    // console.debug("Autoplay waiting for interaction");
+                    console.warn("⚠️ [Audio] Autoplay blocked - waiting for user interaction");
+                    console.warn("💡 [Audio] Tip: Click anywhere on the page to enable audio");
+                    // Don't set as current track since it didn't play
+                    setCurrentTrack(null);
+                    setIsPlaying(false);
+                    // Keep pendingTrackRef so we can retry later
                     return;
                 }
-                console.warn("BGM Playback failed:", e.message);
+                console.error("❌ [Audio] Playback failed:", e.message, e);
+                setCurrentTrack(null);
+                setIsPlaying(false);
             });
         }
     };
 
-    const stopBGM = () => {
+    const stopBGM = (immediate = false) => {
+        console.log(`[Audio] stopBGM called (immediate: ${immediate})`);
+        // Clear periodic timer
+        if (periodicTimerRef.current) {
+            clearInterval(periodicTimerRef.current);
+            periodicTimerRef.current = null;
+        }
+
         if (bgmRef.current) {
-            fadeOutAndStop(bgmRef.current, () => {
+            if (immediate) {
+                // Stop immediately without fade (for navigation cleanup)
+                bgmRef.current.pause();
+                bgmRef.current.currentTime = 0;
                 bgmRef.current = null;
                 setCurrentTrack(null);
-            });
+                setIsPlaying(false);
+                console.log('[Audio] ✓ Stopped immediately');
+            } else {
+                // Fade out gracefully
+                fadeOutAndStop(bgmRef.current, () => {
+                    console.log('[Audio] ✓ Stopped with fade');
+                    bgmRef.current = null;
+                    setCurrentTrack(null);
+                    setIsPlaying(false);
+                });
+            }
+        }
+    };
+
+    const setupPeriodicPlayback = (name, options) => {
+        const { periodInterval = 600000, volume = 1.0 } = options; // Default 10 minutes
+
+        periodicTimerRef.current = setInterval(() => {
+            // Play the track once (non-looping)
+            const path = SOUNDS[name];
+            if (path && !isMuted) {
+                const audio = new Audio(path);
+                audio.volume = globalVolume * volume;
+                audio.play().catch(e => console.debug('[Audio] Periodic playback failed:', e));
+            }
+        }, periodInterval);
+    };
+
+    const retryPendingAudio = () => {
+        if (pendingTrackRef.current) {
+            console.log('[Audio] Retrying pending audio after user interaction');
+            const { name, path, loop, volume } = pendingTrackRef.current;
+            startNewTrack(path, name, loop, volume);
         }
     };
 
@@ -151,15 +235,51 @@ export function SoundProvider({ children }) {
     };
 
     const toggleMute = () => {
-        setIsMuted(prev => !prev);
+        const newMutedState = !isMuted;
+        setIsMuted(newMutedState);
+
+        // Actually pause/resume audio when toggling, not just mute
+        if (bgmRef.current) {
+            if (newMutedState) {
+                console.log('[Audio] Muting - pausing audio');
+                bgmRef.current.pause();
+                setIsPlaying(false);
+            } else {
+                console.log('[Audio] Unmuting - resuming audio');
+                const resumePromise = bgmRef.current.play();
+                if (resumePromise !== undefined) {
+                    resumePromise.then(() => {
+                        setIsPlaying(true);
+                        console.log('[Audio] ✓ Resumed');
+                    }).catch(e => {
+                        console.warn('[Audio] Resume failed:', e.message);
+                    });
+                }
+            }
+        }
     };
+
+    // Cleanup periodic timer on unmount
+    useEffect(() => {
+        return () => {
+            if (periodicTimerRef.current) {
+                clearInterval(periodicTimerRef.current);
+            }
+            if (bgmRef.current) {
+                bgmRef.current.pause();
+            }
+        };
+    }, []);
 
     const value = {
         isMuted,
         toggleMute,
         playSFX,
         playBGM,
-        stopBGM
+        stopBGM,
+        currentTrack,
+        isPlaying,
+        retryPendingAudio
     };
 
     return (

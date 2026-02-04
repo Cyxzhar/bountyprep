@@ -45,6 +45,57 @@
     gap: var(--space-sm);
 }
 
+.header-controls {
+    display: flex;
+    align-items: center;
+    gap: var(--space-sm);
+}
+
+.audio-control-btn {
+    width: 36px;
+    height: 36px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--bg-darker);
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-md);
+    color: var(--text-secondary);
+    cursor: pointer;
+    transition: all var(--transition-fast);
+    position: relative;
+    overflow: hidden;
+}
+
+.audio-control-btn::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 0;
+    height: 0;
+    border-radius: 50%;
+    background: rgba(159, 239, 0, 0.2);
+    transform: translate(-50%, -50%);
+    transition: width 0.3s, height 0.3s;
+}
+
+.audio-control-btn:hover {
+    border-color: var(--neon-green);
+    background: rgba(159, 239, 0, 0.1);
+    color: var(--neon-green);
+    box-shadow: 0 0 12px rgba(159, 239, 0, 0.2);
+}
+
+.audio-control-btn:hover::before {
+    width: 100%;
+    height: 100%;
+}
+
+.audio-control-btn:active {
+    transform: scale(0.92);
+}
+
 .header-time {
     display: flex;
     align-items: center;
@@ -332,6 +383,25 @@
 }
 
 /* Responsive */
+@media (max-width: 480px) {
+    .header-controls {
+        gap: var(--space-xs);
+    }
+
+    .audio-control-btn {
+        width: 32px;
+        height: 32px;
+    }
+
+    .header-time {
+        font-size: 0.8125rem;
+    }
+
+    .header-time .text-muted {
+        display: none;
+    }
+}
+
 @media (min-width: 768px) {
     .detail-content {
         max-width: 600px;
@@ -345,6 +415,11 @@
 
     .detail-footer .btn {
         max-width: 400px;
+    }
+
+    .audio-control-btn {
+        width: 40px;
+        height: 40px;
     }
 }
 /* Session XP Indicator */
