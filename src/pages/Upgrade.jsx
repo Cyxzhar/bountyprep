@@ -23,7 +23,7 @@ export default function Upgrade() {
                     <X size={24} />
                 </button>
                 <div className="header-badge">
-                    <Crown size={14} className="text-yellow" />
+                    <Crown size={14} className="text-neon" />
                     <span>Go Pro</span>
                 </div>
             </header>
@@ -81,7 +81,7 @@ export default function Upgrade() {
                     <div className="card-header">
                         <div className="header-title-row">
                             <h3>Bounty Hunter Pro</h3>
-                            <Crown size={24} className="text-yellow" />
+                            <Crown size={24} className="text-neon" />
                         </div>
                         <div className="price">
                             <span className="amount">$9.99</span>
