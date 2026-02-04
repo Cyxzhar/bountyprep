@@ -127,50 +127,66 @@ export default function Lesson() {
 
             <div className="lesson-layout">
                 <main className="lesson-content-wrapper">
-                    <div className="lesson-content md-content">
-                        <ReactMarkdown
-                            components={{
-                                code: ({ inline, children }) => (
-                                    inline
-                                        ? <code className="inline-code">{children}</code>
-                                        : <pre className="code-block"><code>{children}</code></pre>
-                                ),
-                                blockquote: ({ children }) => {
-                                    // Custom blockquote rendering for alerts
-                                    const text = children?.[1]?.props?.children?.[0] || '';
-                                    if (typeof text === 'string' && text.includes('[!IMPORTANT]')) {
-                                        return <div className="alert-box alert-important">{children}</div>
-                                    }
-                                    if (typeof text === 'string' && text.includes('[!TIP]')) {
-                                        return <div className="alert-box alert-tip">{children}</div>
-                                    }
-                                    return <blockquote>{children}</blockquote>
-                                }
-                            }}
-                        >
-                            {lesson.content}
-                        </ReactMarkdown>
-                    </div>
+                    <div className="lesson-content-card">
+                        <h1 className="lesson-title">{lesson.title}</h1>
 
-                    <div className="lesson-actions">
-                        <button
-                            className="nav-btn prev"
-                            disabled={!prevLessonId}
-                            onClick={() => {
-                                if (prevLessonId) {
-                                    playSFX('click');
-                                    navigate(`/course/${id}/lesson/${prevLessonId}`);
-                                }
-                            }}
-                        >
-                            <ChevronLeft size={18} /> Previous
-                        </button>
+                        {/* Video Player */}
+                        {lesson.videoUrl && (
+                            <div className="video-container" style={{ marginBottom: '24px', borderRadius: '8px', overflow: 'hidden', position: 'relative', paddingTop: '56.25%' }}>
+                                <iframe
+                                    src={lesson.videoUrl.replace('watch?v=', 'embed/')}
+                                    title={lesson.title}
+                                    style={{ position: 'absolute', top: 0, left: 0, width: '100%', height: '100%', border: 'none' }}
+                                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                                    allowFullScreen
+                                ></iframe>
+                            </div>
+                        )}
 
-                        <button className="complete-btn" onClick={handleComplete} disabled={saving}>
-                            {saving ? 'Completing...' : (isCompleted ? 'Next Lesson' : (nextLessonId ? 'Complete & Next' : 'Finish Course'))}
-                            {isCompleted ? <ChevronRight size={18} /> : (nextLessonId ? <ChevronRight size={18} /> : <CheckCircle size={18} />)}
-                        </button>
-                    </div >
+                        <div className="markdown-body">
+                            <ReactMarkdown
+                                components={{
+                                    code: ({ inline, children }) => (
+                                        inline
+                                            ? <code className="inline-code">{children}</code>
+                                            : <pre className="code-block"><code>{children}</code></pre>
+                                    ),
+                                    blockquote: ({ children }) => {
+                                        // Custom blockquote rendering for alerts
+                                        const text = children?.[1]?.props?.children?.[0] || '';
+                                        if (typeof text === 'string' && text.includes('[!IMPORTANT]')) {
+                                            return <div className="alert-box alert-important">{children}</div>
+                                        }
+                                        if (typeof text === 'string' && text.includes('[!TIP]')) {
+                                            return <div className="alert-box alert-tip">{children}</div>
+                                        }
+                                        return <blockquote>{children}</blockquote>
+                                    }
+                                }}
+                            >
+                                {lesson.content}
+                            </ReactMarkdown>
+                        </div>
+
+                        <div className="lesson-actions">
+                            <button
+                                className="nav-btn prev"
+                                disabled={!prevLessonId}
+                                onClick={() => {
+                                    if (prevLessonId) {
+                                        playSFX('click');
+                                        navigate(`/course/${id}/lesson/${prevLessonId}`);
+                                    }
+                                }}
+                            >
+                                <ChevronLeft size={18} /> Previous
+                            </button>
+
+                            <button className="complete-btn" onClick={handleComplete} disabled={saving}>
+                                {saving ? 'Completing...' : (isCompleted ? 'Next Lesson' : (nextLessonId ? 'Complete & Next' : 'Finish Course'))}
+                                {isCompleted ? <ChevronRight size={18} /> : (nextLessonId ? <ChevronRight size={18} /> : <CheckCircle size={18} />)}
+                            </button>
+                        </div >
                 </main >
 
                 <aside className="lesson-sidebar">

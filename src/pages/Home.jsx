@@ -56,6 +56,11 @@ export default function Home() {
         navigate(`/challenge/${id}`);
     };
 
+    const handleComingSoon = (feature) => {
+        playSFX('click');
+        info(`${feature} is coming soon! Join the waitlist for updates.`);
+    };
+
     return (
         <FirstVisitTransition pageName="home">
             <div className="home-screen">
@@ -223,68 +228,59 @@ export default function Home() {
                         </div>
                     </section>
 
-    const handleComingSoon = (feature) => {
-                        playSFX('click');
-                    info(`${feature} is coming soon! Join the waitlist for updates.`);
-    };
-
-                    return (
-                    <FirstVisitTransition pageName="home">
-                        <div className="home-screen">
-                            {/* ... existing content ... */}
-                            {/* Coming Soon Section */}
-                            <section className="coming-soon-section">
-                                <div className="section-header">
-                                    <h3 className="section-title">Coming Soon</h3>
-                                    <span className="coming-soon-badge">Roadmap</span>
-                                </div>
-
-                                <div className="coming-soon-grid">
-                                    <div className="coming-soon-card" onClick={() => handleComingSoon('Global Leaderboard')}>
-                                        <div className="cs-icon">
-                                            <Trophy size={24} />
-                                        </div>
-                                        <div className="cs-content">
-                                            <h4>Global Leaderboard</h4>
-                                            <p>Compete with hackers worldwide</p>
-                                        </div>
-                                    </div>
-
-                                    <div className="coming-soon-card" onClick={() => handleComingSoon('Live Hacking Labs')}>
-                                        <div className="cs-icon">
-                                            <Beaker size={24} />
-                                        </div>
-                                        <div className="cs-content">
-                                            <h4>Live Hacking Labs</h4>
-                                            <p>Real environments to exploit</p>
-                                        </div>
-                                    </div>
-
-                                    <div className="coming-soon-card" onClick={() => handleComingSoon('Certifications')}>
-                                        <div className="cs-icon">
-                                            <Award size={24} />
-                                        </div>
-                                        <div className="cs-content">
-                                            <h4>Certifications</h4>
-                                            <p>Earn verified security certs</p>
-                                        </div>
-                                    </div>
-
-                                    <div className="coming-soon-card" onClick={() => handleComingSoon('CTF Simulator')}>
-                                        <div className="cs-icon">
-                                            <Gamepad2 size={24} />
-                                        </div>
-                                        <div className="cs-content">
-                                            <h4>CTF Simulator</h4>
-                                            <p>Practice capture-the-flag</p>
-                                        </div>
-                                    </div>
-                                </div>
-                            </section>
+                    {/* Coming Soon Section */}
+                    <section className="coming-soon-section">
+                        <div className="section-header">
+                            <h3 className="section-title">Coming Soon</h3>
+                            <span className="coming-soon-badge">Roadmap</span>
                         </div>
 
-                        <BottomNav />
+                        <div className="coming-soon-grid">
+                            <div className="coming-soon-card" onClick={() => handleComingSoon('Global Leaderboard')}>
+                                <div className="cs-icon">
+                                    <Trophy size={24} />
+                                </div>
+                                <div className="cs-content">
+                                    <h4>Global Leaderboard</h4>
+                                    <p>Compete with hackers worldwide</p>
+                                </div>
+                            </div>
+
+                            <div className="coming-soon-card" onClick={() => handleComingSoon('Live Hacking Labs')}>
+                                <div className="cs-icon">
+                                    <Beaker size={24} />
+                                </div>
+                                <div className="cs-content">
+                                    <h4>Live Hacking Labs</h4>
+                                    <p>Real environments to exploit</p>
+                                </div>
+                            </div>
+
+                            <div className="coming-soon-card" onClick={() => handleComingSoon('Certifications')}>
+                                <div className="cs-icon">
+                                    <Award size={24} />
+                                </div>
+                                <div className="cs-content">
+                                    <h4>Certifications</h4>
+                                    <p>Earn verified security certs</p>
+                                </div>
+                            </div>
+
+                            <div className="coming-soon-card" onClick={() => handleComingSoon('CTF Simulator')}>
+                                <div className="cs-icon">
+                                    <Gamepad2 size={24} />
+                                </div>
+                                <div className="cs-content">
+                                    <h4>CTF Simulator</h4>
+                                    <p>Practice capture-the-flag</p>
+                                </div>
+                            </div>
+                        </div>
+                    </section>
                 </div>
+
+                <BottomNav />
+            </div>
         </FirstVisitTransition>
     );
 }

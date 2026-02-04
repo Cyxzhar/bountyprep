@@ -238,7 +238,11 @@ export default function Settings() {
                             <input
                                 type="checkbox"
                                 checked={theme === 'dark'}
-                                onChange={() => setTheme(prev => prev === 'dark' ? 'light' : 'dark')}
+                                onChange={() => {
+                                    const newTheme = theme === 'dark' ? 'light' : 'dark';
+                                    setTheme(newTheme);
+                                    success(`Theme set to ${newTheme} mode`);
+                                }}
                             />
                             <span className="slider round"></span>
                         </label>
@@ -258,7 +262,10 @@ export default function Settings() {
                             <input
                                 type="checkbox"
                                 checked={notifications}
-                                onChange={() => setNotifications(!notifications)}
+                                onChange={() => {
+                                    setNotifications(!notifications);
+                                    success(!notifications ? 'Notifications enabled' : 'Notifications disabled');
+                                }}
                             />
                             <span className="slider round"></span>
                         </label>
