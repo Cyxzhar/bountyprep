@@ -1,16 +1,4 @@
-import { useState, useEffect } from 'react';
-import { useParams, useNavigate } from 'react-router-dom';
-import {
-    ArrowLeft, Clock, Lightbulb, CheckCircle, XCircle,
-    ChevronRight, Award, Copy, Zap, Star
-} from 'lucide-react';
-import { useAuth } from '../context/AuthContext';
-import { useToast } from '../context/ToastContext';
-import { useAchievement } from '../context/AchievementContext';
-import { challenges } from '../data/challenges';
-import { calculateQuestionXp, checkLevelUp, getLevelTitle } from '../utils/xp';
-import { getChallengeProgress, saveChallengeProgress, updateUserStats, markChallengeCompleted, updateStreak } from '../utils/firestore';
-import './ChallengeDetail.css';
+import { useTimer } from '../hooks/useTimer';
 
 export default function ChallengeDetail() {
     const { id } = useParams();
@@ -20,7 +8,31 @@ export default function ChallengeDetail() {
     const { unlockMultiple } = useAchievement();
     const challenge = challenges.find(c => c.id === id) || challenges[0];
 
-    const [currentQ, setCurrentQ] = useState(0);
+    const { elapsedTime, formattedTime, start, stop } = useTimer();
+
+    useEffect(() => {
+        start();
+        return () => stop();
+    }, [start, stop]);
+
+    // ... (rest of imports and state)
+
+    // ... (in handleNext, stop timer)
+    const handleNext = async () => {
+        if (currentQ < challenge.questions.length - 1) {
+            // ...
+        } else {
+            stop(); // Stop the timer
+            // ...
+        }
+    };
+
+    // ... (in JSX)
+    <div className="header-time">
+        <Clock size={16} />
+        <span className="mono-font">{formattedTime}</span>
+        <span className="text-muted"> / {challenge.estimatedTime}m</span>
+    </div>
     const [selected, setSelected] = useState(null);
     const [showHint, setShowHint] = useState(false);
     const [result, setResult] = useState(null);
