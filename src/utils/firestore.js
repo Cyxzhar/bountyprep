@@ -335,10 +335,10 @@ export async function saveLessonProgress(userId, courseId, lessonId, xp = 0) {
             await updateUserStats(userId, xp, true); // true = counts as "correct" action (simpler stat tracking)
         }
 
-        return true;
+        return { success: true, xpAwarded: xp };
     } catch (err) {
         console.error('Failed to save lesson progress:', err);
-        return false;
+        return { success: false, xpAwarded: 0 };
     }
 }
 
