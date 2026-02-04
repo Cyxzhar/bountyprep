@@ -108,9 +108,11 @@ export default function Settings() {
 
     return (
         <div className="page-container settings-page">
-            <header className="page-header">
+            <header className="page-header-nav">
+                <button className="icon-btn" onClick={() => navigate(-1)}>
+                    <ChevronLeft size={24} />
+                </button>
                 <h1>Settings</h1>
-                <p>Manage your account preferences</p>
             </header>
 
             <div className="settings-grid">

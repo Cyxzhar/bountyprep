@@ -18,15 +18,21 @@ export default function Upgrade() {
 
     return (
         <div className="page-container upgrade-page">
-            {/* Hero Section */}
-            <header className="upgrade-hero">
-                <div className="hero-badge">
-                    <Crown size={16} className="text-yellow" />
+            <header className="page-header-nav">
+                <button className="icon-btn" onClick={() => navigate(-1)}>
+                    <X size={24} />
+                </button>
+                <div className="header-badge">
+                    <Crown size={14} className="text-yellow" />
                     <span>Go Pro</span>
                 </div>
+            </header>
+
+            {/* Hero Section */}
+            <div className="upgrade-hero">
                 <h1>Unlock Your Full Potential</h1>
                 <p>Join the top 1% of bug bounty hunters with unlimited access to advanced training and AI mentorship.</p>
-            </header>
+            </div>
 
             {/* Pricing Cards */}
             <div className="pricing-container">

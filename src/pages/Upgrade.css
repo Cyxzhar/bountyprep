@@ -1,46 +1,52 @@
-/* Upgrade Page Styles */
+@import '../components/CommonStyles.css';
 
+/* Upgrade Page */
 .upgrade-page {
-    max-width: 1000px;
-    /* Constrain width slightly more than generic pages */
-    margin: 0 auto;
+    /* Padding bottom to allow for safe area */
+    padding-bottom: 40px;
+    padding-top: 0;
+    /* Let Header handle it */
+}
+
+/* Header Nav */
+.page-header-nav {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: var(--space-md) var(--space-sm);
+    margin-bottom: var(--space-lg);
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    background: rgba(10, 10, 15, 0.9);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.upgrade-page .page-header-nav h1 {
+    font-size: 1.25rem;
+    margin: 0;
+}
+
+.header-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    background: rgba(255, 215, 0, 0.1);
+    color: #FFD700;
+    padding: 4px 12px;
+    border-radius: var(--radius-full);
+    font-size: 0.75rem;
+    font-weight: 600;
+    border: 1px solid rgba(255, 215, 0, 0.2);
 }
 
 /* Hero */
 .upgrade-hero {
     text-align: center;
     margin-bottom: var(--space-2xl);
-    padding-top: var(--space-lg);
-}
-
-.hero-badge {
-    display: inline-flex;
-    align-items: center;
-    gap: 8px;
-    background: rgba(255, 215, 0, 0.1);
-    color: #FFD700;
-    padding: 6px 16px;
-    border-radius: var(--radius-full);
-    font-size: 0.85rem;
-    font-weight: 600;
-    margin-bottom: var(--space-md);
-    border: 1px solid rgba(255, 215, 0, 0.2);
-}
-
-.upgrade-hero h1 {
-    font-size: 2.5rem;
-    margin-bottom: var(--space-md);
-    background: linear-gradient(135deg, #FFFFFF 0%, #a0a0b3 100%);
-    -webkit-background-clip: text;
-    background-clip: text;
-    -webkit-text-fill-color: transparent;
-}
-
-.upgrade-hero p {
-    font-size: 1.1rem;
-    color: var(--text-secondary);
-    max-width: 600px;
-    margin: 0 auto;
+    padding: 0 var(--space-md);
 }
 
 /* Pricing Layout */
