@@ -48,14 +48,61 @@
 /* Hero Section - HUD Style */
 .course-hero {
     background: transparent;
-    border: none;
-    border-radius: 0;
-    padding: 0;
-    margin-bottom: 48px;
+    margin-bottom: 0;
+    padding: 120px var(--space-lg) 60px;
+    /* Large top padding for immersive feel */
+    background: linear-gradient(180deg,
+            rgba(10, 10, 15, 0.8) 0%,
+            var(--bg-dark) 100%);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+    position: relative;
+    width: 100%;
+}
+
+/* Optional: Add a subtle grid or glow behind hero */
+.course-hero::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-image:
+        linear-gradient(rgba(159, 239, 0, 0.03) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(159, 239, 0, 0.03) 1px, transparent 1px);
+    background-size: 40px 40px;
+    mask-image: linear-gradient(to bottom, black 40%, transparent 100%);
+    pointer-events: none;
+    z-index: -1;
+}
+
+.course-title {
+    font-family: 'Outfit', sans-serif;
+    font-size: 3.5rem;
+    font-weight: 800;
+    color: #fff;
+    line-height: 1.1;
+    margin-bottom: 24px;
+    letter-spacing: -0.02em;
+    text-shadow: 0 0 40px rgba(159, 239, 0, 0.1);
+    max-width: 900px;
+}
+
+.course-meta {
     display: flex;
-    justify-content: space-between;
-    align-items: flex-start;
     gap: 32px;
+    color: var(--text-secondary);
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.9rem;
+    margin-bottom: 32px;
+    flex-wrap: wrap;
+}
+
+/* Content Container - Restore padding here */
+.course-content {
+    padding: 40px var(--space-lg);
+    max-width: 1200px;
+    margin: 0 auto;
 }
 
 .course-hero-content {
