@@ -23,6 +23,7 @@ export default function Lesson() {
     const [courseProgress, setCourseProgress] = useState(null);
     const [isCompleted, setIsCompleted] = useState(false);
     const [saving, setSaving] = useState(false);
+    const { unlockMultiple } = useAchievement();
 
     // Fetch progress to check completion status
     useEffect(() => {
