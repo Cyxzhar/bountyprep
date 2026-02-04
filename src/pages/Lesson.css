@@ -175,24 +175,235 @@
         border-radius: 0;
     }
 
-    /* Improve typography for mobile reading */
-    /* Markdown Styles in .md-content */
+    /* Markdown Styles in .md-content - Premium HUD Upgrade */
+
+    /* Typography & Layout */
+    .md-content {
+        font-family: 'Outfit', sans-serif;
+        /* Ensure primary font */
+        color: #e0e0e0;
+        max-width: 100%;
+    }
+
+    .md-content>*+* {
+        margin-top: 1.5em;
+        /* consistent vertical rhythm */
+    }
+
+    /* Headings */
     .md-content h1 {
-        font-size: 1.75rem;
-        margin-bottom: 24px;
-        border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-        padding-bottom: 12px;
-        color: #fff;
+        font-size: 2.2rem;
         font-weight: 800;
-        line-height: 1.2;
+        margin-bottom: 32px;
+        padding-bottom: 16px;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        color: #fff;
+        letter-spacing: -0.02em;
+        background: linear-gradient(90deg, #fff, #aaa);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
     }
 
     .md-content h2 {
+        font-size: 1.75rem;
+        margin-top: 48px;
+        margin-bottom: 24px;
+        color: var(--neon-green);
+        font-weight: 700;
+        letter-spacing: -0.01em;
+        display: flex;
+        align-items: center;
+        gap: 12px;
+    }
+
+    .md-content h2::before {
+        content: '';
+        display: block;
+        width: 6px;
+        height: 24px;
+        background: var(--neon-green);
+        border-radius: 2px;
+        box-shadow: 0 0 10px var(--neon-green);
+    }
+
+    .md-content h3 {
         font-size: 1.4rem;
         margin-top: 32px;
         margin-bottom: 16px;
-        color: var(--neon-green);
+        color: #fff;
+        font-weight: 600;
+        border-left: 3px solid var(--neon-blue);
+        padding-left: 12px;
+    }
+
+    .md-content h4 {
+        font-size: 1.1rem;
         font-weight: 700;
+        margin-top: 24px;
+        color: var(--text-primary);
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+    }
+
+    /* Paragraphs */
+    .md-content p {
+        font-size: 1.05rem;
+        line-height: 1.8;
+        color: var(--text-secondary);
+        /* Slightly off-white for reading comfort */
+        margin-bottom: 24px;
+        max-width: 75ch;
+        /* Optimal reading line length */
+    }
+
+    .md-content strong {
+        color: #fff;
+        font-weight: 700;
+    }
+
+    .md-content em {
+        color: var(--neon-blue);
+        font-style: normal;
+        /* Modern look */
+    }
+
+    /* Lists */
+    .md-content ul,
+    .md-content ol {
+        padding-left: 20px;
+        margin-bottom: 32px;
+    }
+
+    .md-content li {
+        margin-bottom: 12px;
+        padding-left: 8px;
+        line-height: 1.6;
+        color: var(--text-secondary);
+        position: relative;
+        list-style: none;
+        /* Custom markers */
+    }
+
+    .md-content ul>li::before {
+        content: '>';
+        position: absolute;
+        left: -20px;
+        color: var(--neon-green);
+        font-weight: bold;
+        font-family: monospace;
+    }
+
+    .md-content ol {
+        counter-reset: item;
+    }
+
+    .md-content ol>li::before {
+        content: counter(item) ".";
+        counter-increment: item;
+        position: absolute;
+        left: -24px;
+        color: var(--neon-blue);
+        font-weight: bold;
+        font-family: monospace;
+    }
+
+    /* Code Blocks */
+    .md-content pre {
+        background: #0f0f13;
+        /* Darker than bg */
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        border-radius: 8px;
+        padding: 20px;
+        margin: 32px 0;
+        overflow-x: auto;
+        width: 100%;
+        position: relative;
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+    }
+
+    .md-content pre code {
+        font-family: 'JetBrains Mono', monospace;
+        font-size: 0.9rem;
+        line-height: 1.5;
+        color: #a9b7c6;
+        /* IDE text color */
+        background: transparent;
+        padding: 0;
+        border: none;
+    }
+
+    .md-content .inline-code {
+        background: rgba(255, 255, 255, 0.08);
+        color: var(--neon-orange);
+        padding: 2px 6px;
+        border-radius: 4px;
+        font-family: 'JetBrains Mono', monospace;
+        font-size: 0.9em;
+        border: 1px solid rgba(255, 255, 255, 0.05);
+    }
+
+    /* Blockquotes / Callouts */
+    .md-content blockquote {
+        background: rgba(255, 215, 0, 0.05);
+        /* Gold tint */
+        border-left: 4px solid #FFD700;
+        padding: 24px;
+        margin: 32px 0;
+        border-radius: 0 8px 8px 0;
+        color: #fff;
+        font-style: italic;
+        position: relative;
+    }
+
+    /* Links */
+    .md-content a {
+        color: var(--neon-blue);
+        text-decoration: none;
+        border-bottom: 1px dashed var(--neon-blue);
+        transition: all 0.2s;
+    }
+
+    .md-content a:hover {
+        color: #fff;
+        border-bottom-style: solid;
+        text-shadow: 0 0 8px var(--neon-blue);
+    }
+
+    /* Images */
+    .md-content img {
+        max-width: 100%;
+        border-radius: 8px;
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        margin: 32px 0;
+        box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3);
+        transition: transform 0.3s ease;
+    }
+
+    .md-content img:hover {
+        transform: scale(1.01);
+        border-color: rgba(255, 255, 255, 0.3);
+    }
+
+    /* Mobile Adjustments */
+    @media (max-width: 768px) {
+        .md-content h1 {
+            font-size: 1.8rem;
+        }
+
+        .md-content h2 {
+            font-size: 1.5rem;
+        }
+
+        .md-content p {
+            font-size: 1rem;
+        }
+
+        .md-content pre {
+            padding: 16px;
+            margin: 24px 0;
+        }
+
+        /* Footer spacing handled in lesson-actions */
     }
 
     /* Actions Footer */
