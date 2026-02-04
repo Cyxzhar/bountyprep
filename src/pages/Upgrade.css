@@ -2,10 +2,8 @@
 
 /* Upgrade Page */
 .upgrade-page {
-    /* Padding bottom to allow for safe area */
     padding-bottom: 40px;
     padding-top: 0;
-    /* Let Header handle it */
 }
 
 /* Header Nav */

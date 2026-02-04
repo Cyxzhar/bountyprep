@@ -24,6 +24,7 @@ const difficulties = [
     { id: 'mid', title: 'Mid-Level', desc: 'Real-world Scenarios', icon: BookOpen },
     { id: 'senior', title: 'Senior', desc: 'Architecture & Strategy', icon: Rocket }
 ];
+// End of configuration
 
 export default function Interview() {
     const { currentUser } = useAuth();

@@ -8,7 +8,7 @@ import { doc, updateDoc } from 'firebase/firestore';
 import { db } from '../lib/firebase';
 import {
     Camera, User, Mail, Bell, Shield, Lock, LogOut,
-    ChevronRight, Moon, Sun, Loader2, Check
+    ChevronRight, Moon, Sun, Loader2, Check, ChevronLeft
 } from 'lucide-react';
 import './Settings.css';
 
