@@ -1,9 +1,16 @@
 import { Lock, Syringe, Link, IdCard, RefreshCw, Upload, Terminal, Shield, Code, Globe } from 'lucide-react';
 
+// Note: challengeType field added to support multiple challenge types
+// - 'multiple_choice' (default, existing challenges)
+// - 'coding' (code submission with automated validation)
+// - 'lab' (CTF-style with flag capture)
+// - 'practical' (step-by-step guided challenges)
+
 export const challenges = [
     // ===== EXISTING CHALLENGES (1-8) =====
     {
         id: '1',
+        challengeType: 'multiple_choice',
         title: 'E-commerce Login Bypass',
         description: 'Bypass authentication using SQL payloads',
         type: 'SQL Injection',
@@ -35,6 +42,7 @@ export const challenges = [
     },
     {
         id: '2',
+        challengeType: 'multiple_choice',
         title: 'Stored XSS in Comment Section',
         description: 'Exploit a vulnerable comment system',
         type: 'XSS',
@@ -56,6 +64,7 @@ export const challenges = [
     },
     {
         id: '3',
+        challengeType: 'multiple_choice',
         title: 'IDOR in User Profile API',
         description: 'Access unauthorized user data through IDOR',
         type: 'IDOR',
@@ -950,6 +959,1084 @@ export const challenges = [
                 hint: 'Timing is everything in race conditions.'
             }
         ]
+    }
+    ,
+
+    // ===== NEW CHALLENGE TYPES EXAMPLES =====
+
+    // CODING CHALLENGE EXAMPLE
+    {
+        id: '34',
+        challengeType: 'coding',
+        title: 'Build a SQL Injection Detector',
+        description: 'Write code to detect SQL injection patterns in user input',
+        type: 'SQL Injection',
+        difficulty: 'medium',
+        estimatedTime: 20,
+        isPremium: false,
+        xpReward: 200,
+        completed: false,
+        language: 'javascript',
+        objective: 'Create a function that detects common SQL injection patterns',
+        scenario: 'You need to build input validation for a web application. Create a function that returns true if the input contains SQL injection patterns.',
+        starterCode: `// Complete this function
+function detectSQLInjection(userInput) {
+    // Your code here
+
+    return false; // Change this
+}`,
+        hints: [
+            'Check for common SQL keywords like SELECT, UNION, DROP',
+            'Look for SQL comment syntax like -- or /* */',
+            'Check for quote manipulation patterns'
+        ],
+        validation: {
+            type: 'pattern',
+            mustContain: [
+                { pattern: 'SELECT|UNION|DROP|INSERT|UPDATE|DELETE', description: 'Check for SQL keywords' },
+                { pattern: '--|/\\*|\\*/', description: 'Check for SQL comments' },
+                { pattern: '\'"', description: 'Check for quote characters' }
+            ],
+            testCases: [
+                {
+                    description: 'Detect basic SQL injection',
+                    input: "admin' OR '1'='1",
+                    expected: true,
+                    hidden: false
+                },
+                {
+                    description: 'Detect UNION-based injection',
+                    input: "' UNION SELECT * FROM users--",
+                    expected: true,
+                    hidden: false
+                },
+                {
+                    description: 'Allow normal input',
+                    input: 'john.doe@example.com',
+                    expected: false,
+                    hidden: false
+                },
+                {
+                    description: 'Detect comment-based bypass',
+                    input: "admin'--",
+                    expected: true,
+                    hidden: true
+                }
+            ]
+        },
+        resources: {
+            internal: [
+                { title: 'SQL Injection Patterns', path: '/course/intro-to-bug-bounty/lesson/sqli-intro' },
+                { title: 'Input Validation Best Practices', path: '/course/intro-to-bug-bounty/lesson/sqli-prevention' }
+            ],
+            external: [
+                { title: 'OWASP SQL Injection Cheat Sheet', url: 'https://cheatsheetseries.owasp.org/cheatsheets/SQL_Injection_Prevention_Cheat_Sheet.html' },
+                { title: 'RegEx for Security', url: 'https://www.regular-expressions.info/' }
+            ]
+        }
+    },
+
+    // LAB CHALLENGE EXAMPLE
+    {
+        id: '35',
+        challengeType: 'lab',
+        title: 'E-Commerce SQL Injection Lab',
+        description: 'Exploit SQL injection to extract admin credentials from a vulnerable e-commerce site',
+        type: 'SQL Injection',
+        difficulty: 'medium',
+        estimatedTime: 30,
+        isPremium: true,
+        xpReward: 300,
+        completed: false,
+        objective: 'Find and exploit SQL injection vulnerability to retrieve the admin password, then submit the flag',
+        scenario: 'You are testing an e-commerce application. The product search functionality appears vulnerable. Your goal is to extract the admin user\'s password hash and submit it as a flag.',
+        labEnvironment: {
+            type: 'simulation',
+            mockData: {
+                vulnerable_endpoint: '/search?q=',
+                database: {
+                    tables: ['users', 'products', 'orders'],
+                    users_columns: ['id', 'username', 'password', 'email', 'role']
+                }
+            },
+            tools: ['Browser DevTools', 'Note-taking']
+        },
+        flag: {
+            format: 'BUGORA{[a-f0-9]{32}}',
+            value: 'BUGORA{5f4dcc3b5aa765d61d8327deb882cf99}',
+            hints: [
+                'Start by testing if the search parameter is vulnerable to SQL injection',
+                'Use UNION SELECT to determine the number of columns',
+                'The users table contains the admin credentials',
+                'The password is stored as an MD5 hash',
+                'Submit the flag in the format: BUGORA{hash_here}'
+            ]
+        },
+        steps: [
+            {
+                title: 'Identify the Injection Point',
+                description: 'Test the search functionality for SQL injection vulnerability',
+                hints: ['Try adding a single quote to the search', 'Look for SQL errors in the response']
+            },
+            {
+                title: 'Determine Column Count',
+                description: 'Use UNION SELECT to find how many columns the query returns',
+                hints: ['Try: \' UNION SELECT NULL--', 'Increase NULL values until error disappears']
+            },
+            {
+                title: 'Extract Database Schema',
+                description: 'Find the table and column names',
+                hints: ['Use information_schema.tables', 'Look for users table']
+            },
+            {
+                title: 'Retrieve Admin Credentials',
+                description: 'Extract the admin password hash',
+                hints: ['SELECT password FROM users WHERE role=\'admin\'', 'Format: BUGORA{hash}']
+            }
+        ],
+        resources: {
+            internal: [
+                { title: 'UNION-based SQL Injection', path: '/course/intro-to-bug-bounty/lesson/sqli-exploitation' },
+                { title: 'Information Schema Exploitation', path: '/course/intro-to-bug-bounty/lesson/sqli-exploitation' }
+            ],
+            external: [
+                { title: 'PortSwigger SQL Injection Lab', url: 'https://portswigger.net/web-security/sql-injection' },
+                { title: 'SQLi Cheat Sheet', url: 'https://portswigger.net/web-security/sql-injection/cheat-sheet' }
+            ]
+        }
+    },
+
+    // PRACTICAL CHALLENGE EXAMPLE
+    {
+        id: '36',
+        challengeType: 'practical',
+        title: 'XSS Attack Chain: From Discovery to Exploitation',
+        description: 'Learn to identify, test, and exploit XSS vulnerabilities through guided steps',
+        type: 'XSS',
+        difficulty: 'medium',
+        estimatedTime: 25,
+        isPremium: false,
+        xpReward: 250,
+        completed: false,
+        objective: 'Complete all steps to discover and exploit an XSS vulnerability',
+        scenario: 'A social media platform has a comment feature that might be vulnerable to XSS. Guide yourself through the exploitation process step by step.',
+        steps: [
+            {
+                id: 'step1',
+                title: 'Identify the Vulnerability Type',
+                description: 'The comment is reflected back to you immediately when posted. What type of XSS is this?',
+                type: 'multiple_choice',
+                hints: [
+                    'The payload executes immediately when submitted',
+                    'It\'s not stored in the database permanently'
+                ],
+                validation: {
+                    type: 'multiple_choice',
+                    options: ['Reflected XSS', 'Stored XSS', 'DOM-based XSS', 'Blind XSS'],
+                    correctAnswer: 0,
+                    successMessage: 'Correct! This is Reflected XSS because the payload is immediately reflected in the response.',
+                    errorMessage: 'Incorrect. Think about when and how the payload executes.'
+                }
+            },
+            {
+                id: 'step2',
+                title: 'Test for Basic XSS',
+                description: 'Submit a basic XSS test payload using a script tag',
+                type: 'payload',
+                hints: [
+                    'Use <script> tags',
+                    'Try alert() function to test',
+                    'Keep it simple: <script>alert(1)</script>'
+                ],
+                validation: {
+                    type: 'payload',
+                    category: 'xss',
+                    checks: [
+                        {
+                            type: 'required',
+                            pattern: '<script>.*</script>',
+                            message: 'Payload must contain script tags'
+                        },
+                        {
+                            type: 'required',
+                            pattern: 'alert\\(',
+                            message: 'Payload must use alert() function'
+                        }
+                    ],
+                    successMessage: 'Great! Your basic XSS payload is correct.',
+                    errorMessage: 'Your payload is missing required elements.'
+                }
+            },
+            {
+                id: 'step3',
+                title: 'Bypass Basic Filters',
+                description: 'The application blocks the word "script". Create a bypass payload.',
+                type: 'payload',
+                hints: [
+                    'Try using event handlers instead of script tags',
+                    'Consider <img> or <svg> tags',
+                    'Use onerror event handler'
+                ],
+                validation: {
+                    type: 'payload',
+                    category: 'xss',
+                    checks: [
+                        {
+                            type: 'forbidden',
+                            pattern: '<script',
+                            message: 'Cannot use script tags (they are blocked)'
+                        },
+                        {
+                            type: 'required',
+                            pattern: 'onerror|onload|onclick',
+                            message: 'Must use an event handler'
+                        },
+                        {
+                            type: 'required',
+                            pattern: 'alert\\(',
+                            message: 'Must trigger alert()'
+                        }
+                    ],
+                    successMessage: 'Excellent! You bypassed the filter using event handlers.',
+                    errorMessage: 'Check your payload structure.'
+                }
+            },
+            {
+                id: 'step4',
+                title: 'Craft Cookie Stealer Payload',
+                description: 'Create a payload that would steal cookies (using document.cookie)',
+                type: 'text',
+                hints: [
+                    'Access cookies with document.cookie',
+                    'You would normally send to attacker server',
+                    'For this exercise, just show the concept'
+                ],
+                validation: {
+                    type: 'regex',
+                    pattern: 'document\\.cookie',
+                    flags: 'i',
+                    successMessage: 'Perfect! You understand how to access cookies in XSS attacks.',
+                    errorMessage: 'Your payload should reference document.cookie'
+                }
+            },
+            {
+                id: 'step5',
+                title: 'Identify the Fix',
+                description: 'What is the BEST way to prevent this XSS vulnerability?',
+                type: 'multiple_choice',
+                hints: [
+                    'Think about how to safely handle user input',
+                    'Consider both input and output handling'
+                ],
+                validation: {
+                    type: 'multiple_choice',
+                    options: [
+                        'Use Content-Security-Policy headers and output encoding',
+                        'Block the word "script"',
+                        'Remove all HTML tags',
+                        'Use base64 encoding'
+                    ],
+                    correctAnswer: 0,
+                    successMessage: 'Correct! CSP and proper output encoding are the best defense.',
+                    errorMessage: 'That approach can be bypassed. Think about defense in depth.'
+                }
+            }
+        ],
+        resources: {
+            internal: [
+                { title: 'XSS Fundamentals', path: '/course/intro-to-bug-bounty/lesson/xss-fundamentals' },
+                { title: 'XSS Prevention Guide', path: '/course/intro-to-bug-bounty/lesson/xss-prevention' }
+            ],
+            external: [
+                { title: 'PortSwigger XSS', url: 'https://portswigger.net/web-security/cross-site-scripting' },
+                { title: 'OWASP XSS Guide', url: 'https://owasp.org/www-community/attacks/xss/' },
+                { title: 'XSS Filter Evasion', url: 'https://cheatsheetseries.owasp.org/cheatsheets/XSS_Filter_Evasion_Cheat_Sheet.html' }
+            ]
+        }
+    },
+
+    // CODING CHALLENGE - Python Example
+    {
+        id: '37',
+        challengeType: 'coding',
+        title: 'Secure Password Hashing Function',
+        description: 'Implement a secure password hashing function using best practices',
+        type: 'Cryptography',
+        difficulty: 'easy',
+        estimatedTime: 15,
+        isPremium: false,
+        xpReward: 150,
+        completed: false,
+        language: 'python',
+        objective: 'Create a function that properly hashes passwords with salt',
+        scenario: 'You need to implement secure password storage for a web application. Create a function that hashes passwords using bcrypt or PBKDF2.',
+        starterCode: `import hashlib
+import os
+
+def hash_password(password):
+    """
+    Hash a password using secure methods
+    Returns: (salt, hashed_password)
+    """
+    # Your code here
+    pass
+
+def verify_password(password, salt, hashed_password):
+    """
+    Verify a password against stored hash
+    Returns: Boolean
+    """
+    # Your code here
+    pass`,
+        hints: [
+            'Use a cryptographically secure random salt',
+            'Use PBKDF2, bcrypt, or scrypt for hashing',
+            'Store both the salt and the hash',
+            'Use high iteration count for PBKDF2 (at least 100,000)'
+        ],
+        validation: {
+            type: 'pattern',
+            mustContain: [
+                { pattern: 'os\\.urandom|secrets\\.token_bytes', description: 'Use cryptographically secure random for salt' },
+                { pattern: 'pbkdf2|bcrypt|scrypt|argon2', description: 'Use proper password hashing algorithm' },
+                { pattern: 'iterations.*100000|rounds.*12', description: 'Use sufficient iteration count' }
+            ],
+            mustNotContain: [
+                { pattern: 'md5|sha1|sha256(?!.*pbkdf2)', description: 'Do not use weak hashing algorithms directly' },
+                { pattern: 'random\\.random|random\\.randint', description: 'Do not use insecure random for salt' }
+            ]
+        },
+        resources: {
+            internal: [
+                { title: 'Cryptography Basics', path: '/course/intro-to-bug-bounty/lesson/owasp-intro' },
+                { title: 'Secure Password Storage', path: '/course/intro-to-bug-bounty/lesson/auth-basics' }
+            ],
+            external: [
+                { title: 'OWASP Password Storage', url: 'https://cheatsheetseries.owasp.org/cheatsheets/Password_Storage_Cheat_Sheet.html' },
+                { title: 'bcrypt Documentation', url: 'https://github.com/pyca/bcrypt/' }
+            ]
+        }
+    },
+
+    // LAB CHALLENGE - IDOR Example
+    {
+        id: '38',
+        challengeType: 'lab',
+        title: 'API IDOR: Unauthorized Data Access',
+        description: 'Exploit IDOR vulnerability in REST API to access other users\' data',
+        type: 'IDOR',
+        difficulty: 'easy',
+        estimatedTime: 20,
+        isPremium: false,
+        xpReward: 200,
+        completed: false,
+        objective: 'Find and exploit IDOR to access another user\'s private data and capture the flag',
+        scenario: 'You are user ID 1001. The API endpoint /api/users/{id}/profile allows users to view their profile. Can you access other users\' sensitive data?',
+        labEnvironment: {
+            type: 'simulation',
+            mockData: {
+                your_user_id: 1001,
+                endpoint: '/api/users/{id}/profile',
+                hint: 'Try changing the user ID in the URL'
+            },
+            tools: ['Browser DevTools', 'Postman/curl']
+        },
+        flag: {
+            format: 'BUGORA{[A-Z0-9_]+}',
+            value: 'BUGORA{ACCESS_CONTROL_IS_CRITICAL}',
+            hints: [
+                'You are user 1001, but there are other users...',
+                'Try incrementing or decrementing the user ID',
+                'Look for admin users (hint: they often have low IDs)',
+                'Check user ID 1000',
+                'The flag is in the admin user\'s bio field'
+            ]
+        },
+        steps: [
+            {
+                title: 'Access Your Own Profile',
+                description: 'First, access your own profile at /api/users/1001/profile to understand the response structure',
+                hints: ['Note the fields returned', 'See what information is available']
+            },
+            {
+                title: 'Test for IDOR',
+                description: 'Try accessing another user\'s profile by changing the ID',
+                hints: ['Change 1001 to 1002', 'Does it work?']
+            },
+            {
+                title: 'Find the Admin',
+                description: 'Admin users often have lower IDs. Try user ID 1000.',
+                hints: ['Access /api/users/1000/profile', 'Look for the flag in the response']
+            }
+        ],
+        resources: {
+            internal: [
+                { title: 'IDOR Fundamentals', path: '/course/intro-to-bug-bounty/lesson/idor-basics' },
+                { title: 'Access Control Testing', path: '/course/intro-to-bug-bounty/lesson/idor-exploitation' }
+            ],
+            external: [
+                { title: 'OWASP IDOR', url: 'https://owasp.org/www-project-web-security-testing-guide/latest/4-Web_Application_Security_Testing/05-Authorization_Testing/04-Testing_for_Insecure_Direct_Object_References' },
+                { title: 'PortSwigger Access Control', url: 'https://portswigger.net/web-security/access-control' }
+            ]
+        }
+    },
+
+
+    // ===== LAB CHALLENGES (Real World) =====
+    {
+        id: 'lab-sqli-1',
+        challengeType: 'lab',
+        title: 'Lab: SQL Injection Data Exfiltration',
+        description: 'Extract the administrator password from the database.',
+        type: 'SQL Injection',
+        difficulty: 'hard',
+        estimatedTime: 20,
+        isPremium: true,
+        xpReward: 300,
+        completed: false,
+        objective: 'Your goal is to use a UNION-based SQL injection attack to retrieve the password of the "admin" user from the "users" table.',
+        scenario: 'You have found a vulnerable endpoint that displays product details. The application is using a MySQL database.',
+        labEnvironment: {
+            type: 'simulation',
+            mockData: {
+                currentQuery: "SELECT name, price, description FROM products WHERE id = '1'",
+                database: {
+                    products: [
+                        { id: 1, name: 'Hacker Hoodie', price: 49.99, description: 'Stay hidden.' },
+                        { id: 2, name: 'Cyber Deck', price: 1299.99, description: 'High performance.' }
+                    ],
+                    users: [
+                        { id: 1, username: 'admin', password: 'flag{sql_union_master_2026}' },
+                        { id: 2, username: 'user', password: 'password123' }
+                    ]
+                }
+            },
+            tools: ['Browser', 'Repeater', 'Decoder']
+        },
+        steps: [
+            {
+                title: 'Determine Column Count',
+                description: 'First, find out how many columns are being returned by the original query using ORDER BY.',
+                hints: ['Try injecting: \' ORDER BY 1--', 'Try increasing the number until you get an error.']
+            },
+            {
+                title: 'Identify Injectable Columns',
+                description: 'Use UNION SELECT to find which columns are displayed on the page.',
+                hints: ['Payload: \' UNION SELECT 1, 2, 3--']
+            },
+            {
+                title: 'Extract User Data',
+                description: 'Construct a final payload to select the username and password from the users table.',
+                hints: ['Payload: \' UNION SELECT username, password, 3 FROM users--']
+            }
+        ],
+        flag: {
+            format: 'flag{...}',
+            value: 'flag{sql_union_master_2026}',
+            hints: [
+                'The table name is "users".',
+                'Columns are "username" and "password".',
+                'The flag is the admin password.'
+            ]
+        },
+        resources: {
+            internal: [
+                { title: 'SQL Injection Deep Dive', path: '/course/intro-to-bug-bounty/lesson/sqli-intro' },
+                { title: 'UNION Attacks', path: '/course/intro-to-bug-bounty/lesson/sqli-exploitation' }
+            ],
+            external: []
+        }
+    },
+    {
+        id: 'lab-xss-1',
+        challengeType: 'lab',
+        title: 'Lab: Reflected XSS Filter Bypass',
+        description: 'Execute JavaScript in a filtered search box.',
+        type: 'XSS',
+        difficulty: 'medium',
+        estimatedTime: 15,
+        isPremium: false,
+        xpReward: 250,
+        completed: false,
+        objective: 'Inject a payload that executes alert(1) to capture the flag. The application filters out the word "script".',
+        scenario: 'The search functionality reflects your input, but there is a basic WAF in place.',
+        labEnvironment: {
+            type: 'simulation',
+            mockData: {
+                filter: 'Removes "script" (case-insensitive)',
+                reflectionPoint: '<div id="search-results">You searched for: [INPUT]</div>'
+            },
+            tools: ['Browser', 'Console']
+        },
+        steps: [
+            {
+                title: 'Test Basic Injection',
+                description: 'Try a standard <script>alert(1)</script> to confirm the filter.',
+                hints: ['Notice how the word "script" disappears from the output.']
+            },
+            {
+                title: 'Bypass the Filter',
+                description: 'Find a way to inject valid HTML/JS without using the word "script", or by tricking the filter.',
+                hints: ['Try using an <img> tag with onerror event.', 'Or try nested tags like <scr<script>ipt>.']
+            }
+        ],
+        flag: {
+            format: 'flag{...}',
+            value: 'flag{xss_filter_bypassed}',
+            hints: [
+                'The payload <img src=x onerror=alert(1)> does not use the word "script".',
+                'Or use <scr<script>ipt> if the filter only runs once.'
+            ]
+        },
+        resources: {
+            internal: [
+                { title: 'XSS Fundamentals', path: '/course/intro-to-bug-bounty/lesson/xss-fundamentals' },
+                { title: 'Filter Bypass', path: '/course/intro-to-bug-bounty/lesson/xss-payloads' }
+            ],
+            external: []
+        }
+    },
+    {
+        id: 'lab-idor-1',
+        challengeType: 'lab',
+        title: 'Lab: IDOR Invoice Access',
+        description: 'Access another user\'s private invoice.',
+        type: 'IDOR',
+        difficulty: 'easy',
+        estimatedTime: 10,
+        isPremium: false,
+        xpReward: 200,
+        completed: false,
+        objective: 'Modify the API request to retrieve Invoice #1002, which belongs to another user.',
+        scenario: 'You are logged in as User A and viewing your own invoice #1001.',
+        labEnvironment: {
+            type: 'simulation',
+            mockData: {
+                url: '/api/invoices?id=1001',
+                response: 'Invoice #1001: $50.00 (User A)'
+            },
+            tools: ['Burp Repeater']
+        },
+        steps: [
+            {
+                title: 'Analyze the Request',
+                description: 'Look at the URL parameters. How is the invoice identified?',
+                hints: ['The "id" parameter controls which invoice is fetched.']
+            },
+            {
+                title: 'Exploit IDOR',
+                description: 'Change the ID to access an invoice that doesn\'t belong to you.',
+                hints: ['Try changing 1001 to 1002.']
+            }
+        ],
+        flag: {
+            format: 'flag{...}',
+            value: 'flag{idor_enumerated_1002}',
+            hints: [
+                'Simply changing the ID from 1001 to 1002 will reveal the flag.'
+            ]
+        },
+        resources: {
+            internal: [
+                { title: 'IDOR Fundamentals', path: '/course/intro-to-bug-bounty/lesson/idor-basics' }
+            ],
+            external: []
+        }
+    },
+    {
+        id: 'lab-nmap-1',
+        challengeType: 'lab',
+        title: 'Lab: Network Discovery',
+        description: 'Scan a target to find open ports.',
+        type: 'Network Scanning',
+        difficulty: 'easy',
+        estimatedTime: 10,
+        isPremium: false,
+        xpReward: 150,
+        completed: false,
+        objective: 'Use Nmap to discover open ports on the target machine 192.168.1.5.',
+        scenario: 'You are on an internal network. You need to identify what services are running on a suspicious server.',
+        labEnvironment: {
+            type: 'simulation',
+            mockData: {
+                target: '192.168.1.5',
+                network: '192.168.1.0/24'
+            },
+            tools: ['Terminal']
+        },
+        steps: [
+            {
+                title: 'Ping Sweep',
+                description: 'Verifiy the host is up using a ping scan.',
+                hints: ['Command: nmap -sn 192.168.1.5']
+            },
+            {
+                title: 'Service Scan',
+                description: 'Run a service version scan to find open ports and running services.',
+                hints: ['Command: nmap -sV 192.168.1.5']
+            }
+        ],
+        flag: {
+            format: 'flag{...}',
+            value: 'flag{ports_22_80_3306_open}',
+            hints: [
+                'The scan reveals SSH (22), HTTP (80), and MySQL (3306).',
+                'The flag format lists the open ports in order.'
+            ]
+        },
+        resources: {
+            internal: [
+                { title: 'Nmap Scanning', path: '/course/network-security-101/lesson/nmap-basics' }
+            ],
+            external: []
+        }
+    },
+    {
+        id: 'lab-ssh-1',
+        challengeType: 'lab',
+        title: 'Lab: SSH Brute Force',
+        description: 'Cracking a weak SSH password.',
+        type: 'Service Exploitation',
+        difficulty: 'medium',
+        estimatedTime: 15,
+        isPremium: true,
+        xpReward: 200,
+        completed: false,
+        objective: 'Find the password for the "admin" user on the target SSH server.',
+        scenario: 'The target server 192.168.1.5 has SSH open. You have a list of common passwords.',
+        labEnvironment: {
+            type: 'simulation',
+            mockData: {
+                target: '192.168.1.5',
+                user: 'admin',
+                wordlist: ['123456', 'password', 'welcome', 'admin123', 'secure']
+            },
+            tools: ['Terminal', 'Hydra']
+        },
+        steps: [
+            {
+                title: 'Configure Attack',
+                description: 'Set up the brute force attack using the username "admin" and the provided wordlist.',
+                hints: ['Tool: hydra -l admin -P wordlist.txt ssh://192.168.1.5']
+            },
+            {
+                title: 'Run Attack',
+                description: 'Launch the attack and wait for a valid credential match.',
+                hints: ['The password "admin123" is in the list.']
+            }
+        ],
+        flag: {
+            format: 'flag{...}',
+            value: 'flag{ssh_access_granted_admin123}',
+            hints: [
+                'The successful password is "admin123".'
+            ]
+        },
+        resources: {
+            internal: [
+                { title: 'SSH Exploitation', path: '/course/network-security-101/lesson/ssh-attacks' }
+            ],
+            external: []
+        }
+    },
+
+    {
+        id: 'coding-py-requests',
+        challengeType: 'coding',
+        title: 'Scripting HTTP Requests',
+        description: 'Write a Python script to fetch a custom header.',
+        type: 'Python Automation',
+        difficulty: 'medium',
+        estimatedTime: 15,
+        isPremium: false,
+        xpReward: 175,
+        completed: false,
+        language: 'python',
+        objective: 'Use the requests library to GET the URL and print the value of the "X-Secret-Flag" header.',
+        scenario: 'The target server sends a secret flag in the "X-Secret-Flag" HTTP header. You need to write a script to retrieve it.',
+        starterCode: `import requests
+import sys
+
+def get_flag(url):
+    # Your code here
+    pass`,
+        hints: [
+            'Use requests.get(url) to fetch the page.',
+            'Access headers using response.headers dictionary.',
+            'Look for "X-Secret-Flag" (case-insensitive in some libs, but be careful).'
+        ],
+        validation: {
+            type: 'pattern',
+            mustContain: [
+                { pattern: 'requests\\.get', description: 'Make a GET request' },
+                { pattern: '\\.headers', description: 'Access response headers' },
+                { pattern: 'X-Secret-Flag', description: 'Look for the specific header' }
+            ],
+            testCases: []
+        },
+        resources: {
+            internal: [
+                { title: 'Python Requests', path: '/course/python-for-pentesters/lesson/python-requests' }
+            ],
+            external: []
+        }
+    },
+    {
+        id: 'coding-py-scanner',
+        challengeType: 'coding',
+        title: 'Build a Port Scanner',
+        description: 'Create a simple TCP port scanner using sockets.',
+        type: 'Python Automation',
+        difficulty: 'hard',
+        estimatedTime: 25,
+        isPremium: true,
+        xpReward: 250,
+        completed: false,
+        language: 'python',
+        objective: 'Write a function that attempts to connect to a specific port and returns True if open, False otherwise.',
+        scenario: 'You are building a custom scanning tool. You need a function that checks if a single TCP port is open.',
+        starterCode: `import socket
+
+def check_port(ip, port):
+    # Create a socket object
+    # Try to connect
+    # Return True if successful, False if not
+    pass`,
+        hints: [
+            'Use socket.socket(socket.AF_INET, socket.SOCK_STREAM).',
+            'Use sock.connect_ex((ip, port)) which returns 0 on success.',
+            'Don\'t forget to set a timeout using sock.settimeout().',
+            'Close the socket after checking.'
+        ],
+        validation: {
+            type: 'pattern',
+            mustContain: [
+                { pattern: 'socket\\.socket', description: 'Create a socket' },
+                { pattern: 'connect|connect_ex', description: 'Attempt connection' },
+                { pattern: 'close\\(', description: 'Close the socket' }
+            ],
+            testCases: []
+        },
+        resources: {
+            internal: [
+                { title: 'Socket Programming', path: '/course/python-for-pentesters/lesson/socket-programming' }
+            ],
+            external: []
+        }
+    },
+    {
+        id: 'lab-api-1',
+        challengeType: 'lab',
+        title: 'Lab: Leaky API Endpoint',
+        description: 'Find sensitive data leaked in a JSON response.',
+        type: 'API Security',
+        difficulty: 'easy',
+        estimatedTime: 10,
+        isPremium: false,
+        xpReward: 125,
+        completed: false,
+        objective: 'Analyze the API response to find the exposed API key.',
+        scenario: 'You are auditing a public API. It seems to be returning more data than it should.',
+        labEnvironment: {
+            type: 'simulation',
+            mockData: {
+                request: 'GET /api/users/1',
+                response: {
+                    id: 1,
+                    username: 'jdoe',
+                    email: 'jdoe@example.com',
+                    apiKey: 'flag{api_key_exposed_in_response}',
+                    role: 'user'
+                }
+            },
+            tools: ['Postman', 'Browser']
+        },
+        steps: [
+            {
+                title: 'Send Request',
+                description: 'Send a GET request to /api/users/1 using the mock tool.',
+                hints: ['Look closely at the JSON response.']
+            },
+            {
+                title: 'Inspect Response',
+                description: 'Identify any sensitive fields that should not be public.',
+                hints: ['The "apiKey" field looks suspicious.']
+            }
+        ],
+        flag: {
+            format: 'flag{...}',
+            value: 'flag{api_key_exposed_in_response}',
+            hints: [
+                'The flag is the value of the apiKey field.'
+            ]
+        },
+        resources: {
+            internal: [
+                { title: 'REST API Basics', path: '/course/api-security-testing/lesson/rest-api-basics' }
+            ],
+            external: []
+        }
+    },
+    // ===== PRACTICAL QUIZZES (Mobile Friendly) =====
+    {
+        id: 'quiz-wireless-1',
+        challengeType: 'multiple_choice',
+        title: 'Wireless Cracking Steps',
+        description: 'Identify the correct tool for WiFi deauthentication.',
+        type: 'Network Security',
+        difficulty: 'easy',
+        estimatedTime: 5,
+        isPremium: false,
+        xpReward: 50,
+        completed: false,
+        questions: [
+            {
+                scenario: "You are in monitor mode and want to force a client to disconnect so you can capture the WPA handshake.",
+                question: 'Which tool and command in the Aircrack-ng suite is used for deauthentication?',
+                options: [
+                    'aircrack-ng -w wordlist capfile',
+                    'aireplay-ng -0 10 -a BSSID wlan0mon',
+                    'airodump-ng wlan0mon',
+                    'airmon-ng start wlan0'
+                ],
+                correctAnswer: 1,
+                explanation: 'aireplay-ng is used for packet injection. The -0 flag triggers the deauthentication attack.',
+                hint: 'We need to "replay" or inject packets to kick the user off.'
+            }
+        ],
+        resources: {
+            internal: [{ title: 'WiFi Attacks', path: '/course/network-security-101/lesson/wifi-attacks' }],
+            external: []
+        }
+    },
+    {
+        id: 'quiz-metasploit-1',
+        challengeType: 'multiple_choice',
+        title: 'Metasploit Workflow',
+        description: 'Select the correct order of operations in MSF.',
+        type: 'Network Security',
+        difficulty: 'medium',
+        estimatedTime: 5,
+        isPremium: false,
+        xpReward: 50,
+        completed: false,
+        questions: [
+            {
+                scenario: "You have found a vulnerable service (EternalBlue). You want to exploit it using Metasploit.",
+                question: 'What is the correct command sequence?',
+                options: [
+                    'exploit -> use -> set RHOSTS',
+                    'search -> use -> set RHOSTS -> exploit',
+                    'use -> search -> exploit -> set RHOSTS',
+                    'set RHOSTS -> exploit -> search'
+                ],
+                correctAnswer: 1,
+                explanation: 'First you SEARCH for the exploit, then USE it, then configure options like RHOSTS, and finally run EXPLOIT.',
+                hint: 'Find it, Select it, Configure it, Launch it.'
+            }
+        ],
+        resources: {
+            internal: [{ title: 'Metasploit Basics', path: '/course/network-security-101/lesson/msf-basics' }],
+            external: []
+        }
+    },
+    {
+        id: 'quiz-python-bs4',
+        challengeType: 'multiple_choice',
+        title: 'Python Web Scraping',
+        description: 'Identify the correct BeautifulSoup syntax.',
+        type: 'Python Automation',
+        difficulty: 'medium',
+        estimatedTime: 5,
+        isPremium: false,
+        xpReward: 50,
+        completed: false,
+        questions: [
+            {
+                scenario: "You are writing a Python script to extract all links (href attributes) from a page using BeautifulSoup.",
+                question: 'Which code snippet correctly finds all <a> tags?',
+                options: [
+                    'soup.get_all("a")',
+                    'soup.find_all("a")',
+                    'soup.search("link")',
+                    'soup.extract("href")'
+                ],
+                correctAnswer: 1,
+                explanation: 'BeautifulSoup uses .find_all("tag") to return a list of matching elements.',
+                hint: 'The method is named "find_all".'
+            }
+        ],
+        resources: {
+            internal: [{ title: 'Web Scraping', path: '/course/python-for-pentesters/lesson/bs4-basics' }],
+            external: []
+        }
+    },
+    {
+        id: 'quiz-jwt-none',
+        challengeType: 'multiple_choice',
+        title: 'JWT Vulnerabilities',
+        description: 'Understand the "None" algorithm attack.',
+        type: 'API Security',
+        difficulty: 'medium',
+        estimatedTime: 5,
+        isPremium: false,
+        xpReward: 50,
+        completed: false,
+        questions: [
+            {
+                scenario: "You are testing a JWT implementation. You change the algorithm header to 'None' and remove the signature.",
+                question: 'Why does this allow you to bypass authentication?',
+                options: [
+                    'It crashes the server.',
+                    'It tells the server that the token is unsigned and should be trusted without verification.',
+                    'It encrypts the payload with a new key.',
+                    'It forces the server to use a default password.'
+                ],
+                correctAnswer: 1,
+                explanation: 'If the library supports "None", it skips the signature verification step, accepting whatever payload you send.',
+                hint: 'No signature means no verification.'
+            }
+        ],
+        resources: {
+            internal: [{ title: 'JWT Attacks', path: '/course/api-security-testing/lesson/jwt-none-alg' }],
+            external: []
+        }
+    },
+    {
+        id: 'quiz-rate-limit',
+        challengeType: 'multiple_choice',
+        title: 'Bypassing Rate Limits',
+        description: 'Choose the correct header to spoof scanning IP.',
+        type: 'API Security',
+        difficulty: 'medium',
+        estimatedTime: 5,
+        isPremium: true,
+        xpReward: 75,
+        completed: false,
+        questions: [
+            {
+                scenario: "You are being blocked by an API rate limiter (429 Too Many Requests). You want to try spoofing your IP.",
+                question: 'Which HTTP header is commonly trusted by load balancers to identify the original client IP?',
+                options: [
+                    'User-Agent',
+                    'X-Forwarded-For',
+                    'Authorization',
+                    'Content-Type'
+                ],
+                correctAnswer: 1,
+                explanation: 'X-Forwarded-For is the standard header used by proxies to forward the original client IP.',
+                hint: 'It forwards the IP.'
+            }
+        ],
+        resources: {
+            internal: [{ title: 'Rate Limiting', path: '/course/api-security-testing/lesson/bypass-headers' }],
+            external: []
+        }
+    },
+
+    // ===== NEW LAB CHALLENGES =====
+    {
+        id: 'lab-cloud-ssrf',
+        challengeType: 'lab',
+        title: 'Lab: Cloud SSRF',
+        description: 'Exploit SSRF to steal cloud credentials.',
+        type: 'Cloud Security',
+        difficulty: 'hard',
+        estimatedTime: 15,
+        isPremium: true,
+        xpReward: 250,
+        completed: false,
+        objective: 'Query the AWS metadata service to retrieve the "SecretAccessKey".',
+        scenario: 'You found a Server-Side Request Forgery vulnerability on a web server running in the cloud.',
+        labEnvironment: {
+            type: 'simulation',
+            mockData: {
+                target: 'http://vulnerable-site.com/fetch?url=',
+                metadata_url: 'http://169.254.169.254/latest/meta-data/iam/security-credentials/admin',
+                response_metadata: {
+                    "Code": "Success",
+                    "AccessKeyId": "AKIAIOSFODNN7EXAMPLE",
+                    "SecretAccessKey": "flag{cloud_keys_stolen_via_ssrf}",
+                    "Token": "token123"
+                }
+            },
+            tools: ['Browser', 'Repeater']
+        },
+        steps: [
+            {
+                title: 'Test SSRF',
+                description: 'Verify you can access internal services via the URL parameter.',
+                hints: ['Try fetching http://localhost first.']
+            },
+            {
+                title: 'Query Metadata',
+                description: 'Target the AWS magic IP (169.254.169.254) to find credentials.',
+                hints: ['Path: /latest/meta-data/iam/security-credentials/admin']
+            }
+        ],
+        flag: {
+            format: 'flag{...}',
+            value: 'flag{cloud_keys_stolen_via_ssrf}',
+            hints: ['The flag is the SecretAccessKey.']
+        },
+        resources: {
+            internal: [{ title: 'Cloud Metadata', path: '/course/api-security-testing/lesson/cloud-metadata' }],
+            external: []
+        }
+    },
+    {
+        id: 'lab-graphql-intro',
+        challengeType: 'lab',
+        title: 'Lab: GraphQL Introspection',
+        description: 'Discover hidden types using introspection.',
+        type: 'API Security',
+        difficulty: 'medium',
+        estimatedTime: 10,
+        isPremium: false,
+        xpReward: 150,
+        completed: false,
+        objective: 'Run an introspection query to find the hidden "SuperSecret" type.',
+        scenario: 'The API endpoint /graphql is executing queries. Can you map the entire schema?',
+        labEnvironment: {
+            type: 'simulation',
+            mockData: {
+                endpoint: '/graphql',
+                introspection_query: '{ __schema { types { name } } }',
+                response_schema: {
+                    "data": {
+                        "__schema": {
+                            "types": [
+                                { "name": "User" },
+                                { "name": "Post" },
+                                { "name": "flag{hidden_type_discovered}" }
+                            ]
+                        }
+                    }
+                }
+            },
+            tools: ['GraphQL Console']
+        },
+        steps: [
+            {
+                title: 'Send Introspection',
+                description: 'Send the standard introspection query to list all types.',
+                hints: ['Query: { __schema { types { name } } }']
+            },
+            {
+                title: 'Identify Secrets',
+                description: 'Look through the list of types for anything unusual.',
+                hints: ['One type looks like a flag.']
+            }
+        ],
+        flag: {
+            format: 'flag{...}',
+            value: 'flag{hidden_type_discovered}',
+            hints: ['The flag is the name of the hidden type.']
+        },
+        resources: {
+            internal: [{ title: 'GraphQL Intro', path: '/course/api-security-testing/lesson/graphql-intro' }],
+            external: []
+        }
     }
 ];
 
