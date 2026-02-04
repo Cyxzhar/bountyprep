@@ -212,12 +212,15 @@ textarea {
   text-shadow: 0 0 20px rgba(159, 239, 0, 0.5);
 }
 
-/* Container */
-.container {
+/* Page Container - Global Wrapper */
+.page-container {
   width: 100%;
   max-width: var(--max-width);
   margin: 0 auto;
-  padding: 0 var(--container-padding);
+  padding: 0 var(--space-md);
+  /* Mobile side padding */
+  padding-bottom: calc(80px + env(safe-area-inset-bottom));
+  /* Bottom nav space */
 }
 
 /* Screen Layout */
@@ -229,8 +232,16 @@ textarea {
 }
 
 .screen-content {
-  padding: var(--space-lg);
+  padding: var(--space-md);
+  /* Reduced from lg for mobile */
   padding-bottom: calc(80px + var(--space-lg) + env(safe-area-inset-bottom));
+}
+
+@media (min-width: 768px) {
+  .page-container {
+    padding: 0 var(--space-lg);
+    padding-bottom: var(--space-xl);
+  }
 }
 
 /* Cards */
