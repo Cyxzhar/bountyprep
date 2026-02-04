@@ -2,17 +2,45 @@ import { useNavigate } from 'react-router-dom';
 import {
     BookOpen, Trophy, Clock, ChevronRight, Play, CheckCircle
 } from 'lucide-react';
+import { useState, useEffect } from 'react'; // Added useState, useEffect
 import { courses } from '../data/courses';
 import BottomNav from '../components/BottomNav';
+import { useAuth } from '../context/AuthContext'; // Added useAuth
+import { getAllCoursesProgress } from '../utils/firestore'; // Added import
 import './Courses.css';
 
 export default function Courses() {
     const navigate = useNavigate();
+    const { currentUser } = useAuth(); // Get user
+    const [allProgress, setAllProgress] = useState({}); // Store progress map
 
-    // TODO: Connect to real user progress from Firestore
-    // For now using mock progress
+    // Fetch real progress
+    useEffect(() => {
+        async function loadProgress() {
+            if (currentUser) {
+                const data = await getAllCoursesProgress(currentUser.uid);
+                setAllProgress(data || {});
+            }
+        }
+        loadProgress();
+    }, [currentUser]);
+
     const getProgress = (courseId) => {
-        return Math.floor(Math.random() * 30); // Random 0-30%
+        const courseData = courses.find(c => c.id === courseId);
+        const userCourseData = allProgress[courseId];
+
+        if (!courseData || !userCourseData?.completedLessons) return 0;
+
+        // Calculate total lessons in course
+        let totalLessons = 0;
+        courseData.modules.forEach(m => {
+            totalLessons += m.lessons.length;
+        });
+
+        if (totalLessons === 0) return 0;
+
+        const completedCount = userCourseData.completedLessons.length;
+        return Math.min(100, Math.round((completedCount / totalLessons) * 100));
     };
 
     return (
@@ -30,11 +58,12 @@ export default function Courses() {
                             <span className="stat-label">Courses</span>
                         </div>
                     </div>
+                    {/* Placeholder for total user XP if we want to fetch it later */}
                     <div className="stat-card">
                         <Trophy size={20} className="text-purple" />
                         <div className="stat-info">
-                            <span className="stat-value">500+</span>
-                            <span className="stat-label">Total XP</span>
+                            <span className="stat-value">Start</span>
+                            <span className="stat-label">Your Journey</span>
                         </div>
                     </div>
                 </div>

@@ -361,7 +361,22 @@ export async function getCourseProgress(userId, courseId) {
  * Returns map of courseId -> progressData
  */
 export async function getAllCoursesProgress(userId) {
-    // TODO: Implement using collection query if needed for dashboard
-    // For now returning empty object as placeholder or implementing simpler version
-    return {};
+    try {
+        const coursesRef = collection(db, 'users', userId, 'courses');
+        const snap = await getDocs(coursesRef);
+
+        const progressMap = {};
+        snap.forEach(doc => {
+            progressMap[doc.id] = doc.data();
+        });
+
+        return progressMap;
+    } catch (err) {
+        if (err.code === 'unavailable' || err.message.includes('offline')) {
+            console.warn('Firestore offline, returning empty progress');
+            return {};
+        }
+        console.error('Failed to get all courses progress:', err);
+        return {};
+    }
 }
