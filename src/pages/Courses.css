@@ -26,24 +26,26 @@
 }
 
 .header-stats {
-    display: flex;
-    gap: var(--space-lg);
-    flex-wrap: wrap;
-    /* Allow wrapping on small screens */
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+    /* Auto-fit for single row on mobile */
+    gap: var(--space-md);
+    /* Reduced gap */
+    width: 100%;
 }
 
 .stat-card {
     background: var(--bg-card);
     border: 1px solid var(--border-color);
     border-radius: var(--radius-md);
-    padding: var(--space-md) var(--space-lg);
+    padding: var(--space-md);
+    /* Compact padding */
     display: flex;
-    align-items: center;
-    /* Center vertically */
-    gap: var(--space-md);
+    flex-direction: column;
+    /* Stack icon and text for compactness if needed, or keep row */
+    align-items: flex-start;
+    gap: var(--space-sm);
     flex: 1;
-    min-width: 160px;
-    /* Prevent crushing */
     transition: all 0.2s;
 }
 

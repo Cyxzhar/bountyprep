@@ -11,6 +11,7 @@
     margin-bottom: var(--space-md);
     position: sticky;
     top: 0;
+    padding-top: max(var(--space-sm), env(safe-area-inset-top));
     z-index: 100;
     background: rgba(10, 10, 15, 0.95);
     backdrop-filter: blur(10px);

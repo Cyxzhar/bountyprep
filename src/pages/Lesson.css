@@ -12,7 +12,9 @@
 
 /* Header */
 .lesson-header {
-    height: 64px;
+    height: auto;
+    min-height: 64px;
+    padding-top: env(safe-area-inset-top);
     border-bottom: 1px solid var(--border-color);
     display: flex;
     align-items: center;
@@ -262,25 +264,28 @@
     .lesson-content {
         border: none;
         background: transparent;
-        padding: var(--space-md) var(--space-lg);
-        /* Mobile consistent reading padding */
+        padding: var(--space-md) var(--space-md);
+        /* Standard 16px padding */
         border-radius: 0;
     }
 
     /* Improve typography for mobile reading */
     .md-content p {
-        font-size: 1.05rem;
+        font-size: 0.95rem;
         line-height: 1.6;
         color: var(--text-secondary);
+        margin-bottom: var(--space-md);
     }
 
     .md-content h1 {
-        font-size: 1.5rem;
+        font-size: 1.35rem;
+        /* Reduced from 1.5rem */
         margin-top: 0;
     }
 
     .md-content h2 {
-        font-size: 1.25rem;
+        font-size: 1.15rem;
+        /* Reduced from 1.25rem */
     }
 
     .lesson-actions {
