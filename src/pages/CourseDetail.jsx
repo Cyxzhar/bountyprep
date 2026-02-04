@@ -77,7 +77,7 @@ export default function CourseDetail() {
             <div className="modules-list">
                 <h2 className="section-title">Syllabus</h2>
                 {course.modules.map((module, index) => (
-                    <div key={module.id} className="module-card">
+                    <div key={module.id} className="module-group">
                         <div className="module-header">
                             <span className="module-number">Module {index + 1}</span>
                             <div className="module-title-row">
@@ -91,15 +91,16 @@ export default function CourseDetail() {
                                 const status = getLessonStatus(lesson.id);
                                 const Icon = status === 'locked' ? Lock :
                                     status === 'completed' ? CheckCircle : PlayCircle;
+                                const isLocked = status === 'locked';
 
                                 return (
                                     <div
                                         key={lesson.id}
                                         className={`lesson-item ${status}`}
-                                        onClick={() => navigate(`/course/${course.id}/lesson/${lesson.id}`)}
+                                        onClick={() => !isLocked && navigate(`/course/${course.id}/lesson/${lesson.id}`)}
                                     >
                                         <div className="lesson-icon">
-                                            <Icon size={18} />
+                                            <Icon size={isLocked ? 16 : 20} strokeWidth={isLocked ? 2 : 2.5} />
                                         </div>
                                         <div className="lesson-info">
                                             <span className="lesson-title">{lesson.title}</span>
@@ -110,6 +111,7 @@ export default function CourseDetail() {
                                             </div>
                                         </div>
                                         {status === 'completed' && <span className="xp-badge">+{lesson.xp} XP</span>}
+                                        {isLocked && <Lock size={14} className="text-muted" />}
                                     </div>
                                 );
                             })}
