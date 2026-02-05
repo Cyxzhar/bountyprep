@@ -8,6 +8,7 @@ import { SoundProvider } from './context/SoundContext';
 import { Loader2 } from 'lucide-react';
 
 // Lazy load pages for performance
+// Lazy load pages for performance
 const Landing = lazy(() => import('./pages/Landing'));
 const Splash = lazy(() => import('./pages/Splash'));
 const Welcome = lazy(() => import('./pages/onboarding/Welcome'));
@@ -32,6 +33,9 @@ const Progress = lazy(() => import('./pages/Progress'));
 const Profile = lazy(() => import('./pages/Profile'));
 const AdminSeeder = lazy(() => import('./pages/AdminSeeder'));
 
+// Protected Layout Component
+import ProtectedRoute from './components/ProtectedRoute';
+
 // Loading fallback
 const PageLoader = () => (
   <div style={{ height: '100vh', display: 'flex', alignItems: 'center', justifyContent: 'center', background: '#0A0A0F', color: '#9FEF00' }}>
@@ -49,6 +53,7 @@ function App() {
               <SoundProvider>
                 <Suspense fallback={<PageLoader />}>
                   <Routes>
+                    {/* Public Routes */}
                     <Route path="/" element={<Landing />} />
                     <Route path="/splash" element={<Splash />} />
                     <Route path="/onboarding/welcome" element={<Welcome />} />
@@ -60,17 +65,20 @@ function App() {
                     <Route path="/auth/signup" element={<SignUp />} />
                     <Route path="/auth/login" element={<Login />} />
                     <Route path="/auth/forgot-password" element={<ForgotPassword />} />
-                    <Route path="/upgrade" element={<Upgrade />} />
-                    <Route path="/settings" element={<Settings />} />
-                    <Route path="/home" element={<Home />} />
-                    <Route path="/courses" element={<Courses />} />
-                    <Route path="/course/:id" element={<CourseDetail />} />
-                    <Route path="/course/:id/lesson/:lessonId" element={<Lesson />} />
-                    <Route path="/challenges" element={<Challenges />} />
-                    <Route path="/challenge/:id" element={<ChallengeDetail />} />
-                    <Route path="/interview" element={<Interview />} />
-                    <Route path="/progress" element={<Progress />} />
-                    <Route path="/profile" element={<Profile />} />
+                    <Route path="/course/:id" element={<CourseDetail />} /> {/* Public Preview */}
+
+                    {/* Protected Routes */}
+                    <Route path="/home" element={<ProtectedRoute><Home /></ProtectedRoute>} />
+                    <Route path="/courses" element={<ProtectedRoute><Courses /></ProtectedRoute>} />
+                    <Route path="/course/:id/lesson/:lessonId" element={<ProtectedRoute><Lesson /></ProtectedRoute>} />
+                    <Route path="/challenges" element={<ProtectedRoute><Challenges /></ProtectedRoute>} />
+                    <Route path="/challenge/:id" element={<ProtectedRoute><ChallengeDetail /></ProtectedRoute>} />
+                    <Route path="/interview" element={<ProtectedRoute><Interview /></ProtectedRoute>} />
+                    <Route path="/progress" element={<ProtectedRoute><Progress /></ProtectedRoute>} />
+                    <Route path="/profile" element={<ProtectedRoute><Profile /></ProtectedRoute>} />
+                    <Route path="/settings" element={<ProtectedRoute><Settings /></ProtectedRoute>} />
+                    <Route path="/upgrade" element={<ProtectedRoute><Upgrade /></ProtectedRoute>} />
+
                     <Route path="/admin-seed" element={<AdminSeeder />} />
                     <Route path="*" element={<Navigate to="/" replace />} />
                   </Routes>

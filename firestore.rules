@@ -67,8 +67,9 @@ service cloud.firestore {
     }
 
     // Waitlist collection
-    match /waitlist/{userId} {
-      allow read, write: if isOwner(userId);
+    match /waitlist/{entryId} {
+      allow create: if true;
+      allow read, update, delete: if isOwner(entryId);
     }
   }
 }

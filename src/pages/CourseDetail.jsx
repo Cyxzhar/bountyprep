@@ -64,6 +64,12 @@ export default function CourseDetail() {
         allLessons.every(l => courseProgress?.completedLessons?.includes(l.id));
 
     const handleStartCourse = () => {
+        // Redirect to signup if not authenticated
+        if (!currentUser) {
+            navigate('/auth/signup');
+            return;
+        }
+
         // Find the first uncompleted lesson
         let targetLessonId = null;
 

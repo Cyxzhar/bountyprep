@@ -437,21 +437,26 @@ export async function getAllCoursesProgress(userId) {
  */
 export async function addToWaitlist(userId, email, source = 'upgrade_page') {
     try {
-        const waitlistRef = doc(db, 'waitlist', userId);
+        // If no userId (unauthenticated), use email as part of the ID or generate one
+        const waitlistId = userId || `anon_${email.replace(/[@.]/g, '_')}`;
+        const waitlistRef = doc(db, 'waitlist', waitlistId);
+
         await setDoc(waitlistRef, {
-            userId,
+            userId: userId || null,
             email,
             source,
             joinedAt: serverTimestamp(),
             status: 'pending' // pending, notified, converted
         }, { merge: true });
 
-        // Also update user profile for immediate UI feedback
-        const userRef = doc(db, 'users', userId);
-        await setDoc(userRef, {
-            onWaitlist: true,
-            updatedAt: serverTimestamp()
-        }, { merge: true });
+        // Only update user profile if userId exists
+        if (userId) {
+            const userRef = doc(db, 'users', userId);
+            await setDoc(userRef, {
+                onWaitlist: true,
+                updatedAt: serverTimestamp()
+            }, { merge: true });
+        }
 
         return { success: true };
     } catch (error) {
