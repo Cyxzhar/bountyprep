@@ -13,6 +13,11 @@ const Landing = () => {
     const [displayCode, setDisplayCode] = React.useState("");
     const [attackIndex, setAttackIndex] = React.useState(0);
 
+    // 100% Kali Realism: Terminal Handshake State
+    const [terminalStep, setTerminalStep] = React.useState(0);
+    const [terminalTypedText, setTerminalTypedText] = React.useState("");
+    const [terminalLogs, setTerminalLogs] = React.useState([]);
+
     // Multi-stage Attacks with Human Keystrokes (Expert Mode)
     // '<' represents backspace, '|' represents a long pause (thought pause)
     const attacks = [
@@ -90,28 +95,64 @@ const Landing = () => {
 
     React.useEffect(() => {
         let timeout;
+
+        // --- 1. Code Editor Typing Phase ---
         if (hackStep === 0) {
-            // Smooth Typing Animation (Linear)
             if (sequenceIndex < currentAttack.keystrokes.length) {
                 const char = currentAttack.keystrokes[sequenceIndex];
-                const delay = Math.random() * 40 + 30; // Faster but smooth speed
-
+                const delay = Math.random() * 40 + 30; // High speed but smooth
                 timeout = setTimeout(() => {
                     setDisplayCode(prev => prev + char);
                     setSequenceIndex(prev => prev + 1);
                 }, delay);
             } else {
-                timeout = setTimeout(() => setHackStep(1), 1500);
+                // Done typing code: transition to terminal handshake
+                timeout = setTimeout(() => setHackStep(1), 800);
             }
-        } else if (hackStep === 1) {
-            // Executing - Extended pause for realistic background processing & log reading
-            timeout = setTimeout(() => setHackStep(2), 5500);
-        } else if (hackStep === 2) {
-            // Success results display - longer before modal
-            timeout = setTimeout(() => setHackStep(3), 3500);
         }
+
+        // --- 2. Terminal Handshake Phase ---
+        else if (hackStep === 1) {
+            const commands = ["cd labs", "ls -la", "python3 payload.py"];
+            const currentCmd = commands[terminalStep];
+
+            if (terminalTypedText.length < currentCmd.length) {
+                // Type the command
+                const char = currentCmd[terminalTypedText.length];
+                timeout = setTimeout(() => {
+                    setTerminalTypedText(prev => prev + char);
+                }, 60);
+            } else {
+                // Finish command - hold then "Enter"
+                timeout = setTimeout(() => {
+                    if (terminalStep === 0) {
+                        setTerminalLogs(prev => [...prev, { text: `cd labs`, type: "command", dir: "~" }]);
+                        setTerminalStep(1);
+                        setTerminalTypedText("");
+                    } else if (terminalStep === 1) {
+                        setTerminalLogs(prev => [
+                            ...prev,
+                            { text: `ls -la`, type: "command", dir: "~/labs" },
+                            { text: "total 24K\ndrwxr-xr-x 2 root root 4.0K Feb 5 23:55 .\ndrwxr-xr-x 4 root root 4.0K Feb 5 23:54 ..\n-rw-r--r-- 1 root root  827 Feb 5 23:56 payload.py\n-rw-r--r-- 1 root root  142 Feb 5 23:56 .env", type: "info" }
+                        ]);
+                        setTerminalStep(2);
+                        setTerminalTypedText("");
+                    } else if (terminalStep === 2) {
+                        setTerminalLogs(prev => [...prev, { text: `python3 payload.py`, type: "command", dir: "~/labs" }]);
+                        // Final command done: transition to execution phase
+                        setHackStep(2);
+                    }
+                }, 600);
+            }
+        }
+
+        // --- 3. Execution Phase (Logs appearing) ---
+        else if (hackStep === 2) {
+            timeout = setTimeout(() => setHackStep(3), 6500);
+        }
+
         return () => clearTimeout(timeout);
-    }, [sequenceIndex, hackStep, currentAttack, attackIndex]);
+    }, [sequenceIndex, hackStep, terminalStep, terminalTypedText, currentAttack, attackIndex]);
 
     const nextAttack = () => {
         if (attackIndex < attacks.length - 1) {
@@ -119,6 +160,9 @@ const Landing = () => {
             setSequenceIndex(0);
             setDisplayCode("");
             setHackStep(0);
+            setTerminalStep(0);
+            setTerminalTypedText("");
+            setTerminalLogs([]);
         } else {
             navigate('/challenges');
         }
@@ -129,13 +173,13 @@ const Landing = () => {
         setDisplayCode("");
         setHackStep(0);
         setAttackIndex(0);
+        setTerminalStep(0);
+        setTerminalTypedText("");
+        setTerminalLogs([]);
     };
 
     // Render logic for organic code (Tokenized on the fly for syntax highlighting)
     const renderCode = () => {
-        // We use the reference 'tokens' for the final version to determine highlighting
-        // But we slice the text based on what's actually in displayCode
-        let charPointer = 0;
         let remainingDisplay = displayCode;
 
         return currentAttack.tokens.map((token, index) => {
@@ -298,16 +342,42 @@ const Landing = () => {
                                                     </div>
                                                 </div>
                                                 <div className="terminal-body">
-                                                    {hackStep >= 1 && (
+                                                    {/* Handshake: Executed Commands History */}
+                                                    {terminalLogs.map((log, i) => (
+                                                        <div key={`log-${i}`} className={`term-line ${log.type}`}>
+                                                            {log.type === 'command' ? (
+                                                                <div className="prompt-wrapper">
+                                                                    <span className="prompt-user">root@kali</span>
+                                                                    <span className="prompt-sep">:</span>
+                                                                    <span className="prompt-dir">{log.dir || '~'}</span>
+                                                                    <span className="prompt-char">#</span>
+                                                                    <span className="typed-text ml-2">{log.text}</span>
+                                                                </div>
+                                                            ) : (
+                                                                <div className="pre-output">{log.text}</div>
+                                                            )}
+                                                        </div>
+                                                    ))}
+
+                                                    {/* Active Typing Handshake */}
+                                                    {hackStep === 1 && (
                                                         <div className="term-line command">
                                                             <span className="prompt-user">root@kali</span>
                                                             <span className="prompt-sep">:</span>
-                                                            <span className="prompt-dir">~/labs</span>
-                                                            <span className="prompt-char">#</span> python3 payload.py
+                                                            <span className="prompt-dir">
+                                                                {terminalStep === 0 ? '~' : '~/labs'}
+                                                            </span>
+                                                            <span className="prompt-char">#</span>
+                                                            <span className="typed-text ml-2">
+                                                                {terminalTypedText}
+                                                                <span className="terminal-cursor"></span>
+                                                            </span>
                                                         </div>
                                                     )}
+
+                                                    {/* Main Hacking Execution Logs */}
                                                     {hackStep >= 2 && currentAttack.terminal.map((line, i) => (
-                                                        <div key={i} className={`term-line ${line.type} animate-type`} style={{ animationDelay: `${line.delay}s` }}>
+                                                        <div key={`hack-log-${i}`} className={`term-line ${line.type} animate-type`} style={{ animationDelay: `${line.delay}s` }}>
                                                             {line.text}
                                                         </div>
                                                     ))}

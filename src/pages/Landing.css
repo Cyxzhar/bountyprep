@@ -444,7 +444,7 @@
     position: relative;
     display: flex;
     flex-direction: column;
-    font-family: 'JetBrains Mono', 'Fira Code', monospace;
+    font-family: 'Fira Code', 'Fira Mono', 'Hack', 'JetBrains Mono', monospace;
     /* Ensure monospace */
 }
 
@@ -618,44 +618,44 @@
 
 /* --- Syntax Highlighting (Catppuccin/Dracula hybrid) --- */
 .c-keyword {
-    color: #cba6f7;
-    font-weight: bold;
+    color: #ff79c6;
+    /* Vibrant Magenta */
+    font-weight: 600;
 }
 
-/* Mauve */
 .c-variable {
-    color: #f2cdcd;
+    color: #ff5555;
+    /* Red/Pink */
 }
 
-/* Flamingo */
 .c-operator {
-    color: #89dceb;
+    color: #8be9fd;
+    /* Cyan */
 }
 
-/* Sky */
 .c-string {
-    color: #a6e3a1;
+    color: #50fa7b;
+    /* Neon Green */
 }
 
-/* Green */
 .c-comment {
-    color: #6c7086;
+    color: #6272a4;
+    /* Dracula Slate */
     font-style: italic;
 }
 
-/* Overlay0 */
 .c-method {
-    color: #89b4fa;
+    color: #bd93f9;
+    /* Vibrant Purple */
 }
 
-/* Blue */
 .c-property {
-    color: #f9e2af;
+    color: #f1fa8c;
+    /* Neon Yellow */
 }
 
-/* Yellow */
 .c-plain {
-    color: #cdd6f4;
+    color: #f8f8f2;
 }
 
 .c-keyword,
@@ -737,26 +737,64 @@
     line-height: 1.5;
 }
 
+.prompt-wrapper {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+}
+
 .prompt-user {
-    color: #f38ba8;
-    /* Red for root */
+    color: #ff5555;
+    /* Kali Root Red */
     font-weight: 900;
 }
 
 .prompt-sep {
-    color: #cdd6f4;
+    color: #f8f8f2;
     margin: 0 4px;
 }
 
 .prompt-dir {
-    color: #89b4fa;
-    /* Blue for Kali */
+    color: #8be9fd;
+    /* Cyan/Blue for Kali */
     font-weight: 800;
 }
 
 .prompt-char {
-    color: #cdd6f4;
+    color: #f8f8f2;
     margin-right: 10px;
+}
+
+.typed-text {
+    color: #f8f8f2;
+}
+
+.terminal-cursor {
+    display: inline-block;
+    width: 8px;
+    height: 1.1em;
+    background: #f8f8f2;
+    margin-left: 2px;
+    animation: terminal-blink 1s step-end infinite;
+    vertical-align: middle;
+}
+
+@keyframes terminal-blink {
+    50% {
+        opacity: 0;
+    }
+}
+
+.pre-output {
+    white-space: pre-wrap;
+    font-family: inherit;
+    color: #cdd6f4;
+    opacity: 0.9;
+    font-size: 0.8rem;
+    line-height: 1.4;
+    margin-left: 12px;
+    margin-top: 4px;
+    margin-bottom: 12px;
 }
 
 .term-line.info {
@@ -768,9 +806,10 @@
 }
 
 .term-line.success {
-    color: #a6e3a1;
+    color: #50fa7b;
+    /* Vibrant Kali Green */
     font-weight: bold;
-    text-shadow: 0 0 10px rgba(166, 227, 161, 0.3);
+    text-shadow: 0 0 10px rgba(80, 250, 123, 0.3);
 }
 
 /* --- Victory Modal (Dopamine Spike) --- */
