@@ -5,6 +5,8 @@ import { useLabSimulation } from '../../hooks/useLabSimulation.jsx';
 import RequestRepeater from './tools/RequestRepeater';
 import VirtualBrowser from './tools/VirtualBrowser';
 import GraphQLConsole from './tools/GraphQLConsole';
+import TerminalTool from './tools/Terminal';
+import BurpRepeater from './tools/BurpRepeater';
 import './ChallengeComponents.css';
 import './tools/Tools.css';
 
@@ -17,6 +19,12 @@ const TOOL_COMPONENT_MAP = {
     'Postman': 'Repeater',
     'GraphQL Console': 'GraphQL Console',
     'GraphQL': 'GraphQL Console',
+    'Terminal': 'Terminal',
+    'Shell': 'Terminal',
+    'Command Line': 'Terminal',
+    'Burp Repeater': 'Burp Repeater',
+    'Burp Suite': 'Burp Repeater',
+    'Burp': 'Burp Repeater',
 };
 
 const getToolComponentKey = (toolName) => TOOL_COMPONENT_MAP[toolName] || null;
@@ -27,6 +35,8 @@ const getToolIcon = (tool) => {
         case 'Browser': return <Globe size={14} />;
         case 'Repeater': return <Monitor size={14} />;
         case 'GraphQL Console': return <Activity size={14} />;
+        case 'Terminal': return <Terminal size={14} />;
+        case 'Burp Repeater': return <Layers size={14} />;
         default: return <Wrench size={14} />;
     }
 };
@@ -71,7 +81,7 @@ export default function LabChallenge({ challenge, onComplete }) {
     const [mobileView, setMobileView] = useState('guide');
 
     // Simulation logic
-    const { handleBrowserNavigate, handleRepeaterSend, handleGraphQLQuery } = useLabSimulation(challenge);
+    const { handleBrowserNavigate, handleRepeaterSend, handleGraphQLQuery, handleTerminalCommand } = useLabSimulation(challenge);
 
     // Detect native app on mount
     useEffect(() => {
@@ -126,6 +136,10 @@ export default function LabChallenge({ challenge, onComplete }) {
                 return <RequestRepeater initialUrl={initialUrl} onSend={handleRepeaterSend} />;
             case 'GraphQL Console':
                 return <GraphQLConsole endpoint={challenge.labEnvironment?.mockData?.endpoint} onQuery={handleGraphQLQuery} />;
+            case 'Terminal':
+                return <TerminalTool onCommand={handleTerminalCommand} />;
+            case 'Burp Repeater':
+                return <BurpRepeater initialUrl={initialUrl} onSend={handleRepeaterSend} />;
             default:
                 return (
                     <div className="tool-placeholder">
@@ -226,6 +240,23 @@ export default function LabChallenge({ challenge, onComplete }) {
                             </div>
                         )}
                     </div>
+
+                    {/* Recommended Resources Section */}
+                    {challenge.resources?.internal && challenge.resources.internal.length > 0 && (
+                        <div className="resources-card">
+                            <div className="card-header-sm">LEARN CONCEPTS FIRST</div>
+                            <p className="resources-intro">Stuck? Master the concepts before solving:</p>
+                            <div className="resources-list">
+                                {challenge.resources.internal.map((res, i) => (
+                                    <a key={i} href={res.path} className="resource-link">
+                                        <Lightbulb size={14} className="icon" />
+                                        <span>{res.title}</span>
+                                        <ChevronRight size={14} className="arrow" />
+                                    </a>
+                                ))}
+                            </div>
+                        </div>
+                    )}
                 </div>
 
                 {/* TOOLS PANEL */}

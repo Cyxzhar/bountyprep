@@ -1749,7 +1749,7 @@ def check_port(ip, port):
                     role: 'user'
                 }
             },
-            tools: ['Postman', 'Browser']
+            tools: ['Postman', 'Browser', 'Burp Repeater']
         },
         steps: [
             {
@@ -1981,6 +1981,56 @@ def check_port(ip, port):
         },
         resources: {
             internal: [{ title: 'Cloud Metadata', path: '/course/api-security-testing/lesson/cloud-metadata' }],
+            external: []
+        }
+    },
+    {
+        id: 'lab-cmd-injection',
+        challengeType: 'lab',
+        title: 'Lab: Ping Command Injection',
+        description: 'Exploit a command injection vulnerability in a diagnostic tool.',
+        type: 'Command Injection',
+        difficulty: 'medium',
+        estimatedTime: 10,
+        isPremium: false,
+        xpReward: 150,
+        completed: false,
+        objective: 'Use the ping tool to execute arbitrary commands and find the hidden flag file.',
+        scenario: 'This system administration tool lets you ping other servers. But does it validate your input correctly?',
+        labEnvironment: {
+            type: 'simulation',
+            mockData: {
+                endpoint: 'ping',
+                target: '127.0.0.1'
+            },
+            tools: ['Terminal']
+        },
+        steps: [
+            {
+                title: 'Test Normal Usage',
+                description: 'Use the ping command to verify the tool works. Try "ping 8.8.8.8".',
+                hints: ['Type "ping 8.8.8.8" and see the output.']
+            },
+            {
+                title: 'Inject Command',
+                description: 'Try chaining a second command after the ping command using a separator like ; or |.',
+                hints: ['Try "ping 8.8.8.8; ls" to list files.']
+            },
+            {
+                title: 'Locate Flag',
+                description: 'The output of "ls" might reveal something interesting. Read its content.',
+                hints: ['Use "cat <filename>" to read the flag file.']
+            }
+        ],
+        flag: {
+            format: 'flag{...}',
+            value: 'flag{cmd_injection_master}',
+            hints: ['The flag is inside the file you found.']
+        },
+        resources: {
+            internal: [
+                { title: 'Command Injection', path: '/course/network-security-101/lesson/command-injection' }
+            ],
             external: []
         }
     },

@@ -208,7 +208,9 @@ export default function Lesson() {
                                     return <blockquote className="modern-blockquote">{children}</blockquote>
                                 },
                                 // H2 becomes a Section Card
-                                h2: ({ children }) => <div className="section-header"><h2>{children}</h2></div>
+                                h2: ({ children }) => <div className="section-header"><h2>{children}</h2></div>,
+                                // Fix hydration error: Ensure paragraphs are divs so they can contain block elements if needed
+                                p: ({ children }) => <div className="md-paragraph">{children}</div>
                             }}
                         >
                             {lesson.content}

@@ -637,6 +637,7 @@
    ======================================== */
 
 @media (max-width: 768px) {
+
     .tool-repeater,
     .tool-browser,
     .tool-graphql {
@@ -678,5 +679,291 @@
     .address-bar {
         padding: 5px 10px;
         font-size: 0.8rem;
+    }
+}
+
+/* ========================================
+   TERMINAL
+   ======================================== */
+
+.tool-terminal {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    min-height: 400px;
+    background: #0d0d0d;
+    border-radius: var(--radius-md, 12px);
+    overflow: hidden;
+    border: 1px solid var(--border-color, rgba(255, 255, 255, 0.08));
+    font-family: 'Fira Code', 'Courier New', monospace;
+}
+
+.terminal-header {
+    background: #1a1a1a;
+    padding: 6px 12px;
+    border-bottom: 1px solid #333;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.terminal-title {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 0.8rem;
+    color: #ccc;
+    font-weight: 600;
+}
+
+.terminal-viewport {
+    flex: 1;
+    overflow-y: auto;
+    padding: 12px;
+    background: #0d0d0d;
+    color: #33ff00;
+    /* Distinct Terminal Green */
+    font-size: 0.9rem;
+}
+
+.terminal-content {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.term-line {
+    word-break: break-all;
+    line-height: 1.5;
+}
+
+.term-line.error {
+    color: #ff3333;
+}
+
+.term-line.output {
+    color: #cccccc;
+    white-space: pre-wrap;
+}
+
+.term-input-line {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+}
+
+.prompt {
+    margin-right: 8px;
+    white-space: nowrap;
+}
+
+.prompt .user {
+    color: #ff3333;
+    font-weight: bold;
+}
+
+.prompt .sep {
+    color: #fff;
+}
+
+.prompt .path {
+    color: #3333ff;
+    font-weight: bold;
+}
+
+.prompt .symbol {
+    color: #fff;
+    margin-left: 4px;
+}
+
+.term-input-line input {
+    flex: 1;
+    background: transparent;
+    border: none;
+    color: #fff;
+    font-family: inherit;
+    font-size: inherit;
+    outline: none;
+    min-width: 50%;
+}
+
+/* ========================================
+   BURP REPEATER
+   ======================================== */
+
+.tool-burp {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    min-height: 400px;
+    background: #1e1e1e;
+    border-radius: var(--radius-md, 12px);
+    overflow: hidden;
+    border: 1px solid #333;
+    font-family: sans-serif;
+}
+
+.burp-toolbar {
+    background: #2d2d2d;
+    padding: 8px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 1px solid #333;
+}
+
+.burp-actions {
+    display: flex;
+    gap: 8px;
+}
+
+.btn-burp-send {
+    background: #ff5e00;
+    /* Burp Orange */
+    color: #000;
+    border: none;
+    padding: 6px 20px;
+    border-radius: 4px;
+    font-weight: 700;
+    cursor: pointer;
+    font-size: 0.85rem;
+    transition: all 0.2s;
+}
+
+.btn-burp-send:hover {
+    background: #ff7b2e;
+}
+
+.btn-burp-action {
+    background: #444;
+    color: #fff;
+    border: 1px solid #333;
+    padding: 6px 14px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 0.85rem;
+    font-weight: 600;
+}
+
+.burp-status {
+    font-size: 0.8rem;
+    color: #aaa;
+    display: flex;
+    gap: 12px;
+    align-items: center;
+}
+
+.status-code {
+    font-weight: bold;
+    padding: 2px 6px;
+    border-radius: 4px;
+    background: rgba(0, 0, 0, 0.3);
+}
+
+.status-code.success {
+    color: #2ecc71;
+}
+
+.status-code.error {
+    color: #e74c3c;
+}
+
+.burp-split-pane {
+    flex: 1;
+    display: flex;
+    overflow: hidden;
+}
+
+.burp-pane {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    border-right: 1px solid #333;
+    min-width: 0;
+}
+
+.burp-pane:last-child {
+    border-right: none;
+}
+
+.burp-pane-header {
+    background: #252526;
+    padding: 6px 10px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 1px solid #333;
+}
+
+.pane-title {
+    font-weight: bold;
+    font-size: 0.75rem;
+    color: #cecece;
+    text-transform: uppercase;
+}
+
+.pane-tabs button {
+    background: transparent;
+    border: none;
+    color: #777;
+    margin-left: 8px;
+    font-size: 0.75rem;
+    cursor: pointer;
+    padding: 2px 4px;
+    font-weight: 600;
+}
+
+.pane-tabs button.active {
+    color: #ff5e00;
+    border-bottom: 2px solid #ff5e00;
+}
+
+.burp-editor {
+    flex: 1;
+    background: #1e1e1e;
+    color: #d4d4d4;
+    /* VS Code-ish text */
+    border: none;
+    padding: 10px;
+    font-family: 'Fira Code', monospace;
+    font-size: 0.85rem;
+    resize: none;
+    outline: none;
+    line-height: 1.5;
+}
+
+.burp-viewer {
+    flex: 1;
+    overflow: auto;
+    background: #1e1e1e;
+    padding: 10px;
+}
+
+.burp-viewer pre {
+    margin: 0;
+    font-family: 'Fira Code', monospace;
+    font-size: 0.85rem;
+    color: #d4d4d4;
+    white-space: pre-wrap;
+}
+
+.empty-response {
+    color: #555;
+    text-align: center;
+    margin-top: 40px;
+    font-style: italic;
+    font-size: 0.9rem;
+}
+
+/* Mobile Tweaks */
+@media (max-width: 768px) {
+    .burp-split-pane {
+        flex-direction: column;
+    }
+
+    .burp-pane {
+        border-right: none;
+        border-bottom: 1px solid #333;
+        height: 50%;
     }
 }

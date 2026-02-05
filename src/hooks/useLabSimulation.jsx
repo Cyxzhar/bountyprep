@@ -111,6 +111,9 @@ export function useLabSimulation(challenge) {
             if (type.includes('SQL') || id.includes('sqli')) {
                 return simulateSQLiLab_Repeater(req, challenge);
             }
+            if (type.includes('API') || id.includes('api')) {
+                return simulateAPILab_Repeater(req, challenge);
+            }
 
             return { status: 404, time: '15ms', data: { error: 'Endpoint not found in simulation.' } };
         } catch (e) {
@@ -129,7 +132,113 @@ export function useLabSimulation(challenge) {
         }
     }, [challenge]);
 
-    return { handleBrowserNavigate, handleRepeaterSend, handleGraphQLQuery };
+    const handleTerminalCommand = useCallback((command) => {
+        try {
+            return simulateTerminalDefault(command, challenge);
+        } catch (e) {
+            return `Error: ${e.message}`;
+        }
+    }, [challenge]);
+
+    return { handleBrowserNavigate, handleRepeaterSend, handleGraphQLQuery, handleTerminalCommand };
+}
+
+function simulateTerminalDefault(cmdLine, challenge) {
+    if (!cmdLine) return '';
+    const args = cmdLine.trim().split(/\s+/);
+    const cmd = args[0];
+
+    if (cmd === 'whoami') return 'root';
+    if (cmd === 'id') return 'uid=0(root) gid=0(root) groups=0(root)';
+    if (cmd === 'pwd') return '/root';
+
+    // Updated ls to show flag.txt for the command injection lab
+    if (cmd === 'ls') {
+        if (challenge.id === 'lab-cmd-injection' || (challenge.title || '').includes('Command Injection')) {
+            return 'Desktop  Documents  Downloads  Music  Pictures  Public  Templates  Videos  tools  flag.txt';
+        }
+        return 'Desktop  Documents  Downloads  Music  Pictures  Public  Templates  Videos  tools';
+    }
+
+    if (cmd === 'cat') {
+        const file = args[1];
+        if (!file) return 'Usage: cat <file>';
+        if (file === '/etc/passwd') return 'root:x:0:0:root:/root:/bin/bash\nbin:x:2:2:bin:/bin:/usr/sbin/nologin\nsys:x:3:3:sys:/dev:/usr/sbin/nologin\n...';
+        if (file === '/etc/hosts') return '127.0.0.1\tlocalhost\n127.0.1.1\tkali';
+
+        // Allow reading the flag file if it matches
+        if (file === 'flag.txt' && (challenge.id === 'lab-cmd-injection' || (challenge.title || '').includes('Command Injection'))) {
+            return challenge.flag?.value || 'flag{cmd_injection_master}';
+        }
+
+        if (file.includes('flag')) return 'Permissions denied. Try a harder approach.';
+        return `cat: ${file}: No such file or directory`;
+    }
+
+    if (cmd === 'ping') {
+        const target = args[1];
+        if (!target) return 'Usage: ping <host>';
+
+        // Basic Command Injection Simulation
+        const separators = [';', '|', '&&', '||'];
+        let injection = null;
+
+        for (const sep of separators) {
+            if (cmdLine.includes(sep)) {
+                const parts = cmdLine.split(sep);
+                const firstPart = parts[0];
+                const rest = parts.slice(1).join(sep).trim();
+
+                // Extract target from the first part for the bas ping
+                // e.g. "ping 8.8.8.8;" -> parts[0] is "ping 8.8.8.8"
+                const firstPartArgs = firstPart.trim().split(/\s+/);
+                const baseTarget = firstPartArgs[1] || target;
+
+                injection = { sep, rest, baseTarget };
+                break;
+            }
+        }
+
+        const host = injection ? injection.baseTarget : target;
+
+        // Simulate DNS Resolution
+        const isIp = /^\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}$/.test(host);
+        let ip = host;
+
+        if (!isIp) {
+            if (host === 'localhost') ip = '127.0.0.1';
+            else if (host.includes('google')) ip = '142.250.185.78';
+            else if (host.includes('example')) ip = '93.184.216.34';
+            else ip = `10.${Math.floor(Math.random() * 255)}.${Math.floor(Math.random() * 255)}.${Math.floor(Math.random() * 255)}`;
+        }
+
+        // Simulate Latency
+        const getLat = () => (Math.random() * 10 + 20).toFixed(3);
+        const lat1 = host === 'localhost' || host.startsWith('127.') ? '0.042' : getLat();
+        const lat2 = host === 'localhost' || host.startsWith('127.') ? '0.035' : getLat();
+        const lat3 = host === 'localhost' || host.startsWith('127.') ? '0.051' : getLat();
+
+        const baseOutput = `PING ${host} (${ip}) 56(84) bytes of data.\n64 bytes from ${ip}: icmp_seq=1 ttl=64 time=${lat1} ms\n64 bytes from ${ip}: icmp_seq=2 ttl=64 time=${lat2} ms\n64 bytes from ${ip}: icmp_seq=3 ttl=64 time=${lat3} ms\n\n--- ${host} ping statistics ---\n3 packets transmitted, 3 received, 0% packet loss`;
+
+        if (injection) {
+            // Recursive call
+            return `${baseOutput}\n\n${simulateTerminalDefault(injection.rest, challenge)}`;
+        }
+
+        return baseOutput;
+    }
+
+    if (cmd === 'curl') {
+        const url = args.find(a => a.startsWith('http'));
+        if (!url) return 'Usage: curl <url>';
+        return `<!DOCTYPE html>\n<html>\n<head><title>Mock Response</title></head>\n<body>\n  <h1>Response from ${url}</h1>\n</body>\n</html>`;
+    }
+
+    if (cmd === 'help') {
+        return 'GNU bash, version 5.1.4(1)-release (x86_64-pc-linux-gnu)\nThese shell commands are defined internally.  Type `help` to see this list.\n\nAvailable commands:\n  cat [file]\n  cd [dir]\n  curl [url]\n  echo [text]\n  ls [dir]\n  ping [host]\n  pwd\n  whoami\n  id\n  clear';
+    }
+
+    return `bash: ${cmd}: command not found`;
 }
 
 // ============ BROWSER SIMULATIONS ============
@@ -667,5 +776,13 @@ function simulateGraphQL(query, variables, challenge) {
     return {
         status: 200,
         data: { data: { message: 'Query executed. Try introspection with __schema to explore the API.' } }
+    };
+}
+
+function simulateAPILab_Repeater(req, challenge) {
+    return {
+        status: 200,
+        time: '42ms',
+        data: challenge.labEnvironment?.mockData?.response || { message: 'Hello API' }
     };
 }
