@@ -1972,24 +1972,25 @@
 
     .curriculum-layout {
         grid-template-columns: 1fr;
-        gap: 60px;
-        text-align: center;
+        gap: 48px;
+        text-align: left;
     }
 
     .curriculum-info p {
-        margin-left: auto;
-        margin-right: auto;
+        margin-left: 0;
+        margin-right: 0;
+        text-align: left;
     }
 
     .curriculum-list {
-        align-items: center;
+        align-items: flex-start;
     }
 
     .module-stack {
         width: 100%;
         max-width: 320px;
-        height: 380px;
-        margin-top: 40px;
+        height: 360px;
+        margin: 40px 0 0 0;
     }
 
     .module-item {
