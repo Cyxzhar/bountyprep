@@ -508,7 +508,7 @@ const Landing = () => {
                             </ul>
 
                             <button className="btn-secondary mt-lg" onClick={() => navigate('/courses')}>
-                                View Full Syllabus
+                                Learn Hacking
                             </button>
                         </div>
                         <div className="curriculum-visual animate-fade-in-up">

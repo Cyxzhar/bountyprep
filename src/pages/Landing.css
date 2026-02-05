@@ -1458,27 +1458,49 @@
 
 .curriculum-list li {
     display: flex;
-    align-items: center;
+    align-items: flex-start;
     gap: 16px;
     font-size: 1.15rem;
     color: var(--text-primary);
-    background: rgba(255, 255, 255, 0.03);
-    padding: 12px 20px;
-    border-radius: 12px;
-    border: 1px solid rgba(255, 255, 255, 0.05);
-    width: fit-content;
+    padding: 8px 0;
     transition: all 0.3s var(--transition-smooth);
 }
 
 .curriculum-list li:hover {
-    background: rgba(159, 239, 0, 0.05);
-    border-color: rgba(159, 239, 0, 0.2);
+    color: var(--primary);
     transform: translateX(10px);
 }
+
 
 .curriculum-list li svg {
     color: var(--primary);
     filter: drop-shadow(0 0 8px rgba(159, 239, 0, 0.4));
+    margin-top: 4px;
+    flex-shrink: 0;
+}
+
+.btn-secondary {
+    background: rgba(255, 255, 255, 0.04);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    color: #fff;
+    padding: 18px 36px;
+    border-radius: 16px;
+    font-weight: 700;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    cursor: pointer;
+    transition: all 0.4s var(--transition-smooth);
+    display: inline-flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.btn-secondary:hover {
+    background: rgba(255, 255, 255, 0.08);
+    border-color: var(--primary);
+    color: var(--primary);
+    transform: translateY(-4px);
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
 }
 
 .module-stack {
