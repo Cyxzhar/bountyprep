@@ -337,24 +337,7 @@ export default function Profile() {
                     Log Out
                 </button>
 
-                {/* Developer Tools (Hidden for non-admins usually, but public for now) */}
-                <div style={{ marginTop: '20px', textAlign: 'center' }}>
-                    <button
-                        onClick={handleSeed}
-                        disabled={isSeeding}
-                        style={{
-                            background: 'transparent',
-                            border: '1px dashed #666',
-                            color: '#888',
-                            padding: '8px 16px',
-                            borderRadius: '8px',
-                            fontSize: '0.8rem',
-                            cursor: 'pointer'
-                        }}
-                    >
-                        {isSeeding ? 'Seeding...' : 'Sync Database Content'}
-                    </button>
-                </div>
+
 
                 {/* Footer */}
                 <div className="profile-footer">
