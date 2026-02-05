@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Copy, CheckCircle, XCircle, Lightbulb, Award, Zap, ChevronRight, BookOpen, HelpCircle, GraduationCap, ExternalLink } from 'lucide-react';
+import { Copy, CheckCircle, XCircle, Lightbulb, Award, Zap, ChevronRight, BookOpen, HelpCircle, GraduationCap, ExternalLink, ArrowLeft, SkipForward } from 'lucide-react';
 import { calculateQuestionXp } from '../../utils/xp';
 import { useAuth } from '../../context/AuthContext';
 import { useSound } from '../../context/SoundContext';
@@ -12,17 +12,40 @@ export default function MultipleChoiceChallenge({ challenge, savedProgress, onCo
     const { currentUser } = useAuth();
     const { playSFX } = useSound();
     const [currentQ, setCurrentQ] = useState(0);
-    const [selected, setSelected] = useState(null);
+    const [answers, setAnswers] = useState({}); // { [questionIdx]: optionIdx }
+    const [history, setHistory] = useState({}); // { [questionIdx]: { correct: boolean, usedHint: booleanResult } }
+    const [currentSelected, setCurrentSelected] = useState(null); // Current selection for currentQ
     const [showHint, setShowHint] = useState(false);
     const [result, setResult] = useState(null);
     const [showResult, setShowResult] = useState(false);
     const [usedHint, setUsedHint] = useState(false);
     const [sessionXp, setSessionXp] = useState(0);
-    const [correctAnswers, setCorrectAnswers] = useState(0);
+    const [correctAnswersCount, setCorrectAnswersCount] = useState(0);
 
     const question = challenge.questions[currentQ];
 
-    // Load saved progress
+    // Load saved progress or existing state when changing question
+    useEffect(() => {
+        // Restore state for this question if it exists in history/answers
+        if (answers[currentQ] !== undefined) {
+            setCurrentSelected(answers[currentQ]);
+        } else {
+            setCurrentSelected(null);
+        }
+
+        if (history[currentQ]) {
+            setResult(history[currentQ].correct);
+            setShowResult(true);
+            setUsedHint(history[currentQ].usedHint);
+        } else {
+            setShowResult(false);
+            setResult(null);
+            setUsedHint(false); // Reset hint for fresh question
+            setShowHint(false);
+        }
+    }, [currentQ, answers, history]);
+
+    // Initial load from saved progress
     useEffect(() => {
         if (savedProgress && !savedProgress.completed) {
             if (typeof savedProgress.currentQuestion === 'number') {
@@ -33,14 +56,29 @@ export default function MultipleChoiceChallenge({ challenge, savedProgress, onCo
     }, [savedProgress, challenge.questions.length]);
 
     const handleSubmit = async () => {
-        if (selected === null) return;
+        if (currentSelected === null) return;
 
-        const isCorrect = selected === question.correctAnswer;
+        const isCorrect = currentSelected === question.correctAnswer;
         setResult(isCorrect);
         setShowResult(true);
 
+        // Update local history
+        setHistory(prev => ({
+            ...prev,
+            [currentQ]: { correct: isCorrect, usedHint }
+        }));
+
+        // Update answers
+        setAnswers(prev => ({
+            ...prev,
+            [currentQ]: currentSelected
+        }));
+
         if (isCorrect) {
             playSFX('success');
+            // increment correct count if not already answered correctly in this session
+            // (simple approximation)
+            setCorrectAnswersCount(prev => prev + 1);
         } else {
             playSFX('error');
         }
@@ -55,14 +93,13 @@ export default function MultipleChoiceChallenge({ challenge, savedProgress, onCo
             usedHint
         );
 
-        if (isReplay) {
+        if (isReplay || history[currentQ]) { // Also check local history to prevent double dipping
             calculatedXp = 0;
         }
 
         const xpEarned = calculatedXp;
 
         if (isCorrect) {
-            setCorrectAnswers(prev => prev + 1);
             setSessionXp(prev => prev + xpEarned);
         }
 
@@ -71,7 +108,7 @@ export default function MultipleChoiceChallenge({ challenge, savedProgress, onCo
             try {
                 await saveChallengeProgress(currentUser.uid, challenge.id, {
                     currentQuestion: currentQ,
-                    lastAnswer: selected,
+                    lastAnswer: currentSelected,
                     lastAnswerCorrect: isCorrect,
                     xpEarned: sessionXp + xpEarned,
                 });
@@ -87,22 +124,35 @@ export default function MultipleChoiceChallenge({ challenge, savedProgress, onCo
         setUsedHint(true);
     };
 
+    const handlePrevious = () => {
+        if (currentQ > 0) {
+            playSFX('click');
+            setCurrentQ(prev => prev - 1);
+        }
+    };
+
+    const handleSkip = () => {
+        if (currentQ < challenge.questions.length - 1) {
+            playSFX('click');
+            setCurrentQ(prev => prev + 1);
+        }
+    };
+
     const handleNext = async () => {
         playSFX('click');
         if (currentQ < challenge.questions.length - 1) {
             setCurrentQ(prev => prev + 1);
-            setSelected(null);
-            setShowHint(false);
-            setShowResult(false);
-            setResult(null);
-            setUsedHint(false);
         } else {
             // Challenge complete
-            const accuracy = Math.round((correctAnswers / challenge.questions.length) * 100);
+            // Recalculate strictly based on current session history + answers
+            const totalCorrect = Object.values(history).filter(h => h.correct).length;
+
+            const accuracy = Math.round((totalCorrect / challenge.questions.length) * 100);
+
             onComplete({
                 success: true,
                 xpEarned: sessionXp,
-                correctAnswers,
+                correctAnswers: totalCorrect,
                 totalQuestions: challenge.questions.length,
                 accuracy,
                 hintsUsed: usedHint ? 1 : 0
@@ -162,15 +212,15 @@ export default function MultipleChoiceChallenge({ challenge, savedProgress, onCo
                     {question.options.map((option, idx) => (
                         <button
                             key={idx}
-                            className={`option-btn ${selected === idx ? 'selected' : ''} ${showResult && idx === question.correctAnswer ? 'correct' : ''
-                                } ${showResult && selected === idx && selected !== question.correctAnswer ? 'incorrect' : ''}`}
-                            onClick={() => { if (!showResult) { playSFX('click'); setSelected(idx); } }}
+                            className={`option-btn ${currentSelected === idx ? 'selected' : ''} ${showResult && idx === question.correctAnswer ? 'correct' : ''
+                                } ${showResult && currentSelected === idx && currentSelected !== question.correctAnswer ? 'incorrect' : ''}`}
+                            onClick={() => { if (!showResult) { playSFX('click'); setCurrentSelected(idx); } }}
                             disabled={showResult}
                         >
                             <span className="option-letter">{String.fromCharCode(65 + idx)}</span>
                             <span className="option-text">{option}</span>
                             {showResult && idx === question.correctAnswer && <CheckCircle size={20} />}
-                            {showResult && selected === idx && selected !== question.correctAnswer && <XCircle size={20} />}
+                            {showResult && currentSelected === idx && currentSelected !== question.correctAnswer && <XCircle size={20} />}
                         </button>
                     ))}
                 </div>
@@ -284,23 +334,43 @@ export default function MultipleChoiceChallenge({ challenge, savedProgress, onCo
             )}
 
             {/* Footer Buttons */}
-            <div className="detail-footer">
+            <div className="detail-footer multip-choice-footer" style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem' }}>
+                <button
+                    className="btn btn-outline"
+                    onClick={handlePrevious}
+                    disabled={currentQ === 0}
+                    style={{ justifySelf: 'start' }}
+                >
+                    <ArrowLeft size={16} /> Previous
+                </button>
+
                 {!showResult ? (
-                    <button
-                        className="btn btn-primary btn-full"
-                        disabled={selected === null}
-                        onClick={handleSubmit}
-                    >
-                        Submit Answer
-                        <Zap size={20} />
-                    </button>
+                    <div style={{ display: 'flex', gap: '1rem', justifySelf: 'end' }}>
+                        <button
+                            className="btn btn-ghost" // Assuming you have a ghost variant, or use simple styling
+                            onClick={handleSkip}
+                            disabled={currentQ === challenge.questions.length - 1}
+                            style={{ color: 'var(--text-secondary)' }}
+                        >
+                            Skip
+                        </button>
+                        <button
+                            className="btn btn-primary"
+                            disabled={currentSelected === null}
+                            onClick={handleSubmit}
+                        >
+                            Submit
+                            <Zap size={16} />
+                        </button>
+                    </div>
                 ) : (
                     <button
-                        className="btn btn-primary btn-full"
+                        className="btn btn-primary"
                         onClick={handleNext}
+                        style={{ justifySelf: 'end' }}
                     >
-                        {currentQ < challenge.questions.length - 1 ? 'Next Question' : 'Complete Challenge'}
-                        <ChevronRight size={20} />
+                        {currentQ < challenge.questions.length - 1 ? 'Next' : 'Complete'}
+                        <ChevronRight size={16} />
                     </button>
                 )}
             </div>

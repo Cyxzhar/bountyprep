@@ -491,11 +491,14 @@
     }
 
     .header-time {
-        font-size: 0.8125rem;
+        font-size: 0.75rem;
+        white-space: nowrap;
     }
 
     .header-time .text-muted {
-        display: none;
+        display: inline;
+        /* Show total time */
+        opacity: 0.7;
     }
 }
 
