@@ -63,6 +63,13 @@ const ws = {
     muted: { color: '#6b7280', fontSize: '0.85rem' },
 };
 
+// Shared form input style for light-themed simulated pages
+const lightInput = { border: '1px solid #d1d5db', padding: '6px 10px', borderRadius: '6px', fontSize: '0.85rem', flex: 1, outline: 'none', minWidth: 0, color: '#111' };
+const lightBtn = { background: '#3b82f6', color: '#fff', border: 'none', padding: '6px 14px', borderRadius: '6px', cursor: 'pointer', fontSize: '0.85rem', fontWeight: 600, whiteSpace: 'nowrap' };
+// Dark-themed form styles
+const darkInput = { background: 'rgba(0,0,0,0.3)', border: '1px solid rgba(255,255,255,0.15)', color: '#e6edf3', padding: '6px 10px', borderRadius: '6px', fontSize: '0.85rem', flex: 1, outline: 'none', minWidth: 0 };
+const darkBtn = { background: '#22c55e', color: '#000', border: 'none', padding: '6px 14px', borderRadius: '6px', cursor: 'pointer', fontSize: '0.85rem', fontWeight: 600, whiteSpace: 'nowrap' };
+
 // ============ Main Hook ============
 export function useLabSimulation(challenge) {
 
@@ -130,6 +137,7 @@ export function useLabSimulation(challenge) {
 function simulateXSSLab(url, challenge) {
     try {
         const urlObj = new URL(url);
+        const origin = urlObj.origin;
         const searchParams = new URLSearchParams(urlObj.search);
         const q = searchParams.get('q') || searchParams.get('search') || '';
 
@@ -155,14 +163,21 @@ function simulateXSSLab(url, challenge) {
         }
 
         return {
-            render: () => (
+            render: ({ navigateTo } = {}) => (
                 <div style={{ ...ws.page, background: '#fff', color: '#1f2937', position: 'relative' }}>
                     <div style={{ borderBottom: '1px solid #e5e7eb', paddingBottom: '12px', marginBottom: '16px', display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '8px' }}>
                         <span style={{ fontSize: '1.1rem', fontWeight: 700, color: '#111827' }}>Search Results</span>
-                        <div style={{ display: 'flex', gap: '6px', alignItems: 'center' }}>
-                            <input style={{ border: '1px solid #d1d5db', padding: '5px 10px', borderRadius: '6px', fontSize: '0.8rem', width: '160px' }} defaultValue={q} readOnly />
-                            <button style={{ background: '#3b82f6', color: '#fff', border: 'none', padding: '5px 12px', borderRadius: '6px', cursor: 'pointer', fontSize: '0.8rem' }}>Search</button>
-                        </div>
+                        <form
+                            onSubmit={(e) => {
+                                e.preventDefault();
+                                const val = e.target.elements.q.value;
+                                navigateTo?.(`${origin}/search?q=${encodeURIComponent(val)}`);
+                            }}
+                            style={{ display: 'flex', gap: '6px', alignItems: 'center' }}
+                        >
+                            <input name="q" style={{ ...lightInput, width: '160px', flex: 'none' }} defaultValue={q} placeholder="Type XSS payload..." />
+                            <button type="submit" style={lightBtn}>Search</button>
+                        </form>
                     </div>
 
                     <p style={{ marginBottom: '12px', fontSize: '0.9rem', color: '#374151' }}>
@@ -174,7 +189,7 @@ function simulateXSSLab(url, challenge) {
                             No results found for your query.
                         </div>
                     ) : (
-                        <p style={{ color: '#9ca3af', fontSize: '0.85rem' }}>Enter a search term above.</p>
+                        <p style={{ color: '#9ca3af', fontSize: '0.85rem' }}>Enter a search term above to test for XSS.</p>
                     )}
 
                     {q.length > 0 && !success && (
@@ -195,6 +210,7 @@ function simulateXSSLab(url, challenge) {
 function simulateIDORLab_Browser(url, challenge) {
     try {
         const urlObj = new URL(url);
+        const origin = urlObj.origin;
         const path = urlObj.pathname;
 
         const userMatch = path.match(/\/api\/users\/(\d+)(\/profile)?/);
@@ -215,9 +231,9 @@ function simulateIDORLab_Browser(url, challenge) {
             const statusColor = profile ? '#22c55e' : '#ef4444';
 
             return {
-                render: () => (
+                render: ({ navigateTo } = {}) => (
                     <div style={ws.page}>
-                        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '12px' }}>
+                        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '12px', flexWrap: 'wrap', gap: '8px' }}>
                             <span style={{ fontSize: '0.7rem', fontWeight: 600, color: '#6b7280', textTransform: 'uppercase', letterSpacing: '0.05em' }}>API Response</span>
                             <span style={{ ...ws.badge, background: profile ? 'rgba(34,197,94,0.15)' : 'rgba(239,68,68,0.15)', color: statusColor }}>
                                 {profile ? '200 OK' : '404 NOT FOUND'}
@@ -229,6 +245,17 @@ function simulateIDORLab_Browser(url, challenge) {
                                 IDOR detected! You accessed another user's private data. The flag is in the api_key field.
                             </div>
                         )}
+                        <form
+                            onSubmit={(e) => {
+                                e.preventDefault();
+                                const uid = e.target.elements.uid.value;
+                                navigateTo?.(`${origin}/api/users/${encodeURIComponent(uid)}/profile`);
+                            }}
+                            style={{ marginTop: '16px', display: 'flex', gap: '6px', alignItems: 'center' }}
+                        >
+                            <input name="uid" style={darkInput} defaultValue="" placeholder="Try another user ID..." />
+                            <button type="submit" style={darkBtn}>Fetch</button>
+                        </form>
                     </div>
                 )
             };
@@ -237,25 +264,47 @@ function simulateIDORLab_Browser(url, challenge) {
         // API root/documentation
         if (path === '/' || path === '/api' || path === '/api/') {
             return {
-                render: () => (
+                render: ({ navigateTo } = {}) => (
                     <div style={{ ...ws.page, background: '#fff', color: '#1f2937' }}>
                         <h2 style={{ ...ws.heading, color: '#111827' }}>API v1 Documentation</h2>
                         <div style={{ background: '#f3f4f6', padding: '14px', borderRadius: '8px', border: '1px solid #e5e7eb', marginBottom: '12px' }}>
                             <h3 style={{ fontSize: '0.9rem', fontWeight: 600, marginBottom: '8px', color: '#374151' }}>Endpoints</h3>
                             <div style={{ fontFamily: 'monospace', fontSize: '0.82rem', lineHeight: 2 }}>
-                                <div><span style={{ color: '#22c55e', fontWeight: 600 }}>GET</span> /api/users/&#123;id&#125;/profile</div>
-                                <div><span style={{ color: '#f59e0b', fontWeight: 600 }}>PUT</span> /api/users/&#123;id&#125;/profile</div>
-                                <div><span style={{ color: '#22c55e', fontWeight: 600 }}>GET</span> /api/users/&#123;id&#125;/orders</div>
+                                <div>
+                                    <span style={{ color: '#22c55e', fontWeight: 600 }}>GET</span>{' '}
+                                    <a href="#" onClick={(e) => { e.preventDefault(); navigateTo?.(`${origin}/api/users/1001/profile`); }} style={{ color: '#2563eb', textDecoration: 'underline', cursor: 'pointer' }}>/api/users/1001/profile</a>
+                                    <span style={{ color: '#9ca3af', marginLeft: '8px' }}>(your profile)</span>
+                                </div>
+                                <div>
+                                    <span style={{ color: '#f59e0b', fontWeight: 600 }}>PUT</span>{' '}
+                                    <span>/api/users/&#123;id&#125;/profile</span>
+                                </div>
+                                <div>
+                                    <span style={{ color: '#22c55e', fontWeight: 600 }}>GET</span>{' '}
+                                    <span>/api/users/&#123;id&#125;/orders</span>
+                                </div>
                             </div>
                         </div>
-                        <p style={{ color: '#9ca3af', fontSize: '0.82rem' }}>Authentication: Bearer token required. Your user ID: 1001</p>
+                        <p style={{ color: '#9ca3af', fontSize: '0.82rem', marginBottom: '16px' }}>Authentication: Bearer token required. Your user ID: 1001</p>
+
+                        <form
+                            onSubmit={(e) => {
+                                e.preventDefault();
+                                const uid = e.target.elements.uid.value;
+                                navigateTo?.(`${origin}/api/users/${encodeURIComponent(uid)}/profile`);
+                            }}
+                            style={{ display: 'flex', gap: '6px', alignItems: 'center' }}
+                        >
+                            <input name="uid" style={lightInput} defaultValue="1001" placeholder="User ID..." />
+                            <button type="submit" style={lightBtn}>Load Profile</button>
+                        </form>
                     </div>
                 )
             };
         }
 
         return {
-            render: () => (
+            render: ({ navigateTo } = {}) => (
                 <div style={ws.page}>
                     <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '12px' }}>
                         <span style={{ fontSize: '0.7rem', fontWeight: 600, color: '#6b7280', textTransform: 'uppercase' }}>API Response</span>
@@ -271,38 +320,114 @@ function simulateIDORLab_Browser(url, challenge) {
 }
 
 function simulateSSRFLab_Browser(url, challenge) {
-    if (url.includes('169.254.169.254')) {
+    try {
+        const urlObj = new URL(url);
+        const origin = urlObj.origin;
+
+        // Direct access to metadata IP is blocked by the browser
+        if (urlObj.hostname === '169.254.169.254') {
+            return {
+                render: ({ navigateTo } = {}) => (
+                    <div style={{ ...ws.page, textAlign: 'center', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', minHeight: '280px' }}>
+                        <div style={{ fontSize: '3rem', marginBottom: '12px' }}>&#128683;</div>
+                        <h2 style={{ ...ws.heading, color: '#ef4444' }}>Access Denied</h2>
+                        <p style={ws.text}>Browser prevents direct access to private network ranges (RFC 1918).</p>
+                        <p style={{ ...ws.muted, marginTop: '12px' }}>Hint: Can you trick the <em>server</em> into fetching this for you?</p>
+                    </div>
+                )
+            };
+        }
+
+        // Handle /fetch endpoint (server-side fetch simulation)
+        if (urlObj.pathname.includes('/fetch')) {
+            const fetchTarget = urlObj.searchParams.get('url');
+
+            if (!fetchTarget) {
+                return {
+                    render: ({ navigateTo } = {}) => (
+                        <div style={ws.page}>
+                            <span style={{ ...ws.badge, background: 'rgba(239,68,68,0.15)', color: '#ef4444' }}>400 BAD REQUEST</span>
+                            <pre style={{ ...ws.apiResponse, marginTop: '12px' }}>{JSON.stringify({ error: "Missing 'url' parameter. Usage: /fetch?url=https://..." }, null, 2)}</pre>
+                        </div>
+                    )
+                };
+            }
+
+            // SSRF success — server-side fetch bypasses browser restrictions
+            if (fetchTarget.includes('169.254.169.254')) {
+                const metaData = challenge.labEnvironment?.mockData?.response_metadata || {
+                    'instance-id': 'i-0abc123def456',
+                    'ami-id': 'ami-12345678',
+                    'security-credentials': {
+                        'AccessKeyId': 'AKIAEXAMPLE123456',
+                        'SecretAccessKey': challenge.flag?.value || 'BUGORA{SSRF_FLAG}',
+                    }
+                };
+                return {
+                    render: ({ navigateTo } = {}) => (
+                        <div style={ws.page}>
+                            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '8px' }}>
+                                <span style={{ fontSize: '0.7rem', fontWeight: 600, color: '#6b7280', textTransform: 'uppercase' }}>Server Fetch Result</span>
+                                <span style={{ ...ws.badge, background: 'rgba(34,197,94,0.15)', color: '#22c55e' }}>200 OK</span>
+                            </div>
+                            <div style={{ marginBottom: '12px', padding: '10px 14px', background: 'rgba(34,197,94,0.1)', border: '1px solid rgba(34,197,94,0.3)', borderRadius: '6px', fontSize: '0.82rem', color: '#22c55e' }}>
+                                SSRF successful! The server fetched internal metadata on your behalf.
+                            </div>
+                            <pre style={ws.apiResponse}>{JSON.stringify(metaData, null, 2)}</pre>
+                        </div>
+                    )
+                };
+            }
+
+            // Generic fetch result
+            return {
+                render: ({ navigateTo } = {}) => (
+                    <div style={ws.page}>
+                        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '8px' }}>
+                            <span style={{ fontSize: '0.7rem', fontWeight: 600, color: '#6b7280', textTransform: 'uppercase' }}>Server Fetch Result</span>
+                            <span style={{ ...ws.badge, background: 'rgba(34,197,94,0.15)', color: '#22c55e' }}>200 OK</span>
+                        </div>
+                        <pre style={ws.apiResponse}>{JSON.stringify({ fetched: fetchTarget, content_type: 'image/png', size: '24.5 KB', status: 'OK' }, null, 2)}</pre>
+                    </div>
+                )
+            };
+        }
+
+        // Default: Image Fetcher Service landing page with interactive form
         return {
-            render: () => (
-                <div style={{ ...ws.page, textAlign: 'center', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', minHeight: '280px' }}>
-                    <div style={{ fontSize: '3rem', marginBottom: '12px' }}>&#128683;</div>
-                    <h2 style={{ ...ws.heading, color: '#ef4444' }}>Access Denied</h2>
-                    <p style={ws.text}>Browser prevents direct access to private network ranges (RFC 1918).</p>
-                    <p style={{ ...ws.muted, marginTop: '12px' }}>Hint: Can you trick the server into fetching this for you?</p>
+            render: ({ navigateTo } = {}) => (
+                <div style={{ ...ws.page, background: '#fff', color: '#1f2937' }}>
+                    <h1 style={{ ...ws.heading, color: '#7c3aed' }}>Image Fetcher Service</h1>
+                    <p style={{ ...ws.text, color: '#4b5563' }}>We fetch and resize images for you! Enter a URL below to fetch an image from any source.</p>
+                    <form
+                        onSubmit={(e) => {
+                            e.preventDefault();
+                            const target = e.target.elements.fetchUrl.value;
+                            navigateTo?.(`${origin}/fetch?url=${encodeURIComponent(target)}`);
+                        }}
+                        style={{ display: 'flex', gap: '6px', alignItems: 'center', marginBottom: '12px' }}
+                    >
+                        <input name="fetchUrl" style={lightInput} defaultValue="" placeholder="https://example.com/image.png" />
+                        <button type="submit" style={{ ...lightBtn, background: '#7c3aed' }}>Fetch</button>
+                    </form>
+                    <div style={{ background: '#f3f4f6', padding: '14px', borderRadius: '8px', border: '1px solid #e5e7eb' }}>
+                        <p style={{ margin: 0, fontFamily: 'monospace', fontSize: '0.82rem', color: '#6b7280' }}>
+                            API: <code style={{ background: '#e5e7eb', padding: '2px 6px', borderRadius: '4px' }}>/fetch?url=&#123;target&#125;</code>
+                        </p>
+                    </div>
+                    <p style={{ ...ws.muted, marginTop: '12px' }}>Tip: The server will fetch any URL you provide, including internal services...</p>
                 </div>
             )
         };
+    } catch (e) {
+        return { render: () => <div style={{ ...ws.page, ...ws.error }}>Invalid URL: {e.message}</div> };
     }
-
-    return {
-        render: () => (
-            <div style={{ ...ws.page, background: '#fff', color: '#1f2937' }}>
-                <h1 style={{ ...ws.heading, color: '#7c3aed' }}>Image Fetcher Service</h1>
-                <p style={{ ...ws.text, color: '#4b5563' }}>We fetch and resize images for you!</p>
-                <div style={{ background: '#f3f4f6', padding: '14px', borderRadius: '8px', border: '1px solid #e5e7eb' }}>
-                    <p style={{ margin: 0, fontFamily: 'monospace', fontSize: '0.82rem', color: '#6b7280' }}>
-                        Usage: <code style={{ background: '#e5e7eb', padding: '2px 6px', borderRadius: '4px' }}>/fetch?url=https://example.com/image.png</code>
-                    </p>
-                </div>
-                <p style={{ ...ws.muted, marginTop: '12px' }}>Status: Waiting for input...</p>
-            </div>
-        )
-    };
 }
 
 function simulateSQLiLab_Browser(url, challenge) {
     try {
         const urlObj = new URL(url);
+        const origin = urlObj.origin;
         const searchParams = new URLSearchParams(urlObj.search);
         const id = searchParams.get('id') || '';
         const q = searchParams.get('q') || searchParams.get('search') || '';
@@ -342,9 +467,22 @@ function simulateSQLiLab_Browser(url, challenge) {
         }
 
         return {
-            render: () => (
+            render: ({ navigateTo } = {}) => (
                 <div style={{ ...ws.page, background: '#fff', color: '#1f2937' }}>
-                    <h2 style={{ ...ws.heading, color: '#111827' }}>Product Catalog</h2>
+                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '16px', flexWrap: 'wrap', gap: '8px' }}>
+                        <h2 style={{ ...ws.heading, color: '#111827', margin: 0 }}>Product Catalog</h2>
+                        <form
+                            onSubmit={(e) => {
+                                e.preventDefault();
+                                const val = e.target.elements.pid.value;
+                                navigateTo?.(`${origin}/products?id=${encodeURIComponent(val)}`);
+                            }}
+                            style={{ display: 'flex', gap: '6px', alignItems: 'center' }}
+                        >
+                            <input name="pid" style={{ ...lightInput, width: '180px', flex: 'none' }} defaultValue={input} placeholder="Product ID or search..." />
+                            <button type="submit" style={lightBtn}>Search</button>
+                        </form>
+                    </div>
 
                     {errorMode && (
                         <div style={{ background: '#fef2f2', border: '1px solid #fecaca', borderRadius: '6px', padding: '12px', marginBottom: '16px', fontFamily: 'monospace', fontSize: '0.8rem', color: '#991b1b' }}>
@@ -391,7 +529,7 @@ function defaultBrowserPage(url) {
     try { hostname = new URL(url).hostname; } catch (e) { /* ignore */ }
 
     return {
-        render: () => (
+        render: ({ navigateTo } = {}) => (
             <div style={{ ...ws.page, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', minHeight: '280px', textAlign: 'center' }}>
                 <div style={{ fontSize: '2.5rem', marginBottom: '12px', opacity: 0.4 }}>&#127760;</div>
                 <h2 style={{ ...ws.heading }}>Welcome to {hostname}</h2>

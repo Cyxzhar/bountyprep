@@ -8,12 +8,14 @@ export default function VirtualBrowser({ initialUrl, onNavigate }) {
     const [loading, setLoading] = useState(false);
     const inputRef = useRef(null);
 
-    const handleNavigate = useCallback(() => {
-        if (!onNavigate || !url) return;
+    // Navigate to any URL — used by both the address bar and in-page interactive forms
+    const navigateTo = useCallback((targetUrl) => {
+        if (!onNavigate) return;
+        setUrl(targetUrl);
         setLoading(true);
         setTimeout(() => {
             try {
-                const result = onNavigate(url);
+                const result = onNavigate(targetUrl);
                 setContent(result);
             } catch (e) {
                 setContent({
@@ -25,8 +27,13 @@ export default function VirtualBrowser({ initialUrl, onNavigate }) {
                 });
             }
             setLoading(false);
-        }, 400);
-    }, [url, onNavigate]);
+        }, 300);
+    }, [onNavigate]);
+
+    const handleNavigate = useCallback(() => {
+        if (!url) return;
+        navigateTo(url);
+    }, [url, navigateTo]);
 
     // Initial page load
     React.useEffect(() => {
@@ -64,7 +71,7 @@ export default function VirtualBrowser({ initialUrl, onNavigate }) {
                     <div className="browser-content">
                         {content ? (
                             typeof content.render === 'function'
-                                ? content.render()
+                                ? content.render({ navigateTo })
                                 : <pre>{JSON.stringify(content, null, 2)}</pre>
                         ) : (
                             <div className="empty-state">
