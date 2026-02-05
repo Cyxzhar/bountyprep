@@ -4,6 +4,7 @@
     display: flex;
     flex-direction: column;
     background: var(--gradient-dark);
+    overflow-x: hidden;
 }
 
 /* Header */
@@ -11,7 +12,7 @@
     display: flex;
     align-items: center;
     gap: var(--space-md);
-    padding: max(var(--space-md), env(safe-area-inset-top)) var(--space-lg) var(--space-md);
+    padding: var(--space-lg) var(--space-xl);
     background: rgba(26, 26, 46, 0.95);
     backdrop-filter: blur(20px);
     -webkit-backdrop-filter: blur(20px);
@@ -19,6 +20,7 @@
     position: sticky;
     top: 0;
     z-index: 100;
+    min-height: 72px;
 }
 
 @media (max-width: 480px) {
@@ -146,9 +148,12 @@
 /* Content */
 .detail-content {
     flex: 1;
-    padding: var(--space-xl) var(--space-lg);
+    padding: var(--space-xl) var(--space-xl);
     overflow-y: auto;
+    overflow-x: hidden;
     -webkit-overflow-scrolling: touch;
+    box-sizing: border-box;
+    width: 100%;
 }
 
 @media (max-width: 480px) {
@@ -159,14 +164,14 @@
 
 /* Progress */
 .question-progress {
-    margin-bottom: var(--space-lg);
+    margin-bottom: var(--space-xl);
 }
 
 .question-progress span {
     display: block;
-    font-size: 0.875rem;
+    font-size: 0.9375rem;
     color: var(--text-secondary);
-    margin-bottom: var(--space-sm);
+    margin-bottom: var(--space-md);
 }
 
 /* Scenario */
@@ -174,8 +179,10 @@
     background: var(--bg-card);
     border: 1px solid var(--border-color);
     border-radius: var(--radius-lg);
-    padding: var(--space-xl) var(--space-lg);
+    padding: var(--space-xl);
     margin-bottom: var(--space-xl);
+    box-sizing: border-box;
+    width: 100%;
 }
 
 @media (max-width: 480px) {
@@ -244,19 +251,23 @@
 /* Question */
 .question-section {
     margin-bottom: var(--space-xl);
+    width: 100%;
+    box-sizing: border-box;
 }
 
 .question-text {
-    font-size: clamp(1rem, 2.5vw, 1.0625rem);
+    font-size: clamp(1rem, 2.5vw, 1.125rem);
     font-weight: 600;
-    margin-bottom: var(--space-lg);
+    margin-bottom: var(--space-xl);
     line-height: 1.5;
 }
 
 .options-list {
     display: flex;
     flex-direction: column;
-    gap: var(--space-md);
+    gap: var(--space-lg);
+    width: 100%;
+    box-sizing: border-box;
 }
 
 .option-btn {
@@ -264,17 +275,18 @@
     align-items: center;
     gap: var(--space-md);
     width: 100%;
-    padding: var(--space-lg) var(--space-md);
-    min-height: 64px;
+    padding: var(--space-lg);
+    min-height: 68px;
     background: var(--bg-card);
     border: 2px solid var(--border-color);
     border-radius: var(--radius-md);
     color: var(--text-primary);
-    font-size: clamp(0.9rem, 2.5vw, 0.9375rem);
+    font-size: clamp(0.9375rem, 2.5vw, 1rem);
     text-align: left;
     line-height: 1.5;
     cursor: pointer;
     transition: all var(--transition-fast);
+    box-sizing: border-box;
 }
 
 @media (max-width: 480px) {
@@ -464,16 +476,17 @@
 
 /* Footer */
 .detail-footer {
-    padding: var(--space-lg);
+    padding: var(--space-xl);
     padding-bottom: calc(var(--space-xl) + env(safe-area-inset-bottom));
-    background: rgba(26, 26, 46, 0.95);
-    backdrop-filter: blur(20px);
-    -webkit-backdrop-filter: blur(20px);
-    border-top: 1px solid var(--border-color);
+    background: transparent;
+    border-top: none;
+    box-sizing: border-box;
+    width: 100%;
 }
 
 .detail-footer .btn-full {
     width: 100%;
+    box-sizing: border-box;
 }
 
 @media (max-width: 480px) {
@@ -508,16 +521,23 @@
 
 /* Desktop Responsive Styles */
 @media (min-width: 768px) {
+    .detail-header {
+        padding: var(--space-xl) 2rem;
+        min-height: 80px;
+    }
+
     .detail-content {
         max-width: 900px;
         margin: 0 auto;
-        padding: var(--space-xl) var(--space-xl);
+        padding: 2rem;
     }
 
     .detail-footer {
         display: flex;
         justify-content: center;
-        padding: var(--space-xl) var(--space-lg);
+        padding: var(--space-xl) 2rem;
+        max-width: 900px;
+        margin: 0 auto;
     }
 
     .detail-footer .btn-full {
@@ -637,19 +657,24 @@
 @media (min-width: 1024px) {
     .detail-screen {
         box-sizing: border-box;
+        overflow-x: hidden;
+    }
+
+    .detail-header {
+        padding: var(--space-xl) 2.5rem;
+        min-height: 88px;
     }
 
     .detail-content {
         max-width: 1100px;
-        padding: var(--space-xxl) var(--space-xxl);
-    }
-
-    .detail-header {
-        padding: var(--space-lg) var(--space-xxl);
+        padding: 2.5rem;
+        margin: 0 auto;
     }
 
     .detail-footer {
-        padding: var(--space-xl) var(--space-xxl);
+        padding: var(--space-xl) 2.5rem;
+        max-width: 1100px;
+        margin: 0 auto;
     }
 
     .detail-footer .btn-full {
@@ -697,9 +722,20 @@
 }
 
 @media (min-width: 1440px) {
+    .detail-header {
+        padding: var(--space-xl) 3rem;
+    }
+
     .detail-content {
         max-width: 1300px;
         padding: 3rem;
+        margin: 0 auto;
+    }
+
+    .detail-footer {
+        max-width: 1300px;
+        padding: var(--space-xl) 3rem;
+        margin: 0 auto;
     }
 
     .scenario-card {
@@ -759,6 +795,12 @@
 @media (min-width: 1920px) {
     .detail-content {
         max-width: 1400px;
+        margin: 0 auto;
+    }
+
+    .detail-footer {
+        max-width: 1400px;
+        margin: 0 auto;
     }
 
     .detail-footer .btn-full {
