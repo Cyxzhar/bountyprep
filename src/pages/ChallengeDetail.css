@@ -472,6 +472,10 @@
     border-top: 1px solid var(--border-color);
 }
 
+.detail-footer .btn-full {
+    width: 100%;
+}
+
 @media (max-width: 480px) {
     .detail-footer {
         padding: var(--space-md);
@@ -513,11 +517,15 @@
     .detail-footer {
         display: flex;
         justify-content: center;
+        padding: var(--space-xl) var(--space-lg);
     }
 
-    .detail-footer .btn {
-        max-width: 500px;
-        min-width: 300px;
+    .detail-footer .btn-full {
+        width: auto;
+        max-width: 450px;
+        min-width: 320px;
+        padding-left: var(--space-xl);
+        padding-right: var(--space-xl);
     }
 
     .audio-control-btn {
@@ -644,11 +652,14 @@
         padding: var(--space-xl) var(--space-xxl);
     }
 
-    .detail-footer .btn {
-        max-width: 600px;
-        min-width: 400px;
-        height: 60px;
+    .detail-footer .btn-full {
+        width: auto;
+        max-width: 500px;
+        min-width: 380px;
+        height: 58px;
         font-size: 1.0625rem;
+        padding-left: 2.5rem;
+        padding-right: 2.5rem;
     }
 
     .scenario-card {
@@ -735,6 +746,24 @@
 
     .result-explanation {
         font-size: 1.125rem;
+    }
+
+    .detail-footer .btn-full {
+        max-width: 550px;
+        min-width: 420px;
+        height: 62px;
+        font-size: 1.125rem;
+    }
+}
+
+@media (min-width: 1920px) {
+    .detail-content {
+        max-width: 1400px;
+    }
+
+    .detail-footer .btn-full {
+        max-width: 600px;
+        min-width: 450px;
     }
 }
 
