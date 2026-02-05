@@ -1,6 +1,7 @@
 import { useState, useEffect, useCallback } from 'react';
 
-export const useTimer = (initialTime = 0) => {
+export const useTimer = (initialTime = 0, options = {}) => {
+    const { mode = 'countup', onExpire } = options;
     const [elapsedTime, setElapsedTime] = useState(initialTime);
     const [isRunning, setIsRunning] = useState(false);
 
@@ -12,18 +13,29 @@ export const useTimer = (initialTime = 0) => {
         let interval;
         if (isRunning) {
             interval = setInterval(() => {
-                setElapsedTime(prev => prev + 1);
+                setElapsedTime(prev => {
+                    if (mode === 'countdown') {
+                        if (prev <= 1) {
+                            clearInterval(interval);
+                            setIsRunning(false);
+                            if (onExpire) onExpire();
+                            return 0;
+                        }
+                        return prev - 1;
+                    }
+                    return prev + 1;
+                });
             }, 1000);
         }
         return () => clearInterval(interval);
-    }, [isRunning]);
+    }, [isRunning, mode, onExpire]);
 
     const start = useCallback(() => setIsRunning(true), []);
     const stop = useCallback(() => setIsRunning(false), []);
     const reset = useCallback(() => {
         setIsRunning(false);
-        setElapsedTime(0);
-    }, []);
+        setElapsedTime(initialTime);
+    }, [initialTime]);
 
     const formatTime = (seconds) => {
         const mins = Math.floor(seconds / 60);
@@ -32,13 +44,14 @@ export const useTimer = (initialTime = 0) => {
     };
 
     return {
-        elapsedTime,
-        setElapsedTime,
+        time: elapsedTime, // Renamed for clarity, but kept aliases below
+        elapsedTime,      // Legacy support
+        remainingTime: elapsedTime, // Alias for countdown
         formattedTime: formatTime(elapsedTime),
         isRunning,
         start,
         stop,
         reset,
-        formatTime // Exporting utility in case custom formatting needed
+        formatTime
     };
 };

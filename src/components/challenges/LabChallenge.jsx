@@ -1,7 +1,9 @@
 import React, { useState, useMemo, useEffect } from 'react';
-import { Flag, Terminal, Lightbulb, ChevronRight, ChevronLeft, Monitor, Globe, Activity, Layers, FileText, Wrench, ExternalLink } from 'lucide-react';
+import { Flag, Terminal, Lightbulb, ChevronRight, ChevronLeft, Monitor, Globe, Activity, Layers, FileText, Wrench, ExternalLink, Clock } from 'lucide-react';
 import { validateFlag } from '../../utils/challengeValidation';
 import { useLabSimulation } from '../../hooks/useLabSimulation.jsx';
+import { useTimer } from '../../hooks/useTimer';
+import ChallengeFailureModal from '../ChallengeFailureModal';
 import RequestRepeater from './tools/RequestRepeater';
 import VirtualBrowser from './tools/VirtualBrowser';
 import GraphQLConsole from './tools/GraphQLConsole';
@@ -79,6 +81,36 @@ export default function LabChallenge({ challenge, onComplete }) {
 
     // Mobile view state ('guide' or 'tools')
     const [mobileView, setMobileView] = useState('guide');
+
+    // Timer Logic
+    const [hasFailed, setHasFailed] = useState(false);
+    const [failureReason, setFailureReason] = useState(null);
+
+    // Convert estimatedTime (e.g. 15 or "15m") to seconds
+    const durationSeconds = useMemo(() => {
+        const time = challenge.estimatedTime || 15;
+        // If string "15m", parse it. If number 15, assume minutes.
+        if (typeof time === 'string') {
+            if (time.endsWith('m')) return parseInt(time) * 60;
+            if (time.endsWith('s')) return parseInt(time);
+            return parseInt(time) * 60; // default minutes
+        }
+        return time * 60;
+    }, [challenge.estimatedTime]);
+
+    const { time, formattedTime, start, stop } = useTimer(durationSeconds, {
+        mode: 'countdown',
+        onExpire: () => {
+            setHasFailed(true);
+            setFailureReason('timeout');
+        }
+    });
+
+    // Start timer on mount
+    useEffect(() => {
+        start();
+        return () => stop();
+    }, [start, stop]);
 
     // Simulation logic
     const { handleBrowserNavigate, handleRepeaterSend, handleGraphQLQuery, handleTerminalCommand } = useLabSimulation(challenge);
@@ -159,8 +191,14 @@ export default function LabChallenge({ challenge, onComplete }) {
                     <Terminal size={18} className="text-primary" />
                     <h3>{challenge.title}</h3>
                 </div>
-                <div className="step-tracker">
-                    <span className="step-text">Step {currentStep + 1}/{challenge.steps.length}</span>
+                <div className="header-stats">
+                    <div className={`timer-badge ${time < 60 ? 'timer-critical' : ''}`}>
+                        <Clock size={14} />
+                        <span>{formattedTime}</span>
+                    </div>
+                    <div className="step-tracker">
+                        <span className="step-text">Step {currentStep + 1}/{challenge.steps.length}</span>
+                    </div>
                 </div>
             </div>
 
@@ -279,6 +317,16 @@ export default function LabChallenge({ challenge, onComplete }) {
                     </div>
                 </div>
             </div>
-        </div>
+
+            {
+                hasFailed && (
+                    <ChallengeFailureModal
+                        reason={failureReason}
+                        onRetry={() => window.location.reload()} // Simple reload to restart
+                        onExit={() => onComplete({ success: false })} // Exit to previous screen
+                    />
+                )
+            }
+        </div >
     );
 }

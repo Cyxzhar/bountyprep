@@ -1,7 +1,9 @@
-import { useState } from 'react';
+import { useState, useMemo, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Code, Play, CheckCircle, XCircle, Lightbulb, BookOpen } from 'lucide-react';
+import { Code, Play, CheckCircle, XCircle, Lightbulb, BookOpen, Clock } from 'lucide-react';
 import { validatePythonCode, validateJavaScriptCode } from '../../utils/challengeValidation';
+import { useTimer } from '../../hooks/useTimer';
+import ChallengeFailureModal from '../ChallengeFailureModal';
 import './ChallengeComponents.css';
 
 export default function CodingChallenge({ challenge, onComplete }) {
@@ -10,6 +12,34 @@ export default function CodingChallenge({ challenge, onComplete }) {
     const [validationResult, setValidationResult] = useState(null);
     const [showHints, setShowHints] = useState(false);
     const [hintsUsed, setHintsUsed] = useState(0);
+
+    // Timer Logic
+    const [hasFailed, setHasFailed] = useState(false);
+    const [failureReason, setFailureReason] = useState(null);
+
+    // Convert estimatedTime (e.g. 15 or "15m") to seconds
+    const durationSeconds = useMemo(() => {
+        const time = challenge.estimatedTime || 15;
+        if (typeof time === 'string') {
+            if (time.endsWith('m')) return parseInt(time) * 60;
+            if (time.endsWith('s')) return parseInt(time);
+            return parseInt(time) * 60;
+        }
+        return time * 60;
+    }, [challenge.estimatedTime]);
+
+    const { time, formattedTime, start, stop } = useTimer(durationSeconds, {
+        mode: 'countdown',
+        onExpire: () => {
+            setHasFailed(true);
+            setFailureReason('timeout');
+        }
+    });
+
+    useEffect(() => {
+        start();
+        return () => stop();
+    }, [start, stop]);
 
     const handleRunCode = () => {
         let result;
@@ -54,6 +84,10 @@ export default function CodingChallenge({ challenge, onComplete }) {
                     <Code size={20} />
                     <h3>Coding Challenge</h3>
                     <span className="badge badge-info">{challenge.language}</span>
+                    <div className={`timer-badge ${time < 60 ? 'timer-critical' : ''}`} style={{ marginLeft: 'auto' }}>
+                        <Clock size={14} />
+                        <span>{formattedTime}</span>
+                    </div>
                 </div>
 
                 <div className="objective-card">
@@ -232,6 +266,13 @@ export default function CodingChallenge({ challenge, onComplete }) {
                         )}
                     </div>
                 </div>
+            )}
+            {hasFailed && (
+                <ChallengeFailureModal
+                    reason={failureReason}
+                    onRetry={() => window.location.reload()}
+                    onExit={() => onComplete({ success: false })}
+                />
             )}
         </div>
     );

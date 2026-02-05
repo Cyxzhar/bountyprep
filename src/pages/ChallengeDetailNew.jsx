@@ -14,6 +14,7 @@ import { useTimer } from '../hooks/useTimer';
 import CodingChallenge from '../components/challenges/CodingChallenge';
 import LabChallenge from '../components/challenges/LabChallenge';
 import PracticalChallenge from '../components/challenges/PracticalChallenge';
+import CompletionModal from '../components/CompletionModal';
 
 // Import original multiple choice component logic (embedded)
 import MultipleChoiceChallenge from '../components/challenges/MultipleChoiceChallenge';
@@ -78,9 +79,8 @@ export default function ChallengeDetailNew() {
                 const progress = await getChallengeProgress(currentUser.uid, challenge.id);
                 if (progress) {
                     setSavedProgress(progress);
-                    if (progress.completed) {
-                        setChallengeCompleted(true);
-                    }
+                    // Do NOT auto-set challengeCompleted(true) here, 
+                    // or replaying the challenge will instantly confirm it.
                 }
             } catch (err) {
                 console.error("Failed to load challenge:", err);
@@ -229,12 +229,11 @@ export default function ChallengeDetailNew() {
 
                 {/* Completion overlay */}
                 {challengeCompleted && (
-                    <div className="completion-overlay">
-                        <div className="completion-message">
-                            <h2>Challenge Completed!</h2>
-                            <p>Redirecting to challenges...</p>
-                        </div>
-                    </div>
+                    <CompletionModal
+                        xpEarned={challenge.xpReward}
+                        onBack={() => navigate('/challenges')}
+                        onReplay={() => window.location.reload()}
+                    />
                 )}
             </div>
         </div>
