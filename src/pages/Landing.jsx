@@ -513,9 +513,18 @@ const Landing = () => {
                         </div>
                         <div className="curriculum-visual animate-fade-in-up">
                             <div className="module-stack">
-                                <div className="module-item p1">SQLi Mastery</div>
-                                <div className="module-item p2">XSS Exploitation</div>
-                                <div className="module-item p3">Cloud Security</div>
+                                <div className="module-item p1">
+                                    <span className="module-tag">WEB EXPLOIT</span>
+                                    SQLi Mastery
+                                </div>
+                                <div className="module-item p2">
+                                    <span className="module-tag">RECON</span>
+                                    XSS Exploitation
+                                </div>
+                                <div className="module-item p3">
+                                    <span className="module-tag">CLOUD</span>
+                                    Cloud Security
+                                </div>
                             </div>
                         </div>
                     </div>
