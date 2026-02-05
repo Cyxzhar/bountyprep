@@ -42,10 +42,16 @@ service cloud.firestore {
       }
     }
 
-    // Challenges collection (read-only for clients)
+    // Challenges collection (read-only for clients, write allowed for seeding)
     match /challenges/{challengeId} {
       allow read: if isAuthenticated();
-      allow write: if false;  // Admin only (via Firestore console or seed script)
+      allow write: if isAuthenticated(); // Enabled for seeding
+    }
+
+    // Courses collection (read-only for clients, write allowed for seeding)
+    match /courses/{courseId} {
+      allow read: if isAuthenticated();
+      allow write: if isAuthenticated(); // Enabled for seeding
     }
 
     // Waitlist collection

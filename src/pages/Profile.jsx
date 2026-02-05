@@ -118,6 +118,22 @@ export default function Profile() {
         }
     };
 
+    const handleSeed = async () => {
+        if (!window.confirm('This will update all course content in the database. Continue?')) return;
+
+        setIsSeeding(true);
+        info('Starting database seed...');
+
+        const result = await seedDatabase();
+
+        setIsSeeding(false);
+        if (result.success) {
+            success(`Seeded ${result.courses} courses and ${result.challenges} challenges!`);
+        } else {
+            error(`Seeding failed: ${result.error}`);
+        }
+    };
+
     const menuSections = [
         {
             title: 'Account',
@@ -320,6 +336,25 @@ export default function Profile() {
                     <LogOut size={20} />
                     Log Out
                 </button>
+
+                {/* Developer Tools (Hidden for non-admins usually, but public for now) */}
+                <div style={{ marginTop: '20px', textAlign: 'center' }}>
+                    <button
+                        onClick={handleSeed}
+                        disabled={isSeeding}
+                        style={{
+                            background: 'transparent',
+                            border: '1px dashed #666',
+                            color: '#888',
+                            padding: '8px 16px',
+                            borderRadius: '8px',
+                            fontSize: '0.8rem',
+                            cursor: 'pointer'
+                        }}
+                    >
+                        {isSeeding ? 'Seeding...' : 'Sync Database Content'}
+                    </button>
+                </div>
 
                 {/* Footer */}
                 <div className="profile-footer">
