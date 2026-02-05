@@ -34,3 +34,6 @@ serviceAccountKey.json
 # Documentation
 *.md
 !README.md
+
+# Editor configs
+.claude/
