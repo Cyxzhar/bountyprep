@@ -20,21 +20,28 @@
     }
 }
 
-/* Desktop: Max width container + better spacing */
+/* Desktop: Centered container with optimal reading width */
 @media (min-width: 1024px) {
     .home-screen .screen-content {
-        max-width: 1400px;
+        max-width: 1200px;
         margin: 0 auto;
-        padding: var(--space-2xl) var(--space-2xl);
+        padding: var(--space-2xl) var(--space-xl);
         padding-bottom: var(--space-2xl);
     }
 }
 
-/* Large Desktop */
+/* Large Desktop: Wider but still contained */
 @media (min-width: 1440px) {
     .home-screen .screen-content {
+        max-width: 1400px;
+        padding: 48px 80px;
+    }
+}
+
+/* Ultra-wide: Max out at comfortable reading width */
+@media (min-width: 1920px) {
+    .home-screen .screen-content {
         max-width: 1600px;
-        padding: 48px 64px;
     }
 }
 
@@ -696,20 +703,31 @@
     /* Stats Grid: Better spacing and layout */
     .stats-grid {
         grid-template-columns: repeat(3, 1fr);
-        gap: var(--space-lg);
+        gap: var(--space-xl);
         margin-bottom: 48px;
     }
 
     .stat-card {
-        padding: var(--space-xl);
+        padding: 32px 24px;
+        min-height: 140px;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+    }
+
+    .stat-icon {
+        width: 56px;
+        height: 56px;
+        margin-bottom: var(--space-md);
     }
 
     .stat-value {
-        font-size: 2.5rem;
+        font-size: 3rem;
+        margin-bottom: 8px;
     }
 
     .stat-label {
-        font-size: 0.95rem;
+        font-size: 1rem;
     }
 
     /* Level Card: Enhanced for desktop */
@@ -732,37 +750,158 @@
         font-size: 1.05rem;
     }
 
+    /* Skill Modules: Convert scroll to grid on desktop */
+    .modules-scroll {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: var(--space-lg);
+        overflow: visible;
+        padding: 0;
+        margin: 0;
+    }
+
+    .module-card {
+        width: 100%;
+        padding: var(--space-lg);
+        min-height: 180px;
+    }
+
+    .module-icon {
+        width: 48px;
+        height: 48px;
+        margin-bottom: var(--space-md);
+    }
+
+    .module-icon svg {
+        width: 28px;
+        height: 28px;
+    }
+
+    .module-progress-ring {
+        width: 72px;
+        height: 72px;
+    }
+
+    .module-name {
+        font-size: 0.95rem;
+        margin-top: var(--space-md);
+    }
+
+    /* Quick Challenges: Grid layout on desktop */
+    .quick-list {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: var(--space-lg);
+    }
+
+    .quick-item {
+        padding: var(--space-xl);
+        min-height: 100px;
+    }
+
+    .quick-icon {
+        width: 56px;
+        height: 56px;
+        min-width: 56px;
+        min-height: 56px;
+    }
+
+    .quick-icon svg {
+        width: 28px;
+        height: 28px;
+    }
+
+    .quick-title {
+        font-size: 1.05rem;
+    }
+
+    .quick-meta {
+        font-size: 0.9rem;
+    }
+
     /* Quick Actions: Better grid */
     .quick-actions {
         grid-template-columns: repeat(2, 1fr);
         gap: var(--space-lg);
     }
 
-    /* Skill Modules: 2 columns */
-    .skill-modules {
+    /* Coming Soon: 2 columns on desktop */
+    .coming-soon-grid {
         grid-template-columns: repeat(2, 1fr);
         gap: var(--space-lg);
     }
+
+    .coming-soon-card {
+        padding: var(--space-xl);
+        min-height: 160px;
+    }
+
+    .cs-icon {
+        width: 64px;
+        height: 64px;
+        margin-bottom: var(--space-md);
+    }
+
+    .cs-icon svg {
+        width: 32px;
+        height: 32px;
+    }
+
+    .cs-title {
+        font-size: 1.05rem;
+    }
 }
 
-/* Large Desktop: 3-column layouts */
+/* Large Desktop: Better layouts */
 @media (min-width: 1440px) {
     .stats-grid {
-        gap: var(--space-xl);
-    }
-
-    /* Quick Actions: 3 columns on very large screens */
-    .quick-actions {
-        grid-template-columns: repeat(3, 1fr);
-    }
-
-    /* Skill Modules: 3 columns */
-    .skill-modules {
-        grid-template-columns: repeat(3, 1fr);
+        gap: var(--space-2xl);
     }
 
     .stat-card {
-        padding: 32px;
+        padding: 40px 28px;
+        min-height: 160px;
+    }
+
+    .stat-icon {
+        width: 64px;
+        height: 64px;
+    }
+
+    .stat-value {
+        font-size: 3.5rem;
+    }
+
+    .stat-label {
+        font-size: 1.05rem;
+    }
+
+    /* Skill Modules: 4 columns on large screens */
+    .modules-scroll {
+        grid-template-columns: repeat(4, 1fr);
+        gap: var(--space-xl);
+    }
+
+    .module-card {
+        padding: var(--space-xl);
+        min-height: 200px;
+    }
+
+    /* Quick Actions: 3 columns */
+    .quick-actions {
+        grid-template-columns: repeat(3, 1fr);
+        gap: var(--space-xl);
+    }
+
+    /* Coming Soon: 4 columns on large screens */
+    .coming-soon-grid {
+        grid-template-columns: repeat(4, 1fr);
+        gap: var(--space-xl);
+    }
+
+    .coming-soon-card {
+        padding: 32px 24px;
+        min-height: 180px;
     }
 }
 
