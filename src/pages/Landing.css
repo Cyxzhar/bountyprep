@@ -1543,22 +1543,26 @@
     z-index: 3;
     transform: translateZ(60px);
     border-color: rgba(159, 239, 0, 0.3);
+    pointer-events: auto;
+    opacity: 1;
 }
 
 .module-item.p2 {
-    top: 70px;
-    left: -40px;
+    top: 60px;
+    left: 60px;
     z-index: 2;
-    transform: translateZ(20px) rotate(-2deg);
-    opacity: 0.8;
+    transform: translateZ(20px) rotate(-3deg);
+    opacity: 0.6;
+    pointer-events: none;
 }
 
 .module-item.p3 {
-    top: 140px;
-    left: 40px;
+    top: 120px;
+    left: -40px;
     z-index: 1;
-    transform: translateZ(-20px) rotate(2deg);
-    opacity: 0.5;
+    transform: translateZ(-20px) rotate(3deg);
+    opacity: 0.3;
+    pointer-events: none;
 }
 
 .module-tag {
@@ -1589,16 +1593,28 @@
 }
 
 .pricing-card {
-    max-width: 540px;
+    max-width: 580px;
     margin: 0 auto;
-    background: linear-gradient(180deg, rgba(25, 25, 40, 0.6) 0%, rgba(5, 5, 12, 0.9) 100%);
-    border: 1px solid rgba(159, 239, 0, 0.2);
-    border-radius: 36px;
-    padding: 80px 56px;
+    background: rgba(15, 15, 25, 0.5);
+    backdrop-filter: blur(30px);
+    -webkit-backdrop-filter: blur(30px);
+    border: 1px solid rgba(159, 239, 0, 0.25);
+    border-radius: 44px;
+    padding: 80px 64px;
     position: relative;
     overflow: hidden;
-    backdrop-filter: blur(20px);
-    box-shadow: 0 50px 100px rgba(0, 0, 0, 0.6), 0 0 40px rgba(159, 239, 0, 0.05);
+    box-shadow:
+        0 60px 120px rgba(0, 0, 0, 0.6),
+        0 0 50px rgba(159, 239, 0, 0.1);
+    transition: all 0.5s var(--transition-smooth);
+}
+
+.pricing-card:hover {
+    transform: translateY(-8px);
+    border-color: var(--primary);
+    box-shadow:
+        0 80px 150px rgba(0, 0, 0, 0.7),
+        0 0 60px rgba(159, 239, 0, 0.2);
 }
 
 .pricing-card::before {
@@ -1607,12 +1623,20 @@
     top: 0;
     left: 0;
     width: 100%;
-    height: 6px;
+    height: 4px;
     background: var(--gradient-primary);
 }
 
+.pricing-card::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(circle at top right, rgba(159, 239, 0, 0.08), transparent 50%);
+    pointer-events: none;
+}
+
 .price-tag {
-    margin: 56px 0;
+    margin: 48px 0;
     display: flex;
     justify-content: center;
     align-items: baseline;
@@ -1621,19 +1645,24 @@
 .price-tag .currency {
     font-size: 2.5rem;
     font-weight: 700;
-    margin-right: 4px;
+    margin-right: 8px;
+    color: var(--primary);
 }
 
 .price-tag .amount {
-    font-size: 6rem;
+    font-size: 7rem;
     font-weight: 800;
     line-height: 0.9;
-    letter-spacing: -0.06em;
+    letter-spacing: -0.05em;
+    background: linear-gradient(135deg, #fff 30%, var(--primary) 100%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
 }
 
 .price-tag .period {
-    font-size: 1.5rem;
-    color: var(--text-secondary);
+    font-size: 1.25rem;
+    color: var(--text-muted);
     margin-left: 12px;
 }
 
@@ -1652,8 +1681,14 @@
     display: flex;
     align-items: center;
     gap: 16px;
-    font-size: 1.1rem;
-    color: var(--text-secondary);
+    font-size: 1.15rem;
+    color: var(--text-primary);
+    padding: 4px 0;
+}
+
+.pricing-features li svg {
+    color: var(--primary);
+    filter: drop-shadow(0 0 8px rgba(159, 239, 0, 0.3));
 }
 
 .btn-primary.btn-lg {
@@ -1674,34 +1709,112 @@
     box-shadow: 0 10px 30px rgba(159, 239, 0, 0.3);
 }
 
-/* --- Footer --- */
+/* --- Footer Overhaul --- */
 .landing-footer {
-    padding: 100px 0;
+    padding: 120px 0 60px;
     background: #020205;
     border-top: 1px solid rgba(255, 255, 255, 0.05);
+    position: relative;
+    overflow: hidden;
+}
+
+.landing-footer::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 60%;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, rgba(159, 239, 0, 0.3), transparent);
 }
 
 .footer-content {
     display: flex;
     flex-direction: column;
     align-items: center;
-    gap: 56px;
+    gap: 60px;
+}
+
+.footer-brand {
+    text-align: center;
+}
+
+.footer-brand .logo-text {
+    font-size: 1.75rem;
+    font-weight: 800;
+    margin-bottom: 12px;
+}
+
+.footer-brand p {
+    color: var(--text-muted);
+    font-size: 1rem;
+    max-width: 400px;
 }
 
 .footer-links {
     display: flex;
-    gap: 48px;
+    gap: 40px;
+    flex-wrap: wrap;
+    justify-content: center;
 }
 
 .footer-links a {
     color: var(--text-muted);
     text-decoration: none;
     font-size: 1rem;
-    transition: all 0.2s;
+    font-weight: 500;
+    transition: all 0.3s var(--transition-smooth);
+    position: relative;
 }
 
 .footer-links a:hover {
     color: var(--primary);
+}
+
+.footer-links a::after {
+    content: '';
+    position: absolute;
+    bottom: -6px;
+    left: 0;
+    width: 0;
+    height: 1px;
+    background: var(--primary);
+    transition: width 0.3s var(--transition-smooth);
+}
+
+.footer-links a:hover::after {
+    width: 100%;
+}
+
+.footer-bottom {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+    border-top: 1px solid rgba(255, 255, 255, 0.05);
+    padding-top: 40px;
+    margin-top: 20px;
+}
+
+.copyright {
+    color: var(--text-muted);
+    font-size: 0.9rem;
+}
+
+.social-links {
+    display: flex;
+    gap: 24px;
+}
+
+.social-icon {
+    color: var(--text-muted);
+    transition: all 0.2s;
+}
+
+.social-icon:hover {
+    color: var(--primary);
+    transform: translateY(-3px);
 }
 
 /* ==========================================================================
@@ -2009,19 +2122,31 @@
     }
 
     .pricing-card {
-        padding: 56px 24px;
-        border-radius: 24px;
+        padding: 56px 32px;
+        border-radius: 32px;
+        width: calc(100% - 32px);
+        margin-left: auto;
+        margin-right: auto;
     }
 
     .price-tag .amount {
-        font-size: 4.5rem;
+        font-size: 5rem;
+    }
+
+    .pricing-features {
+        max-width: 100%;
+        padding: 0 10px;
     }
 
     /* --- Footer Links --- */
-    .footer-links {
-        flex-wrap: wrap;
+    .footer-bottom {
+        flex-direction: column;
+        gap: 24px;
+        text-align: center;
+    }
+
+    .social-links {
         justify-content: center;
-        gap: 24px 32px;
     }
 
     /* --- Mobile Menu Decor --- */

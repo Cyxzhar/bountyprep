@@ -1,6 +1,6 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Shield, Zap, Target, BookOpen, Layers, ArrowRight, CheckCircle, Crown, FlaskConical, Menu, X, Terminal as TerminalIcon } from 'lucide-react';
+import { Shield, Zap, Target, BookOpen, Layers, ArrowRight, CheckCircle, Crown, FlaskConical, Menu, X, Terminal as TerminalIcon, Twitter, Github, Linkedin, Youtube } from 'lucide-react';
 import './Landing.css';
 
 const Landing = () => {
@@ -18,6 +18,7 @@ const Landing = () => {
     const [terminalTypedText, setTerminalTypedText] = React.useState("");
     const [terminalLogs, setTerminalLogs] = React.useState([]);
     const terminalBodyRef = React.useRef(null);
+    const [activeModule, setActiveModule] = React.useState(0);
 
     // Auto-scroll terminal to bottom
     React.useEffect(() => {
@@ -513,18 +514,28 @@ const Landing = () => {
                         </div>
                         <div className="curriculum-visual animate-fade-in-up">
                             <div className="module-stack">
-                                <div className="module-item p1">
-                                    <span className="module-tag">WEB EXPLOIT</span>
-                                    SQLi Mastery
-                                </div>
-                                <div className="module-item p2">
-                                    <span className="module-tag">RECON</span>
-                                    XSS Exploitation
-                                </div>
-                                <div className="module-item p3">
-                                    <span className="module-tag">CLOUD</span>
-                                    Cloud Security
-                                </div>
+                                {[0, 1, 2].map((i) => {
+                                    // Calculate dynamic position class based on rotation
+                                    const pos = (i - activeModule + 3) % 3;
+                                    const posClass = pos === 0 ? 'p1' : pos === 1 ? 'p2' : 'p3';
+
+                                    const moduleData = [
+                                        { tag: "WEB EXPLOIT", title: "SQLi Mastery" },
+                                        { tag: "RECON", title: "XSS Exploitation" },
+                                        { tag: "CLOUD", title: "Cloud Security" }
+                                    ];
+
+                                    return (
+                                        <div
+                                            key={i}
+                                            className={`module-item ${posClass}`}
+                                            onClick={() => setActiveModule((activeModule + 1) % 3)}
+                                        >
+                                            <span className="module-tag">{moduleData[i].tag}</span>
+                                            {moduleData[i].title}
+                                        </div>
+                                    );
+                                })}
                             </div>
                         </div>
                     </div>
@@ -563,15 +574,26 @@ const Landing = () => {
                 <div className="container">
                     <div className="footer-content">
                         <div className="footer-brand">
-                            <img src="/logo.svg" alt="Bugora" />
-                            <span>Bug<span className="brand-accent">ora</span> v1.0</span>
+                            <h2 className="logo-text">Bug<span className="brand-accent">ora</span></h2>
+                            <p>Master the art of bug bounty hunting through immersive, real-world hacking scenarios.</p>
                         </div>
                         <div className="footer-links">
+                            <a href="#features">Features</a>
+                            <a href="#curriculum">Curriculum</a>
+                            <a href="#pricing">Pricing</a>
                             <a href="#">Terms</a>
                             <a href="#">Privacy</a>
-                            <a href="#">Support</a>
                         </div>
-                        <p className="copyright">&copy; 2026 Bugora. Mastery Unleashed.</p>
+                        <div className="footer-bottom">
+                            <div className="copyright">
+                                © 2026 Bugora Labs. All rights reserved.
+                            </div>
+                            <div className="social-links">
+                                <a href="#" className="social-icon"><Twitter size={20} /></a>
+                                <a href="#" className="social-icon"><Github size={20} /></a>
+                                <a href="#" className="social-icon"><Linkedin size={20} /></a>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </footer>
