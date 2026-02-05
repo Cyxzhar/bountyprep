@@ -118,21 +118,7 @@ export default function Profile() {
         }
     };
 
-    const handleSeed = async () => {
-        if (!window.confirm('This will update all course content in the database. Continue?')) return;
 
-        setIsSeeding(true);
-        info('Starting database seed...');
-
-        const result = await seedDatabase();
-
-        setIsSeeding(false);
-        if (result.success) {
-            success(`Seeded ${result.courses} courses and ${result.challenges} challenges!`);
-        } else {
-            error(`Seeding failed: ${result.error}`);
-        }
-    };
 
     const menuSections = [
         {
