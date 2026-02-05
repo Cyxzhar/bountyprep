@@ -447,12 +447,6 @@ const Landing = () => {
                         </div>
                         <div className="reveal-glow"></div>
 
-                        <div className="floating-stat s1">
-                            <Layers size={14} /> 50+ Real Labs
-                        </div>
-                        <div className="floating-stat s2">
-                            <Zap size={14} /> Global Skill Leaderboard
-                        </div>
                     </div>
                 </div>
             </section>
