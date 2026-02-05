@@ -71,6 +71,8 @@ export default function LabChallenge({ challenge, onComplete }) {
     const [validationResult, setValidationResult] = useState(null);
     const [currentStep, setCurrentStep] = useState(0);
     const [showNativeWarning, setShowNativeWarning] = useState(false);
+    const [hintsUsed, setHintsUsed] = useState(0);
+    const [revealedSteps, setRevealedSteps] = useState({});
 
     // Normalize tools list from challenge data
     const tools = useMemo(() => {
@@ -132,14 +134,23 @@ export default function LabChallenge({ challenge, onComplete }) {
         setValidationResult(result);
 
         if (result.success) {
-            const xpEarned = Math.round(challenge.xpReward * 1);
+            const hintPenalty = hintsUsed * 0.15;
+            const xpMultiplier = Math.max(1 - hintPenalty, 0.5);
+            const xpEarned = Math.round(challenge.xpReward * xpMultiplier);
 
             onComplete({
                 success: true,
                 xpEarned,
-                hintsUsed: 0,
+                hintsUsed,
                 flagCaptured: result.flagValue
             });
+        }
+    };
+
+    const handleShowHint = () => {
+        if (!revealedSteps[currentStep]) {
+            setHintsUsed(prev => prev + 1);
+            setRevealedSteps(prev => ({ ...prev, [currentStep]: true }));
         }
     };
 
@@ -235,10 +246,18 @@ export default function LabChallenge({ challenge, onComplete }) {
                         <p className="step-desc">{challenge.steps[currentStep].description}</p>
 
                         {challenge.steps[currentStep].hints && (
-                            <div className="micro-hints">
-                                {challenge.steps[currentStep].hints.map((h, i) => (
-                                    <div key={i} className="hint-pill"><Lightbulb size={12} /> {h}</div>
-                                ))}
+                            <div className="micro-hints-container">
+                                {!revealedSteps[currentStep] ? (
+                                    <button className="btn-show-hint" onClick={handleShowHint}>
+                                        <Lightbulb size={12} /> Show Hints for this Step (-15% XP)
+                                    </button>
+                                ) : (
+                                    <div className="micro-hints">
+                                        {challenge.steps[currentStep].hints.map((h, i) => (
+                                            <div key={i} className="hint-pill"><Lightbulb size={12} /> {h}</div>
+                                        ))}
+                                    </div>
+                                )}
                             </div>
                         )}
 

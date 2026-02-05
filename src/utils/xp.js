@@ -106,14 +106,14 @@ export function getLevelTitle(level) {
 /**
  * Calculate XP earned for a question
  */
-export function calculateQuestionXp(challengeXpReward, totalQuestions, isCorrect, usedHint = false) {
+export function calculateQuestionXp(challengeXpReward, totalQuestions, isCorrect, hintsUsedCount = 0) {
     if (!isCorrect) return 0;
 
-    let xp = Math.round(challengeXpReward / totalQuestions);
-    if (usedHint) {
-        xp = Math.round(xp * 0.5); // 50% XP if hint was used
-    }
-    return xp;
+    const baseQuestionXp = Math.round(challengeXpReward / totalQuestions);
+    const hintPenalty = (typeof hintsUsedCount === 'number' ? hintsUsedCount : (hintsUsedCount ? 1 : 0)) * 0.15;
+    const xpMultiplier = Math.max(1 - hintPenalty, 0.5);
+
+    return Math.round(baseQuestionXp * xpMultiplier);
 }
 
 /**
