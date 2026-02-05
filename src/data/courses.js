@@ -353,6 +353,7 @@ The condition \`'1'='1'\` is always true, bypassing authentication!
                         type: 'text',
                         duration: '25m',
                         xp: 125,
+                        relatedChallengeId: 'sqli-login-bypass',
                         content: `
 # SQL Injection Exploitation Techniques
 
@@ -570,6 +571,7 @@ http://site.com/#<img src=x onerror=alert(1)>
                         type: 'text',
                         duration: '20m',
                         xp: 100,
+                        relatedChallengeId: 'xss-stored-profile',
                         content: `
 # XSS Payloads & Exploitation
 
@@ -982,6 +984,7 @@ hashed = bcrypt.hashpw(password.encode(), salt)
                         type: 'text',
                         duration: '35m',
                         xp: 125,
+                        relatedChallengeId: 'nmap-service-scan',
                         content: `
 # Nmap: The Network Mapper
 
@@ -1262,6 +1265,7 @@ http.response.code == 404
                         type: 'text',
                         duration: '30m',
                         xp: 100,
+                        relatedChallengeId: 'brute-force-ssh',
                         content: `
 # SSH Exploitation & Security
 
@@ -3487,6 +3491,7 @@ Use these keys to access S3 buckets or control the account.
                         type: 'text',
                         duration: '30m',
                         xp: 100,
+                        relatedChallengeId: 'lfi-etc-passwd',
                         content: `
 # Server-Side Request Forgery (SSRF)
 

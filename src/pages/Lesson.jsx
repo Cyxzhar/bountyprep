@@ -1,10 +1,12 @@
 import { useParams, useNavigate } from 'react-router-dom';
 import {
     ChevronLeft, ChevronRight, CheckCircle, PlayCircle, FileText,
-    AlertCircle, RotateCcw
+    AlertCircle, RotateCcw, Copy, Check, ExternalLink, Target
 } from 'lucide-react';
 import ReactMarkdown from 'react-markdown';
 import { useState, useEffect } from 'react';
+import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter';
+import { atomDark } from 'react-syntax-highlighter/dist/esm/styles/prism';
 import { useAuth } from '../context/AuthContext';
 import { useToast } from '../context/ToastContext';
 import { useAchievement } from '../context/AchievementContext';
@@ -59,6 +61,8 @@ export default function Lesson() {
     let nextLessonId = null;
     let prevLessonId = null;
     let nextLessonTitle = null;
+    let allLessonsInModule = [];
+    let currentLessonIndex = -1;
 
     if (course) {
         // Flatten lessons to find current, prev, next
@@ -68,6 +72,11 @@ export default function Lesson() {
         if (currentIndex !== -1) {
             lesson = allLessons[currentIndex];
             currentModule = course.modules.find(m => m.lessons.some(l => l.id === lessonId));
+
+            if (currentModule) {
+                allLessonsInModule = currentModule.lessons;
+                currentLessonIndex = allLessonsInModule.findIndex(l => l.id === lessonId);
+            }
 
             if (currentIndex > 0) prevLessonId = allLessons[currentIndex - 1].id;
             if (currentIndex < allLessons.length - 1) {
@@ -87,6 +96,38 @@ export default function Lesson() {
             </div>
         );
     }
+
+    const [isCopied, setIsCopied] = useState(null);
+
+    const handleCopy = async (text) => {
+        try {
+            if (navigator.clipboard && window.isSecureContext) {
+                await navigator.clipboard.writeText(text);
+                setIsCopied(text);
+                setTimeout(() => setIsCopied(null), 2000);
+            } else {
+                throw new Error('Clipboard API unavailable');
+            }
+        } catch (err) {
+            console.warn('Clipboard API failed, using fallback', err);
+            const textArea = document.createElement("textarea");
+            textArea.value = text;
+            textArea.style.position = "fixed";
+            textArea.style.left = "-9999px";
+            textArea.style.top = "0";
+            document.body.appendChild(textArea);
+            textArea.focus();
+            textArea.select();
+            try {
+                document.execCommand('copy');
+                setIsCopied(text);
+                setTimeout(() => setIsCopied(null), 2000);
+            } catch (fallbackErr) {
+                console.error('Fallback copy failed', fallbackErr);
+            }
+            document.body.removeChild(textArea);
+        }
+    };
 
     const handleComplete = async () => {
         // Play click sound immediately
@@ -192,11 +233,50 @@ export default function Lesson() {
                     <div className="markdown-modern">
                         <ReactMarkdown
                             components={{
-                                code: ({ inline, children }) => (
-                                    inline
-                                        ? <code className="inline-code">{children}</code>
-                                        : <pre className="code-block"><code>{children}</code></pre>
-                                ),
+                                code: ({ node, children, className, ...props }) => {
+                                    const codeText = String(children).replace(/\n$/, '');
+                                    const match = /language-(\w+)/.exec(className || '');
+
+                                    // In react-markdown v10, block code has a language class
+                                    // and is typically NOT inline if it has multiple lines or a language
+                                    const isInline = !match;
+
+                                    if (isInline) {
+                                        return <code className="inline-code">{children}</code>
+                                    }
+
+                                    const isThisCopied = isCopied === codeText;
+
+                                    return (
+                                        <div className="code-block-container">
+                                            <div className="code-block-header">
+                                                <span className="code-lang">{match ? match[1] : 'code'}</span>
+                                                <button
+                                                    className="copy-btn"
+                                                    onClick={() => handleCopy(codeText)}
+                                                >
+                                                    {isThisCopied ? <Check size={14} /> : <Copy size={14} />}
+                                                    {isThisCopied ? 'Copied!' : 'Copy'}
+                                                </button>
+                                            </div>
+                                            <SyntaxHighlighter
+                                                style={atomDark}
+                                                language={match ? match[1] : 'text'}
+                                                PreTag="div"
+                                                className="syntax-highlighter-custom"
+                                                customStyle={{
+                                                    margin: 0,
+                                                    padding: '24px',
+                                                    background: 'transparent',
+                                                    fontSize: 'inherit',
+                                                    lineHeight: 'inherit'
+                                                }}
+                                            >
+                                                {codeText}
+                                            </SyntaxHighlighter>
+                                        </div>
+                                    );
+                                },
                                 blockquote: ({ children }) => {
                                     const text = children?.[1]?.props?.children?.[0] || '';
                                     if (typeof text === 'string' && text.includes('[!IMPORTANT]')) {
@@ -217,6 +297,28 @@ export default function Lesson() {
                         </ReactMarkdown>
                     </div>
 
+                    {/* Lab Integration CTA */}
+                    {lesson.relatedChallengeId && (
+                        <div className="lab-cta-card">
+                            <div className="lab-cta-icon">
+                                <Target size={32} />
+                            </div>
+                            <div className="lab-cta-info">
+                                <h3>Ready for Hands-on Practice?</h3>
+                                <p>Test what you've learned in the interactive lab environment.</p>
+                                <button
+                                    className="lab-action-btn"
+                                    onClick={() => {
+                                        playSFX('click');
+                                        navigate(`/challenge/${lesson.relatedChallengeId}`);
+                                    }}
+                                >
+                                    <ExternalLink size={18} /> Launch Lab Challenge
+                                </button>
+                            </div>
+                        </div>
+                    )}
+
                     {/* Enhanced Footer Navigation */}
                     <div className="lesson-footer">
                         <div className="footer-actions">
@@ -233,15 +335,37 @@ export default function Lesson() {
                                 <ChevronLeft size={16} /> Previous Lesson
                             </button>
 
-                            <button className="complete-btn-primary" onClick={handleComplete} disabled={saving}>
+                            <button
+                                className="complete-btn-primary"
+                                onClick={handleComplete}
+                                disabled={saving || (!isCompleted && scrollProgress < 95)}
+                            >
                                 <div className="btn-content">
                                     <span className="btn-label">
-                                        {saving ? 'Saving...' : (isCompleted ? 'Next Lesson' : 'Mark Complete')}
+                                        {saving ? 'Saving...' : (isCompleted ? 'Next Lesson' : (scrollProgress < 95 ? 'Read to Complete' : 'Mark Complete'))}
                                     </span>
                                     {nextLessonTitle && <span className="btn-subtext">Up Next: {nextLessonTitle}</span>}
                                 </div>
                                 <ChevronRight size={20} />
                             </button>
+                        </div>
+
+                        {/* Pagination / Jump */}
+                        <div className="module-pagination">
+                            <div className="pagination-info">
+                                <span>{currentModule?.title}</span>
+                                <span className="pagination-count">Lesson {currentLessonIndex + 1} of {allLessonsInModule.length}</span>
+                            </div>
+                            <div className="pagination-dots">
+                                {allLessonsInModule.map((l, idx) => (
+                                    <div
+                                        key={l.id}
+                                        className={`pagination-dot ${l.id === lessonId ? 'active' : ''} ${courseProgress?.completedLessons?.includes(l.id) ? 'completed' : ''}`}
+                                        onClick={() => navigate(`/course/${id}/lesson/${l.id}`)}
+                                        title={l.title}
+                                    />
+                                ))}
+                            </div>
                         </div>
                     </div>
                 </main >
