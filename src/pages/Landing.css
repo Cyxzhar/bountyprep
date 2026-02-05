@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Fira+Mono:wght@400;500;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;500;600&family=Fira+Mono:wght@400;500;700&family=JetBrains+Mono:wght@400;500;700&display=swap');
 /* Bugora Landing Page Styles - v1.0 Launch & Mobile Overhaul */
 
 :root {
@@ -440,13 +440,16 @@
 }
 
 /* --- App Reveal Simulation (High Fidelity) --- */
-.reveal-simulation {
+.simulation-container,
+.simulation-container * {
+    font-family: 'JetBrains Mono', 'Fira Mono', 'Fira Code', 'Hack', monospace !important;
+}
+
+.simulation-container {
     flex: 1;
     position: relative;
     display: flex;
     flex-direction: column;
-    font-family: 'Fira Mono', 'Fira Code', 'Hack', 'JetBrains Mono', monospace;
-    /* Ensure monospace */
 }
 
 .terminal-window {
@@ -727,15 +730,15 @@
 .terminal-body {
     flex: 1;
     padding: 16px;
-    font-size: 0.85rem;
+    font-size: 0.8rem;
     font-family: inherit;
     overflow-y: auto;
     color: #cdd6f4;
 }
 
 .term-line {
-    margin-bottom: 8px;
-    line-height: 1.5;
+    margin-bottom: 6px;
+    line-height: 1.4;
 }
 
 .prompt-wrapper {
@@ -747,7 +750,7 @@
 .prompt-user {
     color: #ff5555;
     /* Kali Root Red */
-    font-weight: 900;
+    font-weight: 700;
 }
 
 .prompt-sep {
