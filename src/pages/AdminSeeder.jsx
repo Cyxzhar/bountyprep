@@ -9,8 +9,9 @@ import { useState } from 'react';
 import { useAuth } from '../context/AuthContext';
 import { db } from '../lib/firebase';
 import { doc, setDoc, serverTimestamp } from 'firebase/firestore';
-import { challenges } from '../data/challenges';
+import { challenges, skillModules } from '../data/challenges';
 import { courses } from '../data/courses';
+import { achievements } from '../data/achievements';
 
 export default function AdminSeeder() {
     const { currentUser } = useAuth();
@@ -92,6 +93,43 @@ export default function AdminSeeder() {
                 }
             }
 
+            // Seed Achievements (Master List)
+            setStatus(prev => [...prev, { message: '🏆 Seeding Achievements...', type: 'info' }]);
+            for (const achievement of achievements) {
+                try {
+                    // Sanitize: Remove function 'condition'
+                    const { condition, ...achievementData } = achievement;
+
+                    await setDoc(doc(db, 'achievements', achievement.id), achievementData, { merge: true });
+                    setStatus(prev => [...prev, {
+                        message: `✅ Seeded Achievement: ${achievement.title}`,
+                        type: 'success'
+                    }]);
+                } catch (error) {
+                    setStatus(prev => [...prev, {
+                        message: `❌ Failed Achievement: ${achievement.id} - ${error.message}`,
+                        type: 'error'
+                    }]);
+                }
+            }
+
+            // Seed Skill Modules
+            setStatus(prev => [...prev, { message: '🧠 Seeding Skill Modules...', type: 'info' }]);
+            for (const module of skillModules) {
+                try {
+                    await setDoc(doc(db, 'skill_modules', module.id), module, { merge: true });
+                    setStatus(prev => [...prev, {
+                        message: `✅ Seeded Module: ${module.name}`,
+                        type: 'success'
+                    }]);
+                } catch (error) {
+                    setStatus(prev => [...prev, {
+                        message: `❌ Failed Module: ${module.id} - ${error.message}`,
+                        type: 'error'
+                    }]);
+                }
+            }
+
             setStatus(prev => [...prev, { message: '✨ Seeding complete!', type: 'info' }]);
             setDone(true);
         } catch (error) {
@@ -112,7 +150,7 @@ export default function AdminSeeder() {
             <h1 style={{ color: '#9fef00' }}>🔧 Admin: Seed Firestore</h1>
 
             <p style={{ opacity: 0.7, marginBottom: '1rem' }}>
-                This will migrate {courses.length} courses and {challenges.length} challenges to Firestore.
+                This will migrate {courses.length} courses, {challenges.length} challenges, {achievements.length} achievements, and {skillModules.length} skill modules to Firestore.
             </p>
 
             {currentUser ? (

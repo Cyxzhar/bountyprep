@@ -54,6 +54,18 @@ service cloud.firestore {
       allow write: if isAuthenticated(); // Enabled for seeding
     }
 
+    // Achievements master collection (write allowed for seeding)
+    match /achievements/{achievementId} {
+      allow read: if isAuthenticated();
+      allow write: if isAuthenticated();
+    }
+
+    // Skill Modules collection (write allowed for seeding)
+    match /skill_modules/{moduleId} {
+      allow read: if isAuthenticated();
+      allow write: if isAuthenticated();
+    }
+
     // Waitlist collection
     match /waitlist/{userId} {
       allow read, write: if isOwner(userId);

@@ -336,7 +336,7 @@ export default function MultipleChoiceChallenge({ challenge, savedProgress, onCo
             {/* Footer Buttons */}
             <div className="detail-footer multip-choice-footer" style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem' }}>
                 <button
-                    className="btn btn-outline"
+                    className="btn btn-secondary"
                     onClick={handlePrevious}
                     disabled={currentQ === 0}
                     style={{ justifySelf: 'start' }}
