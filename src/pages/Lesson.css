@@ -299,12 +299,83 @@
 }
 
 /* Code Blocks */
-.markdown-modern pre {
-    background: #08080a;
+.code-block-container {
+    margin: 24px 0;
     border-radius: var(--radius-md);
-    padding: 24px;
-    overflow-x: auto;
+    overflow: hidden;
     border: 1px solid rgba(255, 255, 255, 0.1);
+    background: #1a1a1e;
+    /* Match atomDark background roughly */
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+}
+
+.code-block-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 20px;
+    background: rgba(255, 255, 255, 0.03);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.code-lang {
+    font-family: var(--font-mono);
+    font-size: 0.7rem;
+    text-transform: uppercase;
+    color: var(--local-accent-primary);
+    letter-spacing: 0.1em;
+    font-weight: 700;
+}
+
+.copy-btn {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    color: var(--local-text-secondary);
+    font-size: 0.7rem;
+    font-weight: 600;
+    cursor: pointer;
+    padding: 6px 12px;
+    border-radius: 6px;
+    transition: all 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+.copy-btn:hover {
+    background: rgba(255, 255, 255, 0.1);
+    color: var(--local-text-primary);
+    transform: translateY(-1px);
+    border-color: rgba(255, 255, 255, 0.2);
+}
+
+.copy-btn:active {
+    transform: scale(0.95);
+}
+
+/* Syntax Highlighter Overrides */
+.syntax-highlighter-custom {
+    font-family: 'Fira Code', 'Ubuntu Mono', var(--font-mono) !important;
+    overflow-x: auto !important;
+    scrollbar-width: thin;
+    scrollbar-color: rgba(255, 255, 255, 0.1) transparent;
+}
+
+.syntax-highlighter-custom::-webkit-scrollbar {
+    height: 6px;
+}
+
+.syntax-highlighter-custom::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+.syntax-highlighter-custom::-webkit-scrollbar-thumb {
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 10px;
+}
+
+.syntax-highlighter-custom::-webkit-scrollbar-thumb:hover {
+    background: rgba(255, 255, 255, 0.2);
 }
 
 .markdown-modern code {
@@ -371,6 +442,15 @@
     background: #B8FF33;
     transform: translateY(-2px);
     box-shadow: 0 8px 25px rgba(159, 239, 0, 0.4);
+}
+
+.complete-btn-primary:disabled {
+    background: rgba(255, 255, 255, 0.05);
+    color: var(--local-text-secondary);
+    box-shadow: none;
+    cursor: not-allowed;
+    transform: none;
+    border: 1px solid rgba(255, 255, 255, 0.1);
 }
 
 .btn-content {
@@ -465,12 +545,289 @@
     }
 }
 
+/* Lab CTA Card */
+.lab-cta-card {
+    display: flex;
+    align-items: center;
+    gap: 24px;
+    background: linear-gradient(135deg, rgba(159, 239, 0, 0.1), rgba(0, 217, 255, 0.1));
+    border: 1px solid rgba(159, 239, 0, 0.2);
+    border-radius: var(--radius-md);
+    padding: 32px;
+    margin-top: 64px;
+    position: relative;
+    overflow: hidden;
+}
+
+.lab-cta-card::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    right: 0;
+    width: 200px;
+    height: 100%;
+    background: radial-gradient(circle at 100% 50%, rgba(159, 239, 0, 0.1) 0%, transparent 70%);
+    pointer-events: none;
+}
+
+.lab-cta-icon {
+    background: rgba(159, 239, 0, 0.1);
+    color: var(--local-accent-primary);
+    width: 64px;
+    height: 64px;
+    border-radius: 16px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+}
+
+.lab-cta-info h3 {
+    font-family: var(--font-heading);
+    font-size: 1.4rem;
+    color: #fff;
+    margin-bottom: 8px;
+}
+
+.lab-cta-info p {
+    color: var(--local-text-secondary);
+    font-size: 1rem;
+    margin-bottom: 24px !important;
+}
+
+.lab-action-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background: var(--local-accent-secondary);
+    color: #000;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 8px;
+    font-weight: 700;
+    font-size: 0.9rem;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.lab-action-btn:hover {
+    background: #00f2ff;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 15px rgba(0, 217, 255, 0.3);
+}
+
+/* Module Pagination */
+.module-pagination {
+    margin-top: 48px;
+    background: rgba(255, 255, 255, 0.03);
+    border-radius: var(--radius-md);
+    padding: 24px;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.pagination-info {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 0.9rem;
+    color: var(--local-text-secondary);
+    font-weight: 500;
+}
+
+.pagination-count {
+    color: var(--local-accent-primary);
+    font-family: var(--font-mono);
+    font-weight: 700;
+}
+
+.pagination-dots {
+    display: flex;
+    gap: 12px;
+    justify-content: center;
+}
+
+.pagination-dot {
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.1);
+    cursor: pointer;
+    transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+.pagination-dot:hover {
+    background: rgba(255, 255, 255, 0.3);
+    transform: scale(1.2);
+}
+
+.pagination-dot.active {
+    background: var(--local-accent-primary);
+    width: 24px;
+    border-radius: 100px;
+    box-shadow: 0 0 10px var(--local-accent-glow);
+}
+
+.pagination-dot.completed:not(.active) {
+    background: rgba(159, 239, 0, 0.4);
+}
+
+/* --- Mobile Responsiveness --- */
 @media (max-width: 1024px) {
     .lesson-layout-modern {
         grid-template-columns: 1fr;
+        padding: 32px 16px;
+        gap: 24px;
+    }
+
+    .hero-top-nav {
+        margin-bottom: 24px;
     }
 
     .hero-title {
-        font-size: 2rem;
+        font-size: 2.25rem;
+    }
+
+    .lesson-hero {
+        padding: 40px 16px;
+    }
+
+    .section-header h2 {
+        font-size: 1.5rem;
+        margin-top: 40px;
+    }
+
+    .markdown-modern {
+        font-size: 1.05rem;
+    }
+
+    .lab-cta-card {
+        flex-direction: column;
+        text-align: center;
+        padding: 24px;
+    }
+
+    .lab-cta-icon {
+        margin-bottom: 16px;
+    }
+
+    .footer-actions {
+        flex-direction: column;
+        gap: 16px;
+    }
+
+    .nav-btn-secondary,
+    .complete-btn-primary {
+        width: 100%;
+        justify-content: center;
+    }
+
+    /* Mobile Code Adjustments */
+    .syntax-highlighter-custom {
+        font-size: 0.8rem !important;
+        padding: 16px !important;
+        white-space: pre !important;
+    }
+
+    .code-block-header {
+        padding: 8px 12px;
+    }
+
+    .code-lang {
+        font-size: 0.6rem;
+    }
+
+    .copy-btn {
+        padding: 4px 8px;
+        font-size: 0.65rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .hero-top-nav {
+        flex-direction: column;
+        gap: 16px;
+        align-items: flex-start;
+    }
+
+    .lesson-meta-badge {
+        width: 100%;
+        justify-content: space-between;
+    }
+
+    .icon-btn-back {
+        width: 100%;
+        justify-content: center;
+    }
+
+    .hero-title {
+        font-size: 1.75rem;
+        letter-spacing: -0.02em;
+    }
+
+    .module-tag {
+        font-size: 0.75rem;
+        margin-bottom: 12px;
+    }
+
+    .section-header h2 {
+        font-size: 1.25rem;
+        gap: 8px;
+    }
+
+    .section-header h2::before {
+        height: 20px;
+        width: 4px;
+    }
+
+    .markdown-modern {
+        font-size: 1rem;
+    }
+
+    .markdown-modern ul li {
+        padding: 16px;
+        font-size: 0.95rem;
+    }
+
+    .markdown-modern ul li::before {
+        font-size: 1rem;
+    }
+
+    .callout {
+        padding: 16px;
+        font-size: 0.95rem;
+    }
+
+    .markdown-modern ul li {
+        word-break: break-word;
+        overflow-wrap: anywhere;
+    }
+
+    .markdown-modern .inline-code {
+        max-width: 100%;
+        display: inline;
+        white-space: pre-wrap;
+        word-break: break-all;
+    }
+
+    .module-pagination {
+        padding: 16px;
+        margin-top: 32px;
+    }
+
+    .pagination-info {
+        flex-direction: column;
+        gap: 12px;
+        align-items: flex-start;
+    }
+
+    .lab-cta-card {
+        padding: 24px 16px;
+        margin-top: 40px;
+    }
+
+    .lab-cta-info h3 {
+        font-size: 1.25rem;
     }
 }
