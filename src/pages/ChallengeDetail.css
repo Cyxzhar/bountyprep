@@ -502,10 +502,12 @@
     }
 }
 
+/* Desktop Responsive Styles */
 @media (min-width: 768px) {
     .detail-content {
-        max-width: 600px;
+        max-width: 900px;
         margin: 0 auto;
+        padding: var(--space-xl) var(--space-xl);
     }
 
     .detail-footer {
@@ -514,12 +516,225 @@
     }
 
     .detail-footer .btn {
-        max-width: 400px;
+        max-width: 500px;
+        min-width: 300px;
     }
 
     .audio-control-btn {
         width: 40px;
         height: 40px;
+    }
+
+    .scenario-card {
+        padding: var(--space-xxl) var(--space-xl);
+        margin-bottom: var(--space-xxl);
+    }
+
+    .scenario-title {
+        font-size: 1.5rem;
+        margin-bottom: var(--space-lg);
+    }
+
+    .scenario-text {
+        font-size: 1rem;
+        margin-bottom: var(--space-xl);
+    }
+
+    .code-block {
+        margin-top: var(--space-xl);
+    }
+
+    .code-block pre {
+        padding: var(--space-lg);
+        font-size: 0.875rem;
+        line-height: 1.7;
+    }
+
+    .question-text {
+        font-size: 1.125rem;
+        margin-bottom: var(--space-xl);
+    }
+
+    .option-btn {
+        padding: var(--space-lg) var(--space-lg);
+        min-height: 72px;
+        font-size: 1rem;
+    }
+
+    .option-letter {
+        width: 40px;
+        height: 40px;
+        font-size: 1rem;
+    }
+
+    .hint-btn {
+        min-height: 56px;
+        font-size: 1rem;
+        max-width: 600px;
+        margin-left: auto;
+        margin-right: auto;
+    }
+
+    .hint-box {
+        padding: var(--space-xl);
+        max-width: 800px;
+        margin-left: auto;
+        margin-right: auto;
+    }
+
+    .hint-box p {
+        font-size: 1rem;
+    }
+
+    .result-box {
+        padding: var(--space-xxl) var(--space-xl);
+        max-width: 800px;
+        margin-left: auto;
+        margin-right: auto;
+    }
+
+    .result-header {
+        font-size: 1.25rem;
+        margin-bottom: var(--space-lg);
+    }
+
+    .result-explanation {
+        font-size: 1rem;
+        line-height: 1.8;
+    }
+
+    .xp-earned {
+        font-size: 1rem;
+    }
+
+    .session-xp {
+        font-size: 1rem;
+        padding: var(--space-md) var(--space-lg);
+    }
+
+    .question-progress {
+        margin-bottom: var(--space-xxl);
+    }
+
+    .question-progress span {
+        font-size: 1rem;
+        margin-bottom: var(--space-md);
+    }
+
+    .options-list {
+        gap: var(--space-lg);
+    }
+}
+
+@media (min-width: 1024px) {
+    .detail-screen {
+        box-sizing: border-box;
+    }
+
+    .detail-content {
+        max-width: 1100px;
+        padding: var(--space-xxl) var(--space-xxl);
+    }
+
+    .detail-header {
+        padding: var(--space-lg) var(--space-xxl);
+    }
+
+    .detail-footer {
+        padding: var(--space-xl) var(--space-xxl);
+    }
+
+    .detail-footer .btn {
+        max-width: 600px;
+        min-width: 400px;
+        height: 60px;
+        font-size: 1.0625rem;
+    }
+
+    .scenario-card {
+        padding: 2.5rem 2rem;
+    }
+
+    .scenario-title {
+        font-size: 1.75rem;
+    }
+
+    .scenario-text {
+        font-size: 1.0625rem;
+        line-height: 1.8;
+    }
+
+    .question-text {
+        font-size: 1.25rem;
+        margin-bottom: 2rem;
+    }
+
+    .option-btn {
+        min-height: 80px;
+        font-size: 1.0625rem;
+        transition: all 0.2s ease;
+    }
+
+    .option-btn:hover:not(:disabled) {
+        transform: translateX(8px);
+        box-shadow: 0 4px 16px rgba(159, 239, 0, 0.2);
+    }
+
+    .result-box {
+        padding: 2.5rem 2rem;
+    }
+}
+
+@media (min-width: 1440px) {
+    .detail-content {
+        max-width: 1300px;
+        padding: 3rem;
+    }
+
+    .scenario-card {
+        padding: 3rem 2.5rem;
+    }
+
+    .scenario-title {
+        font-size: 2rem;
+        margin-bottom: var(--space-xl);
+    }
+
+    .scenario-text {
+        font-size: 1.125rem;
+    }
+
+    .code-block pre {
+        font-size: 0.9375rem;
+        padding: var(--space-xl);
+    }
+
+    .question-text {
+        font-size: 1.375rem;
+    }
+
+    .option-btn {
+        padding: var(--space-xl) var(--space-xl);
+        min-height: 88px;
+        font-size: 1.125rem;
+    }
+
+    .option-letter {
+        width: 48px;
+        height: 48px;
+        font-size: 1.125rem;
+    }
+
+    .result-box {
+        padding: 3rem 2.5rem;
+    }
+
+    .result-header {
+        font-size: 1.5rem;
+    }
+
+    .result-explanation {
+        font-size: 1.125rem;
     }
 }
 
