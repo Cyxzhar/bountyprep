@@ -476,8 +476,27 @@
 }
 
 @media (min-width: 1024px) {
+    .lesson-page {
+        overflow-x: hidden;
+    }
+
     .lesson-sidebar-desktop {
         display: block;
+    }
+
+    .lesson-layout-modern {
+        max-width: 1400px;
+        margin: 0 auto;
+        padding: 48px 2.5rem;
+        gap: 60px;
+    }
+
+    .lesson-hero {
+        padding: 48px 2.5rem;
+    }
+
+    .hero-title {
+        font-size: 3.5rem;
     }
 
     .sidebar-sticky {
@@ -542,6 +561,40 @@
         background: var(--local-accent-primary);
         border-radius: 50%;
         box-shadow: 0 0 0 4px rgba(159, 239, 0, 0.2);
+    }
+
+    .markdown-modern {
+        font-size: 1.125rem;
+        line-height: 1.9;
+    }
+
+    .section-header h2 {
+        font-size: 2rem;
+        margin-top: 64px;
+    }
+}
+
+@media (min-width: 1440px) {
+    .lesson-layout-modern {
+        max-width: 1500px;
+        padding: 64px 3rem;
+        gap: 80px;
+    }
+
+    .lesson-hero {
+        padding: 56px 3rem;
+    }
+
+    .hero-title {
+        font-size: 4rem;
+    }
+
+    .markdown-modern {
+        font-size: 1.15rem;
+    }
+
+    .section-header h2 {
+        font-size: 2.25rem;
     }
 }
 

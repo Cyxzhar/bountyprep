@@ -12,8 +12,7 @@ export default function MainLayout({ children }) {
     // Check if current path should hide navigation
     const showNav = location.pathname === '/'
         ? false  // Hide nav on landing page
-        : !noNavPages.some(path => location.pathname.startsWith(path))
-            && !location.pathname.startsWith('/course/');  // Hide on public course preview
+        : !noNavPages.some(path => location.pathname.startsWith(path));
 
     if (!showNav) {
         return children;

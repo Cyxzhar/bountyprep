@@ -566,3 +566,118 @@
         opacity: 0;
     }
 }
+
+/* Desktop Responsive Styles */
+@media (min-width: 1024px) {
+    .course-detail-page {
+        overflow-x: hidden;
+    }
+
+    .course-header-nav {
+        padding: var(--space-xl) 2.5rem;
+    }
+
+    .course-hero {
+        padding: 4rem 2.5rem 3rem;
+    }
+
+    .course-hero h1 {
+        font-size: 3rem;
+    }
+
+    .course-hero p {
+        font-size: 1.125rem;
+        max-width: 700px;
+    }
+
+    .course-content {
+        max-width: 1300px;
+        padding: 2rem 2.5rem;
+    }
+
+    .modules-list {
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 2rem 2.5rem;
+    }
+
+    .section-title {
+        font-size: 1.75rem;
+        margin-bottom: var(--space-xl);
+    }
+
+    .module-title-row h3 {
+        font-size: 1.375rem;
+    }
+
+    .lesson-item {
+        padding: var(--space-xl) var(--space-lg);
+        min-height: 80px;
+    }
+
+    .lesson-item:hover {
+        transform: translateX(8px);
+    }
+
+    .lesson-icon {
+        min-width: 52px;
+        width: 52px;
+        min-height: 52px;
+        height: 52px;
+    }
+
+    .lesson-title {
+        font-size: 1.0625rem;
+    }
+
+    .lesson-meta {
+        font-size: 0.8125rem;
+    }
+
+    .start-course-btn {
+        min-height: 60px;
+        height: 60px;
+        font-size: 1.0625rem;
+        padding: 0 2.5rem;
+    }
+}
+
+@media (min-width: 1440px) {
+    .course-header-nav {
+        padding: var(--space-xl) 3rem;
+    }
+
+    .course-hero {
+        padding: 5rem 3rem 3.5rem;
+    }
+
+    .course-hero h1 {
+        font-size: 3.5rem;
+    }
+
+    .course-content {
+        max-width: 1400px;
+        padding: 2.5rem 3rem;
+    }
+
+    .modules-list {
+        max-width: 1300px;
+        padding: 2.5rem 3rem;
+    }
+
+    .lesson-item {
+        padding: 1.5rem var(--space-xl);
+        min-height: 88px;
+    }
+
+    .lesson-icon {
+        min-width: 56px;
+        width: 56px;
+        min-height: 56px;
+        height: 56px;
+    }
+
+    .lesson-title {
+        font-size: 1.125rem;
+    }
+}

@@ -274,7 +274,7 @@
 .heatmap-grid {
     display: grid;
     grid-template-columns: repeat(13, 1fr);
-    gap: var(--space-xs);
+    gap: 4px;
     margin-bottom: var(--space-md);
 }
 
@@ -285,6 +285,8 @@
 }
 
 .heat-cell {
+    width: 12px;
+    height: 12px;
     aspect-ratio: 1;
     border-radius: 3px;
     background: rgba(255, 255, 255, 0.05);
@@ -548,6 +550,17 @@
         box-sizing: border-box;
     }
 
+    .heatmap-grid {
+        gap: 5px;
+        max-width: 700px;
+        margin-left: 0;
+    }
+
+    .heat-cell {
+        width: 11px;
+        height: 11px;
+    }
+
     /* Header */
     .page-header {
         margin-bottom: 48px;
@@ -659,6 +672,15 @@
 
     .stats-grid {
         gap: var(--space-2xl);
+    }
+
+    .heatmap-grid {
+        max-width: 750px;
+    }
+
+    .heat-cell {
+        width: 12px;
+        height: 12px;
     }
 
     .stat-card {
