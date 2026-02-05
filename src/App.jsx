@@ -8,6 +8,7 @@ import { SoundProvider } from './context/SoundContext';
 import { Loader2 } from 'lucide-react';
 
 // Lazy load pages for performance
+const Landing = lazy(() => import('./pages/Landing'));
 const Splash = lazy(() => import('./pages/Splash'));
 const Welcome = lazy(() => import('./pages/onboarding/Welcome'));
 const GoalSelection = lazy(() => import('./pages/onboarding/GoalSelection'));
@@ -48,7 +49,8 @@ function App() {
               <SoundProvider>
                 <Suspense fallback={<PageLoader />}>
                   <Routes>
-                    <Route path="/" element={<Splash />} />
+                    <Route path="/" element={<Landing />} />
+                    <Route path="/splash" element={<Splash />} />
                     <Route path="/onboarding/welcome" element={<Welcome />} />
                     <Route path="/onboarding/goal" element={<GoalSelection />} />
                     <Route path="/onboarding/experience" element={<ExperienceLevel />} />
