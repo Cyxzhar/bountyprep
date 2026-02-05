@@ -530,3 +530,157 @@
 .progress-screen .module-card .ring-fill {
     stroke: var(--neon-green);
 }
+/* ============================================
+   DESKTOP RESPONSIVE STYLES
+   ============================================ */
+
+@media (min-width: 1024px) {
+    .progress-screen {
+        overflow-x: hidden;
+    }
+
+    .progress-screen .screen-content {
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: var(--space-2xl) var(--space-xl);
+        padding-bottom: var(--space-2xl);
+        width: 100%;
+        box-sizing: border-box;
+    }
+
+    /* Header */
+    .page-header {
+        margin-bottom: 48px;
+    }
+
+    /* Level Card */
+    .level-card {
+        padding: var(--space-2xl);
+        margin-bottom: 48px;
+    }
+
+    .level-number {
+        font-size: 5rem;
+    }
+
+    .level-title {
+        font-size: 1.75rem;
+    }
+
+    /* Stats Grid */
+    .stats-section {
+        margin-bottom: 48px;
+    }
+
+    .stats-grid {
+        grid-template-columns: repeat(3, 1fr);
+        gap: var(--space-xl);
+    }
+
+    .stat-card {
+        padding: 32px 24px;
+        min-height: 140px;
+    }
+
+    .stat-icon {
+        width: 56px;
+        height: 56px;
+    }
+
+    .stat-value {
+        font-size: 3rem;
+    }
+
+    .stat-label {
+        font-size: 1rem;
+    }
+
+    /* Activity Heatmap */
+    .activity-section {
+        margin-bottom: 48px;
+    }
+
+    /* Skills Section */
+    .skills-section {
+        margin-bottom: 48px;
+    }
+
+    .skill-row {
+        padding: var(--space-xl);
+        min-height: 80px;
+    }
+
+    .skill-icon {
+        width: 56px;
+        height: 56px;
+    }
+
+    .skill-name {
+        font-size: 1.1rem;
+    }
+
+    /* Achievements Grid */
+    .achievements-grid {
+        grid-template-columns: repeat(3, 1fr);
+        gap: var(--space-xl);
+    }
+
+    .achievement-card {
+        padding: var(--space-xl);
+        min-height: 200px;
+    }
+
+    .achievement-icon {
+        width: 72px;
+        height: 72px;
+        margin-bottom: var(--space-lg);
+    }
+
+    .achievement-icon svg {
+        width: 36px;
+        height: 36px;
+    }
+
+    .achievement-title {
+        font-size: 1.1rem;
+    }
+
+    .achievement-desc {
+        font-size: 0.95rem;
+    }
+}
+
+/* Large Desktop */
+@media (min-width: 1440px) {
+    .progress-screen .screen-content {
+        max-width: 1400px;
+        padding: 48px 80px;
+    }
+
+    .stats-grid {
+        gap: var(--space-2xl);
+    }
+
+    .stat-card {
+        padding: 40px 28px;
+    }
+
+    .stat-value {
+        font-size: 3.5rem;
+    }
+
+    .achievements-grid {
+        grid-template-columns: repeat(4, 1fr);
+    }
+
+    .level-number {
+        font-size: 6rem;
+    }
+}
+
+/* Ultra-wide */
+@media (min-width: 1920px) {
+    .progress-screen .screen-content {
+        max-width: 1600px;
+    }
+}

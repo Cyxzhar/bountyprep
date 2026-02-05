@@ -1181,3 +1181,159 @@
         height: 64px;
     }
 }
+
+/* ============================================
+   DESKTOP RESPONSIVE STYLES
+   ============================================ */
+
+@media (min-width: 1024px) {
+    .interview-screen {
+        overflow-x: hidden;
+    }
+
+    .interview-screen .screen-content {
+        max-width: 900px;
+        margin: 0 auto;
+        padding: var(--space-2xl) var(--space-xl);
+        padding-bottom: var(--space-2xl);
+        width: 100%;
+        box-sizing: border-box;
+    }
+
+    /* Intro Section */
+    .interview-intro {
+        margin-bottom: 48px;
+    }
+
+    .intro-icon {
+        width: 96px;
+        height: 96px;
+    }
+
+    .intro-icon svg {
+        width: 48px;
+        height: 48px;
+    }
+
+    .intro-title {
+        font-size: 3rem;
+    }
+
+    .intro-subtitle {
+        font-size: 1.25rem;
+    }
+
+    /* Difficulty Section */
+    .difficulty-section {
+        margin-bottom: 48px;
+    }
+
+    .difficulty-grid {
+        gap: var(--space-xl);
+    }
+
+    .diff-card {
+        padding: var(--space-xl);
+        min-height: 100px;
+    }
+
+    .diff-icon {
+        width: 56px;
+        height: 56px;
+        min-width: 56px;
+        min-height: 56px;
+    }
+
+    .diff-title {
+        font-size: 1.15rem;
+    }
+
+    .diff-desc {
+        font-size: 0.95rem;
+    }
+
+    /* Topics Section */
+    .topics-section {
+        margin-bottom: 48px;
+    }
+
+    .topics-grid {
+        gap: var(--space-md);
+    }
+
+    .topic-chip {
+        padding: 12px 20px;
+        font-size: 0.95rem;
+    }
+
+    /* Quota Info */
+    .quota-info {
+        padding: var(--space-lg);
+        font-size: 1rem;
+    }
+
+    /* CTA Section */
+    .cta-section {
+        margin-top: auto;
+    }
+
+    /* Chat Mode */
+    .interview-screen.chat-mode .messages-container {
+        max-width: 900px;
+        margin: 0 auto;
+        padding: var(--space-2xl) var(--space-xl);
+    }
+
+    .message-bubble {
+        max-width: 75%;
+        padding: var(--space-xl);
+        font-size: 1.05rem;
+    }
+
+    .message-avatar {
+        width: 48px;
+        height: 48px;
+        min-width: 48px;
+        min-height: 48px;
+    }
+
+    /* Chat Input */
+    .chat-input-area {
+        max-width: 900px;
+        margin: 0 auto;
+        padding: var(--space-lg) var(--space-xl);
+    }
+
+    .chat-input {
+        font-size: 1.05rem;
+        min-height: 56px;
+    }
+
+    /* Modals */
+    .modal-content {
+        max-width: 700px;
+    }
+
+    .history-modal {
+        max-width: 600px;
+    }
+
+    .session-viewer-modal {
+        max-width: 900px;
+    }
+}
+
+/* Large Desktop */
+@media (min-width: 1440px) {
+    .interview-screen .screen-content {
+        max-width: 1000px;
+    }
+
+    .interview-screen.chat-mode .messages-container {
+        max-width: 1000px;
+    }
+
+    .chat-input-area {
+        max-width: 1000px;
+    }
+}

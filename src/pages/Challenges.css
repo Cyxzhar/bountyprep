@@ -556,3 +556,118 @@
     border: 1px solid rgba(255, 215, 0, 0.3);
     font-weight: 600;
 }
+/* ============================================
+   DESKTOP RESPONSIVE STYLES
+   ============================================ */
+
+@media (min-width: 1024px) {
+    .challenges-screen {
+        overflow-x: hidden;
+    }
+
+    .challenges-screen .screen-content {
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: var(--space-2xl) var(--space-xl);
+        padding-bottom: var(--space-2xl);
+        width: 100%;
+        box-sizing: border-box;
+    }
+
+    /* Header */
+    .page-header {
+        margin-bottom: 48px;
+    }
+
+    .page-header h1 {
+        font-size: 3rem;
+    }
+
+    .header-subtitle {
+        font-size: 1.125rem;
+    }
+
+    /* Search & Filters */
+    .search-wrapper {
+        margin-bottom: var(--space-xl);
+    }
+
+    .search-input {
+        font-size: 1rem;
+        padding: 14px 20px 14px 48px;
+    }
+
+    /* Filter Sections */
+    .filters-section {
+        margin-bottom: var(--space-2xl);
+    }
+
+    /* Challenge Stats */
+    .challenge-stats {
+        padding: var(--space-xl);
+        gap: var(--space-2xl);
+    }
+
+    /* Challenges List: Grid on desktop */
+    .challenges-list {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: var(--space-lg);
+    }
+
+    .challenge-card {
+        padding: var(--space-xl);
+        min-height: 120px;
+    }
+
+    .card-icon {
+        width: 56px;
+        height: 56px;
+        min-width: 56px;
+        min-height: 56px;
+    }
+
+    .card-icon svg {
+        width: 28px;
+        height: 28px;
+    }
+
+    .card-title {
+        font-size: 1.1rem;
+    }
+
+    .card-desc {
+        font-size: 0.95rem;
+    }
+}
+
+/* Large Desktop */
+@media (min-width: 1440px) {
+    .challenges-screen .screen-content {
+        max-width: 1400px;
+        padding: 48px 80px;
+    }
+
+    .challenges-list {
+        gap: var(--space-xl);
+    }
+
+    .challenge-card {
+        padding: 32px 28px;
+        min-height: 140px;
+    }
+
+    .card-icon {
+        width: 64px;
+        height: 64px;
+        min-width: 64px;
+        min-height: 64px;
+    }
+}
+
+/* Ultra-wide */
+@media (min-width: 1920px) {
+    .challenges-screen .screen-content {
+        max-width: 1600px;
+    }
+}

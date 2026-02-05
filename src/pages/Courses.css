@@ -566,3 +566,97 @@
         padding-bottom: var(--space-sm);
     }
 }
+/* ============================================
+   DESKTOP RESPONSIVE STYLES
+   ============================================ */
+
+@media (min-width: 1024px) {
+    .courses-screen {
+        overflow-x: hidden;
+    }
+
+    .courses-screen .screen-content {
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: var(--space-2xl) var(--space-xl);
+        padding-bottom: var(--space-2xl);
+        width: 100%;
+        box-sizing: border-box;
+    }
+
+    /* Header */
+    .page-header {
+        margin-bottom: 48px;
+    }
+
+    .page-header h1 {
+        font-size: 3rem;
+    }
+
+    /* Courses Grid */
+    .courses-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: var(--space-xl);
+    }
+
+    .course-card {
+        padding: var(--space-2xl);
+        min-height: 280px;
+    }
+
+    .course-icon {
+        width: 72px;
+        height: 72px;
+        margin-bottom: var(--space-lg);
+    }
+
+    .course-icon svg {
+        width: 36px;
+        height: 36px;
+    }
+
+    .course-title {
+        font-size: 1.5rem;
+    }
+
+    .course-desc {
+        font-size: 1.05rem;
+    }
+
+    .course-meta {
+        gap: var(--space-lg);
+    }
+
+    .meta-item {
+        font-size: 0.95rem;
+    }
+}
+
+/* Large Desktop */
+@media (min-width: 1440px) {
+    .courses-screen .screen-content {
+        max-width: 1400px;
+        padding: 48px 80px;
+    }
+
+    .courses-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: var(--space-2xl);
+    }
+
+    .course-card {
+        padding: 40px 32px;
+        min-height: 320px;
+    }
+}
+
+/* Ultra-wide: 3 columns */
+@media (min-width: 1920px) {
+    .courses-screen .screen-content {
+        max-width: 1600px;
+    }
+
+    .courses-grid {
+        grid-template-columns: repeat(3, 1fr);
+    }
+}
