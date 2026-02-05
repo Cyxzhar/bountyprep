@@ -1,3 +1,4 @@
+import { useMemo } from 'react';
 import {
     Flame, Target, Trophy, ChevronRight, Calendar,
     CheckCircle, Zap, Award, Lock, Syringe, Link, IdCard, RefreshCw, Upload
@@ -36,8 +37,36 @@ export default function Progress() {
     const correctAnswers = currentUser?.totalCorrectAnswers || 0;
     const accuracy = totalQuestions > 0 ? Math.round((correctAnswers / totalQuestions) * 100) : 0;
 
-    // Generate heatmap data (placeholder for now - would load from Firestore)
-    const heatmapData = Array(91).fill(0).map(() => Math.floor(Math.random() * 4));
+    // Generate real heatmap data from user activity
+    const heatmapData = useMemo(() => {
+        const data = [];
+        const activity = currentUser?.activity || {};
+        const now = new Date();
+
+        // Last 90 days
+        for (let i = 90; i >= 0; i--) {
+            const date = new Date(now);
+            date.setDate(date.getDate() - i);
+            const dateStr = date.toISOString().split('T')[0];
+            const count = activity[dateStr] || 0;
+
+            // Map count to level (0-3)
+            // 0: none, 1: low, 2: med, 3: high
+            let level = 0;
+            if (count > 0) {
+                if (count <= 2) level = 1;
+                else if (count <= 5) level = 2;
+                else level = 3;
+            }
+
+            data.push({
+                date: dateStr,
+                count,
+                level
+            });
+        }
+        return data;
+    }, [currentUser?.activity]);
 
     return (
         <div className="progress-screen">
@@ -106,11 +135,11 @@ export default function Progress() {
                     </div>
                     <div className="heatmap-container">
                         <div className="heatmap-grid">
-                            {heatmapData.map((level, i) => (
+                            {heatmapData.map((day, i) => (
                                 <div
                                     key={i}
-                                    className={`heat-cell level-${level}`}
-                                    title={`${level} challenges`}
+                                    className={`heat-cell level-${day.level}`}
+                                    title={`${day.date}: ${day.count} activities`}
                                 />
                             ))}
                         </div>

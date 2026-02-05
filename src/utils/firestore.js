@@ -7,6 +7,27 @@ import { db } from '../lib/firebase';
 import { checkNewAchievements } from './gamification';
 
 /**
+ * Record activity for the current day
+ */
+export async function recordActivity(userId) {
+    try {
+        const userRef = doc(db, 'users', userId);
+        const now = new Date();
+        const dateStr = now.toISOString().split('T')[0]; // YYYY-MM-DD
+
+        await setDoc(userRef, {
+            activity: {
+                [dateStr]: increment(1)
+            },
+            lastActivityDate: serverTimestamp(),
+            updatedAt: serverTimestamp()
+        }, { merge: true });
+    } catch (err) {
+        console.warn('Failed to record activity:', err);
+    }
+}
+
+/**
  * Save challenge progress to Firestore
  */
 export async function saveChallengeProgress(userId, challengeId, data) {
@@ -98,6 +119,9 @@ export async function updateUserStats(userId, xpEarned, isCorrect) {
 
         await setDoc(userRef, updates, { merge: true });
 
+        // Record activity for today
+        await recordActivity(userId);
+
         // Check achievements after update
         return await processAchievements(userId);
     } catch (err) {
@@ -136,6 +160,9 @@ export async function markChallengeCompleted(userId, challengeId, stats) {
                 updatedAt: serverTimestamp(),
             }, { merge: true });
         }
+
+        // Record activity for today
+        await recordActivity(userId);
 
         // Check achievements after update
         return await processAchievements(userId);
