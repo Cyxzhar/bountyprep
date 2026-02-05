@@ -8,13 +8,33 @@
     padding: var(--space-lg);
     padding-top: max(var(--space-xl), env(safe-area-inset-top) + var(--space-md));
     padding-bottom: calc(88px + var(--space-xl));
+    max-width: 100%;
 }
 
+/* Mobile */
 @media (max-width: 480px) {
     .home-screen .screen-content {
         padding: var(--space-md);
         padding-top: max(var(--space-lg), env(safe-area-inset-top) + var(--space-sm));
         padding-bottom: calc(88px + var(--space-lg));
+    }
+}
+
+/* Desktop: Max width container + better spacing */
+@media (min-width: 1024px) {
+    .home-screen .screen-content {
+        max-width: 1400px;
+        margin: 0 auto;
+        padding: var(--space-2xl) var(--space-2xl);
+        padding-bottom: var(--space-2xl);
+    }
+}
+
+/* Large Desktop */
+@media (min-width: 1440px) {
+    .home-screen .screen-content {
+        max-width: 1600px;
+        padding: 48px 64px;
     }
 }
 
@@ -26,10 +46,25 @@
     margin-bottom: var(--space-xl);
 }
 
+@media (min-width: 1024px) {
+    .home-header {
+        margin-bottom: 48px;
+    }
+}
+
 .greeting-date {
     font-size: 0.875rem;
     color: var(--text-muted);
     margin-bottom: 4px;
+    font-family: 'JetBrains Mono', monospace;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+}
+
+@media (min-width: 1024px) {
+    .greeting-date {
+        font-size: 0.95rem;
+    }
 }
 
 .greeting-text {
@@ -39,6 +74,18 @@
     letter-spacing: -0.02em;
     color: #fff;
     margin-bottom: 0;
+}
+
+@media (min-width: 1024px) {
+    .greeting-text {
+        font-size: 2.5rem;
+    }
+}
+
+@media (min-width: 1440px) {
+    .greeting-text {
+        font-size: 3rem;
+    }
 }
 
 .streak-badge {
@@ -644,20 +691,78 @@
     }
 }
 
-@media (min-width: 768px) {
-    .screen-content {
-        max-width: 600px;
-        margin: 0 auto;
+/* Desktop Layout Improvements */
+@media (min-width: 1024px) {
+    /* Stats Grid: Better spacing and layout */
+    .stats-grid {
+        grid-template-columns: repeat(3, 1fr);
+        gap: var(--space-lg);
+        margin-bottom: 48px;
     }
 
-    .stats-grid {
-        gap: var(--space-md);
+    .stat-card {
+        padding: var(--space-xl);
+    }
+
+    .stat-value {
+        font-size: 2.5rem;
+    }
+
+    .stat-label {
+        font-size: 0.95rem;
+    }
+
+    /* Level Card: Enhanced for desktop */
+    .level-card {
+        padding: var(--space-xl);
+        margin-bottom: var(--space-2xl);
+    }
+
+    /* Today's Challenge: Larger card */
+    .today-challenge {
+        padding: var(--space-2xl) var(--space-xl);
+        margin-bottom: 48px;
+    }
+
+    .challenge-title {
+        font-size: 1.75rem;
+    }
+
+    .challenge-desc {
+        font-size: 1.05rem;
+    }
+
+    /* Quick Actions: Better grid */
+    .quick-actions {
+        grid-template-columns: repeat(2, 1fr);
+        gap: var(--space-lg);
+    }
+
+    /* Skill Modules: 2 columns */
+    .skill-modules {
+        grid-template-columns: repeat(2, 1fr);
+        gap: var(--space-lg);
     }
 }
 
-@media (min-width: 1024px) {
-    .screen-content {
-        max-width: 480px;
+/* Large Desktop: 3-column layouts */
+@media (min-width: 1440px) {
+    .stats-grid {
+        gap: var(--space-xl);
+    }
+
+    /* Quick Actions: 3 columns on very large screens */
+    .quick-actions {
+        grid-template-columns: repeat(3, 1fr);
+    }
+
+    /* Skill Modules: 3 columns */
+    .skill-modules {
+        grid-template-columns: repeat(3, 1fr);
+    }
+
+    .stat-card {
+        padding: 32px;
     }
 }
 

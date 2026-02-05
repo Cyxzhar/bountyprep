@@ -8,7 +8,6 @@ import {
     Bot, Lock, Unlock, Syringe, Link, IdCard, RefreshCw, Upload, Star,
     Trophy, Beaker, Award, Gamepad2, Volume2, VolumeX
 } from 'lucide-react';
-import BottomNav from '../components/BottomNav';
 import { FirstVisitTransition } from '../components/PageTransition';
 import { challenges, skillModules } from '../data/challenges';
 import { calculateLevel, getLevelProgress, getLevelTitle, formatXp } from '../utils/xp';
@@ -278,8 +277,6 @@ export default function Home() {
                         </div>
                     </section>
                 </div>
-
-                <BottomNav />
             </div>
         </FirstVisitTransition>
     );

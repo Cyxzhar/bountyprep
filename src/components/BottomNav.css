@@ -18,6 +18,13 @@
     box-sizing: border-box;
 }
 
+/* Hide bottom nav on desktop - show sidebar instead */
+@media (min-width: 1024px) {
+    .bottom-nav {
+        display: none;
+    }
+}
+
 .nav-item {
     display: flex;
     flex-direction: column;
