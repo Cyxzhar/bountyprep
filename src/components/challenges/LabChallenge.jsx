@@ -1,32 +1,86 @@
-import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { Flag, Terminal, Lightbulb, CheckCircle, XCircle, ChevronRight, Monitor, Globe, Activity, Layers, FileText } from 'lucide-react';
+import React, { useState, useMemo, useEffect } from 'react';
+import { Flag, Terminal, Lightbulb, ChevronRight, ChevronLeft, Monitor, Globe, Activity, Layers, FileText, Wrench, ExternalLink } from 'lucide-react';
 import { validateFlag } from '../../utils/challengeValidation';
-import { useLabSimulation } from '../../hooks/useLabSimulation';
+import { useLabSimulation } from '../../hooks/useLabSimulation.jsx';
 import RequestRepeater from './tools/RequestRepeater';
 import VirtualBrowser from './tools/VirtualBrowser';
 import GraphQLConsole from './tools/GraphQLConsole';
 import './ChallengeComponents.css';
 import './tools/Tools.css';
 
+// Normalize tool names from challenge data to known component keys
+const TOOL_COMPONENT_MAP = {
+    'Browser': 'Browser',
+    'Browser DevTools': 'Browser',
+    'Repeater': 'Repeater',
+    'Postman/curl': 'Repeater',
+    'Postman': 'Repeater',
+    'GraphQL Console': 'GraphQL Console',
+    'GraphQL': 'GraphQL Console',
+};
+
+const getToolComponentKey = (toolName) => TOOL_COMPONENT_MAP[toolName] || null;
+
+const getToolIcon = (tool) => {
+    const key = getToolComponentKey(tool);
+    switch (key) {
+        case 'Browser': return <Globe size={14} />;
+        case 'Repeater': return <Monitor size={14} />;
+        case 'GraphQL Console': return <Activity size={14} />;
+        default: return <Wrench size={14} />;
+    }
+};
+
+// Compute smart initial URL based on challenge data
+const getInitialUrl = (challenge) => {
+    const mockData = challenge.labEnvironment?.mockData;
+    if (mockData?.target) return mockData.target;
+    if (mockData?.endpoint && mockData.endpoint.startsWith('http')) return mockData.endpoint;
+
+    const type = challenge.type || '';
+    if (type.includes('IDOR') || type.includes('Access Control')) return 'http://api.target.com/api/users/1001/profile';
+    if (type.includes('XSS')) return 'http://vulnerable-shop.com/search?q=';
+    if (type.includes('SSRF')) return 'http://vulnerable-site.com';
+    if (type.includes('SQL')) return 'http://shop.target.com/products?id=1';
+    return 'http://target.app';
+};
+
+// Detect native app environment (Capacitor / PWA standalone)
+const isNativeApp = () => {
+    if (typeof window !== 'undefined') {
+        if (window.Capacitor?.isNativePlatform?.()) return true;
+        if (window.matchMedia?.('(display-mode: standalone)').matches) return true;
+    }
+    return false;
+};
+
 export default function LabChallenge({ challenge, onComplete }) {
-    const navigate = useNavigate();
     const [flagInput, setFlagInput] = useState('');
     const [validationResult, setValidationResult] = useState(null);
     const [currentStep, setCurrentStep] = useState(0);
-    const [showHints, setShowHints] = useState(false);
-    const [hintsUsed, setHintsUsed] = useState(0);
+    const [showNativeWarning, setShowNativeWarning] = useState(false);
 
-    // Tools State
-    const [activeTool, setActiveTool] = useState(challenge.labEnvironment?.tools?.[0] || 'Browser');
+    // Normalize tools list from challenge data
+    const tools = useMemo(() => {
+        return challenge.labEnvironment?.tools || ['Browser'];
+    }, [challenge]);
 
-    // Mobile View State ('guide' or 'tools')
+    const [activeTool, setActiveTool] = useState(tools[0] || 'Browser');
+
+    // Mobile view state ('guide' or 'tools')
     const [mobileView, setMobileView] = useState('guide');
 
-    // Import Simulation Logic
+    // Simulation logic
     const { handleBrowserNavigate, handleRepeaterSend, handleGraphQLQuery } = useLabSimulation(challenge);
 
+    // Detect native app on mount
+    useEffect(() => {
+        setShowNativeWarning(isNativeApp());
+    }, []);
+
     const handleSubmitFlag = () => {
+        if (!flagInput.trim()) return;
+
         const result = validateFlag(
             flagInput,
             challenge.flag.value,
@@ -36,22 +90,56 @@ export default function LabChallenge({ challenge, onComplete }) {
         setValidationResult(result);
 
         if (result.success) {
-            const hintPenalty = hintsUsed * 0.15;
-            const xpMultiplier = Math.max(1 - hintPenalty, 0.5);
-            const xpEarned = Math.round(challenge.xpReward * xpMultiplier);
+            const xpEarned = Math.round(challenge.xpReward * 1);
 
             onComplete({
                 success: true,
                 xpEarned,
-                hintsUsed,
+                hintsUsed: 0,
                 flagCaptured: result.flagValue
             });
         }
     };
 
+    const normalizedActiveTool = getToolComponentKey(activeTool);
+    const initialUrl = getInitialUrl(challenge);
+
+    // Render the active tool component
+    const renderTool = () => {
+        if (showNativeWarning) {
+            return (
+                <div className="native-app-warning">
+                    <ExternalLink size={48} className="warning-icon" />
+                    <h4>Open in Browser</h4>
+                    <p>Lab tools require a full browser environment. Open this page in your device's web browser for the best experience.</p>
+                    <button className="btn-open-browser" onClick={() => setShowNativeWarning(false)}>
+                        Continue Anyway
+                    </button>
+                </div>
+            );
+        }
+
+        switch (normalizedActiveTool) {
+            case 'Browser':
+                return <VirtualBrowser initialUrl={initialUrl} onNavigate={handleBrowserNavigate} />;
+            case 'Repeater':
+                return <RequestRepeater initialUrl={initialUrl} onSend={handleRepeaterSend} />;
+            case 'GraphQL Console':
+                return <GraphQLConsole endpoint={challenge.labEnvironment?.mockData?.endpoint} onQuery={handleGraphQLQuery} />;
+            default:
+                return (
+                    <div className="tool-placeholder">
+                        <Wrench size={32} />
+                        <h4>{activeTool}</h4>
+                        <p>This tool is a reference. Use the other available tools to interact with the target.</p>
+                    </div>
+                );
+        }
+    };
+
     return (
         <div className="lab-challenge-container">
-            {/* Header - Always Visible */}
+            {/* Header */}
             <div className="lab-header-section">
                 <div className="section-title">
                     <Terminal size={18} className="text-primary" />
@@ -62,7 +150,7 @@ export default function LabChallenge({ challenge, onComplete }) {
                 </div>
             </div>
 
-            {/* Mobile Tab Switcher (Visible only on small screens) */}
+            {/* Mobile Tab Switcher */}
             <div className="mobile-view-tabs">
                 <button
                     className={`mobile-tab ${mobileView === 'guide' ? 'active' : ''}`}
@@ -79,7 +167,7 @@ export default function LabChallenge({ challenge, onComplete }) {
             </div>
 
             <div className="lab-workspace">
-                {/* GUIDE PANEL (Left on desktop, Tab 1 on mobile) */}
+                {/* GUIDE PANEL */}
                 <div className={`lab-guide-panel ${mobileView === 'guide' ? 'active-mobile' : 'hidden-mobile'}`}>
                     <div className="guide-card objective-card">
                         <div className="card-header-sm">OBJECTIVE</div>
@@ -104,6 +192,13 @@ export default function LabChallenge({ challenge, onComplete }) {
 
                         <div className="step-actions">
                             <button
+                                className="btn-prev"
+                                disabled={currentStep === 0}
+                                onClick={() => setCurrentStep(prev => prev - 1)}
+                            >
+                                <ChevronLeft size={14} /> Prev
+                            </button>
+                            <button
                                 className="btn-next"
                                 disabled={currentStep === challenge.steps.length - 1}
                                 onClick={() => setCurrentStep(prev => prev + 1)}
@@ -121,6 +216,7 @@ export default function LabChallenge({ challenge, onComplete }) {
                                 placeholder={challenge.flag.format}
                                 value={flagInput}
                                 onChange={(e) => setFlagInput(e.target.value)}
+                                onKeyDown={(e) => e.key === 'Enter' && handleSubmitFlag()}
                             />
                             <button className="btn-submit" onClick={handleSubmitFlag}>Submit</button>
                         </div>
@@ -132,194 +228,26 @@ export default function LabChallenge({ challenge, onComplete }) {
                     </div>
                 </div>
 
-                {/* TOOLS PANEL (Right on desktop, Tab 2 on mobile) */}
+                {/* TOOLS PANEL */}
                 <div className={`lab-tools-panel ${mobileView === 'tools' ? 'active-mobile' : 'hidden-mobile'}`}>
                     <div className="tools-tabs">
-                        {challenge.labEnvironment.tools.map(tool => (
+                        {tools.map(tool => (
                             <button
                                 key={tool}
                                 className={`tool-tab ${activeTool === tool ? 'active' : ''}`}
                                 onClick={() => setActiveTool(tool)}
                             >
-                                {tool === 'Browser' && <Globe size={14} />}
-                                {tool === 'Repeater' && <Monitor size={14} />}
-                                {tool === 'GraphQL Console' && <Activity size={14} />}
+                                {getToolIcon(tool)}
                                 {tool}
                             </button>
                         ))}
                     </div>
 
                     <div className="active-tool-container">
-                        {activeTool === 'Browser' && (
-                            <VirtualBrowser
-                                initialUrl={challenge.labEnvironment.mockData?.target}
-                                onNavigate={handleBrowserNavigate}
-                            />
-                        )}
-                        {activeTool === 'Repeater' && (
-                            <RequestRepeater
-                                initialUrl={challenge.labEnvironment.mockData?.target}
-                                onSend={handleRepeaterSend}
-                            />
-                        )}
-                        {activeTool === 'GraphQL Console' && (
-                            <GraphQLConsole
-                                endpoint={challenge.labEnvironment.mockData?.endpoint}
-                                onQuery={handleGraphQLQuery}
-                            />
-                        )}
+                        {renderTool()}
                     </div>
                 </div>
             </div>
-
-            <style jsx>{`
-                .lab-challenge-container {
-                    display: flex;
-                    flex-direction: column;
-                    height: 100%;
-                    gap: 1rem;
-                    position: relative;
-                }
-                
-                .lab-header-section {
-                    display: flex;
-                    justify-content: space-between;
-                    align-items: center;
-                    padding-bottom: 0.75rem;
-                    border-bottom: 1px solid var(--border-color);
-                }
-
-                .step-text {
-                    font-size: 0.9rem;
-                    font-weight: 600;
-                    background: var(--bg-tertiary);
-                    padding: 0.25rem 0.5rem;
-                    border-radius: 4px;
-                }
-
-                /* --- Mobile Tabs --- */
-                .mobile-view-tabs {
-                    display: none; /* Hidden on Desktop */
-                    background: var(--bg-card);
-                    border-radius: 8px;
-                    padding: 4px;
-                    margin-bottom: 8px;
-                    border: 1px solid var(--border-color);
-                }
-                
-                .mobile-tab {
-                    flex: 1;
-                    border: none;
-                    background: transparent;
-                    padding: 8px;
-                    display: flex;
-                    align-items: center;
-                    justify-content: center;
-                    gap: 8px;
-                    font-weight: 600;
-                    color: var(--text-secondary);
-                    border-radius: 6px;
-                    cursor: pointer;
-                    transition: all 0.2s;
-                }
-                
-                .mobile-tab.active {
-                    background: var(--primary-color);
-                    color: white;
-                    shadow: 0 2px 4px rgba(0,0,0,0.1);
-                }
-
-                /* --- Workspace --- */
-                .lab-workspace {
-                    display: grid;
-                    grid-template-columns: 350px 1fr;
-                    gap: 1.5rem;
-                    height: 600px; /* Fixed height for tools scrolling */
-                }
-                
-                .lab-guide-panel {
-                    display: flex;
-                    flex-direction: column;
-                    gap: 1rem;
-                    overflow-y: auto;
-                    padding-right: 0.5rem;
-                }
-
-                .card-header-sm {
-                    font-size: 0.7rem;
-                    font-weight: 700;
-                    letter-spacing: 0.05em;
-                    color: var(--text-muted);
-                    margin-bottom: 0.5rem;
-                    text-transform: uppercase;
-                }
-
-                .guide-card, .current-step-card, .flag-card {
-                    background: var(--bg-card);
-                    padding: 1.25rem;
-                    border-radius: 12px;
-                    border: 1px solid var(--border-color);
-                    box-shadow: 0 1px 3px rgba(0,0,0,0.05);
-                }
-                
-                .current-step-card {
-                    border-left: 4px solid var(--primary-color);
-                    background: linear-gradient(to right, var(--bg-card) 95%, var(--primary-color-alpha-10));
-                }
-
-                .step-title {
-                    font-size: 1.1rem;
-                    margin: 0.5rem 0;
-                    color: var(--text-primary);
-                }
-                
-                .step-desc {
-                    font-size: 0.95rem;
-                    color: var(--text-secondary);
-                    line-height: 1.5;
-                }
-
-                .lab-tools-panel {
-                    display: flex;
-                    flex-direction: column;
-                    background: var(--bg-card);
-                    border: 1px solid var(--border-color);
-                    border-radius: 12px;
-                    overflow: hidden;
-                    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
-                }
-
-                /* --- Mobile Responsive Rules --- */
-                @media (max-width: 900px) {
-                    .lab-workspace {
-                        display: block; /* Remove grid */
-                        height: auto; /* Allow auto height */
-                    }
-
-                    .mobile-view-tabs {
-                        display: flex; /* Show tabs */
-                    }
-
-                    /* Conditional Visibility based on Tabs */
-                    .hidden-mobile {
-                        display: none !important;
-                    }
-                    
-                    .active-mobile {
-                        display: flex;
-                        animation: fadeIn 0.3s ease;
-                    }
-
-                    .lab-tools-panel {
-                        height: calc(100vh - 200px); /* Fill remaining screen */
-                    }
-                }
-
-                @keyframes fadeIn {
-                    from { opacity: 0; transform: translateY(5px); }
-                    to { opacity: 1; transform: translateY(0); }
-                }
-            `}</style>
         </div>
     );
 }

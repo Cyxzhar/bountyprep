@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Send, Globe, Plus, Trash2 } from 'lucide-react';
+import { Send, Plus, Trash2 } from 'lucide-react';
 import './Tools.css';
 
 export default function RequestRepeater({ initialUrl, onSend }) {
@@ -8,10 +8,10 @@ export default function RequestRepeater({ initialUrl, onSend }) {
     const [headers, setHeaders] = useState([{ key: 'Content-Type', value: 'application/json' }]);
     const [body, setBody] = useState('');
     const [response, setResponse] = useState(null);
+    const [loading, setLoading] = useState(false);
 
     const handleSend = () => {
-        // In a real implementation, this would hit a proxy.
-        // For the simulation, we pass it up to the parent container which manages the mock state.
+        if (!onSend) return;
         const req = {
             method,
             url,
@@ -22,28 +22,35 @@ export default function RequestRepeater({ initialUrl, onSend }) {
             body
         };
 
-        // Simulate network delay
-        setResponse({ status: 'Loading...', time: '...' });
+        setLoading(true);
+        setResponse(null);
 
         setTimeout(() => {
-            const resp = onSend(req);
-            setResponse(resp);
-        }, 600);
+            try {
+                const resp = onSend(req);
+                setResponse(resp);
+            } catch (e) {
+                setResponse({ status: 500, time: '0ms', data: { error: e.message } });
+            }
+            setLoading(false);
+        }, 500);
     };
 
-    const addHeader = () => {
-        setHeaders([...headers, { key: '', value: '' }]);
-    };
+    const addHeader = () => setHeaders([...headers, { key: '', value: '' }]);
 
     const updateHeader = (index, field, value) => {
         const newHeaders = [...headers];
-        newHeaders[index][field] = value;
+        newHeaders[index] = { ...newHeaders[index], [field]: value };
         setHeaders(newHeaders);
     };
 
-    const removeHeader = (index) => {
-        const newHeaders = headers.filter((_, i) => i !== index);
-        setHeaders(newHeaders);
+    const removeHeader = (index) => setHeaders(headers.filter((_, i) => i !== index));
+
+    const getStatusClass = () => {
+        if (!response || !response.status) return '';
+        const s = typeof response.status === 'number' ? response.status : 0;
+        if (s >= 200 && s < 300) return 'status-ok';
+        return 'status-err';
     };
 
     return (
@@ -58,16 +65,19 @@ export default function RequestRepeater({ initialUrl, onSend }) {
                     <option value="POST">POST</option>
                     <option value="PUT">PUT</option>
                     <option value="DELETE">DELETE</option>
+                    <option value="PATCH">PATCH</option>
                 </select>
                 <input
                     type="text"
                     value={url}
                     onChange={(e) => setUrl(e.target.value)}
+                    onKeyDown={(e) => e.key === 'Enter' && handleSend()}
                     className="url-input"
-                    placeholder="Enter URL"
+                    placeholder="Enter request URL"
+                    spellCheck="false"
                 />
-                <button className="btn-send" onClick={handleSend}>
-                    <Send size={16} />
+                <button className="btn-send" onClick={handleSend} disabled={loading}>
+                    <Send size={14} />
                 </button>
             </div>
 
@@ -98,31 +108,38 @@ export default function RequestRepeater({ initialUrl, onSend }) {
                     </div>
                 </div>
 
-                <div className="tab-section">
-                    <h4>Body</h4>
-                    <div className="body-editor">
-                        <textarea
-                            value={body}
-                            onChange={(e) => setBody(e.target.value)}
-                            placeholder="{ 'username': 'admin' }"
-                        />
+                {(method === 'POST' || method === 'PUT' || method === 'PATCH') && (
+                    <div className="tab-section">
+                        <h4>Body</h4>
+                        <div className="body-editor">
+                            <textarea
+                                value={body}
+                                onChange={(e) => setBody(e.target.value)}
+                                placeholder='{ "key": "value" }'
+                                spellCheck="false"
+                            />
+                        </div>
                     </div>
-                </div>
+                )}
             </div>
 
-            {response && (
+            {(response || loading) && (
                 <div className="repeater-response">
                     <div className="response-status">
-                        <span className={response.status === 200 ? 'status-ok' : 'status-err'}>
-                            {response.status || 'Checking...'}
+                        <span className={getStatusClass()}>
+                            {loading ? 'Sending...' : (response?.status || 'Error')}
                         </span>
-                        <span>{response.time || '0ms'}</span>
+                        <span style={{ color: 'var(--text-muted, #5A5A6E)' }}>
+                            {loading ? '...' : (response?.time || '')}
+                        </span>
                     </div>
-                    <pre className="response-body">
-                        {typeof response.data === 'object'
-                            ? JSON.stringify(response.data, null, 2)
-                            : response.data}
-                    </pre>
+                    {!loading && response && (
+                        <pre className="response-body">
+                            {typeof response.data === 'object'
+                                ? JSON.stringify(response.data, null, 2)
+                                : String(response.data || '')}
+                        </pre>
+                    )}
                 </div>
             )}
         </div>

@@ -1,19 +1,35 @@
 import React, { useState } from 'react';
-import { Play, Book, Database } from 'lucide-react';
+import { Play, Database } from 'lucide-react';
 import './Tools.css';
 
 export default function GraphQLConsole({ endpoint, onQuery }) {
     const [query, setQuery] = useState('{\n  __schema {\n    types {\n      name\n    }\n  }\n}');
     const [variables, setVariables] = useState('{}');
     const [response, setResponse] = useState(null);
+    const [loading, setLoading] = useState(false);
 
     const handleExecute = () => {
-        setResponse({ data: 'Executing...' });
+        if (!onQuery) return;
+        setLoading(true);
+        setResponse(null);
 
         setTimeout(() => {
-            const result = onQuery(query, JSON.parse(variables || '{}'));
-            setResponse(result);
-        }, 500);
+            try {
+                let parsedVars = {};
+                try {
+                    parsedVars = JSON.parse(variables || '{}');
+                } catch {
+                    setResponse({ errors: [{ message: 'Invalid JSON in variables field' }] });
+                    setLoading(false);
+                    return;
+                }
+                const result = onQuery(query, parsedVars);
+                setResponse(result?.data || result);
+            } catch (e) {
+                setResponse({ errors: [{ message: e.message }] });
+            }
+            setLoading(false);
+        }, 400);
     };
 
     return (
@@ -21,11 +37,11 @@ export default function GraphQLConsole({ endpoint, onQuery }) {
             <div className="graphql-header">
                 <div className="endpoint-display">
                     <Database size={14} />
-                    <span>{endpoint}</span>
+                    <span>{endpoint || '/graphql'}</span>
                 </div>
-                <button className="btn-execute" onClick={handleExecute}>
+                <button className="btn-execute" onClick={handleExecute} disabled={loading}>
                     <Play size={14} />
-                    Execute
+                    {loading ? 'Running...' : 'Execute'}
                 </button>
             </div>
 
@@ -36,13 +52,18 @@ export default function GraphQLConsole({ endpoint, onQuery }) {
                         value={query}
                         onChange={(e) => setQuery(e.target.value)}
                         spellCheck="false"
+                        placeholder="Write your GraphQL query here..."
                     />
                 </div>
 
                 <div className="graphql-result">
                     <div className="editor-label">Result</div>
                     <pre>
-                        {response ? JSON.stringify(response, null, 2) : '// Response will appear here'}
+                        {loading
+                            ? '// Executing query...'
+                            : response
+                                ? JSON.stringify(response, null, 2)
+                                : '// Response will appear here'}
                     </pre>
                 </div>
             </div>
@@ -55,6 +76,7 @@ export default function GraphQLConsole({ endpoint, onQuery }) {
                     value={variables}
                     onChange={(e) => setVariables(e.target.value)}
                     placeholder="{}"
+                    spellCheck="false"
                 />
             </div>
         </div>

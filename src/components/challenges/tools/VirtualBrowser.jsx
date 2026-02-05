@@ -1,40 +1,54 @@
-import React, { useState } from 'react';
-import { Search, RotateCw, Lock } from 'lucide-react';
+import React, { useState, useCallback, useRef } from 'react';
+import { RotateCw, Lock } from 'lucide-react';
 import './Tools.css';
 
 export default function VirtualBrowser({ initialUrl, onNavigate }) {
-    const [url, setUrl] = useState(initialUrl || 'http://vulnerable-shop.com');
+    const [url, setUrl] = useState(initialUrl || 'http://target.app');
     const [content, setContent] = useState(null);
     const [loading, setLoading] = useState(false);
+    const inputRef = useRef(null);
 
-    const handleNavigate = () => {
+    const handleNavigate = useCallback(() => {
+        if (!onNavigate || !url) return;
         setLoading(true);
         setTimeout(() => {
-            const result = onNavigate(url);
-            setContent(result);
+            try {
+                const result = onNavigate(url);
+                setContent(result);
+            } catch (e) {
+                setContent({
+                    render: () => (
+                        <div style={{ padding: '1rem', color: '#ef4444' }}>
+                            Error loading page: {e.message}
+                        </div>
+                    )
+                });
+            }
             setLoading(false);
-        }, 500);
-    };
+        }, 400);
+    }, [url, onNavigate]);
 
-    // Initial load
+    // Initial page load
     React.useEffect(() => {
         handleNavigate();
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, []);
+    }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
     return (
         <div className="tool-browser">
             <div className="browser-bar">
                 <div className="browser-nav">
-                    <button className="btn-icon">
+                    <button className="btn-icon" onClick={handleNavigate} title="Reload">
                         <RotateCw size={14} />
                     </button>
                     <div className="address-bar">
                         <Lock size={12} className="lock-icon" />
                         <input
+                            ref={inputRef}
                             value={url}
                             onChange={(e) => setUrl(e.target.value)}
-                            onKeyPress={(e) => e.key === 'Enter' && handleNavigate()}
+                            onKeyDown={(e) => e.key === 'Enter' && handleNavigate()}
+                            placeholder="Enter URL..."
+                            spellCheck="false"
                         />
                     </div>
                 </div>
@@ -49,11 +63,12 @@ export default function VirtualBrowser({ initialUrl, onNavigate }) {
                 ) : (
                     <div className="browser-content">
                         {content ? (
-                            content.render ? content.render() : <pre>{JSON.stringify(content, null, 2)}</pre>
+                            typeof content.render === 'function'
+                                ? content.render()
+                                : <pre>{JSON.stringify(content, null, 2)}</pre>
                         ) : (
                             <div className="empty-state">
-                                <Search size={48} />
-                                <p>Enter a URL to browse</p>
+                                <p>Enter a URL and press Enter to browse</p>
                             </div>
                         )}
                     </div>
