@@ -120,13 +120,35 @@ export default function Interview() {
     // Load available history
     useEffect(() => {
         if (currentUser?.uid) {
-            import('../utils/firestore').then(({ getUserInterviewSessions }) => {
-                getUserInterviewSessions(currentUser.uid).then(sessions => {
-                    setSessionHistory(sessions);
-                    if (sessions.length > 0) {
-                        setSavedSession(sessions[0]); // Last session
+            import('../utils/firestore').then(async ({ getUserInterviewSessions, getLastInterviewSession, saveInterviewSession }) => {
+                const sessions = await getUserInterviewSessions(currentUser.uid);
+
+                // Migration: Check for old session format (interview/current) and migrate it
+                if (sessions.length === 0) {
+                    const oldSession = await getLastInterviewSession(currentUser.uid);
+                    if (oldSession && oldSession.messages && oldSession.messages.length > 1) {
+                        // Migrate old session to new format
+                        const migrationId = `migrated_${Date.now()}`;
+                        await saveInterviewSession(
+                            currentUser.uid,
+                            oldSession.messages,
+                            oldSession.elapsedTime || 0,
+                            migrationId
+                        );
+                        // Reload sessions after migration
+                        const updatedSessions = await getUserInterviewSessions(currentUser.uid);
+                        setSessionHistory(updatedSessions);
+                        if (updatedSessions.length > 0) {
+                            setSavedSession(updatedSessions[0]);
+                        }
+                        return;
                     }
-                });
+                }
+
+                setSessionHistory(sessions);
+                if (sessions.length > 0) {
+                    setSavedSession(sessions[0]); // Last session
+                }
             });
         }
     }, [currentUser?.uid, started]); // Reload history when returning to menu

@@ -36,8 +36,13 @@ service cloud.firestore {
         allow read, write: if isOwner(userId);
       }
 
-      // User interview sessions
+      // User interview sessions (new format)
       match /interview_sessions/{sessionId} {
+        allow read, write: if isOwner(userId);
+      }
+
+      // User interview data (old format - for migration)
+      match /interview/{document} {
         allow read, write: if isOwner(userId);
       }
     }

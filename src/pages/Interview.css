@@ -60,19 +60,29 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    background: linear-gradient(135deg, rgba(0, 212, 255, 0.2), rgba(0, 212, 255, 0.1));
-    border: 2px solid rgba(0, 212, 255, 0.3);
+    background: linear-gradient(135deg, rgba(159, 239, 0, 0.2), rgba(159, 239, 0, 0.1));
+    border: 2px solid rgba(159, 239, 0, 0.4);
     border-radius: 50%;
-    color: var(--cyan);
-    box-shadow: 0 0 40px rgba(0, 212, 255, 0.2);
+    color: var(--neon-green);
+    box-shadow: 0 0 40px rgba(159, 239, 0, 0.3);
     position: relative;
+    animation: pulseGlow 3s ease-in-out infinite;
+}
+
+@keyframes pulseGlow {
+    0%, 100% {
+        box-shadow: 0 0 40px rgba(159, 239, 0, 0.3);
+    }
+    50% {
+        box-shadow: 0 0 60px rgba(159, 239, 0, 0.5);
+    }
 }
 
 .intro-icon::before {
     content: '';
     position: absolute;
     inset: -4px;
-    background: linear-gradient(135deg, var(--cyan), rgba(0, 212, 255, 0));
+    background: linear-gradient(135deg, var(--neon-green), rgba(159, 239, 0, 0));
     border-radius: 50%;
     opacity: 0.3;
     filter: blur(8px);
@@ -83,9 +93,12 @@
     font-size: clamp(2rem, 6vw, 2.75rem);
     font-weight: 800;
     margin-bottom: var(--space-sm);
-    color: #fff;
+    background: linear-gradient(135deg, #fff 40%, var(--neon-green) 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
     letter-spacing: -0.03em;
-    text-shadow: 0 0 40px rgba(0, 212, 255, 0.2);
+    text-shadow: 0 0 40px rgba(159, 239, 0, 0.2);
     line-height: 1.1;
 }
 
@@ -160,16 +173,18 @@
 }
 
 .diff-card:hover {
-    border-color: rgba(0, 212, 255, 0.3);
-    transform: translateY(-4px);
+    border-color: rgba(159, 239, 0, 0.3);
+    transform: translateY(-2px);
     background: linear-gradient(135deg, rgba(19, 19, 26, 0.8) 0%, rgba(19, 19, 26, 0.5) 100%);
     box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3);
 }
 
 .diff-card.selected {
-    background: linear-gradient(135deg, rgba(0, 212, 255, 0.15), rgba(0, 212, 255, 0.05));
-    border-color: var(--cyan);
-    box-shadow: 0 0 30px rgba(0, 212, 255, 0.2);
+    background: linear-gradient(135deg, rgba(159, 239, 0, 0.2), rgba(159, 239, 0, 0.08));
+    border-color: var(--neon-green);
+    border-width: 2px;
+    box-shadow: 0 0 40px rgba(159, 239, 0, 0.4), 0 4px 16px rgba(159, 239, 0, 0.2);
+    transform: scale(1.02);
 }
 
 .diff-card.selected::after {
@@ -178,8 +193,9 @@
     top: 0;
     left: 0;
     right: 0;
-    height: 3px;
-    background: linear-gradient(90deg, var(--cyan), rgba(0, 212, 255, 0.5));
+    height: 4px;
+    background: linear-gradient(90deg, var(--neon-green), rgba(159, 239, 0, 0.6), var(--neon-green));
+    box-shadow: 0 0 10px rgba(159, 239, 0, 0.6);
 }
 
 @media (max-width: 480px) {
@@ -198,18 +214,20 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    background: rgba(0, 212, 255, 0.1);
-    border: 1px solid rgba(0, 212, 255, 0.2);
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.1);
     border-radius: var(--radius-md);
-    color: var(--cyan);
+    color: var(--text-secondary);
     flex-shrink: 0;
     transition: all 0.3s;
 }
 
 .diff-card.selected .diff-icon {
-    background: rgba(0, 212, 255, 0.2);
-    border-color: var(--cyan);
-    box-shadow: 0 0 15px rgba(0, 212, 255, 0.3);
+    background: linear-gradient(135deg, var(--neon-green), #B8FF33);
+    border-color: var(--neon-green);
+    color: #000;
+    box-shadow: 0 0 20px rgba(159, 239, 0, 0.5);
+    transform: scale(1.05);
 }
 
 @media (pointer: coarse) {
@@ -234,12 +252,23 @@
     font-weight: 700;
     color: #fff;
     line-height: 1.3;
+    transition: all 0.3s;
+}
+
+.diff-card.selected .diff-title {
+    color: var(--neon-green);
+    text-shadow: 0 0 10px rgba(159, 239, 0, 0.3);
 }
 
 .diff-desc {
     font-size: clamp(0.75rem, 2vw, 0.8rem);
     color: var(--text-secondary);
     line-height: 1.4;
+    transition: all 0.3s;
+}
+
+.diff-card.selected .diff-desc {
+    color: rgba(159, 239, 0, 0.8);
 }
 
 /* Topics Section */
@@ -275,9 +304,11 @@
 }
 
 .topic-chip:hover {
-    background: rgba(0, 212, 255, 0.1);
-    border-color: rgba(0, 212, 255, 0.3);
-    color: var(--cyan);
+    background: rgba(159, 239, 0, 0.1);
+    border-color: rgba(159, 239, 0, 0.3);
+    color: var(--neon-green);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(159, 239, 0, 0.15);
 }
 
 /* Quota Info */
