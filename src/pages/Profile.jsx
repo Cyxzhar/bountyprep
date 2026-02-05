@@ -5,7 +5,6 @@ import {
     HelpCircle, Star, Share2, Info, FileText, ChevronRight,
     LogOut, Crown, User, Shield, Bug, ExternalLink, Camera
 } from 'lucide-react';
-import BottomNav from '../components/BottomNav';
 import { useAuth } from '../context/AuthContext';
 import { useToast } from '../context/ToastContext';
 import { getSettings, updateSetting, shareApp } from '../utils/settings';
@@ -335,7 +334,6 @@ export default function Profile() {
                 </div>
             </div>
 
-            <BottomNav />
         </div>
     );
 }

@@ -4,7 +4,6 @@ import {
     Mic, Send, X, Timer, AlertCircle, Loader2, History
 } from 'lucide-react';
 import ReactMarkdown from 'react-markdown';
-import BottomNav from '../components/BottomNav';
 import { useToast } from '../context/ToastContext';
 import { generateInterviewResponse } from '../lib/perplexity';
 import { getRemainingQuota, useQuota, getQuotaResetTime } from '../utils/interviewQuota';
@@ -345,7 +344,6 @@ export default function Interview() {
                         )}
                     </div>
                 </div>
-                <BottomNav />
 
                 {/* History Modal */}
                 {showHistory && (

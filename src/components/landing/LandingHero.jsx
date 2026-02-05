@@ -17,14 +17,14 @@ const LandingHero = ({ onOpenWaitlist, isJoined, onExplore }) => {
                 <div className="hero-content">
                     <div className="badge-promo animate-fade-in">
                         <span className="badge-icon"><Zap size={12} /></span>
-                        v1.0 Official Launch
+                        v1.0.0 (Initial Release)
                     </div>
                     <h1 className="hero-title animate-fade-in-up">
                         Master the Art of <br />
                         <span className="text-gradient">Cyber Exploration</span>
                     </h1>
                     <p className="hero-subtitle animate-fade-in-up" style={{ animationDelay: '0.1s' }}>
-                        Bountypaper is the premium interactive playground where security researchers transform theory into critical findings through immersive labs.
+                        Bountypaper is an interactive playground for security researchers to practice hands-on labs and refine critical exploitation techniques.
                     </p>
                     <div className="hero-actions animate-fade-in-up" style={{ animationDelay: '0.2s' }}>
                         <button

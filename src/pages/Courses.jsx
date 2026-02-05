@@ -4,7 +4,6 @@ import {
 } from 'lucide-react';
 import { useState, useEffect } from 'react'; // Added useState, useEffect
 import { courses } from '../data/courses';
-import BottomNav from '../components/BottomNav';
 import { useAuth } from '../context/AuthContext'; // Added useAuth
 import { getAllCoursesProgress } from '../utils/firestore'; // Added import
 import './Courses.css';
@@ -143,7 +142,6 @@ export default function Courses() {
                     </div>
                 </div>
             </div>
-            <BottomNav />
         </div>
     );
 }

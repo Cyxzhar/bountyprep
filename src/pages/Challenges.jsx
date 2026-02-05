@@ -4,7 +4,6 @@ import { Search, Filter, Lock, ChevronRight, Clock, CheckCircle, Star, Crown, Co
 import { useAuth } from '../context/AuthContext';
 import { collection, getDocs } from 'firebase/firestore';
 import { db } from '../lib/firebase';
-import BottomNav from '../components/BottomNav';
 import { FirstVisitTransition } from '../components/PageTransition';
 import { challenges as localChallenges } from '../data/challenges';
 import './Challenges.css';
@@ -248,7 +247,6 @@ export default function Challenges() {
                     </div>
                 </div>
 
-                <BottomNav />
             </div>
         </FirstVisitTransition>
     );

@@ -7,15 +7,13 @@ export default function MainLayout({ children }) {
     const location = useLocation();
 
     // Pages that should not show navigation
-    const noNavPages = [
-        '/onboarding',
-        '/auth',
-        '/splash',
-        '/',
-        '/course/', // Course detail preview (public)
-    ];
+    const noNavPages = ['/onboarding', '/auth', '/splash'];
 
-    const showNav = !noNavPages.some(path => location.pathname.startsWith(path));
+    // Check if current path should hide navigation
+    const showNav = location.pathname === '/'
+        ? false  // Hide nav on landing page
+        : !noNavPages.some(path => location.pathname.startsWith(path))
+            && !location.pathname.startsWith('/course/');  // Hide on public course preview
 
     if (!showNav) {
         return children;

@@ -4,7 +4,6 @@ import {
     CheckCircle, Zap, Award, Lock, Syringe, Link, IdCard, RefreshCw, Upload
 } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
-import BottomNav from '../components/BottomNav';
 import { FirstVisitTransition } from '../components/PageTransition';
 import { skillModules } from '../data/challenges';
 import { achievements } from '../data/achievements';
@@ -218,7 +217,6 @@ export default function Progress() {
                 </section>
             </div>
 
-            <BottomNav />
         </div>
     );
 }

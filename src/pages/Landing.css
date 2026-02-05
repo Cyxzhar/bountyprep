@@ -2983,19 +2983,42 @@
     opacity: 0.7;
 }
 
-.made-with {
-    font-size: 0.85rem;
+.footer-logo-img {
+    height: 32px;
+    width: auto;
 }
 
-.fw-bold {
-    font-weight: 600;
+.heart-icon-simple {
+    color: #ef4444;
+    display: inline-block;
+    vertical-align: middle;
+    margin-right: 2px;
+    animation: pulse-heart 2s infinite;
 }
 
-.ml-1 {
-    margin-left: 4px;
+.footer-version {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.75rem;
+    color: var(--text-muted);
+    opacity: 0.5;
+    margin-top: 8px;
 }
 
 /* Animations & Responsive */
+@keyframes pulse-heart {
+    0% {
+        transform: scale(1);
+    }
+
+    50% {
+        transform: scale(1.15);
+    }
+
+    100% {
+        transform: scale(1);
+    }
+}
+
 @keyframes pulse-dot {
     0% {
         opacity: 0.5;
