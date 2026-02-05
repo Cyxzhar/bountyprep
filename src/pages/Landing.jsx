@@ -17,6 +17,14 @@ const Landing = () => {
     const [terminalStep, setTerminalStep] = React.useState(0);
     const [terminalTypedText, setTerminalTypedText] = React.useState("");
     const [terminalLogs, setTerminalLogs] = React.useState([]);
+    const terminalBodyRef = React.useRef(null);
+
+    // Auto-scroll terminal to bottom
+    React.useEffect(() => {
+        if (terminalBodyRef.current) {
+            terminalBodyRef.current.scrollTop = terminalBodyRef.current.scrollHeight;
+        }
+    }, [terminalLogs, terminalTypedText, hackStep]);
 
     // Multi-stage Attacks with Human Keystrokes (Expert Mode)
     // '<' represents backspace, '|' represents a long pause (thought pause)
@@ -341,7 +349,7 @@ const Landing = () => {
                                                         <span className="term-tab">DEBUG</span>
                                                     </div>
                                                 </div>
-                                                <div className="terminal-body">
+                                                <div className="terminal-body" ref={terminalBodyRef}>
                                                     {/* Handshake: Executed Commands History */}
                                                     {terminalLogs.map((log, i) => (
                                                         <div key={`log-${i}`} className={`term-line ${log.type}`}>
@@ -443,7 +451,7 @@ const Landing = () => {
                             <Layers size={14} /> 50+ Real Labs
                         </div>
                         <div className="floating-stat s2">
-                            <Zap size={14} /> Interactive 0-Day Playground
+                            <Zap size={14} /> Global Skill Leaderboard
                         </div>
                     </div>
                 </div>
@@ -522,7 +530,6 @@ const Landing = () => {
                         <ul className="pricing-features">
                             <li><CheckCircle size={16} /> Unlimited Lab Runtime</li>
                             <li><CheckCircle size={16} /> Exclusive Premium Modules</li>
-                            <li><CheckCircle size={16} /> Exclusive 0-Day Labs</li>
                             <li><CheckCircle size={16} /> Advanced Exploit Payloads</li>
                             <li><CheckCircle size={16} /> Priority Lab Support</li>
                         </ul>
