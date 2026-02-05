@@ -470,6 +470,15 @@ textarea {
   width: 100%;
 }
 
+/* On desktop, limit button width for better UX */
+@media (min-width: 1024px) {
+  .btn-full {
+    width: auto;
+    min-width: 200px;
+    max-width: 400px;
+  }
+}
+
 /* Inputs */
 .input-group {
   display: flex;

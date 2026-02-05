@@ -2,13 +2,16 @@
     min-height: 100vh;
     min-height: 100dvh;
     background: var(--gradient-dark);
+    overflow-x: hidden;
 }
 
 .home-screen .screen-content {
     padding: var(--space-lg);
     padding-top: max(var(--space-xl), env(safe-area-inset-top) + var(--space-md));
     padding-bottom: calc(88px + var(--space-xl));
+    width: 100%;
     max-width: 100%;
+    box-sizing: border-box;
 }
 
 /* Mobile */
@@ -305,12 +308,13 @@
 }
 
 /* Stats Grid - Larger Touch Targets */
-/* Stats Grid - Larger Touch Targets */
 .stats-grid {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
     gap: var(--space-md);
     margin-bottom: var(--space-xl);
+    width: 100%;
+    box-sizing: border-box;
 }
 
 /* Mobile: Horizontal Scroll for Stats to prevent overflow */
