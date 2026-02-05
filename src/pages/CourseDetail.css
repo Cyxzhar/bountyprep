@@ -73,13 +73,14 @@
 .course-hero {
     background: transparent;
     margin-bottom: var(--space-lg);
-    padding: var(--space-3xl) var(--space-lg) var(--space-2xl);
+    padding: var(--space-3xl) var(--space-xl) var(--space-2xl);
     background: linear-gradient(180deg,
             rgba(10, 10, 15, 0.8) 0%,
             var(--bg-dark) 100%);
     border-bottom: 1px solid rgba(255, 255, 255, 0.05);
     position: relative;
     width: 100%;
+    box-sizing: border-box;
 }
 
 @media (max-width: 768px) {
@@ -125,12 +126,24 @@
 
 .course-meta {
     display: flex;
-    gap: 32px;
+    gap: 40px;
     color: var(--text-secondary);
     font-family: 'JetBrains Mono', monospace;
-    font-size: 0.9rem;
-    margin-bottom: 32px;
+    font-size: 1rem;
+    margin-bottom: 40px;
     flex-wrap: wrap;
+    align-items: center;
+}
+
+.course-meta > div {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.course-meta svg {
+    color: var(--neon-green);
+    flex-shrink: 0;
 }
 
 /* Content Container - Restore padding here */
@@ -163,9 +176,9 @@
 }
 
 .course-hero h1 {
-    font-size: clamp(1.75rem, 5vw, 2.5rem);
+    font-size: clamp(2rem, 5vw, 2.5rem);
     font-weight: 800;
-    margin-bottom: var(--space-md);
+    margin-bottom: var(--space-lg);
     color: #fff;
     letter-spacing: -0.03em;
     line-height: 1.2;
@@ -174,10 +187,10 @@
 
 .course-hero p {
     color: var(--text-secondary);
-    font-size: clamp(0.95rem, 2.5vw, 1.1rem);
+    font-size: clamp(1rem, 2.5vw, 1.125rem);
     margin-bottom: var(--space-xl);
-    max-width: 600px;
-    line-height: 1.6;
+    max-width: 700px;
+    line-height: 1.7;
     font-weight: 400;
 }
 
@@ -271,8 +284,8 @@
 }
 
 .section-title {
-    font-size: clamp(1.25rem, 4vw, 1.5rem);
-    margin-bottom: var(--space-lg);
+    font-size: clamp(1.5rem, 4vw, 1.75rem);
+    margin-bottom: var(--space-xl);
     padding-left: 0;
     font-weight: 800;
     color: #fff;
@@ -571,103 +584,92 @@
 @media (min-width: 1024px) {
     .course-detail-page {
         overflow-x: hidden;
+        box-sizing: border-box;
     }
 
     .course-header-nav {
-        padding: var(--space-xl) 2.5rem;
+        padding: var(--space-xl) 3rem;
+        min-height: 80px;
+    }
+
+    .header-title {
+        font-size: 1.25rem;
     }
 
     .course-hero {
-        padding: 4rem 2.5rem 3rem;
+        padding: 5rem 3rem 4rem;
+    }
+
+    .hero-badges {
+        gap: 12px;
+        margin-bottom: 24px;
+    }
+
+    .hero-badges .badge {
+        font-size: 0.875rem;
+        padding: 8px 16px;
     }
 
     .course-hero h1 {
-        font-size: 3rem;
+        font-size: 3.5rem;
+        margin-bottom: var(--space-xl);
     }
 
     .course-hero p {
+        font-size: 1.25rem;
+        max-width: 800px;
+        line-height: 1.8;
+        margin-bottom: 2.5rem;
+    }
+
+    .course-meta {
+        gap: 48px;
         font-size: 1.125rem;
-        max-width: 700px;
+        margin-bottom: 48px;
+    }
+
+    .course-meta svg {
+        width: 24px;
+        height: 24px;
     }
 
     .course-content {
         max-width: 1300px;
-        padding: 2rem 2.5rem;
+        padding: 2.5rem 3rem;
     }
 
     .modules-list {
         max-width: 1200px;
         margin: 0 auto;
-        padding: 2rem 2.5rem;
+        padding: 2.5rem 3rem;
+        gap: 3rem;
     }
 
     .section-title {
-        font-size: 1.75rem;
-        margin-bottom: var(--space-xl);
+        font-size: 2rem;
+        margin-bottom: 2rem;
+    }
+
+    .module-number {
+        font-size: 0.875rem;
+        margin-bottom: var(--space-sm);
     }
 
     .module-title-row h3 {
-        font-size: 1.375rem;
+        font-size: 1.5rem;
+    }
+
+    .module-duration {
+        font-size: 0.9375rem;
     }
 
     .lesson-item {
-        padding: var(--space-xl) var(--space-lg);
-        min-height: 80px;
+        padding: 1.25rem var(--space-xl);
+        min-height: 88px;
     }
 
     .lesson-item:hover {
         transform: translateX(8px);
-    }
-
-    .lesson-icon {
-        min-width: 52px;
-        width: 52px;
-        min-height: 52px;
-        height: 52px;
-    }
-
-    .lesson-title {
-        font-size: 1.0625rem;
-    }
-
-    .lesson-meta {
-        font-size: 0.8125rem;
-    }
-
-    .start-course-btn {
-        min-height: 60px;
-        height: 60px;
-        font-size: 1.0625rem;
-        padding: 0 2.5rem;
-    }
-}
-
-@media (min-width: 1440px) {
-    .course-header-nav {
-        padding: var(--space-xl) 3rem;
-    }
-
-    .course-hero {
-        padding: 5rem 3rem 3.5rem;
-    }
-
-    .course-hero h1 {
-        font-size: 3.5rem;
-    }
-
-    .course-content {
-        max-width: 1400px;
-        padding: 2.5rem 3rem;
-    }
-
-    .modules-list {
-        max-width: 1300px;
-        padding: 2.5rem 3rem;
-    }
-
-    .lesson-item {
-        padding: 1.5rem var(--space-xl);
-        min-height: 88px;
     }
 
     .lesson-icon {
@@ -679,5 +681,84 @@
 
     .lesson-title {
         font-size: 1.125rem;
+    }
+
+    .lesson-meta {
+        font-size: 0.875rem;
+    }
+
+    .start-course-btn {
+        min-height: 64px;
+        height: 64px;
+        font-size: 1.125rem;
+        padding: 0 3rem;
+    }
+}
+
+@media (min-width: 1440px) {
+    .course-header-nav {
+        padding: var(--space-xl) 4rem;
+    }
+
+    .course-hero {
+        padding: 6rem 4rem 4.5rem;
+    }
+
+    .course-hero h1 {
+        font-size: 4rem;
+    }
+
+    .course-hero p {
+        font-size: 1.375rem;
+        max-width: 900px;
+    }
+
+    .course-meta {
+        gap: 56px;
+        font-size: 1.25rem;
+    }
+
+    .course-content {
+        max-width: 1500px;
+        padding: 3rem 4rem;
+    }
+
+    .modules-list {
+        max-width: 1400px;
+        padding: 3rem 4rem;
+    }
+
+    .section-title {
+        font-size: 2.25rem;
+    }
+
+    .module-title-row h3 {
+        font-size: 1.625rem;
+    }
+
+    .lesson-item {
+        padding: 1.5rem 2rem;
+        min-height: 96px;
+    }
+
+    .lesson-icon {
+        min-width: 60px;
+        width: 60px;
+        min-height: 60px;
+        height: 60px;
+    }
+
+    .lesson-title {
+        font-size: 1.25rem;
+    }
+
+    .lesson-meta {
+        font-size: 0.9375rem;
+    }
+
+    .start-course-btn {
+        min-height: 68px;
+        height: 68px;
+        font-size: 1.25rem;
     }
 }

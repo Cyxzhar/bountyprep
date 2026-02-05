@@ -57,10 +57,11 @@
 .lesson-hero {
     /* Subtle green radial */
     background: radial-gradient(circle at 50% 0%, rgba(159, 239, 0, 0.1) 0%, transparent 60%);
-    padding: 32px 24px;
+    padding: 48px 32px;
     text-align: center;
     position: relative;
     border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+    box-sizing: border-box;
 }
 
 .hero-top-nav {
@@ -141,7 +142,7 @@
 
 .hero-title {
     font-family: var(--font-heading);
-    font-size: 3rem;
+    font-size: clamp(2rem, 5vw, 3rem);
     line-height: 1.1;
     font-weight: 800;
     color: #fff;
@@ -155,7 +156,8 @@
     gap: 48px;
     max-width: 1200px;
     margin: 0 auto;
-    padding: 48px 24px;
+    padding: 48px 32px;
+    box-sizing: border-box;
 }
 
 .lesson-content-modern {
@@ -178,25 +180,25 @@
 
 /* Markdown Content */
 .markdown-modern {
-    font-size: 1.1rem;
+    font-size: clamp(1.05rem, 2vw, 1.125rem);
     line-height: 1.8;
     color: var(--local-text-secondary);
 }
 
 .markdown-modern>*+* {
-    margin-top: 24px;
+    margin-top: 28px;
 }
 
 /* Headings as Cards/Sections */
 .section-header h2 {
     font-family: var(--font-heading);
-    font-size: 1.8rem;
+    font-size: clamp(1.5rem, 3vw, 2rem);
     color: var(--local-text-primary);
-    margin-top: 56px;
-    margin-bottom: 24px;
+    margin-top: 64px;
+    margin-bottom: 32px;
     display: flex;
     align-items: center;
-    gap: 12px;
+    gap: 16px;
 }
 
 .section-header h2::before {
@@ -210,7 +212,8 @@
 }
 
 .markdown-modern p {
-    margin-bottom: 24px;
+    margin-bottom: 28px;
+    line-height: 1.9;
 }
 
 /* Lists as Cards/Checklists */
@@ -393,8 +396,8 @@
 
 /* --- Footer Actions --- */
 .lesson-footer {
-    margin-top: 64px;
-    padding-top: 32px;
+    margin-top: 80px;
+    padding-top: 40px;
     border-top: 1px solid rgba(255, 255, 255, 0.05);
 }
 
@@ -402,25 +405,28 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
+    gap: 24px;
 }
 
 .nav-btn-secondary {
     display: flex;
     align-items: center;
-    gap: 8px;
+    gap: 10px;
     background: transparent;
     color: var(--local-text-secondary);
-    border: 1px solid transparent;
-    padding: 12px 24px;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    padding: 14px 28px;
     border-radius: var(--radius-sm);
     cursor: pointer;
     font-weight: 500;
+    font-size: 1rem;
     transition: all 0.2s;
 }
 
 .nav-btn-secondary:hover:not(:disabled) {
     color: var(--local-text-primary);
     background: rgba(255, 255, 255, 0.05);
+    border-color: rgba(255, 255, 255, 0.2);
 }
 
 .complete-btn-primary {
@@ -431,11 +437,13 @@
     color: #000;
     /* Dark text on lime */
     border: none;
-    padding: 12px 32px;
+    padding: 14px 36px;
     border-radius: var(--radius-md);
     cursor: pointer;
     transition: all 0.2s;
     box-shadow: 0 4px 15px rgba(159, 239, 0, 0.3);
+    font-size: 1rem;
+    font-weight: 600;
 }
 
 .complete-btn-primary:hover {
@@ -478,6 +486,7 @@
 @media (min-width: 1024px) {
     .lesson-page {
         overflow-x: hidden;
+        box-sizing: border-box;
     }
 
     .lesson-sidebar-desktop {
@@ -487,16 +496,22 @@
     .lesson-layout-modern {
         max-width: 1400px;
         margin: 0 auto;
-        padding: 48px 2.5rem;
-        gap: 60px;
+        padding: 64px 3rem;
+        gap: 80px;
+        box-sizing: border-box;
     }
 
     .lesson-hero {
-        padding: 48px 2.5rem;
+        padding: 64px 3rem;
     }
 
     .hero-title {
-        font-size: 3.5rem;
+        font-size: 3.75rem;
+    }
+
+    .module-tag {
+        font-size: 0.9375rem;
+        margin-bottom: 20px;
     }
 
     .sidebar-sticky {
@@ -505,34 +520,35 @@
     }
 
     .sidebar-sticky h3 {
-        font-size: 0.9rem;
+        font-size: 0.9375rem;
         text-transform: uppercase;
         letter-spacing: 0.1em;
         color: var(--local-text-secondary);
-        margin-bottom: 24px;
+        margin-bottom: 28px;
         font-weight: 600;
     }
 
     .sidebar-list {
         display: flex;
         flex-direction: column;
-        gap: 8px;
+        gap: 10px;
     }
 
     .sidebar-item {
         display: flex;
-        gap: 12px;
+        gap: 14px;
         align-items: center;
-        padding: 8px 12px;
+        padding: 10px 14px;
         cursor: pointer;
         opacity: 0.7;
         transition: all 0.2s;
-        border-radius: 4px;
+        border-radius: 6px;
+        font-size: 0.9375rem;
     }
 
     .sidebar-item:hover {
         opacity: 1;
-        background: rgba(255, 255, 255, 0.03);
+        background: rgba(255, 255, 255, 0.05);
     }
 
     .sidebar-item.active {
@@ -543,58 +559,119 @@
     }
 
     .status-indicator {
-        width: 16px;
+        width: 18px;
         display: flex;
         justify-content: center;
     }
 
     .empty-dot {
-        width: 6px;
-        height: 6px;
+        width: 7px;
+        height: 7px;
         background: rgba(255, 255, 255, 0.2);
         border-radius: 50%;
     }
 
     .pulsing-dot {
-        width: 8px;
-        height: 8px;
+        width: 9px;
+        height: 9px;
         background: var(--local-accent-primary);
         border-radius: 50%;
         box-shadow: 0 0 0 4px rgba(159, 239, 0, 0.2);
     }
 
     .markdown-modern {
-        font-size: 1.125rem;
+        font-size: 1.15rem;
         line-height: 1.9;
     }
 
     .section-header h2 {
-        font-size: 2rem;
-        margin-top: 64px;
+        font-size: 2.25rem;
+        margin-top: 72px;
+        margin-bottom: 36px;
+        gap: 18px;
+    }
+
+    .section-header h2::before {
+        width: 7px;
+        height: 28px;
+    }
+
+    .markdown-modern ul li {
+        padding: 24px 28px;
+        font-size: 1.05rem;
+    }
+
+    .markdown-modern ul li::before {
+        font-size: 1.3rem;
+    }
+
+    .nav-btn-secondary {
+        padding: 16px 32px;
+        font-size: 1.0625rem;
+    }
+
+    .complete-btn-primary {
+        padding: 16px 40px;
+        font-size: 1.0625rem;
+    }
+
+    .btn-label {
+        font-size: 1.0625rem;
+    }
+
+    .btn-subtext {
+        font-size: 0.8125rem;
     }
 }
 
 @media (min-width: 1440px) {
     .lesson-layout-modern {
-        max-width: 1500px;
-        padding: 64px 3rem;
-        gap: 80px;
+        max-width: 1600px;
+        padding: 80px 4rem;
+        gap: 100px;
     }
 
     .lesson-hero {
-        padding: 56px 3rem;
+        padding: 72px 4rem;
     }
 
     .hero-title {
-        font-size: 4rem;
+        font-size: 4.5rem;
+    }
+
+    .module-tag {
+        font-size: 1rem;
     }
 
     .markdown-modern {
-        font-size: 1.15rem;
+        font-size: 1.2rem;
+        line-height: 2;
     }
 
     .section-header h2 {
-        font-size: 2.25rem;
+        font-size: 2.5rem;
+        margin-top: 80px;
+        margin-bottom: 40px;
+    }
+
+    .section-header h2::before {
+        width: 8px;
+        height: 32px;
+    }
+
+    .markdown-modern ul li {
+        padding: 28px 32px;
+        font-size: 1.1rem;
+    }
+
+    .nav-btn-secondary {
+        padding: 18px 36px;
+        font-size: 1.125rem;
+    }
+
+    .complete-btn-primary {
+        padding: 18px 44px;
+        font-size: 1.125rem;
     }
 }
 
