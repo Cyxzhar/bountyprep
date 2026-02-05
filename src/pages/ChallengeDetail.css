@@ -180,7 +180,7 @@
     border: 1px solid var(--border-color);
     border-radius: var(--radius-lg);
     padding: var(--space-xl);
-    margin-bottom: var(--space-xl);
+    margin-bottom: 2rem;
     box-sizing: border-box;
     width: 100%;
 }
@@ -203,7 +203,7 @@
     color: var(--text-secondary);
     font-size: clamp(0.9rem, 2.5vw, 0.9375rem);
     line-height: 1.6;
-    margin-bottom: var(--space-lg);
+    margin-bottom: var(--space-xl);
 }
 
 /* Code Block */
@@ -212,6 +212,7 @@
     border: 1px solid var(--border-color);
     border-radius: var(--radius-md);
     overflow: hidden;
+    margin-top: var(--space-lg);
 }
 
 .code-header {
@@ -251,6 +252,7 @@
 /* Question */
 .question-section {
     margin-bottom: var(--space-xl);
+    margin-top: var(--space-lg);
     width: 100%;
     box-sizing: border-box;
 }
@@ -555,7 +557,7 @@
 
     .scenario-card {
         padding: var(--space-xxl) var(--space-xl);
-        margin-bottom: var(--space-xxl);
+        margin-bottom: 2.5rem;
     }
 
     .scenario-title {
@@ -569,6 +571,10 @@
     }
 
     .code-block {
+        margin-top: var(--space-xl);
+    }
+
+    .question-section {
         margin-top: var(--space-xl);
     }
 
@@ -689,6 +695,7 @@
 
     .scenario-card {
         padding: 2.5rem 2rem;
+        margin-bottom: 3rem;
     }
 
     .scenario-title {
@@ -698,6 +705,14 @@
     .scenario-text {
         font-size: 1.0625rem;
         line-height: 1.8;
+    }
+
+    .code-block {
+        margin-top: var(--space-xxl);
+    }
+
+    .question-section {
+        margin-top: var(--space-xxl);
     }
 
     .question-text {
@@ -740,6 +755,7 @@
 
     .scenario-card {
         padding: 3rem 2.5rem;
+        margin-bottom: 3.5rem;
     }
 
     .scenario-title {
@@ -749,11 +765,20 @@
 
     .scenario-text {
         font-size: 1.125rem;
+        margin-bottom: 2rem;
+    }
+
+    .code-block {
+        margin-top: 2rem;
     }
 
     .code-block pre {
         font-size: 0.9375rem;
         padding: var(--space-xl);
+    }
+
+    .question-section {
+        margin-top: 2rem;
     }
 
     .question-text {
