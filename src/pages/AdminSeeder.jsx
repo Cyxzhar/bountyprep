@@ -10,6 +10,7 @@ import { useAuth } from '../context/AuthContext';
 import { db } from '../lib/firebase';
 import { doc, setDoc, serverTimestamp } from 'firebase/firestore';
 import { challenges } from '../data/challenges';
+import { courses } from '../data/courses';
 
 export default function AdminSeeder() {
     const { currentUser } = useAuth();
@@ -27,8 +28,35 @@ export default function AdminSeeder() {
         setStatus([{ message: '🌱 Starting seed...', type: 'info' }]);
 
         try {
+            // Seed Courses
+            setStatus(prev => [...prev, { message: '📚 Seeding Courses...', type: 'info' }]);
+            for (const course of courses) {
+                try {
+                    // Create a deep copy and sanitize non-serializable fields (like React components)
+                    const courseData = { ...course };
+                    delete courseData.icon; // Remove icon component
+
+                    await setDoc(doc(db, 'courses', course.id), courseData, { merge: true });
+                    setStatus(prev => [...prev, {
+                        message: `✅ Seeded Course: ${course.title}`,
+                        type: 'success'
+                    }]);
+                } catch (error) {
+                    setStatus(prev => [...prev, {
+                        message: `❌ Failed Course: ${course.id} - ${error.message}`,
+                        type: 'error'
+                    }]);
+                }
+            }
+
+            // Seed Challenges
+            setStatus(prev => [...prev, { message: '🏆 Seeding Challenges...', type: 'info' }]);
             for (const challenge of challenges) {
                 try {
+                    // Create copy and sanitize
+                    const challengeData = { ...challenge };
+                    delete challengeData.icon; // Remove icon if present (just in case)
+
                     await setDoc(doc(db, 'challenges', challenge.id.toString()), {
                         id: challenge.id.toString(),
                         title: challenge.title,
@@ -38,18 +66,27 @@ export default function AdminSeeder() {
                         xpReward: challenge.xpReward,
                         isPremium: challenge.isPremium || false,
                         estimatedTimeMinutes: challenge.estimatedTime || 10,
-                        questions: challenge.questions,
+                        questions: challenge.questions || [],
+                        steps: challenge.steps || [],
+                        flag: challenge.flag || null,
+                        labEnvironment: challenge.labEnvironment || null,
+                        resources: challenge.resources || null,
+                        // Ensure all fields are included for new challenge types
+                        objective: challenge.objective || null,
+                        scenario: challenge.scenario || null,
+                        initialCode: challenge.initialCode || null,
+                        validationCode: challenge.validationCode || null,
                         createdAt: serverTimestamp(),
                         updatedAt: serverTimestamp(),
                     });
 
                     setStatus(prev => [...prev, {
-                        message: `✅ Seeded: ${challenge.title}`,
+                        message: `✅ Seeded Challenge: ${challenge.title}`,
                         type: 'success'
                     }]);
                 } catch (error) {
                     setStatus(prev => [...prev, {
-                        message: `❌ Failed: ${challenge.id} - ${error.message}`,
+                        message: `❌ Failed Challenge: ${challenge.id} - ${error.message}`,
                         type: 'error'
                     }]);
                 }
@@ -75,7 +112,7 @@ export default function AdminSeeder() {
             <h1 style={{ color: '#9fef00' }}>🔧 Admin: Seed Firestore</h1>
 
             <p style={{ opacity: 0.7, marginBottom: '1rem' }}>
-                This will migrate {challenges.length} challenges from local data to Firestore.
+                This will migrate {courses.length} courses and {challenges.length} challenges to Firestore.
             </p>
 
             {currentUser ? (
@@ -99,7 +136,7 @@ export default function AdminSeeder() {
                     marginBottom: '1rem'
                 }}
             >
-                {loading ? 'Seeding...' : done ? 'Done ✓' : 'Seed Challenges'}
+                {loading ? 'Seeding...' : done ? 'Done ✓' : 'Seed Database'}
             </button>
 
             <div style={{
@@ -110,7 +147,7 @@ export default function AdminSeeder() {
                 overflow: 'auto'
             }}>
                 {status.length === 0 ? (
-                    <p style={{ color: '#666' }}>Click "Seed Challenges" to begin...</p>
+                    <p style={{ color: '#666' }}>Click "Seed Database" to begin...</p>
                 ) : (
                     status.map((s, i) => (
                         <p key={i} style={{

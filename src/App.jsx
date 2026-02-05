@@ -29,6 +29,7 @@ const ChallengeDetail = lazy(() => import('./pages/ChallengeDetailNew'));
 const Interview = lazy(() => import('./pages/Interview'));
 const Progress = lazy(() => import('./pages/Progress'));
 const Profile = lazy(() => import('./pages/Profile'));
+const AdminSeeder = lazy(() => import('./pages/AdminSeeder'));
 
 // Loading fallback
 const PageLoader = () => (
@@ -68,6 +69,7 @@ function App() {
                     <Route path="/interview" element={<Interview />} />
                     <Route path="/progress" element={<Progress />} />
                     <Route path="/profile" element={<Profile />} />
+                    <Route path="/admin-seed" element={<AdminSeeder />} />
                     <Route path="*" element={<Navigate to="/" replace />} />
                   </Routes>
                 </Suspense>

@@ -37,6 +37,54 @@ export const challenges = [
                 correctAnswer: 0,
                 explanation: "The payload admin' OR '1'='1 works because it makes the WHERE clause always true.",
                 hint: 'Think about making the condition always evaluate to true.'
+            },
+            {
+                scenario: "The application uses a blacklist that filters out 'OR' and '=' characters.",
+                question: 'Which payload might bypass this filter?',
+                options: ["admin' || 1 like 1--", "admin' OR '1'='1", "admin' AND 1=1", "admin' UNION SELECT"],
+                correctAnswer: 0,
+                explanation: "'||' is the string concatenation or logical OR operator in some SQL dialects, and 'like' can replace '='.",
+                hint: 'There are alternative SQL operators for OR and =.'
+            },
+            {
+                scenario: "You want to determine the number of columns in the current SELECT statement.",
+                question: 'Which SQL clause is commonly used for this?',
+                options: ['ORDER BY', 'GROUP BY', 'HAVING', 'LIMIT'],
+                correctAnswer: 0,
+                explanation: 'ORDER BY x increments x until the query fails, revealing the column count.',
+                hint: 'You are trying to sort the results.'
+            },
+            {
+                scenario: "The database is PostgreSQL. You want to concatenate strings.",
+                question: 'Which operator should you use?',
+                options: ['||', '+', 'CONCAT()', '&'],
+                correctAnswer: 0,
+                explanation: 'PostgreSQL uses || for string concatenation.',
+                hint: 'Not all databases use the plus sign or CONCAT function.'
+            },
+            {
+                scenario: "You've found a Union-Based SQLi. You need to see if the database user is an admin.",
+                question: 'Which function typically returns the current database user?',
+                options: ['user() or current_user', 'whoami', 'admin()', 'get_user()'],
+                correctAnswer: 0,
+                explanation: 'user() or current_user standard SQL functions to return the current user.',
+                hint: 'It is a standard function name in MySQL and PostgreSQL.'
+            },
+            {
+                scenario: "The application is vulnerable to Time-Based Blind SQLi.",
+                question: 'What function causes a delay in MySQL?',
+                options: ['SLEEP()', 'WAITFOR DELAY', 'pg_sleep()', 'pause()'],
+                correctAnswer: 0,
+                explanation: 'SLEEP(seconds) is the MySQL function to pause execution.',
+                hint: 'It implies taking a nap.'
+            },
+            {
+                scenario: "You insert a payload but only part of it is executed. The rest seems cut off.",
+                question: 'What is a likely cause?',
+                options: ['Input length limit (maxlength attribute or database field size)', 'WAF blocking', 'Syntax error', 'Network timeout'],
+                correctAnswer: 0,
+                explanation: 'Databases and HTML forms often have character limits.',
+                hint: 'Check if there is a limit on how many characters you can type.'
             }
         ]
     },
@@ -59,6 +107,54 @@ export const challenges = [
                 correctAnswer: 0,
                 explanation: 'Stored XSS occurs when the malicious script is permanently stored on the target server.',
                 hint: 'The script persists and affects all users who view the affected page.'
+            },
+            {
+                scenario: "You want to verify if your Stored XSS payload executes for other users.",
+                question: 'What is the best way to prove impact without causing harm?',
+                options: ['Use a payload that calls back to your server (e.g., image loading)', 'Alert loop', 'Delete the database', 'Redirect users to google'],
+                correctAnswer: 0,
+                explanation: 'A blind XSS payload (like loading an image from your logger) proves execution safely.',
+                hint: 'You need to see a record of the execution on your side.'
+            },
+            {
+                scenario: "The site filters <script> tags but allows <img> tags.",
+                question: 'How can you execute JavaScript using an <img> tag?',
+                options: ['<img src=x onerror=alert(1)>', '<img script=alert(1)>', '<img href=javascript:alert(1)>', '<img onclick=auto>'],
+                correctAnswer: 0,
+                explanation: 'The onerror event handler executes JS if the image fails to load.',
+                hint: 'What happens if the image source is invalid?'
+            },
+            {
+                scenario: "You've found a Stored XSS vulnerability in a user profile description.",
+                question: 'Who is the primary victim of this attack?',
+                options: ['Anyone who views the profile', 'Only the attacker', 'The server administrator only', 'No one'],
+                correctAnswer: 0,
+                explanation: 'Stored XSS affects anyone who loads the page where the script is stored.',
+                hint: 'Is the page public or private?'
+            },
+            {
+                scenario: "The application uses 'HttpOnly' cookies.",
+                question: 'Can you steal the session cookie via XSS?',
+                options: ['No, JavaScript cannot access HttpOnly cookies', 'Yes, easily', 'Only with Stored XSS', 'Only with Reflected XSS'],
+                correctAnswer: 0,
+                explanation: 'HttpOnly flag prevents client-side scripts (JS) from accessing the cookie.',
+                hint: 'That is the main purpose of this flag.'
+            },
+            {
+                scenario: "Since you can't steal the cookie, what else can you do with XSS?",
+                question: 'Which of these is a valid XSS impact?',
+                options: ['Perform actions on behalf of the user (CSRF via XSS)', 'Direct database access', 'Server RCE', 'Decrypt passwords'],
+                correctAnswer: 0,
+                explanation: 'XSS allows you to send requests as the user, bypassing CSRF protections.',
+                hint: 'The browser thinks the user is performing the action.'
+            },
+            {
+                scenario: "You see your input reflected inside a JS string: var name = 'USER_INPUT';",
+                question: 'How do you break out of the string context?',
+                options: ["'; alert(1); //", '"; alert(1); //', '<script>alert(1)</script>', ')}'],
+                correctAnswer: 0,
+                explanation: "Closing the single quote and semicolon finishes the statement, allowing new JS.",
+                hint: 'Match the quote style used in the code.'
             }
         ]
     },
@@ -2085,6 +2181,201 @@ def check_port(ip, port):
         },
         resources: {
             internal: [{ title: 'GraphQL Intro', path: '/course/api-security-testing/lesson/graphql-intro' }],
+            external: []
+        }
+    },
+    {
+        id: '101',
+        challengeType: 'lab',
+        title: 'Lab: SSRF to Internal Service',
+        description: 'Exploit Server-Side Request Forgery to access internal metadata.',
+        type: 'SSRF',
+        difficulty: 'hard',
+        estimatedTime: 15,
+        isPremium: true,
+        xpReward: 200,
+        completed: false,
+        objective: 'Access the internal AWS metadata service via SSRF to steal credentials.',
+        scenario: 'The "Fetch Avatar" feature allows you to load images from URLs. Can you trick it into accessing internal services?',
+        labEnvironment: {
+            type: 'simulation',
+            mockData: {
+                endpoint: '/api/avatar',
+                internal_service: 'http://169.254.169.254/latest/meta-data',
+                response_metadata: {
+                    "ami-id": "ami-12345678",
+                    "iam": {
+                        "security-credentials": {
+                            "role-name": {
+                                "AccessKeyId": "AKIAIOSFODNN7EXAMPLE",
+                                "SecretAccessKey": "wJalrXUtnFEMI/K7MDENG/bPxRfiCYEXAMPLEKEY",
+                                "Token": "flag{ssrf_cloud_master}"
+                            }
+                        }
+                    }
+                }
+            },
+            tools: ['Burp Repeater', 'Browser']
+        },
+        steps: [
+            {
+                title: 'Test External Access',
+                description: 'Verify the avatar fetcher works with a public URL (e.g., http://google.com).',
+                hints: ['Use the Browser tool or Burp to send a request to a benign public site.']
+            },
+            {
+                title: 'Target Internal IP',
+                description: 'Try to access the extensive cloud metadata IP: 169.254.169.254.',
+                hints: ['Send the request to http://169.254.169.254/latest/meta-data/']
+            },
+            {
+                title: 'Exfiltrate Credentials',
+                description: 'Navigate the metadata tree to find the IAM security credentials.',
+                hints: ['Path: /iam/security-credentials/role-name']
+            }
+        ],
+        flag: {
+            format: 'flag{...}',
+            value: 'flag{ssrf_cloud_master}',
+            hints: ['The flag is the "Token" value in the credentials.']
+        },
+        resources: {
+            internal: [{ title: 'SSRF Guide', path: '/course/server-side-attacks/lesson/ssrf-intro' }],
+            external: []
+        }
+    },
+    {
+        id: '102',
+        challengeType: 'lab',
+        title: 'Lab: Filtered Command Injection',
+        description: 'Bypass WAF filters to execute commands.',
+        type: 'Command Injection',
+        difficulty: 'hard',
+        estimatedTime: 12,
+        isPremium: false,
+        xpReward: 180,
+        completed: false,
+        objective: 'Bypass the space fitler to read /flag.txt',
+        scenario: 'A "Network Check" tool pings an IP but blocks spaces and common separators. Can you bypass it?',
+        labEnvironment: {
+            type: 'simulation',
+            mockData: {
+                endpoint: '/api/ping',
+                filters: [' ', 'cat', 'flag'],
+                file_system: {
+                    '/flag.txt': 'flag{no_spaces_needed_here}'
+                }
+            },
+            tools: ['Terminal', 'Burp Repeater']
+        },
+        steps: [
+            {
+                title: 'Identify Banned Characters',
+                description: 'Try using spaces or the word "cat". See what gets blocked.',
+                hints: ['Try: 127.0.0.1; ls -la']
+            },
+            {
+                title: 'Bypass Space Filter',
+                description: 'Find a way to represent a space without using a space character.',
+                hints: ['Use ${IFS} or input redirection <']
+            },
+            {
+                title: 'Read the Flag',
+                description: 'Construct a payload to read /flag.txt without using blocked words.',
+                hints: ['Try "more" or "head" instead of "cat". Use wildcards like /fl*g.txt']
+            }
+        ],
+        flag: {
+            format: 'flag{...}',
+            value: 'flag{no_spaces_needed_here}',
+            hints: ['Use < to redirect input if spaces are blocked.']
+        },
+        resources: {
+            internal: [{ title: 'Cmd Injection Advanced', path: '/course/network-security-101/lesson/command-injection-bypass' }],
+            external: []
+        }
+    },
+    {
+        id: '103',
+        challengeType: 'coding',
+        title: 'Coding: Fix JWT Vulnerability',
+        description: 'Patch a vulnerable JWT verification function.',
+        type: 'Auth Bypass',
+        difficulty: 'medium',
+        estimatedTime: 15,
+        isPremium: true,
+        xpReward: 150,
+        completed: false,
+        question: "The following Node.js code verifies a JWT but allows the 'none' algorithm. Fix it to enforce HS256.",
+        code: `
+const jwt = require('jsonwebtoken');
+
+function verifyToken(token, secret) {
+    try {
+        // Vulnerable: accepts any algorithm provided in the token header
+        const decoded = jwt.verify(token, secret);
+        return decoded;
+    } catch (err) {
+        return null;
+    }
+}
+`,
+        language: 'javascript',
+        validationCode: `
+// Validation logic (hidden from user)
+// Success if jwt.verify is called with { algorithms: ['HS256'] }
+if (code.includes("algorithms: ['HS256']") || code.includes('algorithms: ["HS256"]')) {
+    return { success: true, message: "Correct! By enforcing the algorithm, you prevent 'none' alg attacks." };
+}
+return { success: false, message: "Make sure to explicitly specify the allowed algorithms in the verify options." };
+`,
+        hints: [
+            'The jwt.verify function takes a third argument for options.',
+            'You should specify { algorithms: [\'HS256\'] }.'
+        ]
+    },
+    {
+        id: '104',
+        challengeType: 'lab',
+        title: 'Lab: XXE Data Exfiltration',
+        description: 'Exploit XML External Entity vulnerability to read files.',
+        type: 'XXE',
+        difficulty: 'medium',
+        estimatedTime: 12,
+        isPremium: false,
+        xpReward: 160,
+        completed: false,
+        objective: 'Inject an external entity to read /etc/hostname.',
+        scenario: 'The application accepts XML input for product checks. It parses external entities enabled by default.',
+        labEnvironment: {
+            type: 'simulation',
+            mockData: {
+                endpoint: '/api/stock',
+                file_system: {
+                    '/etc/hostname': 'flag{xxe_pwned_server}'
+                }
+            },
+            tools: ['Burp Repeater']
+        },
+        steps: [
+            {
+                title: 'Define Entity',
+                description: 'Modify the XML to define a new DOCTYPE and entity.',
+                hints: ['<!DOCTYPE foo [ <!ENTITY xxe SYSTEM "file:///etc/hostname"> ]>']
+            },
+            {
+                title: 'Reference Entity',
+                description: 'Use the &xxe; entity in one of the data fields (e.g., productId) to trigger the payload.',
+                hints: ['<productId>&xxe;</productId>']
+            }
+        ],
+        flag: {
+            format: 'flag{...}',
+            value: 'flag{xxe_pwned_server}',
+            hints: ['The flag is the hostname of the server.']
+        },
+        resources: {
+            internal: [{ title: 'XXE Basics', path: '/course/server-side-attacks/lesson/xxe-intro' }],
             external: []
         }
     }
