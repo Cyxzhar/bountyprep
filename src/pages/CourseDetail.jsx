@@ -56,6 +56,35 @@ export default function CourseDetail() {
 
     const handleBack = () => navigate('/courses');
 
+    // Calculate progress state
+    // Flatten lessons list to check total progress
+    const allLessons = course.modules.flatMap(m => m.lessons);
+    const hasProgress = courseProgress?.completedLessons?.length > 0;
+    const isCompleted = allLessons.length > 0 &&
+        allLessons.every(l => courseProgress?.completedLessons?.includes(l.id));
+
+    const handleStartCourse = () => {
+        // Find the first uncompleted lesson
+        let targetLessonId = null;
+
+        if (hasProgress && !isCompleted) {
+            const completed = new Set(courseProgress.completedLessons);
+            const firstUnfinished = allLessons.find(l => !completed.has(l.id));
+            if (firstUnfinished) {
+                targetLessonId = firstUnfinished.id;
+            }
+        }
+
+        // Fallback to absolute first lesson if no progress or everything completed (restart/review)
+        if (!targetLessonId && allLessons.length > 0) {
+            targetLessonId = allLessons[0].id;
+        }
+
+        if (targetLessonId) {
+            navigate(`/course/${course.id}/lesson/${targetLessonId}`);
+        }
+    };
+
     return (
         <div className="page-container course-detail-page">
             <header className="course-header-nav">
@@ -70,13 +99,46 @@ export default function CourseDetail() {
                     <div className="hero-badges">
                         <span className="badge badge-info">{course.level}</span>
                         <span className="badge badge-warning">{course.duration}</span>
+                        {isCompleted && (
+                            <span className="badge badge-success">
+                                <CheckCircle size={12} /> Completed
+                            </span>
+                        )}
                     </div>
                     <h1>{course.title}</h1>
                     <p>{course.description}</p>
 
-                    <button className="primary-btn start-course-btn">
-                        Start Learning <PlayCircle size={20} />
-                    </button>
+                    <div className="hero-actions" style={{ display: 'flex', gap: '12px', alignItems: 'center', marginTop: '24px' }}>
+                        <button className="primary-btn start-course-btn" onClick={handleStartCourse}>
+                            {isCompleted ? 'Review Course' : (hasProgress ? 'Resume Learning' : 'Start Learning')}
+                            {isCompleted ? <BookOpen size={20} /> : <PlayCircle size={20} />}
+                        </button>
+
+                        {isCompleted && (
+                            <div className="completion-message">
+                                <Trophy size={16} />
+                                <span>100% Complete!</span>
+                            </div>
+                        )}
+                    </div>
+
+                    {/* Confetti Animation Layer */}
+                    {isCompleted && (
+                        <div className="confetti-container">
+                            {[...Array(20)].map((_, i) => (
+                                <div
+                                    key={i}
+                                    className="confetti"
+                                    style={{
+                                        left: `${Math.random() * 100}%`,
+                                        animation: `fall ${Math.random() * 3 + 2}s linear infinite`,
+                                        animationDelay: `${Math.random() * 5}s`,
+                                        '--drift': `${Math.random() * 200 - 100}px`
+                                    }}
+                                />
+                            ))}
+                        </div>
+                    )}
                 </div>
                 <div className="course-hero-stats">
                     <div className="hero-stat">
