@@ -39,7 +39,7 @@ const LandingFooter = () => {
                     <div className="made-with">
                         Crafted with <Heart size={14} className="heart-icon-simple" /> by <span className="text-white fw-bold ml-1">Binod Acharya</span>
                     </div>
-                    <div className="footer-version">v1.0.0 (Initial Release)</div>
+                    <div className="footer-version">v1.1.0 (Modular Refactor)</div>
                 </div>
             </div>
         </footer>

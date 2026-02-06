@@ -61,7 +61,7 @@ export default function Splash() {
             </div>
 
             {/* Version */}
-            <div className="splash-version">v1.0.0</div>
+            <div className="splash-version">v1.1.0</div>
         </div>
     );
 }
