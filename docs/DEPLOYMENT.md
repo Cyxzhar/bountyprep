@@ -60,5 +60,11 @@ I have already optimized the build configuration in `vite.config.js`:
 - **Vendor Chunking**: Faster parallel loading in the browser.
 - **Dependency Cleanup**: Smaller install footprint for CI/CD.
 
----
-**Done?** Once you push your next change to `main`, the app will automatically rebuild and deploy!
+### Part 4: Firebase Storage CORS (Fix Photo Upload)
+If you cannot upload photos (CORS error), you must set the CORS policy on your bucket:
+1. Install `gsutil` or use the Google Cloud Shell.
+2. Run this command from your project root:
+   ```bash
+   gsutil cors set cors-config.json gs://bountyprep2.firebasestorage.app
+   ```
+*(Note: Replace the bucket name if yours is different. You can find it in Firebase Storage settings.)*
