@@ -328,11 +328,11 @@
 }
 
 /* CTA Section */
-.cta-section {
+.interview-screen .cta-section {
     margin-top: auto;
 }
 
-.cta-section .btn {
+.interview-screen .cta-section .btn {
     width: 100%;
     max-width: 100%;
 }
@@ -1280,7 +1280,7 @@
     }
 
     /* CTA Section */
-    .cta-section {
+    .interview-screen .cta-section {
         margin-top: auto;
     }
 
