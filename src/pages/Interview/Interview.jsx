@@ -140,7 +140,7 @@ export default function Interview() {
     // Load available history
     useEffect(() => {
         if (currentUser?.uid) {
-            import('../utils/firestore').then(async ({ getUserInterviewSessions, getLastInterviewSession, saveInterviewSession }) => {
+            import('../../utils/firestore').then(async ({ getUserInterviewSessions, getLastInterviewSession, saveInterviewSession }) => {
                 const sessions = await getUserInterviewSessions(currentUser.uid);
 
                 // Migration: Check for old session format (interview/current) and migrate it

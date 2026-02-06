@@ -36,7 +36,7 @@ export default function Upgrade() {
         if (!currentUser) return;
         setLoading(true);
         // Add to waitlist logic
-        const { addToWaitlist } = await import('../utils/firestore');
+        const { addToWaitlist } = await import('../../utils/firestore');
         const result = await addToWaitlist(currentUser.uid, currentUser.email, 'upgrade_page');
 
         if (result.success) {

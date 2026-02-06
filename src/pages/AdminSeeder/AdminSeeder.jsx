@@ -6,9 +6,9 @@
  */
 
 import { useState } from 'react';
-import { useAuth } from '../../../context/AuthContext';
-import { useToast } from '../../../context/ToastContext';
-import { useSound } from '../../../context/SoundContext';
+import { useAuth } from '../../context/AuthContext';
+import { useToast } from '../../context/ToastContext';
+import { useSound } from '../../context/SoundContext';
 import { db } from '../../lib/firebase';
 import { doc, setDoc, serverTimestamp } from 'firebase/firestore';
 import { challenges, skillModules } from '../../data/challenges';
