@@ -311,20 +311,21 @@
     box-shadow: 0 4px 12px rgba(159, 239, 0, 0.15);
 }
 
-/* Quota Info */
+/* Quota Info - Subtle inline badge */
 .quota-info {
-    display: flex;
+    display: inline-flex;
     align-items: center;
     justify-content: center;
-    gap: var(--space-sm);
-    padding: var(--space-md);
-    margin-bottom: var(--space-lg);
-    background: rgba(255, 159, 28, 0.05);
-    border: 1px solid rgba(255, 159, 28, 0.2);
-    border-radius: var(--radius-md);
+    gap: 6px;
+    padding: 8px 16px;
+    margin-top: var(--space-md);
+    background: rgba(255, 159, 28, 0.08);
+    border: 1px solid rgba(255, 159, 28, 0.25);
+    border-radius: var(--radius-full);
     color: var(--neon-orange);
-    font-size: clamp(0.8rem, 2vw, 0.85rem);
+    font-size: 0.8rem;
     font-weight: 600;
+    letter-spacing: 0.01em;
 }
 
 /* CTA Section - Cohesive Button Group */

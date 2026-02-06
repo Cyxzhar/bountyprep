@@ -274,6 +274,12 @@ export default function Interview() {
                         </div>
                         <h1 className="intro-title">AI Interview Coach</h1>
                         <p className="intro-subtitle">Practice FAANG-level security interview questions with real-time AI feedback</p>
+
+                        {/* Quota Display */}
+                        <div className="quota-info">
+                            <AlertCircle size={16} />
+                            <span>{quota} free messages remaining today</span>
+                        </div>
                     </div>
 
                     <div className="difficulty-section">
@@ -314,12 +320,6 @@ export default function Interview() {
                                 <span className="topic-chip">Threat Modeling</span>
                             </div>
                         </div>
-                    </div>
-
-                    {/* Quota Display */}
-                    <div className="quota-info">
-                        <AlertCircle size={16} />
-                        <span>{quota} free messages remaining today</span>
                     </div>
 
                     <div className="cta-section">
