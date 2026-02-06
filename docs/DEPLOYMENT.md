@@ -51,7 +51,8 @@ To manage your domain entirely through DigitalOcean:
 Go to [Firebase Console](https://console.firebase.google.com/):
 1. **Authentication** -> **Settings** -> **Authorized Domains**.
 2. Add `bugora.app` and `www.bugora.app`.
-3. This is essential for Google Login and Email Link auth to work.
+3. **Also add** your DigitalOcean subdomain (e.g., `your-app-name.ondigitalocean.app`).
+4. This ensures login works immediately even before the DNS transfer is fully complete.
 
 ## 6. Build Optimization (Applied)
 I have already optimized the build configuration in `vite.config.js`:
