@@ -42,39 +42,42 @@
 
 .paywall-content {
     flex: 1;
-    padding: var(--space-xl) var(--space-lg);
+    padding: var(--space-lg);
     padding-top: calc(60px + env(safe-area-inset-top));
     overflow-y: auto;
 }
 
-/* Desktop Grid Compatibility */
+/* Desktop Grid Compatibility - Ensure proper spacing */
 @media (min-width: 768px) {
     .paywall-content {
-        overflow-y: visible;
+        overflow-y: auto;
+        padding: clamp(16px, 2vw, 24px);
+        padding-top: 70px;
+        max-height: calc(100vh - 90px);
     }
 }
 
-/* Header */
+/* Header - More compact */
 .paywall-header {
     text-align: center;
-    margin-bottom: var(--space-lg);
+    margin-bottom: clamp(12px, 2vw, 16px);
 }
 
 .paywall-crown-badge {
-    width: 48px;
-    height: 48px;
+    width: 40px;
+    height: 40px;
     background: linear-gradient(135deg, #FFD700, #FFA500);
     border-radius: 50%;
     display: flex;
     align-items: center;
     justify-content: center;
-    margin: 0 auto var(--space-md);
+    margin: 0 auto clamp(8px, 1.5vw, 12px);
     color: var(--bg-dark);
     box-shadow: 0 0 30px rgba(255, 215, 0, 0.3);
 }
 
 .paywall-title {
-    font-size: clamp(1.5rem, 5vw, 2rem);
+    font-size: clamp(1.25rem, 3vw, 1.625rem);
     font-weight: 700;
     line-height: 1.3;
 }

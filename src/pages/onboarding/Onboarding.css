@@ -443,9 +443,9 @@
     background: linear-gradient(135deg, var(--bg-card) 0%, rgba(159, 239, 0, 0.05) 100%);
     border: 1px solid rgba(159, 239, 0, 0.3);
     border-radius: var(--radius-xl);
-    padding: clamp(24px, 4vw, 40px);
+    padding: clamp(20px, 3vw, 32px);
     text-align: center;
-    margin-bottom: clamp(20px, 3vw, 32px);
+    margin-bottom: clamp(16px, 2vw, 24px);
     position: relative;
     overflow: hidden;
 }
@@ -741,15 +741,15 @@
         }
     }
 
-    /* Right panel - Content area */
+    /* Right panel - Content area - More compact */
     .onboarding-content {
         grid-area: right;
-        max-width: 600px;
-        padding: clamp(20px, 3vw, 32px);
-        padding-top: 80px; /* Account for skip button */
+        max-width: 550px;
+        padding: clamp(16px, 2vw, 24px);
+        padding-top: 70px; /* Account for skip button */
         justify-content: flex-start;
         overflow-y: auto;
-        max-height: calc(100vh - 100px); /* Leave room for footer */
+        max-height: calc(100vh - 90px); /* Leave room for footer */
     }
 
     /* Footer spans right side only */
@@ -759,90 +759,91 @@
         padding: clamp(16px, 2vw, 24px) clamp(20px, 3vw, 32px);
     }
 
-    /* Enhanced typography on desktop */
+    /* Enhanced typography on desktop - More compact */
     .onboarding-welcome-title {
-        font-size: clamp(2.5rem, 3vw + 1rem, 4rem);
-        line-height: 1.12;
-        letter-spacing: -0.025em;
-        margin-bottom: clamp(20px, 3vw, 32px);
-    }
-
-    .onboarding-welcome-subtitle {
-        font-size: clamp(1.125rem, 1.5vw + 0.5rem, 1.375rem);
-        line-height: 1.7;
-        max-width: 560px;
-    }
-
-    .onboarding-question-title {
-        font-size: clamp(1.875rem, 2.5vw + 0.5rem, 2.5rem);
-        line-height: 1.22;
+        font-size: clamp(2rem, 2.5vw + 0.5rem, 3rem);
+        line-height: 1.15;
         letter-spacing: -0.02em;
         margin-bottom: clamp(16px, 2vw, 24px);
     }
 
-    .onboarding-question-subtitle {
-        font-size: clamp(1.0625rem, 1.5vw + 0.5rem, 1.25rem);
-        line-height: 1.65;
-        margin-bottom: clamp(32px, 4vw, 48px);
-        max-width: 600px;
+    .onboarding-welcome-subtitle {
+        font-size: clamp(1rem, 1.2vw + 0.5rem, 1.125rem);
+        line-height: 1.6;
+        max-width: 500px;
     }
 
-    /* Enhanced stats on desktop */
+    .onboarding-question-title {
+        font-size: clamp(1.5rem, 2vw + 0.5rem, 1.875rem);
+        line-height: 1.25;
+        letter-spacing: -0.015em;
+        margin-bottom: clamp(12px, 1.5vw, 16px);
+    }
+
+    .onboarding-question-subtitle {
+        font-size: clamp(0.9375rem, 1.2vw + 0.5rem, 1.0625rem);
+        line-height: 1.6;
+        margin-bottom: clamp(20px, 3vw, 28px);
+        max-width: 520px;
+    }
+
+    /* Enhanced stats on desktop - More compact */
     .onboarding-welcome-stats {
-        gap: clamp(40px, 5vw, 64px);
-        padding: clamp(28px, 4vw, 40px) clamp(40px, 6vw, 64px);
-        margin-bottom: clamp(40px, 5vw, 56px);
+        gap: clamp(24px, 3vw, 36px);
+        padding: clamp(20px, 3vw, 28px) clamp(28px, 4vw, 40px);
+        margin-bottom: clamp(24px, 3vw, 32px);
     }
 
     .onboarding-stat-value {
-        font-size: clamp(1.75rem, 2.5vw + 0.5rem, 2.25rem);
-        line-height: 1.15;
-        letter-spacing: -0.02em;
+        font-size: clamp(1.5rem, 2vw + 0.5rem, 1.875rem);
+        line-height: 1.2;
+        letter-spacing: -0.015em;
     }
 
     .onboarding-stat-label {
-        font-size: clamp(0.75rem, 1vw + 0.25rem, 0.875rem);
-        letter-spacing: 0.13em;
+        font-size: clamp(0.6875rem, 0.8vw + 0.25rem, 0.8125rem);
+        letter-spacing: 0.12em;
     }
 
-    /* Enhanced badges on desktop */
+    /* Enhanced badges on desktop - More compact */
     .onboarding-trust-badge {
-        padding: 14px 28px;
-        font-size: clamp(0.9375rem, 1vw + 0.5rem, 1.0625rem);
+        padding: 10px 20px;
+        font-size: clamp(0.875rem, 0.9vw + 0.5rem, 0.9375rem);
         line-height: 1.4;
-        gap: 12px;
-        letter-spacing: 0.035em;
+        gap: 10px;
+        letter-spacing: 0.03em;
     }
 
     .onboarding-trust-badge svg {
-        width: clamp(18px, 2vw, 20px);
-        height: clamp(18px, 2vw, 20px);
+        width: 16px;
+        height: 16px;
     }
 
-    /* Grid layout for option cards on desktop */
+    /* Grid layout for option cards on desktop - Compact version */
     .onboarding-options-grid {
         max-width: 100%;
         display: grid;
         grid-template-columns: repeat(2, 1fr);
-        gap: var(--space-lg);
+        gap: clamp(12px, 2vw, 16px);
     }
 
     .onboarding-option-card {
         flex-direction: column;
         text-align: center;
-        padding: var(--space-xl);
-        min-height: 200px;
+        padding: clamp(16px, 2.5vw, 24px);
+        min-height: 140px;
+        max-height: 160px;
     }
 
     .onboarding-option-icon {
-        width: 64px;
-        height: 64px;
-        margin-bottom: var(--space-md);
+        width: 48px;
+        height: 48px;
+        margin-bottom: clamp(8px, 1.5vw, 12px);
     }
 
     .onboarding-option-icon svg {
-        width: 32px;
-        height: 32px;
+        width: 24px;
+        height: 24px;
     }
 
     .onboarding-option-title {
@@ -859,63 +860,68 @@
     }
 }
 
-/* Ultra-wide screens (≥1200px) */
+/* Ultra-wide screens (≥1200px) - Keep compact */
 @media (min-width: 1200px) {
     .onboarding-content {
-        max-width: 720px;
-        padding: clamp(40px, 5vw, 64px);
+        max-width: 600px;
+        padding: clamp(24px, 3vw, 36px);
     }
 
     .onboarding-footer {
-        max-width: 720px;
-        padding: clamp(32px, 4vw, 48px) clamp(40px, 5vw, 64px);
+        max-width: 600px;
+        padding: clamp(20px, 2.5vw, 28px) clamp(24px, 3vw, 36px);
     }
 
-    /* Enhanced typography for ultra-wide */
+    /* Enhanced typography for ultra-wide - Moderate sizing */
     .onboarding-welcome-title {
-        font-size: clamp(3.5rem, 4vw + 1rem, 4.5rem);
-        line-height: 1.1;
-        letter-spacing: -0.03em;
-        margin-bottom: 36px;
+        font-size: clamp(2.25rem, 2.8vw + 0.5rem, 3.25rem);
+        line-height: 1.12;
+        letter-spacing: -0.025em;
+        margin-bottom: 24px;
     }
 
     .onboarding-welcome-subtitle {
-        font-size: clamp(1.25rem, 1.5vw + 0.5rem, 1.5rem);
-        line-height: 1.75;
-        max-width: 640px;
+        font-size: clamp(1.0625rem, 1.3vw + 0.5rem, 1.25rem);
+        line-height: 1.65;
+        max-width: 540px;
     }
 
     .onboarding-question-title {
-        font-size: clamp(2.25rem, 3vw + 0.5rem, 2.75rem);
-        line-height: 1.2;
-        letter-spacing: -0.025em;
-        margin-bottom: 28px;
+        font-size: clamp(1.75rem, 2.2vw + 0.5rem, 2.125rem);
+        line-height: 1.22;
+        letter-spacing: -0.02em;
+        margin-bottom: 20px;
     }
 
     .onboarding-question-subtitle {
-        font-size: clamp(1.125rem, 1.5vw + 0.5rem, 1.375rem);
-        line-height: 1.7;
-        max-width: 680px;
+        font-size: clamp(1rem, 1.2vw + 0.5rem, 1.125rem);
+        line-height: 1.6;
+        max-width: 560px;
     }
 
-    /* Enhanced stats for ultra-wide */
+    /* Enhanced stats for ultra-wide - Moderate sizing */
     .onboarding-stat-value {
-        font-size: clamp(2rem, 2.5vw + 0.5rem, 2.5rem);
+        font-size: clamp(1.75rem, 2.2vw + 0.5rem, 2.125rem);
     }
 
     .onboarding-stat-label {
-        font-size: clamp(0.8125rem, 1vw + 0.25rem, 0.9375rem);
+        font-size: clamp(0.75rem, 0.9vw + 0.25rem, 0.875rem);
     }
 
-    /* Enhanced option cards for ultra-wide */
+    /* Enhanced option cards for ultra-wide - Keep compact */
+    .onboarding-option-card {
+        min-height: 150px;
+        max-height: 170px;
+    }
+
     .onboarding-option-title {
-        font-size: clamp(1.25rem, 1.5vw + 0.5rem, 1.375rem);
-        margin-bottom: 10px;
+        font-size: clamp(1.0625rem, 1.2vw + 0.5rem, 1.1875rem);
+        margin-bottom: 8px;
     }
 
     .onboarding-option-desc {
-        font-size: clamp(1rem, 1vw + 0.5rem, 1.125rem);
-        line-height: 1.65;
+        font-size: clamp(0.9375rem, 1vw + 0.5rem, 1.0625rem);
+        line-height: 1.6;
     }
 
     /* 3-column grid for some layouts */

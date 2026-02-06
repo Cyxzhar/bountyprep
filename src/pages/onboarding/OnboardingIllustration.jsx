@@ -399,21 +399,7 @@ function AnalysisIllustration() {
         })}
       </g>
 
-      {/* Status Text */}
-      <g className="status-text">
-        <text x="250" y="100" fontSize="16" fill="#9FEF00" textAnchor="middle" opacity="0">
-          Analyzing your profile...
-          <animate attributeName="opacity" values="0;1;1;0" dur="3s" repeatCount="indefinite" begin="0s" />
-        </text>
-        <text x="250" y="100" fontSize="16" fill="#9FEF00" textAnchor="middle" opacity="0">
-          Generating personalized path...
-          <animate attributeName="opacity" values="0;1;1;0" dur="3s" repeatCount="indefinite" begin="3s" />
-        </text>
-        <text x="250" y="100" fontSize="16" fill="#9FEF00" textAnchor="middle" opacity="0">
-          Optimizing learning journey...
-          <animate attributeName="opacity" values="0;1;1;0" dur="3s" repeatCount="indefinite" begin="6s" />
-        </text>
-      </g>
+      {/* Status Text - Removed to prevent overlap with page text */}
 
       {/* Progress Percentage */}
       <text x="250" y="540" fontSize="28" fill="url(#analysisGradient)" textAnchor="middle" fontWeight="bold">
