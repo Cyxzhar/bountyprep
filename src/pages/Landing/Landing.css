@@ -1208,118 +1208,6 @@
 
 /* --- Mobile Responsiveness --- */
 @media (max-width: 768px) {
-    .reveal-body {
-        flex-direction: column;
-        height: auto;
-        min-height: 400px;
-    }
-
-    .reveal-app-layout {
-        flex-direction: column;
-    }
-
-    .reveal-sidebar {
-        width: 100%;
-        height: 50px;
-        flex-direction: row;
-        justify-content: space-around;
-        padding: 0 16px;
-        border-right: none;
-        border-bottom: 1px solid rgba(255, 255, 255, 0.05);
-    }
-
-    .sidebar-group {
-        flex-direction: row;
-        gap: 16px;
-    }
-
-    .sidebar-group.bottom {
-        margin-top: 0;
-        margin-left: auto;
-    }
-
-    .reveal-main {
-        padding: 12px;
-        gap: 16px;
-    }
-
-    .simulation-container {
-        height: 500px;
-    }
-
-    .code-area {
-        font-size: 0.7rem;
-        /* Smaller font on mobile */
-        overflow-x: auto;
-        padding-bottom: 8px;
-    }
-
-    .code-area pre {
-        white-space: pre-wrap;
-        /* Wrap long lines on mobile */
-        word-break: break-all;
-    }
-
-    .line-numbers {
-        width: 30px;
-        padding-right: 8px;
-        font-size: 0.75rem;
-    }
-
-    .terminal-drawer {
-        height: 0;
-        max-height: 180px;
-        position: relative;
-        bottom: 0;
-        left: 0;
-        right: 0;
-        z-index: 20;
-    }
-
-    .terminal-drawer.open {
-        height: 180px;
-        border-top: 1px solid rgba(159, 239, 0, 0.2);
-    }
-
-    .terminal-body {
-        font-size: 0.7rem;
-        padding: 8px;
-        overflow-x: auto;
-    }
-
-    .term-line {
-        white-space: pre-wrap;
-        word-break: break-all;
-    }
-
-    .header-address-bar {
-        font-size: 0.65rem;
-        padding: 4px 8px;
-        flex: 1;
-        margin-left: 8px;
-        overflow: hidden;
-        white-space: nowrap;
-        text-overflow: ellipsis;
-        display: block;
-        /* Simpler for overflow */
-        height: auto;
-    }
-
-    .header-address-bar .domain {
-        color: #cdd6f4;
-        display: inline;
-    }
-
-    .header-address-bar .path {
-        color: #89b4fa;
-        opacity: 0.8;
-        display: inline;
-    }
-
-    .header-address-bar .protocol,
-    .header-address-bar .lock-icon {
-        display: none;
-    }
 
     /* Victory Modal Mobile */
     .victory-modal {
@@ -2291,7 +2179,8 @@
     }
 
     .reveal-body {
-        height: 520px !important;
+        height: 460px !important;
+        /* More compact for smaller screen heights */
         overflow: hidden;
         display: flex;
         flex-direction: column;
@@ -2304,16 +2193,15 @@
 
     .reveal-sidebar {
         display: none;
-        /* Mobile focused: hide sidebar icons */
     }
 
     .reveal-main {
-        padding: 16px;
+        padding: 12px;
         flex: 1;
         display: flex;
         flex-direction: column;
         overflow: hidden;
-        gap: 16px;
+        gap: 12px;
     }
 
     .simulation-container {
@@ -2321,12 +2209,38 @@
         display: flex;
         flex-direction: column;
         overflow: hidden;
+        position: relative;
     }
 
     .editor-content {
         flex: 1;
         overflow-y: auto;
-        min-height: 150px;
+        min-height: 120px;
+        font-size: 0.65rem;
+        /* Even smaller for max visibility */
+    }
+
+    .terminal-drawer {
+        height: 0;
+        max-height: 200px;
+        position: relative;
+        z-index: 20;
+        transition: height 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    .terminal-drawer.open {
+        height: 190px;
+        border-top: 1px solid rgba(159, 239, 0, 0.2);
+    }
+
+    .terminal-body {
+        font-size: 0.65rem;
+        padding: 8px;
+        overflow-y: auto;
+        scroll-behavior: smooth;
+        display: flex;
+        flex-direction: column;
+        gap: 6px;
     }
 
     .reveal-line.title {

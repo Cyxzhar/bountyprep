@@ -20,7 +20,14 @@ const AppReveal = () => {
     // Auto-scroll terminal to bottom
     useEffect(() => {
         if (terminalBodyRef.current) {
-            terminalBodyRef.current.scrollTop = terminalBodyRef.current.scrollHeight;
+            // Smooth scroll with small delay to ensure rendering is complete
+            const scrollTimeout = setTimeout(() => {
+                terminalBodyRef.current.scrollTo({
+                    top: terminalBodyRef.current.scrollHeight,
+                    behavior: 'smooth'
+                });
+            }, 50);
+            return () => clearTimeout(scrollTimeout);
         }
     }, [terminalLogs, terminalTypedText, hackStep]);
 
