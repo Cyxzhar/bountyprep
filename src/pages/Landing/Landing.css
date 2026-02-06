@@ -1318,32 +1318,49 @@
     .victory-modal {
         padding: 24px 16px;
         width: 95%;
-        max-height: 90vh;
-        overflow-y: auto;
+        max-width: 360px;
+        overflow: visible;
+        max-height: none;
+    }
+
+    .victory-icon-wrapper {
+        width: 56px;
+        height: 56px;
+        margin-bottom: 16px;
+    }
+
+    .victory-icon {
+        width: 32px;
+        height: 32px;
     }
 
     .victory-title {
-        font-size: 1.3rem;
+        font-size: 1.15rem;
         margin-bottom: 12px;
     }
 
     .modal-result-terminal {
-        margin-bottom: 16px;
+        margin-bottom: 12px;
+    }
+
+    .mt-header {
+        padding: 4px 8px;
+        font-size: 0.6rem;
     }
 
     .mt-body {
-        font-size: 0.7rem;
-        padding: 8px;
+        font-size: 0.65rem;
+        padding: 6px;
     }
 
     .xp-gain {
-        font-size: 1.5rem;
+        font-size: 1.25rem;
         margin-bottom: 16px;
     }
 
     .btn-victory-primary {
-        padding: 14px;
-        font-size: 0.95rem;
+        padding: 12px 20px;
+        font-size: 0.9rem;
     }
 
     /* Hide floating stats on mobile to prevent clutter */
