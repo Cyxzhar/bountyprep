@@ -31,7 +31,7 @@ const Profile = lazy(() => import('./pages/Profile/Profile'));
 const AdminSeeder = lazy(() => import('./pages/AdminSeeder/AdminSeeder'));
 
 // Protected Layout Component
-import ProtectedRoute from './components/ProtectedRoute';
+import ProtectedRoute from './components/ProtectedRoute/ProtectedRoute';
 
 // Auth Router (responsive auth pages)
 import { AuthLoginRouter, AuthSignUpRouter } from './components/auth/AuthRouter';
