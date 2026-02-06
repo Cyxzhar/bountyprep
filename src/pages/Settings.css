@@ -343,7 +343,7 @@ input:checked+.slider:before {
 }
 
 /* Modal Styles */
-.modal-overlay {
+.settings-modal-overlay {
     position: fixed;
     inset: 0;
     background: rgba(0, 0, 0, 0.7);
@@ -355,7 +355,7 @@ input:checked+.slider:before {
     animation: fadeIn 0.2s ease;
 }
 
-.modal-content {
+.settings-modal-content {
     background: var(--bg-card);
     border: 1px solid var(--border-color);
     padding: var(--space-xl);
@@ -367,24 +367,24 @@ input:checked+.slider:before {
     animation: slideUp 0.2s ease;
 }
 
-.modal-content h3 {
+.settings-modal-content h3 {
     font-size: 1.25rem;
     color: var(--text-primary);
     margin-bottom: var(--space-md);
 }
 
-.modal-content p {
+.settings-modal-content p {
     color: var(--text-secondary);
     margin-bottom: var(--space-xl);
     line-height: 1.6;
 }
 
-.modal-actions {
+.settings-modal-actions {
     display: flex;
     gap: var(--space-md);
 }
 
-.modal-actions button {
+.settings-modal-actions button {
     flex: 1;
     padding: 12px;
     border-radius: var(--radius-md);
@@ -393,23 +393,23 @@ input:checked+.slider:before {
     transition: all 0.2s;
 }
 
-.btn-cancel {
+.settings-btn-cancel {
     background: var(--bg-elevated);
     border: 1px solid var(--border-color);
     color: var(--text-primary);
 }
 
-.btn-cancel:hover {
+.settings-btn-cancel:hover {
     background: var(--bg-darker);
 }
 
-.btn-delete {
+.settings-btn-delete {
     background: rgba(214, 48, 49, 0.1);
     border: 1px solid rgba(214, 48, 49, 0.3);
     color: var(--accent-red);
 }
 
-.btn-delete:hover {
+.settings-btn-delete:hover {
     background: rgba(214, 48, 49, 0.2);
     border-color: var(--accent-red);
 }

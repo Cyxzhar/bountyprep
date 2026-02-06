@@ -434,16 +434,16 @@ export default function Settings() {
             {/* Custom Delete Modal */}
             {
                 showDeleteModal && (
-                    <div className="modal-overlay">
-                        <div className="modal-content">
+                    <div className="settings-modal-overlay">
+                        <div className="settings-modal-content">
                             <Shield size={48} className="text-error" style={{ marginBottom: '16px' }} />
                             <h3>Delete Account?</h3>
                             <p>
                                 This action is permanent and cannot be undone. All your progress, XP, and badges will be lost forever.
                             </p>
-                            <div className="modal-actions">
-                                <button className="btn-cancel" onClick={() => setShowDeleteModal(false)}>Cancel</button>
-                                <button className="btn-delete" onClick={confirmDelete} disabled={saving}>
+                            <div className="settings-modal-actions">
+                                <button className="settings-btn-cancel" onClick={() => setShowDeleteModal(false)}>Cancel</button>
+                                <button className="settings-btn-delete" onClick={confirmDelete} disabled={saving}>
                                     {saving ? 'Deleting...' : 'Delete Forever'}
                                 </button>
                             </div>
