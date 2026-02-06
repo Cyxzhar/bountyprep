@@ -8,7 +8,6 @@ import { SoundProvider } from './context/SoundContext';
 import { Loader2 } from 'lucide-react';
 
 // Lazy load pages for performance
-// Lazy load pages for performance
 const Landing = lazy(() => import('./pages/Landing/Landing'));
 const Splash = lazy(() => import('./pages/Splash/Splash'));
 const Welcome = lazy(() => import('./pages/onboarding/Welcome'));
@@ -17,8 +16,6 @@ const ExperienceLevel = lazy(() => import('./pages/onboarding/ExperienceLevel'))
 const DailyCommitment = lazy(() => import('./pages/onboarding/DailyCommitment'));
 const Analysis = lazy(() => import('./pages/onboarding/Analysis'));
 const Paywall = lazy(() => import('./pages/onboarding/Paywall'));
-const SignUp = lazy(() => import('./pages/auth/SignUp'));
-const Login = lazy(() => import('./pages/auth/Login'));
 const ForgotPassword = lazy(() => import('./pages/auth/ForgotPassword'));
 const Upgrade = lazy(() => import('./pages/Upgrade/Upgrade'));
 const Settings = lazy(() => import('./pages/Settings/Settings'));
@@ -35,6 +32,9 @@ const AdminSeeder = lazy(() => import('./pages/AdminSeeder/AdminSeeder'));
 
 // Protected Layout Component
 import ProtectedRoute from './components/ProtectedRoute';
+
+// Auth Router (responsive auth pages)
+import { AuthLoginRouter, AuthSignUpRouter } from './components/auth/AuthRouter';
 
 // Loading fallback
 const PageLoader = () => (
@@ -62,8 +62,8 @@ function App() {
                     <Route path="/onboarding/commitment" element={<DailyCommitment />} />
                     <Route path="/onboarding/analysis" element={<Analysis />} />
                     <Route path="/onboarding/paywall" element={<Paywall />} />
-                    <Route path="/auth/signup" element={<SignUp />} />
-                    <Route path="/auth/login" element={<Login />} />
+                    <Route path="/auth/signup" element={<AuthSignUpRouter />} />
+                    <Route path="/auth/login" element={<AuthLoginRouter />} />
                     <Route path="/auth/forgot-password" element={<ForgotPassword />} />
                     <Route path="/course/:id" element={<CourseDetail />} /> {/* Public Preview */}
 
