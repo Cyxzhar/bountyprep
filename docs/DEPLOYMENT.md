@@ -26,13 +26,8 @@ Add these in the DO App dashboard -> Settings -> Components -> (Your App Name) -
 | `VITE_FIREBASE_APP_ID` | From Firebase Config |
 | `VITE_PERPLEXITY_API_KEY` | Your AI Tutor Key |
 
-## 4. SPA Routing Fix (DigitalOcean)
-To prevent 404s when refreshing on routes like `/home`:
-1. In DO App dashboard, go to **Settings**.
-2. Select your **Static Site** component.
-3. Scroll down to **Catch-all** or **Error Document**.
-4. Set the **Custom Error Document** to `/index.html`.
-5. This tells DO to serve `index.html` for any route not found, allowing React Router to handle it.
+## 4. SPA Routing (Inbuilt)
+Because we are using a **Web Service** with `server.js`, you don't need to configure manual catch-alls in DigitalOcean. The Express server is already configured to serve `index.html` for any unknown routes, ensuring React Router works perfectly.
 
 ## 5. Domain & SSL
 1. Add `bugora.app` in the **Domains** section.
