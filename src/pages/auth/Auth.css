@@ -35,7 +35,7 @@
     margin-bottom: var(--space-xl);
 }
 
-.logo-wrapper {
+.auth-logo-wrapper {
     position: relative;
     width: 56px;
     height: 56px;
@@ -45,18 +45,18 @@
     filter: drop-shadow(0 0 20px rgba(159, 239, 0, 0.3));
 }
 
-.logo-image {
+.auth-logo-image {
     width: 100%;
     height: 100%;
     object-fit: contain;
 }
 
-.logo-text {
+.auth-logo-text {
     font-size: 1.5rem;
     font-weight: 700;
 }
 
-.text-accent {
+.auth-text-accent {
     color: var(--neon-green);
 }
 
@@ -82,16 +82,16 @@
     margin-bottom: var(--space-lg);
 }
 
-.input-with-icon {
+.auth-input-with-icon {
     position: relative;
 }
 
-.input-with-icon .input {
+.auth-input-with-icon .input {
     padding-left: 48px;
     padding-right: 48px;
 }
 
-.input-icon {
+.auth-input-icon {
     position: absolute;
     left: var(--space-md);
     top: 50%;
@@ -100,7 +100,7 @@
     pointer-events: none;
 }
 
-.input-toggle {
+.auth-input-toggle {
     position: absolute;
     right: var(--space-sm);
     top: 50%;
@@ -115,7 +115,7 @@
     justify-content: center;
 }
 
-.input-toggle:hover {
+.auth-input-toggle:hover {
     color: var(--text-secondary);
 }
 
@@ -142,43 +142,65 @@
 }
 
 /* Social Buttons */
-.social-buttons {
+.auth-social-buttons {
     display: grid;
     grid-template-columns: repeat(2, 1fr);
     gap: var(--space-md);
     margin-bottom: var(--space-xl);
 }
 
-.btn-social {
+.auth-btn-social {
     display: flex;
     align-items: center;
     justify-content: center;
-    gap: var(--space-sm);
+    gap: 12px;
     height: 52px;
-    background: var(--text-primary);
-    border: none;
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid var(--border-color);
     border-radius: var(--radius-md);
     font-family: var(--font-main);
     font-size: 0.9375rem;
-    font-weight: 600;
-    color: var(--bg-dark);
-    cursor: pointer;
-    transition: all var(--transition-base);
-}
-
-.btn-social:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 4px 12px rgba(255, 255, 255, 0.1);
-}
-
-.btn-social-dark {
-    background: var(--bg-dark);
+    font-weight: 500;
     color: var(--text-primary);
-    border: 1px solid var(--border-color);
+    cursor: pointer;
+    transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+    position: relative;
+    overflow: hidden;
 }
 
-.btn-social-dark:hover {
+.auth-btn-social::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(to bottom, rgba(255, 255, 255, 0.05), transparent);
+    opacity: 0;
+    transition: opacity 0.2s ease;
+}
+
+.auth-btn-social:hover {
+    background: rgba(255, 255, 255, 0.08);
     border-color: var(--text-muted);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+}
+
+.auth-btn-social:hover::before {
+    opacity: 1;
+}
+
+.auth-btn-social:active {
+    transform: translateY(0);
+}
+
+/* Specific button overrides */
+.auth-btn-social.google:hover {
+    border-color: rgba(66, 133, 244, 0.5);
+    box-shadow: 0 4px 20px rgba(66, 133, 244, 0.15);
+}
+
+.auth-btn-social.apple:hover {
+    border-color: rgba(255, 255, 255, 0.5);
+    box-shadow: 0 4px 20px rgba(255, 255, 255, 0.15);
 }
 
 /* Footer */
@@ -203,7 +225,7 @@
 
 /* Responsive */
 @media (max-width: 400px) {
-    .social-buttons {
+    .auth-social-buttons {
         grid-template-columns: 1fr;
     }
 }
@@ -215,7 +237,7 @@
 }
 
 /* Live Validation Feedback */
-.validation-message {
+.auth-validation-message {
     font-size: 0.75rem;
     margin-top: 4px;
     display: flex;
@@ -224,24 +246,24 @@
     transition: all 0.2s ease;
 }
 
-.text-success {
+.auth-text-success {
     color: var(--neon-green);
 }
 
-.text-error {
+.auth-text-error {
     color: #ff4444;
 }
 
-.text-warning {
+.auth-text-warning {
     color: #ffbb33;
 }
 
-.text-muted {
+.auth-text-muted {
     color: var(--text-muted);
 }
 
 /* Password Strength Bar */
-.strength-bar-container {
+.auth-strength-bar-container {
     display: flex;
     gap: 4px;
     margin-top: 6px;
@@ -249,7 +271,7 @@
     width: 100%;
 }
 
-.strength-segment {
+.auth-strength-segment {
     flex: 1;
     background: var(--bg-dark);
     /* darker bg for empty segments */
@@ -257,14 +279,14 @@
     transition: background 0.3s ease;
 }
 
-.strength-segment.active.weak {
+.auth-strength-segment.active.weak {
     background: #ff4444;
 }
 
-.strength-segment.active.medium {
+.auth-strength-segment.active.medium {
     background: #ffbb33;
 }
 
-.strength-segment.active.strong {
+.auth-strength-segment.active.strong {
     background: var(--neon-green);
 }

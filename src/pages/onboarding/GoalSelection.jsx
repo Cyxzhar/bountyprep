@@ -1,8 +1,8 @@
 import { useState } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { DollarSign, Briefcase, Target, Wrench, ChevronRight } from 'lucide-react';
-import PageTransition, { SLIDE_LEFT, SLIDE_RIGHT } from '../../components/PageTransition';
-import OnboardingProgress from '../../components/OnboardingProgress';
+import PageTransition, { SLIDE_LEFT, SLIDE_RIGHT } from '../../components/PageTransition/PageTransition';
+import OnboardingProgress from '../../components/OnboardingProgress/OnboardingProgress';
 import './Onboarding.css';
 
 const goals = [
@@ -29,26 +29,26 @@ export default function GoalSelection() {
                     {/* Progress */}
                     <OnboardingProgress currentStep={1} />
 
-                    <h2 className="question-title">What's your primary goal?</h2>
-                    <p className="question-subtitle">We'll personalize your learning path</p>
+                    <h2 className="onboarding-question-title">What's your primary goal?</h2>
+                    <p className="onboarding-question-subtitle">We'll personalize your learning path</p>
 
-                    <div className="options-grid">
+                    <div className="onboarding-options-grid">
                         {goals.map((goal) => {
                             const Icon = goal.icon;
                             return (
                                 <div
                                     key={goal.id}
-                                    className={`option-card ${selected === goal.id ? 'selected' : ''}`}
+                                    className={`onboarding-option-card ${selected === goal.id ? 'selected' : ''}`}
                                     onClick={() => setSelected(goal.id)}
                                 >
-                                    <div className="option-icon">
+                                    <div className="onboarding-option-icon">
                                         <Icon size={24} />
                                     </div>
-                                    <div className="option-content">
-                                        <div className="option-title">{goal.title}</div>
-                                        <div className="option-desc">{goal.desc}</div>
+                                    <div className="onboarding-option-content">
+                                        <div className="onboarding-option-title">{goal.title}</div>
+                                        <div className="onboarding-option-desc">{goal.desc}</div>
                                     </div>
-                                    <div className="option-radio"></div>
+                                    <div className="onboarding-option-radio"></div>
                                 </div>
                             );
                         })}

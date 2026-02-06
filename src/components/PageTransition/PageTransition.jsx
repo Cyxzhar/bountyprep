@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { usePageAnimation } from '../context/AnimationContext';
+import { usePageAnimation } from '../../context/AnimationContext';
 import './PageTransition.css';
 
 // Transition directions

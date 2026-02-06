@@ -64,7 +64,7 @@ const WaitlistModal = ({ isOpen, onClose, setIsJoined }) => {
                     </div>
                     <button
                         type="submit"
-                        className="btn-primary full-width"
+                        className="landing-btn-primary landing-btn-full"
                         disabled={isSubmitting}
                     >
                         {isSubmitting ? "Securing Spot..." : "Secure My Spot"}

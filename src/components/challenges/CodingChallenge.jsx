@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { Code, Play, CheckCircle, XCircle, Lightbulb, BookOpen, Clock } from 'lucide-react';
 import { validatePythonCode, validateJavaScriptCode } from '../../utils/challengeValidation';
 import { useTimer } from '../../hooks/useTimer';
-import ChallengeFailureModal from '../ChallengeFailureModal';
+import ChallengeFailureModal from '../ChallengeFailureModal/ChallengeFailureModal';
 import './ChallengeComponents.css';
 
 export default function CodingChallenge({ challenge, onComplete }) {

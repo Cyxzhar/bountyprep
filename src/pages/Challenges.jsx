@@ -4,7 +4,7 @@ import { Search, Filter, Lock, ChevronRight, Clock, CheckCircle, Star, Crown, Co
 import { useAuth } from '../context/AuthContext';
 import { collection, getDocs } from 'firebase/firestore';
 import { db } from '../lib/firebase';
-import { FirstVisitTransition } from '../components/PageTransition';
+import { FirstVisitTransition } from '../components/PageTransition/PageTransition';
 import { challenges as localChallenges } from '../data/challenges';
 import './Challenges.css';
 
@@ -126,42 +126,42 @@ export default function Challenges() {
 
                     {/* Challenge Type Filters */}
                     {showFilters && (
-                    <>
-                        <div className="filter-section">
-                            <h3 className="filter-title">Challenge Type</h3>
-                            <div className="type-filters">
-                                {challengeTypeFilters.map(filter => {
-                                    const Icon = filter.icon;
-                                    return (
-                                        <button
-                                            key={filter.id}
-                                            className={`type-filter-btn ${activeChallengeType === filter.id ? 'active' : ''}`}
-                                            onClick={() => setActiveChallengeType(filter.id)}
-                                        >
-                                            <Icon size={18} />
-                                            <span>{filter.label}</span>
-                                        </button>
-                                    );
-                                })}
+                        <>
+                            <div className="filter-section">
+                                <h3 className="filter-title">Challenge Type</h3>
+                                <div className="type-filters">
+                                    {challengeTypeFilters.map(filter => {
+                                        const Icon = filter.icon;
+                                        return (
+                                            <button
+                                                key={filter.id}
+                                                className={`type-filter-btn ${activeChallengeType === filter.id ? 'active' : ''}`}
+                                                onClick={() => setActiveChallengeType(filter.id)}
+                                            >
+                                                <Icon size={18} />
+                                                <span>{filter.label}</span>
+                                            </button>
+                                        );
+                                    })}
+                                </div>
                             </div>
-                        </div>
 
-                        {/* Vulnerability Filters */}
-                        <div className="filter-section">
-                            <h3 className="filter-title">Vulnerability</h3>
-                            <div className="filters-scroll">
-                                {vulnerabilityFilters.map(filter => (
-                                    <button
-                                        key={filter}
-                                        className={`chip ${activeVulnFilter === filter ? 'active' : ''}`}
-                                        onClick={() => setActiveVulnFilter(filter)}
-                                    >
-                                        {filter}
-                                    </button>
-                                ))}
+                            {/* Vulnerability Filters */}
+                            <div className="filter-section">
+                                <h3 className="filter-title">Vulnerability</h3>
+                                <div className="filters-scroll">
+                                    {vulnerabilityFilters.map(filter => (
+                                        <button
+                                            key={filter}
+                                            className={`chip ${activeVulnFilter === filter ? 'active' : ''}`}
+                                            onClick={() => setActiveVulnFilter(filter)}
+                                        >
+                                            {filter}
+                                        </button>
+                                    ))}
+                                </div>
                             </div>
-                        </div>
-                    </>
+                        </>
                     )}
 
                     {/* Stats Bar */}

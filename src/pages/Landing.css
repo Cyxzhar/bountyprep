@@ -56,7 +56,8 @@
     z-index: 2;
 }
 
-.container {
+/* Landing-specific container - namespaced to avoid conflicts */
+.landing-container {
     max-width: 1200px;
     margin: 0 auto;
     padding: 0 24px;
@@ -1600,7 +1601,8 @@
     flex-shrink: 0;
 }
 
-.btn-secondary {
+/* Landing curriculum button - namespaced */
+.landing-curriculum-btn {
     background: rgba(255, 255, 255, 0.04);
     backdrop-filter: blur(10px);
     -webkit-backdrop-filter: blur(10px);
@@ -1616,7 +1618,7 @@
     gap: 12px;
 }
 
-.btn-secondary:hover {
+.landing-curriculum-btn:hover {
     background: rgba(255, 255, 255, 0.08);
     border-color: var(--primary);
     color: var(--primary);
@@ -1733,11 +1735,12 @@
 }
 
 /* --- Pricing --- */
+/* Landing Pricing Section - All classes namespaced */
 .landing-pricing {
     padding: 140px 0;
 }
 
-.pricing-card {
+.landing-pricing-card {
     max-width: 580px;
     margin: 0 auto;
     background: rgba(15, 15, 25, 0.5);
@@ -1754,7 +1757,7 @@
     transition: all 0.5s var(--transition-smooth);
 }
 
-.pricing-card:hover {
+.landing-pricing-card:hover {
     transform: translateY(-8px);
     border-color: var(--primary);
     box-shadow:
@@ -1762,7 +1765,7 @@
         0 0 60px rgba(159, 239, 0, 0.2);
 }
 
-.pricing-card::before {
+.landing-pricing-card::before {
     content: '';
     position: absolute;
     top: 0;
@@ -1772,7 +1775,7 @@
     background: var(--gradient-primary);
 }
 
-.pricing-card::after {
+.landing-pricing-card::after {
     content: '';
     position: absolute;
     inset: 0;
@@ -1780,21 +1783,34 @@
     pointer-events: none;
 }
 
-.price-tag {
+.landing-pricing-header {
+    text-align: center;
+}
+
+.landing-pricing-header h2 {
+    margin-bottom: 12px;
+}
+
+.landing-pricing-header p {
+    font-size: 1.1rem;
+    color: var(--text-secondary);
+}
+
+.landing-price-tag {
     margin: 48px 0;
     display: flex;
     justify-content: center;
     align-items: baseline;
 }
 
-.price-tag .currency {
+.landing-price-currency {
     font-size: 2.5rem;
     font-weight: 700;
     margin-right: 8px;
     color: var(--primary);
 }
 
-.price-tag .amount {
+.landing-price-amount {
     font-size: 7rem;
     font-weight: 800;
     line-height: 0.9;
@@ -1805,13 +1821,13 @@
     -webkit-text-fill-color: transparent;
 }
 
-.price-tag .period {
+.landing-price-period {
     font-size: 1.25rem;
     color: var(--text-muted);
     margin-left: 12px;
 }
 
-.coming-soon-badge {
+.landing-coming-soon-badge {
     position: absolute;
     top: 32px;
     right: -60px;
@@ -1827,7 +1843,7 @@
     z-index: 10;
 }
 
-.pricing-features {
+.landing-pricing-features {
     list-style: none;
     margin: 0 auto 56px;
     padding: 0;
@@ -1838,7 +1854,7 @@
     text-align: left;
 }
 
-.pricing-features li {
+.landing-pricing-features li {
     display: flex;
     align-items: center;
     gap: 16px;
@@ -1847,13 +1863,13 @@
     padding: 4px 0;
 }
 
-.pricing-features li svg {
+.landing-pricing-features li svg {
     color: var(--primary);
     filter: drop-shadow(0 0 8px rgba(159, 239, 0, 0.3));
 }
 
-/* Buttons */
-.btn-primary,
+/* Landing-specific Buttons - Namespaced to avoid conflicts with global .btn classes */
+.landing-btn-primary,
 .btn-hero-primary {
     background: var(--primary);
     color: var(--bg-dark);
@@ -1871,7 +1887,7 @@
     box-shadow: 0 4px 20px rgba(159, 239, 0, 0.25);
 }
 
-.btn-primary:not(:disabled):hover,
+.landing-btn-primary:not(:disabled):hover,
 .btn-hero-primary:hover {
     transform: translateY(-2px);
     box-shadow: 0 8px 25px rgba(159, 239, 0, 0.4);
@@ -1879,25 +1895,25 @@
     /* Lighter Neon */
 }
 
-.btn-primary:disabled {
+.landing-btn-primary:disabled {
     opacity: 0.6;
     cursor: not-allowed;
     filter: grayscale(0.5);
 }
 
-.btn-primary.btn-lg {
+.landing-btn-primary.landing-btn-lg {
     width: 100%;
     padding: 20px;
     font-size: 1.2rem;
     border-radius: 16px;
 }
 
-.btn-full {
+.landing-btn-full {
     width: 100%;
     justify-content: center;
 }
 
-.btn-secondary {
+.landing-btn-secondary {
     background: transparent;
     border: 1px solid rgba(255, 255, 255, 0.15);
     color: var(--text-primary);
@@ -1906,9 +1922,13 @@
     font-weight: 600;
     cursor: pointer;
     transition: all 0.3s ease;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
 }
 
-.btn-secondary:hover {
+.landing-btn-secondary:hover {
     border-color: var(--primary);
     color: var(--primary);
     background: rgba(159, 239, 0, 0.05);
@@ -2326,7 +2346,7 @@
         top: 120px;
     }
 
-    .pricing-card {
+    .landing-pricing-card {
         padding: 56px 32px;
         border-radius: 32px;
         width: calc(100% - 32px);
@@ -2334,11 +2354,11 @@
         margin-right: auto;
     }
 
-    .price-tag .amount {
+    .landing-price-amount {
         font-size: 5rem;
     }
 
-    .pricing-features {
+    .landing-pricing-features {
         max-width: 100%;
         padding: 0 10px;
     }
@@ -2416,7 +2436,7 @@
         padding: 6px 14px;
     }
 
-    .pricing-features li {
+    .landing-pricing-features li {
         font-size: 0.95rem;
     }
 }

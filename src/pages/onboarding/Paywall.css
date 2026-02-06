@@ -17,7 +17,7 @@
     pointer-events: none;
 }
 
-.close-btn {
+.paywall-close-btn {
     position: absolute;
     top: calc(var(--space-md) + env(safe-area-inset-top));
     right: var(--space-md);
@@ -35,7 +35,7 @@
     transition: all var(--transition-fast);
 }
 
-.close-btn:hover {
+.paywall-close-btn:hover {
     border-color: var(--text-muted);
     color: var(--text-primary);
 }
@@ -53,7 +53,7 @@
     margin-bottom: var(--space-lg);
 }
 
-.crown-badge {
+.paywall-crown-badge {
     width: 48px;
     height: 48px;
     background: linear-gradient(135deg, #FFD700, #FFA500);
@@ -73,14 +73,14 @@
 }
 
 /* Outcomes */
-.outcomes {
+.paywall-outcomes {
     display: flex;
     flex-direction: column;
     gap: var(--space-sm);
     margin-bottom: var(--space-xl);
 }
 
-.outcome {
+.paywall-outcome {
     display: flex;
     align-items: center;
     justify-content: center;
@@ -93,19 +93,19 @@
     color: var(--neon-green);
 }
 
-.outcome svg {
+.paywall-outcome svg {
     flex-shrink: 0;
 }
 
 /* Features Grid */
-.features-grid {
+.paywall-features-grid {
     display: grid;
     grid-template-columns: repeat(2, 1fr);
     gap: var(--space-sm);
     margin-bottom: var(--space-lg);
 }
 
-.feature-item {
+.paywall-feature-item {
     display: flex;
     align-items: center;
     gap: var(--space-sm);
@@ -117,7 +117,7 @@
     color: var(--text-secondary);
 }
 
-.feature-item svg {
+.paywall-feature-item svg {
     color: var(--neon-green);
     flex-shrink: 0;
 }
@@ -162,14 +162,14 @@
 }
 
 /* Pricing - Holographic Panels */
-.pricing-cards {
+.paywall-pricing-cards {
     display: flex;
     flex-direction: column;
     gap: 16px;
     margin-bottom: 32px;
 }
 
-.pricing-card {
+.paywall-pricing-card {
     background: linear-gradient(180deg, rgba(159, 239, 0, 0.1) 0%, rgba(19, 19, 26, 0.8) 100%);
     border: 1px solid rgba(159, 239, 0, 0.3);
     border-radius: 12px;
@@ -182,12 +182,12 @@
     box-shadow: 0 0 20px rgba(159, 239, 0, 0.1);
 }
 
-.pricing-card.waitlist-card {
+.paywall-pricing-card.waitlist-card {
     border-color: var(--neon-green);
     background: linear-gradient(90deg, rgba(159, 239, 0, 0.1) 0%, rgba(19, 19, 26, 0.9) 100%);
 }
 
-.popular-tag {
+.paywall-popular-tag {
     position: absolute;
     top: 0;
     right: 0;
@@ -200,37 +200,37 @@
     text-transform: uppercase;
 }
 
-.plan-info {
+.paywall-plan-info {
     display: flex;
     flex-direction: column;
     text-align: left;
 }
 
-.plan-name {
+.paywall-plan-name {
     font-size: 1.1rem;
     font-weight: 700;
     color: #fff;
     margin-bottom: 4px;
 }
 
-.plan-savings {
+.paywall-plan-savings {
     font-size: 0.8rem;
     color: var(--neon-green);
     font-weight: 600;
 }
 
-.plan-price {
+.paywall-plan-price {
     text-align: right;
 }
 
-.plan-price .price {
+.paywall-plan-price .price {
     font-size: 1.5rem;
     font-weight: 800;
     color: #FFD700;
     display: block;
 }
 
-.plan-price .period {
+.paywall-plan-price .period {
     font-size: 0.75rem;
     color: var(--text-muted);
 }
@@ -267,20 +267,20 @@
 
 /* Responsive */
 @media (max-width: 400px) {
-    .features-grid {
+    .paywall-features-grid {
         grid-template-columns: 1fr;
     }
 
-    .pricing-cards {
+    .paywall-pricing-cards {
         grid-template-columns: 1fr;
         gap: var(--space-sm);
     }
 
-    .pricing-card {
+    .paywall-pricing-card {
         padding: var(--space-md);
     }
 
-    .plan-price .price {
+    .paywall-plan-price .price {
         font-size: 1.5rem;
     }
 }

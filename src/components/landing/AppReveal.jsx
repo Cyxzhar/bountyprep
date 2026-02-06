@@ -202,7 +202,7 @@ const AppReveal = () => {
 
     return (
         <section className="app-reveal">
-            <div className="container">
+            <div className="landing-container">
                 <div className="reveal-wrapper animate-fade-in-up" style={{ animationDelay: '0.3s' }}>
                     <div className="reveal-glass">
                         {/* Browser Header */}

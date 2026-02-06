@@ -36,6 +36,11 @@ export default function Settings() {
     const [confirmPassword, setConfirmPassword] = useState('');
     const [changingPassword, setChangingPassword] = useState(false);
 
+    // Check if user has password provider (email/password signup)
+    const hasPasswordProvider = currentUser?.providerData?.some(
+        provider => provider.providerId === 'password'
+    );
+
     useEffect(() => {
         if (currentUser) {
             setDisplayName(currentUser.displayName || '');
@@ -344,14 +349,16 @@ export default function Settings() {
                     <h2>Account</h2>
 
                     <div className="action-list">
-                        {!showPasswordForm ? (
-                            <button className="action-btn" onClick={() => setShowPasswordForm(true)}>
-                                <Lock size={18} />
-                                <span>Change Password</span>
-                                <ChevronRight size={16} className="action-arrow" />
-                            </button>
-                        ) : (
-                            <form className="password-change-form" onSubmit={handlePasswordChange}>
+                        {/* Only show password change for users who signed up with email/password */}
+                        {hasPasswordProvider && (
+                            !showPasswordForm ? (
+                                <button className="action-btn" onClick={() => setShowPasswordForm(true)}>
+                                    <Lock size={18} />
+                                    <span>Change Password</span>
+                                    <ChevronRight size={16} className="action-arrow" />
+                                </button>
+                            ) : (
+                                <form className="password-change-form" onSubmit={handlePasswordChange}>
                                 <div className="form-group">
                                     <label htmlFor="current-password">Current Password</label>
                                     <input
@@ -415,6 +422,7 @@ export default function Settings() {
                                     </button>
                                 </div>
                             </form>
+                            )
                         )}
 
                         <button className="action-btn text-error" onClick={handleDeleteClick}>

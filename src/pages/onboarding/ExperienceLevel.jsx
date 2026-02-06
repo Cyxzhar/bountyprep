@@ -1,8 +1,8 @@
 import { useState } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { Sprout, BookOpen, Rocket, ChevronRight } from 'lucide-react';
-import PageTransition, { SLIDE_LEFT, SLIDE_RIGHT } from '../../components/PageTransition';
-import OnboardingProgress from '../../components/OnboardingProgress';
+import PageTransition, { SLIDE_LEFT, SLIDE_RIGHT } from '../../components/PageTransition/PageTransition';
+import OnboardingProgress from '../../components/OnboardingProgress/OnboardingProgress';
 import './Onboarding.css';
 
 const levels = [
@@ -26,26 +26,26 @@ export default function ExperienceLevel() {
                 <div className="onboarding-content">
                     <OnboardingProgress currentStep={2} />
 
-                    <h2 className="question-title">What's your experience level?</h2>
-                    <p className="question-subtitle">This helps us tailor content difficulty</p>
+                    <h2 className="onboarding-question-title">What's your experience level?</h2>
+                    <p className="onboarding-question-subtitle">This helps us tailor content difficulty</p>
 
-                    <div className="options-grid">
+                    <div className="onboarding-options-grid">
                         {levels.map((level) => {
                             const Icon = level.icon;
                             return (
                                 <div
                                     key={level.id}
-                                    className={`option-card ${selected === level.id ? 'selected' : ''}`}
+                                    className={`onboarding-option-card ${selected === level.id ? 'selected' : ''}`}
                                     onClick={() => setSelected(level.id)}
                                 >
-                                    <div className="option-icon">
+                                    <div className="onboarding-option-icon">
                                         <Icon size={24} />
                                     </div>
-                                    <div className="option-content">
-                                        <div className="option-title">{level.title}</div>
-                                        <div className="option-desc">{level.desc}</div>
+                                    <div className="onboarding-option-content">
+                                        <div className="onboarding-option-title">{level.title}</div>
+                                        <div className="onboarding-option-desc">{level.desc}</div>
                                     </div>
-                                    <div className="option-radio"></div>
+                                    <div className="onboarding-option-radio"></div>
                                 </div>
                             );
                         })}

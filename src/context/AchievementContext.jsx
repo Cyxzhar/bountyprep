@@ -1,5 +1,5 @@
 import { createContext, useContext, useState, useCallback, useEffect } from 'react';
-import AchievementUnlock from '../components/AchievementUnlock';
+import AchievementUnlock from '../components/AchievementUnlock/AchievementUnlock';
 
 const AchievementContext = createContext(null);
 

@@ -3,7 +3,7 @@ import { Flag, Terminal, Lightbulb, ChevronRight, ChevronLeft, Monitor, Globe, A
 import { validateFlag } from '../../utils/challengeValidation';
 import { useLabSimulation } from '../../hooks/useLabSimulation.jsx';
 import { useTimer } from '../../hooks/useTimer';
-import ChallengeFailureModal from '../ChallengeFailureModal';
+import ChallengeFailureModal from '../ChallengeFailureModal/ChallengeFailureModal';
 import RequestRepeater from './tools/RequestRepeater';
 import VirtualBrowser from './tools/VirtualBrowser';
 import GraphQLConsole from './tools/GraphQLConsole';

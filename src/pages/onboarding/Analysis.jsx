@@ -1,8 +1,8 @@
 import { useState, useEffect } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { Cpu, Check, Circle, BookOpen, Target, Trophy, ChevronRight } from 'lucide-react';
-import PageTransition, { SLIDE_UP, FADE, SLIDE_LEFT, SLIDE_RIGHT } from '../../components/PageTransition';
-import OnboardingProgress from '../../components/OnboardingProgress';
+import PageTransition, { SLIDE_UP, FADE, SLIDE_LEFT, SLIDE_RIGHT } from '../../components/PageTransition/PageTransition';
+import OnboardingProgress from '../../components/OnboardingProgress/OnboardingProgress';
 import './Onboarding.css';
 
 const loadingSteps = [
@@ -37,19 +37,19 @@ export default function Analysis() {
 
     if (loading) {
         return (
-            <div className="analysis-screen">
+            <div className="onboarding-analysis-screen">
                 <div className="onboarding-bg-grid"></div>
 
-                <div className="analysis-spinner">
-                    <div className="spinner-ring"></div>
-                    <Cpu className="spinner-icon" size={32} />
+                <div className="onboarding-analysis-spinner">
+                    <div className="onboarding-spinner-ring"></div>
+                    <Cpu className="onboarding-spinner-icon" size={32} />
                 </div>
 
-                <div className="loading-steps">
+                <div className="onboarding-loading-steps">
                     {loadingSteps.map((step, idx) => (
                         <div
                             key={idx}
-                            className={`loading-step ${idx < currentStep ? 'done' : idx === currentStep ? 'active' : ''}`}
+                            className={`onboarding-loading-step ${idx < currentStep ? 'done' : idx === currentStep ? 'active' : ''}`}
                         >
                             {idx < currentStep ? <Check size={18} /> : <Circle size={18} />}
                             <span>{step}</span>
@@ -69,30 +69,30 @@ export default function Analysis() {
                     <OnboardingProgress currentStep={4} />
 
 
-                    <h2 className="question-title">Your Personalized Plan</h2>
+                    <h2 className="onboarding-question-title">Your Personalized Plan</h2>
 
-                    <div className="results-card">
-                        <div className="results-number">87</div>
-                        <div className="results-label">Days</div>
-                        <p className="results-subtitle">Until your first $500 bounty</p>
+                    <div className="onboarding-results-card">
+                        <div className="onboarding-results-number">87</div>
+                        <div className="onboarding-results-label">Days</div>
+                        <p className="onboarding-results-subtitle">Until your first $500 bounty</p>
                     </div>
 
-                    <div className="results-stats">
-                        <div className="result-stat">
+                    <div className="onboarding-results-stats">
+                        <div className="onboarding-result-stat">
                             <BookOpen size={16} />
                             <span>48 Challenges</span>
                         </div>
-                        <div className="result-stat">
+                        <div className="onboarding-result-stat">
                             <Target size={16} />
                             <span>12 Skills</span>
                         </div>
-                        <div className="result-stat">
+                        <div className="onboarding-result-stat">
                             <Trophy size={16} />
                             <span>Top 15%</span>
                         </div>
                     </div>
 
-                    <p className="footer-text">
+                    <p className="onboarding-footer-text">
                         Join 3,247 users who started this month
                     </p>
                 </div>

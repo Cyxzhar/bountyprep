@@ -36,14 +36,14 @@
 .sidebar-brand {
     display: flex;
     align-items: center;
-    gap: var(--space-md);
+    gap: 12px;
     padding-bottom: var(--space-md);
     border-bottom: 1px solid rgba(255, 255, 255, 0.08);
 }
 
 .brand-logo {
-    width: 44px;
-    height: 44px;
+    width: 32px;
+    height: 32px;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -56,29 +56,15 @@
     object-fit: contain;
 }
 
-.brand-content {
-    display: flex;
-    flex-direction: column;
-    gap: 2px;
-}
-
 .brand-name {
-    font-size: 1.25rem;
+    font-size: 1.5rem;
     font-weight: 800;
     letter-spacing: -0.02em;
-    background: linear-gradient(135deg, #fff, var(--neon-green));
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    background-clip: text;
+    color: var(--text-primary);
 }
 
-.brand-tagline {
-    font-size: 0.65rem;
-    font-weight: 600;
-    text-transform: uppercase;
-    letter-spacing: 0.08em;
-    color: var(--text-muted);
-    font-family: 'JetBrains Mono', monospace;
+.brand-accent {
+    color: var(--primary);
 }
 
 /* User Card */
@@ -310,6 +296,7 @@
         transform: translateX(-100%);
         opacity: 0;
     }
+
     to {
         transform: translateX(0);
         opacity: 1;

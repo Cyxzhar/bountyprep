@@ -6,7 +6,7 @@ const LandingCurriculum = ({ onAction }) => {
 
     return (
         <section id="curriculum" className="landing-curriculum">
-            <div className="container">
+            <div className="landing-container">
                 <div className="curriculum-layout">
                     <div className="curriculum-info animate-fade-in-up">
                         <h2 className="text-display">Real-World <br /><span className="text-gradient">Scenarios</span></h2>
@@ -20,7 +20,7 @@ const LandingCurriculum = ({ onAction }) => {
                             <li><CheckCircle size={18} /> GraphQL Introspection & Injection</li>
                         </ul>
 
-                        <button className="btn-secondary mt-lg" onClick={onAction}>
+                        <button className="landing-curriculum-btn mt-lg" onClick={onAction}>
                             Start Hacking
                         </button>
                     </div>

@@ -5,7 +5,7 @@ import {
     MessageCircle, Rocket, Clock, Crown, Sparkles
 } from 'lucide-react';
 import { useSound } from '../../context/SoundContext';
-import PageTransition, { SLIDE_UP } from '../../components/PageTransition';
+import PageTransition, { SLIDE_UP } from '../../components/PageTransition/PageTransition';
 import './Paywall.css';
 
 const features = [
@@ -40,14 +40,14 @@ export default function Paywall() {
                 <div className="paywall-bg"></div>
 
                 {/* Close Button */}
-                <button className="close-btn" onClick={handleNavigateToSignup}>
+                <button className="paywall-close-btn" onClick={handleNavigateToSignup}>
                     <X size={20} />
                 </button>
 
                 <div className="paywall-content">
                     {/* Header */}
                     <div className="paywall-header">
-                        <div className="crown-badge">
+                        <div className="paywall-crown-badge">
                             <Crown size={20} />
                         </div>
                         <h1 className="paywall-title">
@@ -57,25 +57,25 @@ export default function Paywall() {
                     </div>
 
                     {/* Outcomes */}
-                    <div className="outcomes">
-                        <div className="outcome">
+                    <div className="paywall-outcomes">
+                        <div className="paywall-outcome">
                             <Check size={18} />
                             <span>Land $100K+ Security Jobs</span>
                         </div>
-                        <div className="outcome">
+                        <div className="paywall-outcome">
                             <Check size={18} />
                             <span>Earn $500-5K Bug Bounties</span>
                         </div>
-                        <div className="outcome">
+                        <div className="paywall-outcome">
                             <Check size={18} />
                             <span>Master OWASP Top 10</span>
                         </div>
                     </div>
 
                     {/* Features */}
-                    <div className="features-grid">
+                    <div className="paywall-features-grid">
                         {features.map(({ icon: Icon, text }, idx) => (
-                            <div key={idx} className="feature-item">
+                            <div key={idx} className="paywall-feature-item">
                                 <Icon size={18} />
                                 <span>{text}</span>
                             </div>
@@ -85,14 +85,14 @@ export default function Paywall() {
 
 
                     {/* Pricing */}
-                    <div className="pricing-cards">
-                        <div className="pricing-card selected waitlist-card">
-                            <div className="popular-tag">EARLY BIRD</div>
-                            <div className="plan-info">
-                                <div className="plan-name">Bounty Hunter Pro</div>
-                                <div className="plan-savings">COMING SOON</div>
+                    <div className="paywall-pricing-cards">
+                        <div className="paywall-pricing-card selected waitlist-card">
+                            <div className="paywall-popular-tag">EARLY BIRD</div>
+                            <div className="paywall-plan-info">
+                                <div className="paywall-plan-name">Bounty Hunter Pro</div>
+                                <div className="paywall-plan-savings">COMING SOON</div>
                             </div>
-                            <div className="plan-price">
+                            <div className="paywall-plan-price">
                                 <span className="price">$10</span>
                                 <span className="period">/year</span>
                             </div>

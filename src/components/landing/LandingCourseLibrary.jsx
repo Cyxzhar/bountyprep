@@ -10,7 +10,7 @@ const LandingCourseLibrary = () => {
 
     return (
         <section id="course-library" className="course-library-section py-xl">
-            <div className="container">
+            <div className="landing-container">
                 <div className="section-header text-center mb-xl">
                     <span className="badge badge-primary">CURRICULUM</span>
                     <h2 className="text-display">The Hacker's <span className="text-gradient">Library</span></h2>

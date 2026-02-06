@@ -8,7 +8,7 @@ import {
     Bot, Lock, Unlock, Syringe, Link, IdCard, RefreshCw, Upload, Star,
     Trophy, Beaker, Award, Gamepad2, Volume2, VolumeX
 } from 'lucide-react';
-import { FirstVisitTransition } from '../components/PageTransition';
+import { FirstVisitTransition } from '../components/PageTransition/PageTransition';
 import { challenges, skillModules } from '../data/challenges';
 import { calculateLevel, getLevelProgress, getLevelTitle, formatXp } from '../utils/xp';
 import './Home.css';
@@ -67,11 +67,11 @@ export default function Home() {
                     {/* Header */}
                     <header className="home-header">
                         <div className="header-content">
-                            <p className="greeting-date">{dateString}</p>
-                            <h1 className="greeting-text">Welcome back, <span className="text-gradient">{displayName}</span></h1>
+                            <p className="home-greeting-date">{dateString}</p>
+                            <h1 className="home-greeting-text">Welcome back, <span className="text-gradient">{displayName}</span></h1>
                         </div>
                         <div className="header-actions" style={{ display: 'flex', gap: '8px', alignItems: 'center' }}>
-                            <div className="streak-badge">
+                            <div className="home-streak-badge">
                                 <Flame size={18} />
                                 <span>{streak}</span>
                             </div>
@@ -79,41 +79,41 @@ export default function Home() {
                     </header>
 
                     {/* Level/XP Card */}
-                    <section className="level-card">
-                        <div className="level-info">
-                            <div className="level-badge">
+                    <section className="home-level-card">
+                        <div className="home-level-info">
+                            <div className="home-level-badge">
                                 <Star size={16} />
                                 <span>Level {level}</span>
                             </div>
-                            <span className="level-title">{title}</span>
+                            <span className="home-level-title">{title}</span>
                         </div>
-                        <div className="xp-progress">
-                            <div className="xp-bar">
+                        <div className="home-xp-progress">
+                            <div className="home-xp-bar">
                                 <div
-                                    className="xp-fill"
+                                    className="home-xp-fill"
                                     style={{ width: `${levelProgress}%` }}
                                 ></div>
                             </div>
-                            <span className="xp-text">{formatXp(xp)} XP</span>
+                            <span className="home-xp-text">{formatXp(xp)} XP</span>
                         </div>
                     </section>
 
                     {/* Today's Challenge */}
-                    <section className="today-challenge card-glow" onClick={() => handleChallengeClick(todayChallenge.id)}>
-                        <div className="challenge-glow"></div>
-                        <div className="challenge-header">
-                            <div className="challenge-badges">
+                    <section className="home-today-challenge card-glow" onClick={() => handleChallengeClick(todayChallenge.id)}>
+                        <div className="home-challenge-glow"></div>
+                        <div className="home-challenge-header">
+                            <div className="home-challenge-badges">
                                 <span className="badge badge-info">{todayChallenge.type}</span>
                                 <span className="badge badge-warning">{todayChallenge.difficulty}</span>
                             </div>
-                            <div className="challenge-time">
+                            <div className="home-challenge-time">
                                 <Clock size={14} />
                                 <span>{todayChallenge.estimatedTime} min</span>
                             </div>
                         </div>
 
-                        <h2 className="challenge-title">{todayChallenge.title}</h2>
-                        <p className="challenge-desc">{todayChallenge.description}</p>
+                        <h2 className="home-challenge-title">{todayChallenge.title}</h2>
+                        <p className="home-challenge-desc">{todayChallenge.description}</p>
 
                         <button className="btn btn-primary btn-full mt-md">
                             Start Challenge
@@ -122,32 +122,32 @@ export default function Home() {
                     </section>
 
                     {/* Quick Stats */}
-                    <section className="stats-grid">
-                        <div className="stat-card">
-                            <div className="stat-icon">
+                    <section className="home-stats-grid">
+                        <div className="home-stat-card">
+                            <div className="home-stat-icon">
                                 <CheckCircle size={20} />
                             </div>
-                            <span className="stat-value">{totalCompleted}</span>
-                            <span className="stat-label">Completed</span>
+                            <span className="home-stat-value">{totalCompleted}</span>
+                            <span className="home-stat-label">Completed</span>
                         </div>
-                        <div className="stat-card">
+                        <div className="home-stat-card">
                             <div className="stat-icon fire">
                                 <Flame size={20} />
                             </div>
-                            <span className="stat-value">{streak}</span>
-                            <span className="stat-label">Day Streak</span>
+                            <span className="home-stat-value">{streak}</span>
+                            <span className="home-stat-label">Day Streak</span>
                         </div>
-                        <div className="stat-card">
-                            <div className="stat-icon">
+                        <div className="home-stat-card">
+                            <div className="home-stat-icon">
                                 <Target size={20} />
                             </div>
-                            <span className="stat-value">{level}</span>
-                            <span className="stat-label">Level</span>
+                            <span className="home-stat-value">{level}</span>
+                            <span className="home-stat-label">Level</span>
                         </div>
                     </section>
 
                     {/* Learning Path */}
-                    <section className="learning-section">
+                    <section className="home-learning-section">
                         <div className="section-header">
                             <h3 className="section-title">Your Learning Path</h3>
                             <button className="btn-ghost" onClick={() => { playSFX('click'); navigate('/challenges'); }}>See All</button>

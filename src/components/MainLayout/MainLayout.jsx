@@ -1,6 +1,6 @@
 import { useLocation } from 'react-router-dom';
-import Sidebar from './Sidebar';
-import BottomNav from './BottomNav';
+import Sidebar from '../Sidebar/Sidebar';
+import BottomNav from '../BottomNav/BottomNav';
 import './MainLayout.css';
 
 export default function MainLayout({ children }) {

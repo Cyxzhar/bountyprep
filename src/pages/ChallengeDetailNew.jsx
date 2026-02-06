@@ -14,7 +14,7 @@ import { useTimer } from '../hooks/useTimer';
 import CodingChallenge from '../components/challenges/CodingChallenge';
 import LabChallenge from '../components/challenges/LabChallenge';
 import PracticalChallenge from '../components/challenges/PracticalChallenge';
-import CompletionModal from '../components/CompletionModal';
+import CompletionModal from '../components/CompletionModal/CompletionModal';
 
 // Import original multiple choice component logic (embedded)
 import MultipleChoiceChallenge from '../components/challenges/MultipleChoiceChallenge';

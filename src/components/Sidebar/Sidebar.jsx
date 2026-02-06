@@ -11,7 +11,7 @@ import {
     LogOut,
     Zap
 } from 'lucide-react';
-import { useAuth } from '../context/AuthContext';
+import { useAuth } from '../../context/AuthContext';
 import './Sidebar.css';
 
 export default function Sidebar() {
@@ -53,10 +53,7 @@ export default function Sidebar() {
                 <div className="brand-logo">
                     <img src="/logo.svg" alt="Bugora" />
                 </div>
-                <div className="brand-content">
-                    <span className="brand-name">Bugora</span>
-                    <span className="brand-tagline">Bug Bounty Platform</span>
-                </div>
+                <span className="brand-name">Bug<span className="brand-accent">ora</span></span>
             </div>
 
             {/* User Card */}

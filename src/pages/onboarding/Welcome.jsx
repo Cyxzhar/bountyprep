@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Shield, Bug, ChevronRight, Calculator, Terminal, Award, Zap, Bot, Target, LockOpen } from 'lucide-react';
 import { useSound } from '../../context/SoundContext';
-import PageTransition, { FADE } from '../../components/PageTransition';
+import PageTransition, { FADE } from '../../components/PageTransition/PageTransition';
 import './Onboarding.css';
 
 export default function Welcome() {
@@ -48,20 +48,20 @@ export default function Welcome() {
                 <div className="onboarding-bg-grid"></div>
 
                 {/* Skip Button */}
-                <button className="skip-btn" onClick={handleSkip}>
+                <button className="onboarding-skip-btn" onClick={handleSkip}>
                     Skip
                     <ChevronRight size={16} />
                 </button>
 
                 <div className="onboarding-content">
                     {/* Hero Section */}
-                    <div className="welcome-hero">
-                        <div className="hero-illustration">
-                            <div className="hero-glow"></div>
-                            <div className="hero-icon-main">
+                    <div className="onboarding-welcome-hero">
+                        <div className="onboarding-hero-illustration">
+                            <div className="onboarding-hero-glow"></div>
+                            <div className="onboarding-hero-icon-main">
                                 <img src="/logo.svg" alt="Bugora" style={{ width: '100px', height: '100px' }} />
                             </div>
-                            <div className="hero-particles">
+                            <div className="onboarding-hero-particles">
                                 <span style={{ top: '10%', left: '20%', animationDelay: '0s' }}></span>
                                 <span style={{ top: '30%', right: '15%', animationDelay: '0.5s' }}></span>
                                 <span style={{ bottom: '20%', left: '25%', animationDelay: '1s' }}></span>
@@ -69,46 +69,46 @@ export default function Welcome() {
                             </div>
                         </div>
 
-                        <h1 className="welcome-title">
+                        <h1 className="onboarding-welcome-title">
                             Master Bug Bounties<br />
                             <span className="text-gradient">in 10 Minutes Daily</span>
                         </h1>
 
-                        <p className="welcome-subtitle">
+                        <p className="onboarding-welcome-subtitle">
                             Join thousands of security professionals landing their dream jobs and earning bounties.
                         </p>
                     </div>
 
                     {/* Stats */}
-                    <div className="welcome-stats">
-                        <div className="stat-item">
+                    <div className="onboarding-welcome-stats">
+                        <div className="onboarding-stat-item">
                             <Target size={18} />
-                            <span className="stat-value">50+</span>
-                            <span className="stat-label">Labs</span>
+                            <span className="onboarding-stat-value">50+</span>
+                            <span className="onboarding-stat-label">Labs</span>
                         </div>
-                        <div className="stat-divider"></div>
-                        <div className="stat-item">
+                        <div className="onboarding-stat-divider"></div>
+                        <div className="onboarding-stat-item">
                             <Bot size={18} />
-                            <span className="stat-value">AI</span>
-                            <span className="stat-label">Coach</span>
+                            <span className="onboarding-stat-value">AI</span>
+                            <span className="onboarding-stat-label">Coach</span>
                         </div>
-                        <div className="stat-divider"></div>
-                        <div className="stat-item">
+                        <div className="onboarding-stat-divider"></div>
+                        <div className="onboarding-stat-item">
                             <Award size={18} />
-                            <span className="stat-value">Pro</span>
-                            <span className="stat-label">Certs</span>
+                            <span className="onboarding-stat-value">Pro</span>
+                            <span className="onboarding-stat-label">Certs</span>
                         </div>
                     </div>
 
                     {/* Trust Badges */}
-                    <div className="trust-badges">
-                        <div className="trust-badge">
+                    <div className="onboarding-trust-badges">
+                        <div className="onboarding-trust-badge">
                             <LockOpen size={14} /> Beginner Friendly
                         </div>
-                        <div className="trust-badge">
+                        <div className="onboarding-trust-badge">
                             <Terminal size={14} /> Hands-on Practice
                         </div>
-                        <div className="trust-badge">
+                        <div className="onboarding-trust-badge">
                             <Award size={14} /> Industry Standard
                         </div>
                     </div>
@@ -120,7 +120,7 @@ export default function Welcome() {
                         Start Your Journey
                         <ChevronRight size={20} />
                     </button>
-                    <p className="footer-text">Free to start • No credit card required</p>
+                    <p className="onboarding-footer-text">Free to start • No credit card required</p>
                 </div>
             </div>
         </PageTransition>

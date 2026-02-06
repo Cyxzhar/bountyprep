@@ -4,7 +4,7 @@ import { BookOpen, Flag, Users, Terminal as TerminalIcon, Shield, Zap } from 'lu
 const WhyBugora = () => {
     return (
         <section className="why-bugora-section py-xl">
-            <div className="container">
+            <div className="landing-container">
                 <div className="section-header text-center mb-xl">
                     <span className="badge badge-primary">THE BUGORA STANDARD</span>
                     <h2 className="text-display">Stop Playing <span className="text-gradient">Capture The Flag</span></h2>

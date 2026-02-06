@@ -13,7 +13,7 @@ const LandingHero = ({ onOpenWaitlist, isJoined, onExplore }) => {
                 <div className="hero-overlay"></div>
             </div>
 
-            <div className="container">
+            <div className="landing-container">
                 <div className="hero-content">
                     <div className="badge-promo animate-fade-in">
                         <span className="badge-icon"><Zap size={12} /></span>

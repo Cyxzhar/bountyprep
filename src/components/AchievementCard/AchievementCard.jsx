@@ -1,5 +1,5 @@
 import { Lock, HelpCircle } from 'lucide-react';
-import { getAchievementById } from '../data/achievements';
+import { getAchievementById } from '../../data/achievements';
 import './AchievementCard.css';
 
 export default function AchievementCard({ achievementId, unlockedAt }) {

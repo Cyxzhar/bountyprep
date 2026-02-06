@@ -28,7 +28,7 @@
 
 /* Level Card */
 /* Level Section - HUD Style (No Box) */
-.level-card {
+.progress-level-card {
     display: flex;
     align-items: center;
     gap: 32px;
@@ -40,34 +40,34 @@
     overflow: visible;
 }
 
-.level-card::before {
+.progress-level-card::before {
     display: none;
 }
 
-.level-ring {
+.progress-level-ring {
     position: relative;
     width: 140px;
     height: 140px;
     flex-shrink: 0;
 }
 
-.level-ring svg {
+.progress-level-ring svg {
     width: 100%;
     height: 100%;
     transform: rotate(-90deg);
     filter: drop-shadow(0 0 10px rgba(159, 239, 0, 0.2));
 }
 
-.level-ring circle {
+.progress-level-ring circle {
     fill: none;
     stroke-width: 4;
 }
 
-.level-ring .ring-bg {
+.progress-level-ring .ring-bg {
     stroke: rgba(255, 255, 255, 0.05);
 }
 
-.level-ring .ring-fill {
+.progress-level-ring .ring-fill {
     stroke: var(--neon-green);
     stroke-linecap: round;
     transition: stroke-dasharray 1s ease-out;
@@ -98,7 +98,7 @@
     margin-top: 4px;
 }
 
-.level-info {
+.progress-level-info {
     flex: 1;
     min-width: 0;
     display: flex;
@@ -106,7 +106,7 @@
     justify-content: center;
 }
 
-.level-title {
+.progress-level-title {
     font-size: clamp(1.5rem, 4vw, 2rem);
     font-weight: 800;
     margin-bottom: var(--space-md);
@@ -116,12 +116,12 @@
     width: 100%;
 }
 
-.xp-progress {
+.progress-xp-progress {
     margin-bottom: 20px;
     width: 100%;
 }
 
-.xp-text {
+.progress-xp-text {
     display: flex;
     align-items: center;
     gap: 12px;
@@ -134,7 +134,7 @@
 }
 
 /* Bullet separator */
-.xp-text::before {
+.progress-xp-text::before {
     content: '';
 }
 
@@ -265,10 +265,19 @@
 
 /* Heatmap - Tech Grid with Enhanced Indicators */
 .heatmap-container {
-    background: transparent;
-    border: none;
-    border-radius: 0;
-    padding: 0;
+    background: rgba(19, 19, 26, 0.4);
+    border: 1px solid rgba(255, 255, 255, 0.03);
+    border-radius: var(--radius-lg);
+    padding: var(--space-2xl) var(--space-xl) var(--space-3xl) var(--space-xl);
+    position: relative;
+}
+
+.heatmap-container::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(circle at center, rgba(159, 239, 0, 0.03) 0%, transparent 70%);
+    pointer-events: none;
 }
 
 /* Activity Heatmap - Full-width professional tracking */
@@ -276,116 +285,329 @@
     display: grid;
     grid-template-rows: repeat(7, 1fr);
     grid-auto-flow: column;
-    gap: 3px;
+    gap: 4px;
     width: 100%;
-    margin: 0 0 var(--space-lg) 0;
-    padding: 0;
+    margin: 0 0 var(--space-xl) 0;
+    padding: 2px;
     overflow-x: auto;
     scrollbar-width: thin;
-    scrollbar-color: rgba(159, 239, 0, 0.3) transparent;
+    scrollbar-color: rgba(159, 239, 0, 0.2) transparent;
+    -webkit-overflow-scrolling: touch;
 }
 
 .heatmap-grid::-webkit-scrollbar {
-    height: 6px;
+    height: 4px;
 }
 
 .heatmap-grid::-webkit-scrollbar-track {
-    background: transparent;
+    background: rgba(255, 255, 255, 0.02);
+    border-radius: 10px;
 }
 
 .heatmap-grid::-webkit-scrollbar-thumb {
-    background: rgba(159, 239, 0, 0.3);
-    border-radius: 3px;
+    background: rgba(159, 239, 0, 0.2);
+    border-radius: 10px;
 }
 
 .heatmap-grid::-webkit-scrollbar-thumb:hover {
-    background: rgba(159, 239, 0, 0.5);
+    background: rgba(159, 239, 0, 0.4);
 }
 
-@media (max-width: 480px) {
-    .heatmap-grid {
-        gap: 2px;
-        margin-bottom: var(--space-md);
+@media (max-width: 1024px) {
+    .heatmap-grid-full {
+        scrollbar-width: thin;
+    }
+
+    .heatmap-grid-full::-webkit-scrollbar {
+        display: block;
+        height: 3px;
     }
 }
 
+@media (max-width: 480px) {
+    .heatmap-container {
+        padding: var(--space-md);
+    }
+
+    .heatmap-wrapper {
+        gap: 8px;
+    }
+
+    .day-labels {
+        padding-top: 24px;
+    }
+}
+
+.heatmap-wrapper {
+    display: flex;
+    gap: 12px;
+    margin-bottom: var(--space-md);
+}
+
+.day-labels {
+    display: grid;
+    grid-template-rows: repeat(7, 15px);
+    gap: 5px;
+    padding-top: 36px;
+    font-size: 0.75rem;
+    color: var(--text-muted);
+    font-family: 'JetBrains Mono', monospace;
+    text-transform: uppercase;
+}
+
+.day-labels span {
+    display: flex;
+    align-items: center;
+    height: 15px;
+    visibility: hidden;
+}
+
+.day-labels span:nth-child(2),
+.day-labels span:nth-child(4),
+.day-labels span:nth-child(6) {
+    visibility: visible;
+}
+
+.heatmap-content {
+    flex: 1;
+    min-width: 0;
+    position: relative;
+}
+
+.heatmap-scroll-area {
+    width: 100%;
+    overflow-x: auto;
+    overflow-y: hidden;
+    padding-bottom: 4px;
+    /* Room for scrollbar if needed */
+    scrollbar-width: thin;
+    scrollbar-color: rgba(159, 239, 0, 0.1) transparent;
+    animation: heatmapFadeIn 0.8s ease-out;
+}
+
+/* Custom thin scrollbar for a professional HUD look */
+.heatmap-scroll-area::-webkit-scrollbar {
+    height: 6px;
+}
+
+.heatmap-scroll-area::-webkit-scrollbar-track {
+    background: rgba(255, 255, 255, 0.02);
+    border-radius: 10px;
+}
+
+.heatmap-scroll-area::-webkit-scrollbar-thumb {
+    background: rgba(159, 239, 0, 0.1);
+    border-radius: 10px;
+    border: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.heatmap-scroll-area::-webkit-scrollbar-thumb:hover {
+    background: rgba(159, 239, 0, 0.2);
+}
+
+@keyframes heatmapFadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.month-labels-full {
+    position: relative;
+    height: 20px;
+    margin-bottom: 16px;
+    font-size: 0.8rem;
+    color: var(--text-muted);
+    font-family: 'JetBrains Mono', monospace;
+    text-transform: uppercase;
+    min-width: 1060px;
+    /* (15+5) * 53 */
+}
+
+.month-labels-full span {
+    position: absolute;
+    white-space: nowrap;
+}
+
+.heatmap-grid-full {
+    display: grid;
+    grid-template-rows: repeat(7, 15px);
+    grid-auto-flow: column;
+    grid-template-columns: repeat(53, 15px);
+    gap: 5px;
+    width: max-content;
+    margin: 0;
+    padding: 2px 0;
+    -webkit-overflow-scrolling: touch;
+}
+
+/* Hide scrollbar on desktop dashboard styles */
+.heatmap-scroll-area::-webkit-scrollbar {
+    height: 4px;
+}
+
+.heatmap-scroll-area::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+.heatmap-scroll-area::-webkit-scrollbar-thumb {
+    background: rgba(159, 239, 0, 0.1);
+    border-radius: 10px;
+}
+
 .heat-cell {
-    width: 16px;
-    height: 16px;
+    width: 15px;
+    height: 15px;
     aspect-ratio: 1;
     border-radius: 3px;
-    background: rgba(255, 255, 255, 0.04);
-    border: 1px solid rgba(255, 255, 255, 0.08);
-    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    transition: all 0.3s cubic-bezier(0.23, 1, 0.32, 1);
     cursor: pointer;
     position: relative;
-    flex-shrink: 0;
+    opacity: 0;
+    transform: translateY(4px);
+    animation: cellIn 0.5s ease forwards;
+    animation-delay: var(--delay, 0s);
+}
+
+.heat-cell.is-filler {
+    opacity: 0.02;
+    pointer-events: none;
+    border-color: transparent;
+}
+
+/* Year Selector */
+.year-selector {
+    display: flex;
+    gap: 8px;
+}
+
+.year-btn {
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    color: var(--text-muted);
+    padding: 4px 12px;
+    border-radius: var(--radius-sm);
+    font-size: 0.75rem;
+    font-family: 'JetBrains Mono', monospace;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.year-btn:hover {
+    background: rgba(255, 255, 255, 0.08);
+    color: #fff;
+}
+
+.year-btn.active {
+    background: rgba(159, 239, 0, 0.1);
+    border-color: var(--neon-green);
+    color: var(--neon-green);
+    box-shadow: 0 0 10px rgba(159, 239, 0, 0.1);
+}
+
+.heat-cell {
+    width: 14px;
+    height: 14px;
+    aspect-ratio: 1;
+    border-radius: 2px;
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    transition: all 0.3s cubic-bezier(0.23, 1, 0.32, 1);
+    cursor: pointer;
+    position: relative;
+    opacity: 0;
+    transform: translateY(4px);
+    animation: cellIn 0.5s ease forwards;
+    animation-delay: var(--delay, 0s);
+}
+
+@keyframes cellIn {
+    from {
+        opacity: 0;
+        transform: translateY(4px) scale(0.9);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+    }
 }
 
 .heat-cell:hover {
-    transform: scale(1.5);
-    z-index: 100;
-    border-radius: 4px;
-    outline: 2px solid rgba(159, 239, 0, 0.4);
-    outline-offset: 2px;
+    transform: scale(1.3) translateY(-2px);
+    z-index: 10;
+    border-color: rgba(159, 239, 0, 0.6);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5), 0 0 8px rgba(159, 239, 0, 0.2);
 }
 
-/* WCAG AA Compliant Color Scale */
+/* Level Color Scale - Enhanced with Neon Depth */
 .heat-cell.level-0 {
-    background: rgba(255, 255, 255, 0.04);
-    border-color: rgba(255, 255, 255, 0.08);
+    background: rgba(255, 255, 255, 0.03);
+    border-color: rgba(255, 255, 255, 0.05);
 }
 
 .heat-cell.level-0:hover {
-    background: rgba(255, 255, 255, 0.1);
-    border-color: rgba(255, 255, 255, 0.15);
-    box-shadow: 0 0 12px rgba(255, 255, 255, 0.15);
+    background: rgba(255, 255, 255, 0.08);
 }
 
 .heat-cell.level-1 {
-    background: rgba(159, 239, 0, 0.35);
-    border-color: rgba(159, 239, 0, 0.4);
-    box-shadow: 0 0 4px rgba(159, 239, 0, 0.1);
+    background: rgba(159, 239, 0, 0.15);
+    border-color: rgba(159, 239, 0, 0.2);
 }
 
 .heat-cell.level-1:hover {
-    background: rgba(159, 239, 0, 0.5);
-    border-color: rgba(159, 239, 0, 0.6);
-    box-shadow: 0 0 16px rgba(159, 239, 0, 0.35);
+    background: rgba(159, 239, 0, 0.3);
+    box-shadow: 0 0 15px rgba(159, 239, 0, 0.2);
 }
 
 .heat-cell.level-2 {
-    background: rgba(159, 239, 0, 0.65);
-    border-color: rgba(159, 239, 0, 0.75);
-    box-shadow: 0 0 6px rgba(159, 239, 0, 0.25);
+    background: rgba(159, 239, 0, 0.45);
+    border-color: rgba(159, 239, 0, 0.3);
+    box-shadow: inset 0 0 10px rgba(0, 0, 0, 0.2);
 }
 
 .heat-cell.level-2:hover {
-    background: rgba(159, 239, 0, 0.8);
-    border-color: var(--neon-green);
-    box-shadow: 0 0 18px rgba(159, 239, 0, 0.45);
+    background: rgba(159, 239, 0, 0.6);
+    box-shadow: 0 0 20px rgba(159, 239, 0, 0.4);
 }
 
 .heat-cell.level-3 {
     background: var(--neon-green);
-    border-color: var(--neon-green);
-    box-shadow: 0 0 8px rgba(159, 239, 0, 0.4);
+    border-color: transparent;
+    box-shadow: 0 0 10px rgba(159, 239, 0, 0.3), inset 0 0 5px rgba(255, 255, 255, 0.3);
+    position: relative;
+}
+
+.heat-cell.level-3::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: var(--neon-green);
+    filter: blur(4px);
+    opacity: 0.4;
+    z-index: -1;
+    border-radius: inherit;
 }
 
 .heat-cell.level-3:hover {
-    background: #B8FF33;
-    box-shadow: 0 0 20px rgba(159, 239, 0, 0.6);
+    background: #bdff33;
+    box-shadow: 0 0 25px rgba(159, 239, 0, 0.6);
+    transform: scale(1.4) translateY(-3px);
 }
 
-/* Enhanced Heatmap Legend with Clear Indicators */
 .heatmap-legend {
     display: flex;
     align-items: center;
     justify-content: flex-end;
     gap: var(--space-sm);
-    padding: var(--space-sm) var(--space-md);
-    background: rgba(255, 255, 255, 0.02);
-    border-radius: var(--radius-sm);
+    margin-top: var(--space-md);
     font-size: clamp(0.7rem, 2vw, 0.75rem);
     color: var(--text-muted);
     font-weight: 500;
@@ -559,7 +781,7 @@
 
 /* Responsive */
 @media (max-width: 480px) {
-    .level-card {
+    .progress-level-card {
         flex-direction: column;
         text-align: center;
         gap: 16px;
@@ -596,6 +818,7 @@
 .progress-screen .module-card .ring-fill {
     stroke: var(--neon-green);
 }
+
 /* ============================================
    DESKTOP RESPONSIVE STYLES
    ============================================ */
@@ -630,7 +853,7 @@
     }
 
     /* Level Card */
-    .level-card {
+    .progress-level-card {
         padding: var(--space-2xl);
         margin-bottom: 48px;
     }

@@ -4,7 +4,7 @@ import { Layers, FlaskConical, Crown } from 'lucide-react';
 const LandingFeatures = () => {
     return (
         <section id="features" className="landing-features">
-            <div className="container">
+            <div className="landing-container">
                 <div className="section-header animate-fade-in-up">
                     <h2 className="text-gradient">The Bugora Edge</h2>
                     <p className="subtitle">Everything you need to go from amateur to elite bug hunter.</p>

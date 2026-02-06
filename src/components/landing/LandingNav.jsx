@@ -85,7 +85,7 @@ const LandingNav = () => {
 
                     <div className="nav-actions">
                         <button className="nav-btn login-btn" onClick={() => { navigate('/auth/login'); setIsMenuOpen(false); }}>Login</button>
-                        <button className="nav-btn primary" onClick={() => { navigate('/auth/signup'); setIsMenuOpen(false); }}>Get Started</button>
+                        <button className="nav-btn primary" onClick={() => { navigate('/onboarding/welcome'); setIsMenuOpen(false); }}>Open App</button>
                     </div>
 
                     {/* Decorative elements for mobile menu */}

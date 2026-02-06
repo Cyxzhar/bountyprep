@@ -55,13 +55,13 @@ export default function ForgotPassword() {
                 </div>
 
                 {status === 'success' ? (
-                    <div className="success-state">
-                        <div className="success-icon">
+                    <div className="auth-success-state">
+                        <div className="auth-success-icon">
                             <CheckCircle size={48} />
                         </div>
                         <h2>Check your inbox</h2>
                         <p>We've sent a password reset link to <strong>{email}</strong></p>
-                        <p className="hint-text">
+                        <p className="auth-hint-text">
                             Didn't receive the email? Check your spam folder or try again.
                         </p>
                         <button
@@ -75,8 +75,8 @@ export default function ForgotPassword() {
                     <form onSubmit={handleSubmit} className="auth-form">
                         <div className="input-group">
                             <label htmlFor="email" className="input-label">Email Address</label>
-                            <div className="input-with-icon">
-                                <Mail className="input-icon" size={20} />
+                            <div className="auth-input-with-icon">
+                                <Mail className="auth-input-icon" size={20} />
                                 <input
                                     id="email"
                                     type="email"
@@ -91,7 +91,7 @@ export default function ForgotPassword() {
                         </div>
 
                         {status === 'error' && (
-                            <div className="error-box">
+                            <div className="auth-error-box">
                                 <AlertCircle size={18} />
                                 <span>{errorMessage}</span>
                             </div>

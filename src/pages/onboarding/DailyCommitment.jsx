@@ -1,8 +1,8 @@
 import { useState } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { Zap, Star, Flame, ChevronRight } from 'lucide-react';
-import PageTransition, { SLIDE_LEFT, SLIDE_RIGHT } from '../../components/PageTransition';
-import OnboardingProgress from '../../components/OnboardingProgress';
+import PageTransition, { SLIDE_LEFT, SLIDE_RIGHT } from '../../components/PageTransition/PageTransition';
+import OnboardingProgress from '../../components/OnboardingProgress/OnboardingProgress';
 import './Onboarding.css';
 
 const commitments = [
@@ -26,26 +26,26 @@ export default function DailyCommitment() {
                 <div className="onboarding-content">
                     <OnboardingProgress currentStep={3} />
 
-                    <h2 className="question-title">How much time can you commit?</h2>
-                    <p className="question-subtitle">Consistency is key to mastery</p>
+                    <h2 className="onboarding-question-title">How much time can you commit?</h2>
+                    <p className="onboarding-question-subtitle">Consistency is key to mastery</p>
 
-                    <div className="options-grid">
+                    <div className="onboarding-options-grid">
                         {commitments.map((item) => {
                             const Icon = item.icon;
                             return (
                                 <div
                                     key={item.id}
-                                    className={`option-card ${selected === item.id ? 'selected' : ''} ${item.recommended ? 'recommended' : ''}`}
+                                    className={`onboarding-option-card ${selected === item.id ? 'selected' : ''} ${item.recommended ? 'onboarding-recommended' : ''}`}
                                     onClick={() => setSelected(item.id)}
                                 >
-                                    <div className="option-icon">
+                                    <div className="onboarding-option-icon">
                                         <Icon size={24} />
                                     </div>
-                                    <div className="option-content">
-                                        <div className="option-title">{item.title}</div>
-                                        <div className="option-desc">{item.desc}</div>
+                                    <div className="onboarding-option-content">
+                                        <div className="onboarding-option-title">{item.title}</div>
+                                        <div className="onboarding-option-desc">{item.desc}</div>
                                     </div>
-                                    <div className="option-radio"></div>
+                                    <div className="onboarding-option-radio"></div>
                                 </div>
                             );
                         })}
