@@ -346,15 +346,15 @@ export default function Interview() {
 
                 {/* History Modal */}
                 {showHistory && (
-                    <div className="modal-overlay" onClick={() => setShowHistory(false)}>
-                        <div className="modal-content history-modal" onClick={e => e.stopPropagation()}>
-                            <div className="modal-header">
+                    <div className="interview-modal-overlay" onClick={() => setShowHistory(false)}>
+                        <div className="interview-modal-content interview-history-modal" onClick={e => e.stopPropagation()}>
+                            <div className="interview-modal-header">
                                 <h3>Session History</h3>
-                                <button className="close-btn" onClick={() => setShowHistory(false)}>
+                                <button className="interview-close-btn" onClick={() => setShowHistory(false)}>
                                     <X size={20} />
                                 </button>
                             </div>
-                            <div className="history-list">
+                            <div className="interview-history-list">
                                 {sessionHistory.length === 0 ? (
                                     <p className="text-muted">No history found.</p>
                                 ) : (
@@ -372,14 +372,14 @@ export default function Interview() {
                                                 </div>
                                                 <div className="history-actions">
                                                     <button
-                                                        className="btn-icon"
+                                                        className="interview-btn-icon"
                                                         onClick={() => handleViewSession(session)}
                                                         title="View conversation"
                                                     >
                                                         <History size={18} />
                                                     </button>
                                                     <button
-                                                        className="btn-icon primary"
+                                                        className="interview-btn-icon primary"
                                                         onClick={() => handleResumeSession(session)}
                                                         title="Resume session"
                                                     >
@@ -397,9 +397,9 @@ export default function Interview() {
 
                 {/* Session Viewer Modal (Read-only) */}
                 {showSessionViewer && viewingSession && (
-                    <div className="modal-overlay" onClick={handleCloseViewer}>
-                        <div className="modal-content session-viewer-modal" onClick={e => e.stopPropagation()}>
-                            <div className="modal-header">
+                    <div className="interview-modal-overlay" onClick={handleCloseViewer}>
+                        <div className="interview-modal-content interview-session-viewer-modal" onClick={e => e.stopPropagation()}>
+                            <div className="interview-modal-header">
                                 <div className="viewer-header-info">
                                     <h3>Session Details</h3>
                                     <div className="viewer-meta">
@@ -407,7 +407,7 @@ export default function Interview() {
                                         <span className="viewer-time">{formatTime(viewingSession.elapsedTime || 0)}</span>
                                     </div>
                                 </div>
-                                <button className="close-btn" onClick={handleCloseViewer}>
+                                <button className="interview-close-btn" onClick={handleCloseViewer}>
                                     <X size={20} />
                                 </button>
                             </div>
