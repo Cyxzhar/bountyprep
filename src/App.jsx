@@ -29,6 +29,7 @@ const Interview = lazy(() => import('./pages/Interview/Interview'));
 const Progress = lazy(() => import('./pages/Progress/Progress'));
 const Profile = lazy(() => import('./pages/Profile/Profile'));
 const AdminSeeder = lazy(() => import('./pages/AdminSeeder/AdminSeeder'));
+const NotFound = lazy(() => import('./pages/NotFound/NotFound'));
 
 // Protected Layout Component
 import ProtectedRoute from './components/ProtectedRoute/ProtectedRoute';
@@ -80,7 +81,7 @@ function App() {
                     <Route path="/upgrade" element={<ProtectedRoute><Upgrade /></ProtectedRoute>} />
 
                     <Route path="/admin-seed" element={<AdminSeeder />} />
-                    <Route path="*" element={<Navigate to="/" replace />} />
+                    <Route path="*" element={<NotFound />} />
                   </Routes>
                 </Suspense>
               </SoundProvider>

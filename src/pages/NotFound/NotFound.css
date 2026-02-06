@@ -1,0 +1,253 @@
+.notfound-screen {
+    position: fixed;
+    inset: 0;
+    background: #0A0A0F;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    color: #fff;
+    font-family: 'Space Mono', 'Courier New', monospace;
+}
+
+.notfound-content {
+    position: relative;
+    z-index: 10;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    max-width: 500px;
+    padding: 24px;
+}
+
+.error-icon-wrapper {
+    position: relative;
+    margin-bottom: 24px;
+}
+
+.error-icon {
+    color: #FF0055;
+    /* Cyberpunk Pink/Red */
+    filter: drop-shadow(0 0 10px rgba(255, 0, 85, 0.5));
+}
+
+.error-glow {
+    position: absolute;
+    inset: -20px;
+    background: radial-gradient(circle, rgba(255, 0, 85, 0.2) 0%, transparent 70%);
+    z-index: -1;
+}
+
+.error-code {
+    font-size: 120px;
+    font-weight: 900;
+    line-height: 1;
+    display: flex;
+    gap: 8px;
+    color: #fff;
+    text-shadow:
+        3px 3px 0 #00F0FF,
+        -3px -3px 0 #FF0055;
+    margin-bottom: 16px;
+    font-family: 'Inter', sans-serif;
+}
+
+.error-title {
+    font-size: 24px;
+    letter-spacing: 4px;
+    color: #9FEF00;
+    /* Neon Lime */
+    margin-bottom: 16px;
+}
+
+.error-message {
+    font-size: 16px;
+    color: rgba(255, 255, 255, 0.6);
+    line-height: 1.6;
+    margin-bottom: 32px;
+}
+
+/* Terminal Box */
+.terminal-box {
+    width: 100%;
+    background: rgba(0, 0, 0, 0.6);
+    border: 1px solid rgba(159, 239, 0, 0.2);
+    border-radius: 8px;
+    text-align: left;
+    margin-bottom: 40px;
+    font-size: 13px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+}
+
+.terminal-header {
+    background: rgba(159, 239, 0, 0.1);
+    padding: 6px 12px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    color: #9FEF00;
+    border-bottom: 1px solid rgba(159, 239, 0, 0.1);
+}
+
+.terminal-body {
+    padding: 12px;
+}
+
+.log-line {
+    margin-bottom: 4px;
+    opacity: 0.8;
+}
+
+.text-error {
+    color: #FF0055;
+    font-weight: bold;
+}
+
+.cursor {
+    width: 8px;
+    height: 15px;
+    background: #9FEF00;
+    display: inline-block;
+    animation: blink 1s infinite;
+    vertical-align: middle;
+}
+
+/* Actions */
+.error-actions {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    width: 100%;
+}
+
+@media (min-width: 768px) {
+    .error-actions {
+        flex-direction: row;
+        justify-content: center;
+    }
+}
+
+/* Animations & Effects */
+@keyframes blink {
+
+    0%,
+    100% {
+        opacity: 1;
+    }
+
+    50% {
+        opacity: 0;
+    }
+}
+
+.scanline {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(to bottom,
+            transparent 50%,
+            rgba(0, 0, 0, .5) 51%,
+            transparent 51%);
+    background-size: 100% 4px;
+    z-index: 20;
+    pointer-events: none;
+    opacity: 0.1;
+}
+
+.glitch-overlay {
+    position: absolute;
+    inset: 0;
+    background: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAQAAAAECAYAAACp8Z5+AAAAEklEQVQImWNgYGD4z0AkwK4FAAsTAQgLexu8AAAAAElFTkSuQmCC');
+    opacity: 0.05;
+    z-index: 15;
+    pointer-events: none;
+}
+
+.background-noise {
+    position: absolute;
+    inset: 0;
+    background: repeating-radial-gradient(#000 0 0.0001%, #0a0a0f 0 0.0002%) 50% 0/2500px 2500px,
+        repeating-conic-gradient(#000 0 0.0001%, #0a0a0f 0 0.0002%) 50% 50%/2500px 2500px;
+    background-blend-mode: difference;
+    opacity: 0.1;
+    z-index: 1;
+}
+
+.glitch::before,
+.glitch::after {
+    content: attr(data-text);
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+}
+
+.glitch::before {
+    left: 2px;
+    text-shadow: -2px 0 #FF0055;
+    clip: rect(44px, 450px, 56px, 0);
+    animation: glitch-anim 5s infinite linear alternate-reverse;
+}
+
+.glitch::after {
+    left: -2px;
+    text-shadow: -2px 0 #00F0FF;
+    clip: rect(44px, 450px, 56px, 0);
+    animation: glitch-anim2 5s infinite linear alternate-reverse;
+}
+
+@keyframes glitch-anim {
+    0% {
+        clip: rect(31px, 9999px, 94px, 0);
+    }
+
+    20% {
+        clip: rect(62px, 9999px, 14px, 0);
+    }
+
+    40% {
+        clip: rect(10px, 9999px, 73px, 0);
+    }
+
+    60% {
+        clip: rect(85px, 9999px, 50px, 0);
+    }
+
+    80% {
+        clip: rect(43px, 9999px, 2px, 0);
+    }
+
+    100% {
+        clip: rect(98px, 9999px, 20px, 0);
+    }
+}
+
+@keyframes glitch-anim2 {
+    0% {
+        clip: rect(10px, 9999px, 85px, 0);
+    }
+
+    20% {
+        clip: rect(50px, 9999px, 32px, 0);
+    }
+
+    40% {
+        clip: rect(5px, 9999px, 99px, 0);
+    }
+
+    60% {
+        clip: rect(78px, 9999px, 12px, 0);
+    }
+
+    80% {
+        clip: rect(22px, 9999px, 64px, 0);
+    }
+
+    100% {
+        clip: rect(90px, 9999px, 4px, 0);
+    }
+}
