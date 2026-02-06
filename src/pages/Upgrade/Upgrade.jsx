@@ -4,8 +4,8 @@ import {
     Check, X, Zap, Crown, Shield, Rocket, Star,
     MessageSquare, ChevronRight, HelpCircle, ChevronDown
 } from 'lucide-react';
-import { useAuth } from '../context/AuthContext';
-import { useToast } from '../context/ToastContext';
+import { useAuth } from '../../context/AuthContext';
+import { useToast } from '../../context/ToastContext';
 import './Upgrade.css';
 
 export default function Upgrade() {

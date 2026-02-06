@@ -1,16 +1,16 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { useAuth } from '../context/AuthContext';
-import { useSound } from '../context/SoundContext';
-import { useToast } from '../context/ToastContext';
+import { useAuth } from '../../context/AuthContext';
+import { useSound } from '../../context/SoundContext';
+import { useToast } from '../../context/ToastContext';
 import {
     Flame, CheckCircle, Target, ChevronRight, Clock,
     Bot, Lock, Unlock, Syringe, Link, IdCard, RefreshCw, Upload, Star,
     Trophy, Beaker, Award, Gamepad2, Volume2, VolumeX
 } from 'lucide-react';
-import { FirstVisitTransition } from '../components/PageTransition/PageTransition';
-import { challenges, skillModules } from '../data/challenges';
-import { calculateLevel, getLevelProgress, getLevelTitle, formatXp } from '../utils/xp';
+import { FirstVisitTransition } from '../../components/PageTransition/PageTransition';
+import { challenges, skillModules } from '../../data/challenges';
+import { calculateLevel, getLevelProgress, getLevelTitle, formatXp } from '../../utils/xp';
 import './Home.css';
 
 // Map icon names to components

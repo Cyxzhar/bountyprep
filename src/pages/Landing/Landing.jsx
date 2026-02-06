@@ -1,15 +1,15 @@
 import React, { useState } from 'react';
-import LandingNav from '../components/landing/LandingNav';
-import LandingHero from '../components/landing/LandingHero';
-import AppReveal from '../components/landing/AppReveal';
-import LandingFeatures from '../components/landing/LandingFeatures';
-import LandingCurriculum from '../components/landing/LandingCurriculum';
-import LandingPricing from '../components/landing/LandingPricing';
-import LandingCourseLibrary from '../components/landing/LandingCourseLibrary';
-import WhyBugora from '../components/landing/WhyBugora';
-import WaitlistModal from '../components/landing/WaitlistModal';
-import LandingFooter from '../components/landing/LandingFooter';
-import { useAuth } from '../context/AuthContext';
+import LandingNav from '../../components/landing/LandingNav';
+import LandingHero from '../../components/landing/LandingHero';
+import AppReveal from '../../components/landing/AppReveal';
+import LandingFeatures from '../../components/landing/LandingFeatures';
+import LandingCurriculum from '../../components/landing/LandingCurriculum';
+import LandingPricing from '../../components/landing/LandingPricing';
+import LandingCourseLibrary from '../../components/landing/LandingCourseLibrary';
+import WhyBugora from '../../components/landing/WhyBugora';
+import WaitlistModal from '../../components/landing/WaitlistModal';
+import LandingFooter from '../../components/landing/LandingFooter';
+import { useAuth } from '../../context/AuthContext';
 import './Landing.css';
 
 const Landing = () => {

@@ -4,9 +4,9 @@ import {
     BookOpen, Zap, Target
 } from 'lucide-react';
 import { useState, useEffect } from 'react';
-import { courses } from '../data/courses';
-import { useAuth } from '../context/AuthContext';
-import { getCourseProgress } from '../utils/firestore';
+import { courses } from '../../data/courses';
+import { useAuth } from '../../context/AuthContext';
+import { getCourseProgress } from '../../utils/firestore';
 import './CourseDetail.css';
 
 export default function CourseDetail() {

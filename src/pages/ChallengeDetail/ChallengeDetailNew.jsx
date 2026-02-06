@@ -1,23 +1,23 @@
 import { useState, useEffect, useRef } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { useAuth } from '../context/AuthContext';
-import { useToast } from '../context/ToastContext';
-import { useAchievement } from '../context/AchievementContext';
-import { useSound } from '../context/SoundContext';
-import { challenges } from '../data/challenges';
-import { updateStreak, getChallengeProgress, updateUserStats, saveChallengeProgress, markChallengeCompleted } from '../utils/firestore';
-import { checkLevelUp } from '../utils/xp';
+import { useAuth } from '../../context/AuthContext';
+import { useToast } from '../../context/ToastContext';
+import { useAchievement } from '../../context/AchievementContext';
+import { useSound } from '../../context/SoundContext';
+import { challenges } from '../../data/challenges';
+import { updateStreak, getChallengeProgress, updateUserStats, saveChallengeProgress, markChallengeCompleted } from '../../utils/firestore';
+import { checkLevelUp } from '../../utils/xp';
 import { ArrowLeft, Clock, Volume2, VolumeX } from 'lucide-react';
-import { useTimer } from '../hooks/useTimer';
+import { useTimer } from '../../hooks/useTimer';
 
 // Import challenge type components
-import CodingChallenge from '../components/challenges/CodingChallenge';
-import LabChallenge from '../components/challenges/LabChallenge';
-import PracticalChallenge from '../components/challenges/PracticalChallenge';
-import CompletionModal from '../components/CompletionModal/CompletionModal';
+import CodingChallenge from '../../components/challenges/CodingChallenge';
+import LabChallenge from '../../components/challenges/LabChallenge';
+import PracticalChallenge from '../../components/challenges/PracticalChallenge';
+import CompletionModal from '../../components/CompletionModal/CompletionModal';
 
 // Import original multiple choice component logic (embedded)
-import MultipleChoiceChallenge from '../components/challenges/MultipleChoiceChallenge';
+import MultipleChoiceChallenge from '../../components/challenges/MultipleChoiceChallenge';
 
 import './ChallengeDetail.css';
 

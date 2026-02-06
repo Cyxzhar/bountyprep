@@ -1,14 +1,14 @@
 import { useState, useEffect, useRef } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { useAuth } from '../context/AuthContext';
-import { useToast } from '../context/ToastContext';
-import { useAchievement } from '../context/AchievementContext';
-import { useSound } from '../context/SoundContext';
-import { challenges } from '../data/challenges';
-import { updateStreak, getChallengeProgress, updateUserStats, saveChallengeProgress, markChallengeCompleted } from '../utils/firestore';
-import { calculateQuestionXp, checkLevelUp } from '../utils/xp';
+import { useAuth } from '../../context/AuthContext';
+import { useToast } from '../../context/ToastContext';
+import { useAchievement } from '../../context/AchievementContext';
+import { useSound } from '../../context/SoundContext';
+import { challenges } from '../../data/challenges';
+import { updateStreak, getChallengeProgress, updateUserStats, saveChallengeProgress, markChallengeCompleted } from '../../utils/firestore';
+import { calculateQuestionXp, checkLevelUp } from '../../utils/xp';
 import { ArrowLeft, Clock, Star, Copy, CheckCircle, XCircle, Lightbulb, Award, Zap, ChevronRight, Volume2, VolumeX, Music } from 'lucide-react';
-import { useTimer } from '../hooks/useTimer';
+import { useTimer } from '../../hooks/useTimer';
 import './ChallengeDetail.css';
 
 export default function ChallengeDetail() {

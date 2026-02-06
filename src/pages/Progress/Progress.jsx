@@ -4,12 +4,12 @@ import {
     CheckCircle, Zap, Award, Lock, Syringe, Link, IdCard, RefreshCw, Upload,
     ChevronLeft
 } from 'lucide-react';
-import { useAuth } from '../context/AuthContext';
-import { FirstVisitTransition } from '../components/PageTransition/PageTransition';
-import { skillModules } from '../data/challenges';
-import { achievements } from '../data/achievements';
-import AchievementCard from '../components/AchievementCard/AchievementCard';
-import { calculateLevel, getLevelProgress, getLevelTitle, getXpToNextLevel, formatXp } from '../utils/xp';
+import { useAuth } from '../../context/AuthContext';
+import { FirstVisitTransition } from '../../components/PageTransition/PageTransition';
+import { skillModules } from '../../data/challenges';
+import { achievements } from '../../data/achievements';
+import AchievementCard from '../../components/AchievementCard/AchievementCard';
+import { calculateLevel, getLevelProgress, getLevelTitle, getXpToNextLevel, formatXp } from '../../utils/xp';
 import './Progress.css';
 
 // Map icon names to components

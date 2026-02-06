@@ -1,13 +1,13 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { useAuth } from '../context/AuthContext';
-import { useToast } from '../context/ToastContext'; // Added useToast
-import { useSound } from '../context/SoundContext';
-import { refreshUserProfile } from '../utils/firestore';
+import { useAuth } from '../../context/AuthContext';
+import { useToast } from '../../context/ToastContext'; // Added useToast
+import { useSound } from '../../context/SoundContext';
+import { refreshUserProfile } from '../../utils/firestore';
 import { updateProfile, updatePassword, EmailAuthProvider, reauthenticateWithCredential, deleteUser } from 'firebase/auth';
 import { getStorage, ref, uploadString, getDownloadURL } from 'firebase/storage';
 import { doc, updateDoc, deleteDoc } from 'firebase/firestore';
-import { db, auth } from '../lib/firebase';
+import { db, auth } from '../../lib/firebase';
 import {
     Camera, User, Mail, Bell, Shield, Lock, LogOut,
     ChevronRight, Moon, Sun, Loader2, Check, ChevronLeft,

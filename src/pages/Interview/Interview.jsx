@@ -4,12 +4,12 @@ import {
     Mic, Send, X, Timer, AlertCircle, Loader2, History
 } from 'lucide-react';
 import ReactMarkdown from 'react-markdown';
-import { useToast } from '../context/ToastContext';
-import { generateInterviewResponse } from '../lib/perplexity';
-import { getRemainingQuota, useQuota, getQuotaResetTime } from '../utils/interviewQuota';
-import { saveInterviewSession, getLastInterviewSession } from '../utils/firestore';
-import { useAuth } from '../context/AuthContext';
-import { useSound } from '../context/SoundContext'; // Import sound
+import { useToast } from '../../context/ToastContext';
+import { generateInterviewResponse } from '../../lib/perplexity';
+import { getRemainingQuota, useQuota, getQuotaResetTime } from '../../utils/interviewQuota';
+import { saveInterviewSession, getLastInterviewSession } from '../../utils/firestore';
+import { useAuth } from '../../context/AuthContext';
+import { useSound } from '../../context/SoundContext'; // Import sound
 import './Interview.css';
 
 // Helper to sanitize corrupt message history

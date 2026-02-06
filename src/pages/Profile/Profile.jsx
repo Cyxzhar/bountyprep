@@ -5,9 +5,9 @@ import {
     HelpCircle, Star, Share2, Info, FileText, ChevronRight,
     LogOut, Crown, User, Shield, Bug, ExternalLink, Camera
 } from 'lucide-react';
-import { useAuth } from '../context/AuthContext';
-import { useToast } from '../context/ToastContext';
-import { getSettings, updateSetting, shareApp } from '../utils/settings';
+import { useAuth } from '../../context/AuthContext';
+import { useToast } from '../../context/ToastContext';
+import { getSettings, updateSetting, shareApp } from '../../utils/settings';
 import './Profile.css';
 
 export default function Profile() {

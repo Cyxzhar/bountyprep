@@ -6,12 +6,14 @@
  */
 
 import { useState } from 'react';
-import { useAuth } from '../context/AuthContext';
-import { db } from '../lib/firebase';
+import { useAuth } from '../../../context/AuthContext';
+import { useToast } from '../../../context/ToastContext';
+import { useSound } from '../../../context/SoundContext';
+import { db } from '../../lib/firebase';
 import { doc, setDoc, serverTimestamp } from 'firebase/firestore';
-import { challenges, skillModules } from '../data/challenges';
-import { courses } from '../data/courses';
-import { achievements } from '../data/achievements';
+import { challenges, skillModules } from '../../data/challenges';
+import { courses } from '../../data/courses';
+import { achievements } from '../../data/achievements';
 
 export default function AdminSeeder() {
     const { currentUser } = useAuth();

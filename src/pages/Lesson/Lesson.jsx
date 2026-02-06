@@ -7,12 +7,12 @@ import ReactMarkdown from 'react-markdown';
 import { useState, useEffect } from 'react';
 import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter';
 import { atomDark } from 'react-syntax-highlighter/dist/esm/styles/prism';
-import { useAuth } from '../context/AuthContext';
-import { useToast } from '../context/ToastContext';
-import { useAchievement } from '../context/AchievementContext';
-import { useSound } from '../context/SoundContext';
-import { saveLessonProgress, getCourseProgress } from '../utils/firestore';
-import { courses } from '../data/courses';
+import { useAuth } from '../../context/AuthContext';
+import { useToast } from '../../context/ToastContext';
+import { useAchievement } from '../../context/AchievementContext';
+import { useSound } from '../../context/SoundContext';
+import { saveLessonProgress, getCourseProgress } from '../../utils/firestore';
+import { courses } from '../../data/courses';
 import './Lesson.css';
 
 export default function Lesson() {

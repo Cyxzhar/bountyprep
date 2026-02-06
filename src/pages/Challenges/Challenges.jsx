@@ -1,11 +1,11 @@
 import { useState, useEffect } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import { Search, Filter, Lock, ChevronRight, Clock, CheckCircle, Star, Crown, Code, FlaskConical, Layers, BookOpen } from 'lucide-react';
-import { useAuth } from '../context/AuthContext';
+import { useAuth } from '../../context/AuthContext';
 import { collection, getDocs } from 'firebase/firestore';
-import { db } from '../lib/firebase';
-import { FirstVisitTransition } from '../components/PageTransition/PageTransition';
-import { challenges as localChallenges } from '../data/challenges';
+import { db } from '../../lib/firebase';
+import { FirstVisitTransition } from '../../components/PageTransition/PageTransition';
+import { challenges as localChallenges } from '../../data/challenges';
 import './Challenges.css';
 
 // Challenge type filters with icons

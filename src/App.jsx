@@ -9,8 +9,8 @@ import { Loader2 } from 'lucide-react';
 
 // Lazy load pages for performance
 // Lazy load pages for performance
-const Landing = lazy(() => import('./pages/Landing'));
-const Splash = lazy(() => import('./pages/Splash'));
+const Landing = lazy(() => import('./pages/Landing/Landing'));
+const Splash = lazy(() => import('./pages/Splash/Splash'));
 const Welcome = lazy(() => import('./pages/onboarding/Welcome'));
 const GoalSelection = lazy(() => import('./pages/onboarding/GoalSelection'));
 const ExperienceLevel = lazy(() => import('./pages/onboarding/ExperienceLevel'));
@@ -20,18 +20,18 @@ const Paywall = lazy(() => import('./pages/onboarding/Paywall'));
 const SignUp = lazy(() => import('./pages/auth/SignUp'));
 const Login = lazy(() => import('./pages/auth/Login'));
 const ForgotPassword = lazy(() => import('./pages/auth/ForgotPassword'));
-const Upgrade = lazy(() => import('./pages/Upgrade'));
-const Settings = lazy(() => import('./pages/Settings'));
-const Home = lazy(() => import('./pages/Home'));
-const Courses = lazy(() => import('./pages/Courses'));
-const CourseDetail = lazy(() => import('./pages/CourseDetail'));
-const Lesson = lazy(() => import('./pages/Lesson'));
-const Challenges = lazy(() => import('./pages/Challenges'));
-const ChallengeDetail = lazy(() => import('./pages/ChallengeDetailNew'));
-const Interview = lazy(() => import('./pages/Interview'));
-const Progress = lazy(() => import('./pages/Progress'));
-const Profile = lazy(() => import('./pages/Profile'));
-const AdminSeeder = lazy(() => import('./pages/AdminSeeder'));
+const Upgrade = lazy(() => import('./pages/Upgrade/Upgrade'));
+const Settings = lazy(() => import('./pages/Settings/Settings'));
+const Home = lazy(() => import('./pages/Home/Home'));
+const Courses = lazy(() => import('./pages/Courses/Courses'));
+const CourseDetail = lazy(() => import('./pages/CourseDetail/CourseDetail'));
+const Lesson = lazy(() => import('./pages/Lesson/Lesson'));
+const Challenges = lazy(() => import('./pages/Challenges/Challenges'));
+const ChallengeDetail = lazy(() => import('./pages/ChallengeDetail/ChallengeDetailNew'));
+const Interview = lazy(() => import('./pages/Interview/Interview'));
+const Progress = lazy(() => import('./pages/Progress/Progress'));
+const Profile = lazy(() => import('./pages/Profile/Profile'));
+const AdminSeeder = lazy(() => import('./pages/AdminSeeder/AdminSeeder'));
 
 // Protected Layout Component
 import ProtectedRoute from './components/ProtectedRoute';

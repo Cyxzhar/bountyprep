@@ -3,9 +3,9 @@ import {
     BookOpen, Trophy, Clock, ChevronRight, Play, CheckCircle
 } from 'lucide-react';
 import { useState, useEffect } from 'react'; // Added useState, useEffect
-import { courses } from '../data/courses';
-import { useAuth } from '../context/AuthContext'; // Added useAuth
-import { getAllCoursesProgress } from '../utils/firestore'; // Added import
+import { courses } from '../../data/courses';
+import { useAuth } from '../../context/AuthContext'; // Added useAuth
+import { getAllCoursesProgress } from '../../utils/firestore'; // Added import
 import './Courses.css';
 
 export default function Courses() {
