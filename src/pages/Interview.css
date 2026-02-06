@@ -332,6 +332,11 @@
     margin-top: auto;
 }
 
+.cta-section .btn {
+    width: 100%;
+    max-width: 100%;
+}
+
 .resume-btn {
     display: flex;
     align-items: center;

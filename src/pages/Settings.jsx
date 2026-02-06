@@ -4,7 +4,7 @@ import { useAuth } from '../context/AuthContext';
 import { useToast } from '../context/ToastContext'; // Added useToast
 import { useSound } from '../context/SoundContext';
 import { refreshUserProfile } from '../utils/firestore';
-import { updateProfile, sendPasswordResetEmail, deleteUser } from 'firebase/auth';
+import { updateProfile, updatePassword, EmailAuthProvider, reauthenticateWithCredential, deleteUser } from 'firebase/auth';
 import { getStorage, ref, uploadString, getDownloadURL } from 'firebase/storage';
 import { doc, updateDoc, deleteDoc } from 'firebase/firestore';
 import { db, auth } from '../lib/firebase';
@@ -28,6 +28,13 @@ export default function Settings() {
     const [notifications, setNotifications] = useState(true);
     const [saving, setSaving] = useState(false);
     const [uploading, setUploading] = useState(false);
+
+    // Password change form state
+    const [showPasswordForm, setShowPasswordForm] = useState(false);
+    const [currentPassword, setCurrentPassword] = useState('');
+    const [newPassword, setNewPassword] = useState('');
+    const [confirmPassword, setConfirmPassword] = useState('');
+    const [changingPassword, setChangingPassword] = useState(false);
 
     useEffect(() => {
         if (currentUser) {
@@ -82,14 +89,54 @@ export default function Settings() {
         }
     };
 
-    const handlePasswordReset = async () => {
-        if (!currentUser?.email) return;
+    const handlePasswordChange = async (e) => {
+        e.preventDefault();
+
+        // Validation
+        if (!currentPassword || !newPassword || !confirmPassword) {
+            showError('Please fill in all password fields');
+            return;
+        }
+
+        if (newPassword.length < 6) {
+            showError('New password must be at least 6 characters');
+            return;
+        }
+
+        if (newPassword !== confirmPassword) {
+            showError('New passwords do not match');
+            return;
+        }
+
+        setChangingPassword(true);
+
         try {
-            await sendPasswordResetEmail(currentUser.auth, currentUser.email);
-            success(`Password reset email sent to ${currentUser.email}`);
+            // Re-authenticate user with current password
+            const credential = EmailAuthProvider.credential(
+                currentUser.email,
+                currentPassword
+            );
+            await reauthenticateWithCredential(currentUser, credential);
+
+            // Update password
+            await updatePassword(currentUser, newPassword);
+
+            success('Password changed successfully');
+            setShowPasswordForm(false);
+            setCurrentPassword('');
+            setNewPassword('');
+            setConfirmPassword('');
         } catch (err) {
-            console.error('Password reset failed:', err);
-            showError('Failed to send reset email.');
+            console.error('Password change failed:', err);
+            if (err.code === 'auth/wrong-password') {
+                showError('Current password is incorrect');
+            } else if (err.code === 'auth/weak-password') {
+                showError('New password is too weak');
+            } else {
+                showError('Failed to change password. Please try again.');
+            }
+        } finally {
+            setChangingPassword(false);
         }
     };
 
@@ -297,11 +344,78 @@ export default function Settings() {
                     <h2>Account</h2>
 
                     <div className="action-list">
-                        <button className="action-btn" onClick={handlePasswordReset}>
-                            <Lock size={18} />
-                            <span>Change Password</span>
-                            <ChevronRight size={16} className="action-arrow" />
-                        </button>
+                        {!showPasswordForm ? (
+                            <button className="action-btn" onClick={() => setShowPasswordForm(true)}>
+                                <Lock size={18} />
+                                <span>Change Password</span>
+                                <ChevronRight size={16} className="action-arrow" />
+                            </button>
+                        ) : (
+                            <form className="password-change-form" onSubmit={handlePasswordChange}>
+                                <div className="form-group">
+                                    <label htmlFor="current-password">Current Password</label>
+                                    <input
+                                        type="password"
+                                        id="current-password"
+                                        value={currentPassword}
+                                        onChange={(e) => setCurrentPassword(e.target.value)}
+                                        placeholder="Enter current password"
+                                        disabled={changingPassword}
+                                    />
+                                </div>
+                                <div className="form-group">
+                                    <label htmlFor="new-password">New Password</label>
+                                    <input
+                                        type="password"
+                                        id="new-password"
+                                        value={newPassword}
+                                        onChange={(e) => setNewPassword(e.target.value)}
+                                        placeholder="Enter new password (min 6 characters)"
+                                        disabled={changingPassword}
+                                    />
+                                </div>
+                                <div className="form-group">
+                                    <label htmlFor="confirm-password">Confirm New Password</label>
+                                    <input
+                                        type="password"
+                                        id="confirm-password"
+                                        value={confirmPassword}
+                                        onChange={(e) => setConfirmPassword(e.target.value)}
+                                        placeholder="Confirm new password"
+                                        disabled={changingPassword}
+                                    />
+                                </div>
+                                <div className="form-actions">
+                                    <button
+                                        type="button"
+                                        className="btn btn-secondary"
+                                        onClick={() => {
+                                            setShowPasswordForm(false);
+                                            setCurrentPassword('');
+                                            setNewPassword('');
+                                            setConfirmPassword('');
+                                        }}
+                                        disabled={changingPassword}
+                                    >
+                                        Cancel
+                                    </button>
+                                    <button
+                                        type="submit"
+                                        className="btn btn-primary"
+                                        disabled={changingPassword}
+                                    >
+                                        {changingPassword ? (
+                                            <>
+                                                <Loader2 size={18} className="spin" />
+                                                Changing...
+                                            </>
+                                        ) : (
+                                            'Change Password'
+                                        )}
+                                    </button>
+                                </div>
+                            </form>
+                        )}
 
                         <button className="action-btn text-error" onClick={handleDeleteClick}>
                             <Shield size={18} />

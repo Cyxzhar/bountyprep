@@ -447,3 +447,206 @@ input:checked+.slider:before {
         align-self: flex-end;
     }
 }
+/* ============================================
+   DESKTOP RESPONSIVE STYLES
+   ============================================ */
+
+@media (min-width: 1024px) {
+    .settings-screen {
+        overflow-x: hidden;
+    }
+
+    .settings-screen .screen-content {
+        max-width: 900px;
+        margin: 0 auto;
+        padding: var(--space-2xl) var(--space-xl);
+        box-sizing: border-box;
+    }
+
+    .settings-header {
+        padding: var(--space-xl) 2.5rem;
+        min-height: 80px;
+    }
+
+    .settings-title {
+        font-size: 2rem;
+    }
+
+    /* Settings Sections */
+    .settings-section {
+        max-width: 700px;
+        padding: var(--space-xl);
+        margin-bottom: var(--space-xl);
+    }
+
+    .section-title {
+        font-size: 1.5rem;
+        margin-bottom: var(--space-lg);
+    }
+
+    /* Setting Items */
+    .setting-item {
+        padding: var(--space-lg);
+        min-height: 72px;
+    }
+
+    .setting-label {
+        font-size: 1.05rem;
+    }
+
+    .setting-description {
+        font-size: 0.9375rem;
+    }
+
+    /* Buttons */
+    .change-password-btn,
+    .save-btn {
+        padding: 14px 28px;
+        font-size: 1rem;
+        min-height: 52px;
+    }
+
+    .logout-btn {
+        width: auto;
+        min-width: 320px;
+        max-width: 500px;
+        margin-left: 0;
+    }
+}
+
+@media (min-width: 1440px) {
+    .settings-screen .screen-content {
+        max-width: 1000px;
+        padding: 2.5rem 3rem;
+    }
+
+    .settings-header {
+        padding: var(--space-2xl) 3rem;
+    }
+
+    .settings-section {
+        max-width: 750px;
+        padding: 2rem;
+    }
+
+    .setting-item {
+        padding: var(--space-xl);
+    }
+}
+
+/* Password Change Form */
+.password-change-form {
+    padding: var(--space-xl);
+    background: rgba(255, 255, 255, 0.02);
+    border: 1px solid rgba(255, 255, 255, 0.06);
+    border-radius: var(--radius-lg);
+    margin-top: var(--space-md);
+}
+
+.password-change-form .form-group {
+    margin-bottom: var(--space-lg);
+}
+
+.password-change-form label {
+    display: block;
+    font-size: 0.875rem;
+    font-weight: 600;
+    color: var(--text-secondary);
+    margin-bottom: var(--space-sm);
+}
+
+.password-change-form input[type="password"] {
+    width: 100%;
+    padding: var(--space-md) var(--space-lg);
+    background: var(--bg-darker);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: var(--radius-md);
+    color: var(--text-primary);
+    font-size: 1rem;
+    transition: all 0.2s;
+    box-sizing: border-box;
+}
+
+.password-change-form input[type="password"]:focus {
+    outline: none;
+    border-color: var(--neon-green);
+    box-shadow: 0 0 0 3px rgba(159, 239, 0, 0.1);
+}
+
+.password-change-form input[type="password"]:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+.password-change-form .form-actions {
+    display: flex;
+    gap: var(--space-md);
+    margin-top: var(--space-xl);
+}
+
+.password-change-form .btn {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: var(--space-sm);
+    padding: var(--space-md) var(--space-xl);
+    min-height: 48px;
+    border-radius: var(--radius-md);
+    font-weight: 600;
+    transition: all 0.2s;
+    cursor: pointer;
+}
+
+.password-change-form .btn-secondary {
+    background: transparent;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    color: var(--text-secondary);
+}
+
+.password-change-form .btn-secondary:hover:not(:disabled) {
+    background: rgba(255, 255, 255, 0.05);
+    color: var(--text-primary);
+}
+
+.password-change-form .btn-primary {
+    background: var(--neon-green);
+    border: none;
+    color: #000;
+}
+
+.password-change-form .btn-primary:hover:not(:disabled) {
+    background: #B8FF33;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(159, 239, 0, 0.3);
+}
+
+.password-change-form .btn:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+.spin {
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }
+}
+
+@media (min-width: 1024px) {
+    .password-change-form {
+        padding: 2rem;
+    }
+
+    .password-change-form input[type="password"] {
+        font-size: 1.05rem;
+        padding: var(--space-lg) var(--space-xl);
+    }
+
+    .password-change-form .btn {
+        min-height: 52px;
+        font-size: 1rem;
+    }
+}
