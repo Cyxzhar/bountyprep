@@ -14,50 +14,95 @@ function WelcomeIllustration() {
   ]);
   const [cursorVisible, setCursorVisible] = useState(true);
 
-  // Blinking cursor effect
+  // Blinking cursor
   useEffect(() => {
-    const interval = setInterval(() => {
-      setCursorVisible(v => !v);
-    }, 500);
+    const interval = setInterval(() => setCursorVisible(v => !v), 500);
     return () => clearInterval(interval);
   }, []);
 
-  // Typing sequence
+  // Hacking Sequence
   useEffect(() => {
-    let timeout;
-    
-    const sequence = async () => {
-      // 1. Type command
-      const command = "$ bugora init";
-      for (let i = 1; i <= command.length; i++) {
-        await new Promise(r => setTimeout(r, 50));
-        setLines([{ text: command.slice(0, i), type: 'command' }]);
-      }
+    let mounted = true;
+    const wait = (ms) => new Promise(r => setTimeout(r, ms));
 
-      await new Promise(r => setTimeout(r, 400));
-
-      // 2. Output lines
-      setLines(prev => [...prev, { text: "Initializing lab environment...", type: 'info', opacity: 0.8 }]);
-      await new Promise(r => setTimeout(r, 300));
-      
-      setLines(prev => [...prev, { text: "[OK] Workspace ready", type: 'success', opacity: 0.6 }]);
-      await new Promise(r => setTimeout(r, 300));
-      
-      setLines(prev => [...prev, { text: "[OK] Tools loaded", type: 'success', opacity: 0.4 }]);
-      
-      // 3. Final prompt
-      await new Promise(r => setTimeout(r, 400));
-      setLines(prev => [...prev, { text: "$ _", type: 'prompt' }]);
+    const addLine = (text, color = '#9FEF00', opacity = 1) => {
+      if (!mounted) return;
+      setLines(prev => {
+        const newLines = [...prev, { text, color, opacity }];
+        return newLines.slice(-9); // Keep last 9 lines visible for taller terminal
+      });
     };
 
-    sequence();
+    const typeCommand = async (cmd) => {
+      if (!mounted) return;
+      const base = "$ ";
+      for (let i = 0; i <= cmd.length; i++) {
+        if (!mounted) return;
+        setLines(prev => {
+          const current = prev.slice(-9);
+          if (current.length > 0 && current[current.length - 1].isTyping) {
+             const updated = [...current];
+             updated[updated.length - 1] = { text: base + cmd.slice(0, i), color: '#9FEF00', isTyping: true };
+             return updated;
+          }
+          return [...current, { text: base + cmd.slice(0, i), color: '#9FEF00', isTyping: true }];
+        });
+        await wait(Math.random() * 40 + 20); // Faster typing
+      }
+      setLines(prev => {
+        const copy = [...prev];
+        if (copy.length > 0) copy[copy.length - 1].isTyping = false;
+        return copy;
+      });
+    };
 
-    return () => clearTimeout(timeout);
+    const runSequence = async () => {
+      setLines([]);
+      await wait(500);
+
+      // 1. Init
+      await typeCommand("bugora init");
+      await wait(300);
+      addLine("[OK] Workspace ready", "#9FEF00", 0.8);
+      await wait(400);
+
+      // 2. Recon
+      await typeCommand("nmap -T4 target_sys");
+      await wait(300);
+      addLine("Starting Nmap 7.92...", "#9FEF00", 0.6);
+      await wait(200);
+      addLine("Discovered open port 22/tcp (ssh)", "#FFBD2E");
+      await wait(150);
+      addLine("Discovered open port 80/tcp (http)", "#FFBD2E");
+      await wait(500);
+
+      // 3. Exploit
+      await typeCommand("run exploit/auth_bypass");
+      await wait(400);
+      addLine("[*] Started reverse TCP handler", "#9FEF00", 0.8);
+      await wait(300);
+      addLine("[*] Sending stage (179 bytes)", "#27C93F");
+      await wait(300);
+      addLine("[*] Meterpreter session 1 opened", "#27C93F");
+      await wait(500);
+
+      // 4. Access
+      await typeCommand("whoami");
+      await wait(300);
+      addLine("root", "#FF5F56", 1);
+      await wait(400);
+      addLine("ACCESS GRANTED", "#9FEF00", 1);
+      
+      await wait(200);
+      setLines(prev => [...prev, { text: "$ _", color: '#9FEF00', isPrompt: true }]);
+    };
+
+    runSequence();
+    return () => { mounted = false; };
   }, []);
 
   return (
     <svg viewBox="0 0 500 600" fill="none" xmlns="http://www.w3.org/2000/svg" className="onboarding-illustration" preserveAspectRatio="xMidYMid meet">
-      {/* Gradients */}
       <defs>
         <linearGradient id="welcomeGradient" x1="0%" y1="0%" x2="100%" y2="100%">
           <stop offset="0%" stopColor="#9FEF00" />
@@ -69,11 +114,11 @@ function WelcomeIllustration() {
         </radialGradient>
       </defs>
 
-      {/* Central Terminal Window */}
-      <g className="terminal-window" transform="translate(100, 150)">
+      {/* Central Terminal Window - WIDER & TALLER */}
+      <g className="terminal-window" transform="translate(80, 130)">
         {/* Window Frame */}
-        <rect x="0" y="0" width="300" height="400" rx="8" fill="none" stroke="url(#welcomeGradient)" strokeWidth="2" />
-        <rect x="0" y="0" width="300" height="30" rx="8" fill="rgba(159, 239, 0, 0.1)" />
+        <rect x="0" y="0" width="340" height="420" rx="8" fill="none" stroke="url(#welcomeGradient)" strokeWidth="2" />
+        <rect x="0" y="0" width="340" height="30" rx="8" fill="rgba(159, 239, 0, 0.1)" />
 
         {/* Window Buttons */}
         <circle cx="15" cy="15" r="4" fill="#FF5F56" />
@@ -85,9 +130,9 @@ function WelcomeIllustration() {
           <text 
             key={index} 
             x="15" 
-            y={60 + (index * 20)} 
+            y={60 + (index * 22)} 
             fontSize="11" 
-            fill="#9FEF00" 
+            fill={line.color || "#9FEF00"} 
             fontFamily="monospace" 
             className="terminal-text"
             opacity={line.opacity || 1}
@@ -103,20 +148,20 @@ function WelcomeIllustration() {
 
       {/* Floating Code Symbols */}
       <g className="floating-symbols" opacity="0.3">
-        <text x="80" y="150" fontSize="24" fill="#9FEF00" className="code-bracket">&lt;/&gt;</text>
-        <text x="480" y="250" fontSize="24" fill="#9FEF00" className="code-bracket">{ }</text>
-        <text x="100" y="650" fontSize="20" fill="#9FEF00" className="code-bracket">[ ]</text>
-        <text x="450" y="680" fontSize="20" fill="#9FEF00" className="code-bracket">$</text>
+        <text x="50" y="120" fontSize="24" fill="#9FEF00" className="code-bracket">&lt;/&gt;</text>
+        <text x="450" y="200" fontSize="24" fill="#9FEF00" className="code-bracket">{ }</text>
+        <text x="80" y="580" fontSize="20" fill="#9FEF00" className="code-bracket">[ ]</text>
+        <text x="420" y="550" fontSize="20" fill="#9FEF00" className="code-bracket">$</text>
       </g>
 
       {/* Circuit Lines */}
       <g className="circuit-lines" opacity="0.2">
-        <path d="M 100 100 L 200 100 L 200 150" stroke="#9FEF00" strokeWidth="2" fill="none" className="circuit-line" />
-        <path d="M 500 600 L 400 600 L 400 650" stroke="#9FEF00" strokeWidth="2" fill="none" className="circuit-line" />
+        <path d="M 80 130 L 30 130 L 30 100" stroke="#9FEF00" strokeWidth="2" fill="none" className="circuit-line" />
+        <path d="M 420 550 L 470 550 L 470 600" stroke="#9FEF00" strokeWidth="2" fill="none" className="circuit-line" />
       </g>
 
       {/* Glow Effect */}
-      <circle cx="250" cy="300" r="180" fill="url(#welcomeGlow)" />
+      <circle cx="250" cy="300" r="200" fill="url(#welcomeGlow)" />
     </svg>
   );
 }
