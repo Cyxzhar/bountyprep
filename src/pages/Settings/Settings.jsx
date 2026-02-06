@@ -5,8 +5,7 @@ import { useToast } from '../../context/ToastContext'; // Added useToast
 import { useSound } from '../../context/SoundContext';
 import { refreshUserProfile } from '../../utils/firestore';
 import { updateProfile, updatePassword, EmailAuthProvider, reauthenticateWithCredential, deleteUser } from 'firebase/auth';
-import { getStorage, ref, uploadString, getDownloadURL } from 'firebase/storage';
-import { doc, updateDoc, deleteDoc } from 'firebase/firestore';
+import { doc, updateDoc, deleteDoc, serverTimestamp } from 'firebase/firestore';
 import { db, auth } from '../../lib/firebase';
 import {
     Camera, User, Mail, Bell, Shield, Lock, LogOut,
@@ -50,30 +49,75 @@ export default function Settings() {
     const handlePhotoUpload = async (e) => {
         const file = e.target.files[0];
         if (!file) return;
-        if (file.size > 2 * 1024 * 1024) {
-            alert('File too large (max 2MB)');
+
+        // Validation - Max 5MB (though we will resize it)
+        if (file.size > 5 * 1024 * 1024) {
+            showError('File too large (max 5MB)');
             return;
         }
 
         setUploading(true);
         const reader = new FileReader();
-        reader.onloadend = async () => {
-            try {
-                const base64String = reader.result;
-                const storageRef = ref(getStorage(), `avatars/${currentUser.uid}`);
-                await uploadString(storageRef, base64String, 'data_url');
-                const photoURL = await getDownloadURL(storageRef);
-                await updateProfile(currentUser, { photoURL });
-                await updateDoc(doc(db, 'users', currentUser.uid), { photoURL });
-                const updatedUser = await refreshUserProfile(currentUser.uid);
-                setCurrentUser(prev => ({ ...prev, ...updatedUser, photoURL }));
-            } catch (err) {
-                console.error('Upload failed:', err);
-                showError('Failed to upload photo');
-            } finally {
-                setUploading(false);
-            }
+
+        reader.onloadend = () => {
+            const img = new Image();
+            img.onload = async () => {
+                try {
+                    // Create canvas for resizing
+                    const canvas = document.createElement('canvas');
+                    const MAX_SIZE = 400; // 400x400 max
+                    let width = img.width;
+                    let height = img.height;
+
+                    if (width > height) {
+                        if (width > MAX_SIZE) {
+                            height *= MAX_SIZE / width;
+                            width = MAX_SIZE;
+                        }
+                    } else {
+                        if (height > MAX_SIZE) {
+                            width *= MAX_SIZE / height;
+                            height = MAX_SIZE;
+                        }
+                    }
+
+                    canvas.width = width;
+                    canvas.height = height;
+                    const ctx = canvas.getContext('2d');
+                    ctx.drawImage(img, 0, 0, width, height);
+
+                    // Convert to compressed Base64 JPEG
+                    const base64String = canvas.toDataURL('image/jpeg', 0.8);
+
+                    // Bypass Storage - Save directly to Firestore
+                    // Note: updateProfile has character limits in some environments, 
+                    // we prioritize Firestore which is our app's source of truth.
+                    await updateDoc(doc(db, 'users', currentUser.uid), {
+                        photoURL: base64String,
+                        updatedAt: serverTimestamp()
+                    });
+
+                    // Update local auth profile for immediate UI consistency
+                    await updateProfile(currentUser, { photoURL: base64String });
+
+                    const updatedUser = await refreshUserProfile(currentUser.uid);
+                    setCurrentUser(prev => ({ ...prev, ...updatedUser, photoURL: base64String }));
+                    success('Profile photo updated!');
+                } catch (err) {
+                    console.error('Upload failed:', err);
+                    showError('Failed to save photo');
+                } finally {
+                    setUploading(false);
+                }
+            };
+            img.src = reader.result;
         };
+
+        reader.onerror = () => {
+            showError('Could not read file');
+            setUploading(false);
+        };
+
         reader.readAsDataURL(file);
     };
 
@@ -359,69 +403,69 @@ export default function Settings() {
                                 </button>
                             ) : (
                                 <form className="password-change-form" onSubmit={handlePasswordChange}>
-                                <div className="form-group">
-                                    <label htmlFor="current-password">Current Password</label>
-                                    <input
-                                        type="password"
-                                        id="current-password"
-                                        value={currentPassword}
-                                        onChange={(e) => setCurrentPassword(e.target.value)}
-                                        placeholder="Enter current password"
-                                        disabled={changingPassword}
-                                    />
-                                </div>
-                                <div className="form-group">
-                                    <label htmlFor="new-password">New Password</label>
-                                    <input
-                                        type="password"
-                                        id="new-password"
-                                        value={newPassword}
-                                        onChange={(e) => setNewPassword(e.target.value)}
-                                        placeholder="Enter new password (min 6 characters)"
-                                        disabled={changingPassword}
-                                    />
-                                </div>
-                                <div className="form-group">
-                                    <label htmlFor="confirm-password">Confirm New Password</label>
-                                    <input
-                                        type="password"
-                                        id="confirm-password"
-                                        value={confirmPassword}
-                                        onChange={(e) => setConfirmPassword(e.target.value)}
-                                        placeholder="Confirm new password"
-                                        disabled={changingPassword}
-                                    />
-                                </div>
-                                <div className="form-actions">
-                                    <button
-                                        type="button"
-                                        className="btn btn-secondary"
-                                        onClick={() => {
-                                            setShowPasswordForm(false);
-                                            setCurrentPassword('');
-                                            setNewPassword('');
-                                            setConfirmPassword('');
-                                        }}
-                                        disabled={changingPassword}
-                                    >
-                                        Cancel
-                                    </button>
-                                    <button
-                                        type="submit"
-                                        className="btn btn-primary"
-                                        disabled={changingPassword}
-                                    >
-                                        {changingPassword ? (
-                                            <>
-                                                <Loader2 size={18} className="spin" />
-                                                Changing...
-                                            </>
-                                        ) : (
-                                            'Change Password'
-                                        )}
-                                    </button>
-                                </div>
-                            </form>
+                                    <div className="form-group">
+                                        <label htmlFor="current-password">Current Password</label>
+                                        <input
+                                            type="password"
+                                            id="current-password"
+                                            value={currentPassword}
+                                            onChange={(e) => setCurrentPassword(e.target.value)}
+                                            placeholder="Enter current password"
+                                            disabled={changingPassword}
+                                        />
+                                    </div>
+                                    <div className="form-group">
+                                        <label htmlFor="new-password">New Password</label>
+                                        <input
+                                            type="password"
+                                            id="new-password"
+                                            value={newPassword}
+                                            onChange={(e) => setNewPassword(e.target.value)}
+                                            placeholder="Enter new password (min 6 characters)"
+                                            disabled={changingPassword}
+                                        />
+                                    </div>
+                                    <div className="form-group">
+                                        <label htmlFor="confirm-password">Confirm New Password</label>
+                                        <input
+                                            type="password"
+                                            id="confirm-password"
+                                            value={confirmPassword}
+                                            onChange={(e) => setConfirmPassword(e.target.value)}
+                                            placeholder="Confirm new password"
+                                            disabled={changingPassword}
+                                        />
+                                    </div>
+                                    <div className="form-actions">
+                                        <button
+                                            type="button"
+                                            className="btn btn-secondary"
+                                            onClick={() => {
+                                                setShowPasswordForm(false);
+                                                setCurrentPassword('');
+                                                setNewPassword('');
+                                                setConfirmPassword('');
+                                            }}
+                                            disabled={changingPassword}
+                                        >
+                                            Cancel
+                                        </button>
+                                        <button
+                                            type="submit"
+                                            className="btn btn-primary"
+                                            disabled={changingPassword}
+                                        >
+                                            {changingPassword ? (
+                                                <>
+                                                    <Loader2 size={18} className="spin" />
+                                                    Changing...
+                                                </>
+                                            ) : (
+                                                'Change Password'
+                                            )}
+                                        </button>
+                                    </div>
+                                </form>
                             )
                         )}
 
