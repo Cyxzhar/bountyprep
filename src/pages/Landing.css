@@ -2783,17 +2783,21 @@
     left: 0;
     width: 100%;
     height: 100%;
+    height: 100dvh;
     background: rgba(0, 0, 0, 0.85);
     backdrop-filter: blur(12px);
     z-index: 9999;
     display: flex;
-    align-items: center;
-    justify-content: center;
     padding: 20px;
     animation: fadeIn 0.3s ease;
+    overflow-y: auto;
+    /* Allow scrolling if content is tall */
 }
 
+/* Modal Content - Centered via auto margins for robust overflow handling */
 .modal-content {
+    margin: auto;
+    /* Centers vertically/horizontally and handles overflow safe */
     width: 100%;
     max-width: 480px;
     background: #0D0D14;

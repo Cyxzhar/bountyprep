@@ -59,7 +59,7 @@ async function loadUserProfile(user) {
         }
 
         // Profile doesn't exist - create it
-        await withTimeout(setDoc(userRef, {
+        const newProfile = {
             uid: user.uid,
             email: user.email,
             displayName: user.displayName || user.email?.split('@')[0] || 'Hacker',
@@ -67,14 +67,13 @@ async function loadUserProfile(user) {
             ...DEFAULT_PROFILE,
             createdAt: serverTimestamp(),
             updatedAt: serverTimestamp(),
-        }), 5000);
-
-        // Return the user with default profile
-        return {
-            ...user,
-            ...DEFAULT_PROFILE,
-            displayName: user.displayName || user.email?.split('@')[0] || 'Hacker',
         };
+
+        // Try to create in DB, success or fail we continue
+        setDoc(userRef, newProfile).catch(e => console.warn('Async profile creation failed:', e));
+
+        // Return the user with default profile immediately
+        return { ...user, ...newProfile };
     } catch (error) {
         console.warn('Firestore unavailable, using fallback profile:', error.message);
     }

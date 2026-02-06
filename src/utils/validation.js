@@ -22,7 +22,8 @@ export const getAuthErrorMessage = (errorCode) => {
         case 'auth/network-request-failed':
             return 'Network error. Please check your internet connection.';
         case 'auth/popup-closed-by-user':
-            return 'Sign-in cancelled.';
+        case 'auth/cancelled-popup-request':
+            return null; // Don't show error for user cancellation
         case 'auth/popup-blocked':
             return 'Sign-in popup was blocked. Please allow popups for this site.';
         default:

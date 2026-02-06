@@ -21,7 +21,13 @@ export async function generateInterviewResponse(messages, difficulty, topic) {
     2. Ask one question at a time.
     3. Dig deeper into vague answers with follow-ups.
     4. If the candidate makes a mistake, gently correct them after their answer or lead them to the right path.
-    5. Keep responses concise (under 150 words) unless explaining a complex concept.
+    5. Keep responses concise (under 200 words) and meaningful.
+    6. **CRITICAL: Use proper Markdown structure.**
+       - Use ### for major sections (e.g., ### Core Concept).
+       - Use **bold** for key terms.
+       - Use - bullet points for lists.
+       - Use > blockquotes for important notes or hints.
+       - Use \`code\` for technical terms.
     
     Your goal is to assess their depth of knowledge in AppSec, Network Security, and Threat Modeling.`;
 

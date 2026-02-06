@@ -71,8 +71,11 @@ export default function Login() {
             }
         } catch (err) {
             console.error(err);
+            if (err.code === 'auth/popup-closed-by-user' || err.code === 'auth/cancelled-popup-request') {
+                return;
+            }
             const msg = getAuthErrorMessage(err.code);
-            toastError(msg);
+            if (msg) toastError(msg);
         }
     };
 

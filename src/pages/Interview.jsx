@@ -31,24 +31,41 @@ const getSafeMessageContent = (content) => {
     return text.replace(/\[\d+(?:,\s*\d+)*\]/g, '');
 };
 
-const TypingEffect = ({ text, onComplete }) => {
+const TypingEffect = ({ text, onComplete, scrollRef }) => {
     const [displayedText, setDisplayedText] = useState('');
 
     useEffect(() => {
         let index = 0;
-        // Faster typing for better UX
+        const safeText = String(text || '');
+
         const interval = setInterval(() => {
-            const safeText = String(text || '');
             setDisplayedText(safeText.slice(0, index + 1));
             index++;
+
+            // Auto-scroll while typing
+            if (scrollRef?.current) {
+                // Check if near bottom or force scroll?
+                // For AI chat usually force scroll if it was already at bottom is good, 
+                // but simplest is just scrollIntoView relative to the message or container.
+                // We'll trust the parent's ref or pass a callback.
+                // Actually, let's just trigger a scroll event or call a function passed down.
+            }
+
             if (index >= safeText.length) {
                 clearInterval(interval);
                 if (onComplete) onComplete();
             }
-        }, 15);
+        }, 10); // Slightly faster typing
 
         return () => clearInterval(interval);
-    }, [text, onComplete]);
+    }, [text, onComplete, scrollRef]);
+
+    // Trigger scroll on text change
+    useEffect(() => {
+        if (scrollRef?.current) {
+            scrollRef.current.scrollIntoView({ behavior: 'smooth' });
+        }
+    }, [displayedText, scrollRef]);
 
     return (
         <ReactMarkdown
@@ -58,6 +75,10 @@ const TypingEffect = ({ text, onComplete }) => {
                         ? <code className="inline-code">{children}</code>
                         : <pre className="code-block"><code>{children}</code></pre>
                 ),
+                h1: ({ children }) => <h1>{children}</h1>,
+                h2: ({ children }) => <h2>{children}</h2>,
+                h3: ({ children }) => <h3>{children}</h3>,
+                blockquote: ({ children }) => <blockquote>{children}</blockquote>,
                 p: ({ children }) => <p className="md-paragraph">{children}</p>,
                 ul: ({ children }) => <ul className="md-list">{children}</ul>,
                 li: ({ children }) => <li className="md-list-item">{children}</li>,
@@ -65,7 +86,7 @@ const TypingEffect = ({ text, onComplete }) => {
             }}
         >
             {displayedText}
-        </ReactMarkdown>
+        </ReactMarkdown >
     );
 };
 
@@ -223,7 +244,7 @@ export default function Interview() {
             const response = await generateInterviewResponse(newMessages, difficulty);
 
             if (response) {
-                const aiMsg = { role: 'assistant', content: response };
+                const aiMsg = { role: 'assistant', content: response, shouldAnimate: true };
                 setMessages(prev => [...prev, aiMsg]);
             } else {
                 error('Failed to get response from AI coach.');
@@ -266,6 +287,12 @@ export default function Interview() {
     if (!started) {
         return (
             <div className="interview-screen">
+                {/* Micro-Badge for Quota */}
+                <div className={`quota-micro-badge ${quota === 0 ? 'limit-reached' : ''}`}>
+                    <AlertCircle size={14} />
+                    <span>{quota} free messages</span>
+                </div>
+
                 <div className="screen-content">
                     <div className="interview-intro">
                         {/* ... (Intro UI) ... */}
@@ -274,12 +301,6 @@ export default function Interview() {
                         </div>
                         <h1 className="intro-title">AI Interview Coach</h1>
                         <p className="intro-subtitle">Practice FAANG-level security interview questions with real-time AI feedback</p>
-
-                        {/* Quota Display */}
-                        <div className="quota-info">
-                            <AlertCircle size={16} />
-                            <span>{quota} free messages remaining today</span>
-                        </div>
                     </div>
 
                     <div className="difficulty-section">
@@ -473,8 +494,15 @@ export default function Interview() {
 
     return (
         <div className="interview-screen chat-mode">
+            {/* Micro-Badge for Quota in Chat Mode */}
+            <div className={`quota-micro-badge ${quota === 0 ? 'limit-reached' : ''}`}>
+                <AlertCircle size={14} />
+                <span>{quota} free messages</span>
+            </div>
+
             {/* Chat Header */}
             <header className="chat-header">
+
                 <button className="back-btn" onClick={handleEndSession}>
                     <X size={20} />
                 </button>
@@ -492,7 +520,8 @@ export default function Interview() {
             <div className="messages-container">
                 {messages.map((msg, idx) => {
                     const isLastAI = msg.role === 'assistant' && idx === messages.length - 1;
-                    const showTyping = isLastAI && idx > 0; // Don't animate initial greeting
+                    // Only animate if it's the last message AND explicitly marked for animation
+                    const showTyping = isLastAI && msg.shouldAnimate;
                     const safeContent = getSafeMessageContent(msg.content);
 
                     return (
@@ -505,7 +534,7 @@ export default function Interview() {
                             <div className="message-bubble">
                                 {msg.role === 'assistant' ? (
                                     showTyping ? (
-                                        <TypingEffect text={safeContent} />
+                                        <TypingEffect text={safeContent} scrollRef={messagesEndRef} />
                                     ) : (
                                         <ReactMarkdown
                                             components={{
@@ -514,6 +543,10 @@ export default function Interview() {
                                                         ? <code className="inline-code">{children}</code>
                                                         : <pre className="code-block"><code>{children}</code></pre>
                                                 ),
+                                                h1: ({ children }) => <h1>{children}</h1>,
+                                                h2: ({ children }) => <h2>{children}</h2>,
+                                                h3: ({ children }) => <h3>{children}</h3>,
+                                                blockquote: ({ children }) => <blockquote>{children}</blockquote>,
                                                 p: ({ children }) => <p className="md-paragraph">{children}</p>,
                                                 ul: ({ children }) => <ul className="md-list">{children}</ul>,
                                                 li: ({ children }) => <li className="md-list-item">{children}</li>,
@@ -531,31 +564,25 @@ export default function Interview() {
                     );
                 })}
 
-                {isLoading && (
-                    <div className="message ai">
-                        <div className="message-avatar">
-                            <Bot size={20} />
+                {
+                    isLoading && (
+                        <div className="message ai">
+                            <div className="message-avatar">
+                                <Bot size={20} />
+                            </div>
+                            <div className="message-bubble typing">
+                                <Loader2 size={18} className="spin" />
+                                <span>Thinking...</span>
+                            </div>
                         </div>
-                        <div className="message-bubble typing">
-                            <Loader2 size={18} className="spin" />
-                            <span>Thinking...</span>
-                        </div>
-                    </div>
-                )}
+                    )
+                }
 
                 <div ref={messagesEndRef} />
-            </div>
-
-            {/* Quota Banner */}
-            {quota <= 2 && quota > 0 && (
-                <div className="quota-banner">
-                    <AlertCircle size={14} />
-                    <span>{quota} message{quota !== 1 ? 's' : ''} left today</span>
-                </div>
-            )}
+            </div >
 
             {/* Input Area */}
-            <div className="chat-input-area">
+            < div className="chat-input-area" >
                 <div className="input-wrapper">
                     <input
                         type="text"
@@ -577,7 +604,7 @@ export default function Interview() {
                 >
                     {isLoading ? <Loader2 size={20} className="spin" /> : <Send size={20} />}
                 </button>
-            </div>
-        </div>
+            </div >
+        </div >
     );
 }

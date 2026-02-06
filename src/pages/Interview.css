@@ -5,6 +5,8 @@
     background: var(--gradient-dark);
     display: flex;
     flex-direction: column;
+    position: relative;
+    /* Context for absolute positioning */
 }
 
 .interview-screen .screen-content {
@@ -17,7 +19,126 @@
     max-width: 700px;
     margin: 0 auto;
     width: 100%;
+    position: relative;
 }
+
+/* Micro-Badge for Quota - Top Right */
+.quota-micro-badge {
+    position: absolute;
+    top: max(var(--space-md), env(safe-area-inset-top));
+    right: var(--space-md);
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 16px;
+    background: rgba(19, 19, 26, 0.6);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border: 1px solid rgba(255, 159, 28, 0.2);
+    border-radius: var(--radius-full);
+    color: var(--neon-orange);
+    font-size: 0.8rem;
+    font-weight: 600;
+    letter-spacing: 0.02em;
+    z-index: 50;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.quota-micro-badge:hover {
+    background: rgba(255, 159, 28, 0.1);
+    border-color: rgba(255, 159, 28, 0.5);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 20px rgba(255, 159, 28, 0.15);
+}
+
+.quota-micro-badge.limit-reached {
+    border-color: var(--accent-red);
+    color: var(--accent-red);
+    background: rgba(40, 10, 10, 0.8);
+}
+
+/* Intro Section */
+.interview-intro {
+    text-align: center;
+    margin-bottom: var(--space-2xl);
+    animation: fadeInUp 0.5s ease-out;
+}
+
+/* ... existing intro styles ... */
+/* Removing .quota-info styles as it is replaced by micro-badge */
+
+/* ... (Keep existing Difficulty Section) ... */
+
+/* ... (Keep existing Topics Section) ... */
+
+/* CTA Section - Standardized Button Group */
+.interview-screen .cta-section {
+    margin-top: auto;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    /* Space between buttons */
+    align-items: center;
+    width: 100%;
+}
+
+/* Override only layout specific properties, use global btn styles for visuals */
+.interview-screen .cta-section .btn-full {
+    width: 100% !important;
+    max-width: 400px;
+    /* Limit max width for readability */
+}
+
+/* Chat Header - Grid Layout */
+.chat-header {
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    display: grid;
+    grid-template-columns: 44px 1fr auto;
+    /* Back btn | Title | Timer */
+    align-items: center;
+    gap: 24px;
+    /* Min gutter 24px */
+    padding: max(var(--space-md), env(safe-area-inset-top)) var(--space-lg) var(--space-md);
+    background: rgba(19, 19, 26, 0.95);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
+}
+
+@media (max-width: 480px) {
+    .chat-header {
+        padding: max(var(--space-sm), env(safe-area-inset-top)) var(--space-md) var(--space-sm);
+        gap: 16px;
+        /* Smaller gutter on mobile if strictly needed, but 24px preferred for consistency */
+        grid-template-columns: 44px 1fr auto;
+    }
+}
+
+.chat-info {
+    display: flex;
+    flex-direction: column;
+    text-align: center;
+    /* Center title in grid layout usually looks best or left aligned */
+    align-items: center;
+    /* Center horizontally */
+    min-width: 0;
+}
+
+/* Ensure accessible touch targets */
+.back-btn {
+    min-width: 44px;
+    /* Touch target */
+    width: 44px;
+    min-height: 44px;
+    height: 44px;
+    /* ... existing styles ... */
+}
+
+/* ... keep other styles ... */
 
 @media (max-width: 768px) {
     .interview-screen .screen-content {
@@ -47,6 +168,7 @@
         opacity: 0;
         transform: translateY(20px);
     }
+
     to {
         opacity: 1;
         transform: translateY(0);
@@ -70,9 +192,12 @@
 }
 
 @keyframes pulseGlow {
-    0%, 100% {
+
+    0%,
+    100% {
         box-shadow: 0 0 40px rgba(159, 239, 0, 0.3);
     }
+
     50% {
         box-shadow: 0 0 60px rgba(159, 239, 0, 0.5);
     }
@@ -335,67 +460,13 @@
     flex-direction: column;
     gap: 16px;
     align-items: center;
+    width: 100%;
 }
 
-/* Base styling for all CTA buttons */
-.interview-screen .cta-section .btn,
+/* Use standard button classes from global CSS */
 .interview-screen .cta-section .btn-full {
-    width: 100% !important;
-    max-width: 500px !important;
-    margin-left: auto !important;
-    margin-right: auto !important;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 10px;
-    height: 56px;
-    min-height: 56px;
-    border-radius: 14px;
-    font-size: 1rem;
-    font-weight: 600;
-    transition: all 0.2s ease;
-}
-
-/* Primary Button - Main Action */
-.interview-screen .cta-section .btn-primary {
-    background: var(--neon-green) !important;
-    color: #000 !important;
-    border: none !important;
-    box-shadow: 0 4px 16px rgba(159, 239, 0, 0.2);
-}
-
-.interview-screen .cta-section .btn-primary:hover:not(:disabled) {
-    background: #B8FF33 !important;
-    transform: translateY(-2px);
-    box-shadow: 0 6px 20px rgba(159, 239, 0, 0.3);
-}
-
-.interview-screen .cta-section .btn-primary:active:not(:disabled) {
-    transform: translateY(0);
-}
-
-/* Secondary Button - Supporting Action */
-.interview-screen .cta-section .btn-secondary {
-    background: transparent !important;
-    color: var(--neon-green) !important;
-    border: 2px solid rgba(159, 239, 0, 0.3) !important;
-}
-
-.interview-screen .cta-section .btn-secondary:hover:not(:disabled) {
-    background: rgba(159, 239, 0, 0.1) !important;
-    border-color: var(--neon-green) !important;
-    transform: translateY(-2px);
-}
-
-.interview-screen .cta-section .btn-secondary:active:not(:disabled) {
-    transform: translateY(0);
-    background: rgba(159, 239, 0, 0.15) !important;
-}
-
-/* Icon alignment fix */
-.interview-screen .cta-section .btn svg {
-    flex-shrink: 0;
-    vertical-align: middle;
+    max-width: 500px;
+    width: 100%;
 }
 
 /* Chat Mode */
@@ -552,91 +623,50 @@
     animation: slideInMessage 0.4s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
-@keyframes slideInMessage {
-    from {
-        opacity: 0;
-        transform: translateY(20px) scale(0.95);
-    }
-    to {
-        opacity: 1;
-        transform: translateY(0) scale(1);
-    }
-}
-
-.message.user {
-    justify-content: flex-end;
-}
-
-.message.ai {
-    justify-content: flex-start;
-}
-
-@media (max-width: 480px) {
-    .message {
-        gap: var(--space-sm);
-    }
-}
-
-.message-avatar {
-    min-width: 40px;
-    width: 40px;
-    min-height: 40px;
-    height: 40px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    background: linear-gradient(135deg, rgba(0, 212, 255, 0.2), rgba(0, 212, 255, 0.1));
-    border: 1px solid rgba(0, 212, 255, 0.3);
-    border-radius: 50%;
-    color: var(--cyan);
-    flex-shrink: 0;
-    box-shadow: 0 0 15px rgba(0, 212, 255, 0.2);
-}
-
-@media (max-width: 480px) {
-    .message-avatar {
-        min-width: 36px;
-        width: 36px;
-        min-height: 36px;
-        height: 36px;
-    }
-}
-
 .message-bubble {
-    max-width: 80%;
-    padding: var(--space-lg) var(--space-xl);
-    border-radius: var(--radius-xl);
-    font-size: clamp(0.95rem, 2.5vw, 1rem);
-    line-height: 1.7;
+    font-family: 'JetBrains Mono', 'SF Mono', 'Fira Code', monospace;
+    font-size: 0.9rem;
+    /* Reduced from 0.95rem */
+    line-height: 1.5;
+    /* Reduced from 1.7 */
     word-wrap: break-word;
     overflow-wrap: break-word;
     transition: all 0.2s;
+    letter-spacing: 0;
 }
 
-@media (max-width: 480px) {
-    .message-bubble {
-        max-width: 85%;
-        padding: var(--space-md) var(--space-lg);
-        font-size: clamp(0.9rem, 2.5vw, 0.95rem);
-    }
-}
-
+/* User Message - Keep Pill Style */
 .message.user .message-bubble {
+    max-width: 80%;
+    padding: var(--space-md) var(--space-lg);
     background: linear-gradient(135deg, var(--neon-green), #B8FF33);
     color: #000;
     font-weight: 600;
     box-shadow: 0 0 15px rgba(159, 239, 0, 0.2), 0 4px 12px rgba(159, 239, 0, 0.15);
     border-radius: var(--radius-xl);
+    font-family: 'JetBrains Mono', 'SF Mono', 'Fira Code', monospace;
+    /* Consistent font */
+    font-size: 0.9rem;
 }
 
+/* AI Message - Remove Box/Modal Look */
 .message.ai .message-bubble {
-    background: linear-gradient(135deg, rgba(26, 26, 46, 0.95) 0%, rgba(26, 26, 46, 0.85) 100%);
-    backdrop-filter: blur(10px);
-    -webkit-backdrop-filter: blur(10px);
-    border: 1px solid rgba(255, 255, 255, 0.1);
+    max-width: 100%;
+    /* Allow full width text flow */
+    background: transparent;
+    backdrop-filter: none;
+    -webkit-backdrop-filter: none;
+    border: none;
     color: #e8e8e8;
-    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.3);
-    border-radius: var(--radius-xl);
+    box-shadow: none;
+    padding: 0;
+    /* Remove padding to align with "writing paragraph without any extra space" */
+    margin-top: 4px;
+    /* Slight alignment with avatar */
+}
+
+.message.ai {
+    align-items: flex-start;
 }
 
 .message-bubble.typing {
@@ -652,43 +682,61 @@
     box-shadow: 0 0 15px rgba(0, 212, 255, 0.1);
 }
 
-/* Markdown Styling in Messages - Enhanced */
+/* Markdown Styling in Messages - Premium Polish */
 .md-paragraph {
-    margin: 0 0 1em 0;
-    font-size: 1em;
-    line-height: 1.7;
-    color: inherit;
-}
-
-.md-paragraph:last-child {
-    margin-bottom: 0;
-}
-
-.md-paragraph:first-child {
-    margin-top: 0;
+    margin: 0 0 0.75rem 0;
+    /* Reduced margin */
+    font-size: 0.95rem;
+    /* Reduced size */
+    line-height: 1.6;
+    /* Reduced line-height */
+    color: rgba(255, 255, 255, 0.9);
+    letter-spacing: 0;
 }
 
 .md-list {
-    margin: 1em 0;
-    padding-left: 1.5em;
-    line-height: 1.7;
+    margin: 0.75rem 0;
+    /* Reduced margin */
+    padding-left: 0;
+    line-height: 1.6;
 }
 
 .md-list-item {
-    margin-bottom: 0.5em;
-    line-height: 1.7;
+    margin-bottom: 0.5rem;
+    /* Reduced spacing */
+    padding-left: 1.5rem;
     position: relative;
+    color: rgba(255, 255, 255, 0.85);
+    font-size: 0.95rem;
 }
 
+/* Custom polished bullet point */
+.md-list-item::before {
+    content: '>';
+    position: absolute;
+    left: 0;
+    top: 0;
+    font-weight: 700;
+    color: var(--neon-green);
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.9em;
+    text-shadow: 0 0 8px rgba(159, 239, 0, 0.4);
+}
+
+/* Remove default marker */
 .md-list-item::marker {
-    color: var(--neon-green);
-    font-weight: 700;
+    content: none;
 }
 
+/* Premium Highlight - Clear & Distinct, No Box */
 .md-bold {
-    font-weight: 700;
+    font-weight: 800;
     color: var(--neon-green);
-    text-shadow: 0 0 10px rgba(159, 239, 0, 0.2);
+    /* Remove background/border for cleaner look */
+    background: transparent;
+    border: none;
+    padding: 0;
+    text-shadow: 0 0 12px rgba(159, 239, 0, 0.3);
 }
 
 .inline-code {
@@ -704,18 +752,17 @@
 }
 
 .code-block {
-    padding: var(--space-lg);
-    background: linear-gradient(135deg, rgba(0, 0, 0, 0.6) 0%, rgba(0, 0, 0, 0.5) 100%);
-    border: 1px solid rgba(159, 239, 0, 0.2);
-    border-left: 3px solid var(--neon-green);
+    padding: var(--space-md) var(--space-lg);
+    background: #0d0d0d;
+    /* Very dark background for contrast */
+    border: 1px solid rgba(255, 255, 255, 0.1);
     border-radius: var(--radius-lg);
     overflow-x: auto;
-    margin: 1em 0;
-    font-family: 'JetBrains Mono', 'SF Mono', 'Fira Code', monospace;
+    margin: 1.25em 0;
+    font-family: 'JetBrains Mono', 'Fira Code', monospace;
     font-size: 0.9em;
-    line-height: 1.6;
-    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.3);
-    position: relative;
+    line-height: 1.5;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
 }
 
 .code-block code {
@@ -750,44 +797,93 @@
 }
 
 /* Additional Markdown Elements */
+/* refined headings */
+/* refined headings */
 .message-bubble h1,
 .message-bubble h2,
-.message-bubble h3,
-.message-bubble h4 {
-    color: var(--neon-green);
-    font-weight: 700;
-    margin-top: 1.2em;
-    margin-bottom: 0.6em;
+.message-bubble h3 {
+    color: #fff;
+    font-weight: 800;
+    margin-top: 1.5em;
+    /* Clear separation before new sections */
+    margin-bottom: 0.5em;
+    /* Tight spacing after header */
     line-height: 1.3;
+    letter-spacing: -0.02em;
 }
 
 .message-bubble h1 {
-    font-size: 1.4em;
-    border-bottom: 2px solid rgba(159, 239, 0, 0.3);
+    font-size: 1.25em;
+    /* Distinctly larger */
+    color: var(--neon-green);
+    border-bottom: 1px solid rgba(159, 239, 0, 0.2);
     padding-bottom: 0.3em;
+    margin-bottom: 0.8em;
 }
 
 .message-bubble h2 {
-    font-size: 1.25em;
+    font-size: 1.1em;
+    /* Secondary header size */
+    color: var(--cyan);
 }
 
 .message-bubble h3 {
-    font-size: 1.15em;
+    font-size: 1rem;
+    /* Tertiary header, same as body but bold/colored */
+    color: #fff;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    font-size: 0.85em;
+    /* Smaller but uppercase for distinction */
+    opacity: 0.9;
 }
 
-.message-bubble h4 {
-    font-size: 1.05em;
+/* Paragraphs & Lists */
+.md-paragraph {
+    margin: 0 0 1em 0;
+    /* Standard paragraph spacing */
+    font-size: 0.9rem;
+    line-height: 1.6;
+    color: rgba(255, 255, 255, 0.85);
+    /* Slightly muted for body text */
 }
 
+.md-list {
+    margin: 0.5em 0 1em 0;
+    padding-left: 0;
+}
+
+.md-list-item {
+    margin-bottom: 0.4em;
+    padding-left: 1.25rem;
+    /* Distinct indentation */
+    position: relative;
+    color: rgba(255, 255, 255, 0.9);
+}
+
+/* Custom polished bullet point */
+.md-list-item::before {
+    content: '>';
+    position: absolute;
+    left: 0;
+    top: 0;
+    font-weight: 700;
+    color: var(--neon-green);
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.85em;
+    opacity: 0.8;
+}
+
+/* Blockquotes for Notes/Key Points */
 .message-bubble blockquote {
     margin: 1em 0;
-    padding-left: 1em;
+    padding: 0.75em 1em;
     border-left: 3px solid var(--cyan);
-    color: var(--text-secondary);
-    font-style: italic;
     background: rgba(0, 212, 255, 0.05);
-    padding: 0.5em 1em;
+    color: rgba(255, 255, 255, 0.9);
     border-radius: 4px;
+    font-style: italic;
+    font-size: 0.9rem;
 }
 
 .message-bubble a {
@@ -834,15 +930,20 @@
     position: sticky;
     bottom: 0;
     display: flex;
-    align-items: flex-end;
-    gap: var(--space-sm);
+    align-items: center;
+    /* Center align items vertically */
+    gap: 12px;
     padding: var(--space-md) var(--space-lg);
+    /* Base padding */
     padding-bottom: max(var(--space-md), env(safe-area-inset-bottom));
     background: rgba(19, 19, 26, 0.95);
     backdrop-filter: blur(20px);
     -webkit-backdrop-filter: blur(20px);
     border-top: 1px solid rgba(255, 255, 255, 0.08);
     box-shadow: 0 -4px 16px rgba(0, 0, 0, 0.1);
+    width: 100%;
+    /* Ensure full width */
+    justify-content: center;
 }
 
 @media (max-width: 480px) {
@@ -855,27 +956,35 @@
 .input-wrapper {
     flex: 1;
     min-width: 0;
+    display: flex;
+    /* Ensure input fills wrapper height if needed */
 }
 
 .chat-input {
     width: 100%;
-    min-height: 52px;
-    padding: var(--space-md) var(--space-lg);
+    height: 56px;
+    /* Fixed height to match button */
+    min-height: 56px;
+    padding: 0 var(--space-lg);
+    /* remove vertical padding for exact height control with line-height or flex */
     background: rgba(26, 26, 46, 0.8);
     border: 2px solid rgba(255, 255, 255, 0.1);
-    border-radius: var(--radius-xl);
+    border-radius: 28px;
+    /* Fully rounded to match button/pill shape */
     color: #fff;
-    font-size: clamp(0.95rem, 2.5vw, 1rem);
-    line-height: 1.5;
+    font-size: 1rem;
+    line-height: normal;
+    /* Normal line height for input */
     resize: none;
     transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 @media (max-width: 480px) {
     .chat-input {
+        height: 48px;
         min-height: 48px;
         padding: var(--space-sm) var(--space-md);
-        font-size: clamp(0.9rem, 2.5vw, 0.95rem);
+        font-size: 0.95rem;
     }
 }
 
@@ -896,10 +1005,10 @@
 }
 
 .send-btn {
-    min-width: 52px;
-    width: 52px;
-    min-height: 52px;
-    height: 52px;
+    min-width: 56px;
+    width: 56px;
+    min-height: 56px;
+    height: 56px;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -913,12 +1022,12 @@
     box-shadow: 0 0 20px rgba(159, 239, 0, 0.4), 0 4px 12px rgba(159, 239, 0, 0.3);
 }
 
-@media (pointer: coarse) {
+@media (max-width: 480px) {
     .send-btn {
-        min-width: 56px;
-        width: 56px;
-        min-height: 56px;
-        height: 56px;
+        min-width: 48px;
+        width: 48px;
+        min-height: 48px;
+        height: 48px;
     }
 }
 
@@ -966,6 +1075,7 @@
     from {
         opacity: 0;
     }
+
     to {
         opacity: 1;
     }
@@ -998,6 +1108,7 @@
         opacity: 0;
         transform: scale(0.9);
     }
+
     to {
         opacity: 1;
         transform: scale(1);
@@ -1404,9 +1515,19 @@
 
     /* Chat Input */
     .chat-input-area {
-        max-width: 1000px;
+        width: 100%;
+        max-width: none;
+        /* Override any max-width */
+        margin: 0;
+        padding: var(--space-xl) 3rem;
+        /* Suitable spacing */
+    }
+
+    .input-wrapper {
+        max-width: 1400px;
+        /* Reasonable cap for the input field itself, or user might want the bar to stretch? User said "extend it and to full-wdith to cover the entire widnows". Let's make the container full width and maybe the input bar slightly contained or full. */
         margin: 0 auto;
-        padding: var(--space-xl) 2rem;
+        width: 100%;
     }
 
     .chat-input {
@@ -1487,8 +1608,9 @@
     }
 
     .chat-input-area {
-        max-width: 1200px;
-        padding: var(--space-xl) 2.5rem;
+        max-width: none;
+        width: 100%;
+        padding: var(--space-xl) 3rem;
     }
 
     .chat-input {
@@ -1528,7 +1650,8 @@
     }
 
     .chat-input-area {
-        max-width: 1400px;
-        padding: var(--space-xxl) 3rem;
+        max-width: none;
+        width: 100%;
+        padding: var(--space-xxl) 4rem;
     }
 }
