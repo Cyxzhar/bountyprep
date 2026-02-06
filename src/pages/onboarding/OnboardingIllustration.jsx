@@ -85,8 +85,8 @@ function WelcomeIllustration() {
           <text 
             key={index} 
             x="15" 
-            y={60 + (index * 25)} 
-            fontSize="12" 
+            y={60 + (index * 20)} 
+            fontSize="11" 
             fill="#9FEF00" 
             fontFamily="monospace" 
             className="terminal-text"
