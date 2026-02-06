@@ -34,6 +34,7 @@ serviceAccountKey.json
 # Documentation
 *.md
 !README.md
+!docs/DEPLOYMENT.md
 
 # Editor configs
 .claude/
