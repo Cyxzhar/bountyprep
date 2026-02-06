@@ -104,9 +104,9 @@ export default function Analysis() {
                 <div className="onboarding-footer">
                     <button
                         className="btn btn-primary btn-full"
-                        onClick={() => navigate('/onboarding/paywall')}
+                        onClick={() => navigate('/auth/signup')}
                     >
-                        Unlock Full Access
+                        Create Free Account
                         <ChevronRight size={20} />
                     </button>
                 </div>

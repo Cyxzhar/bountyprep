@@ -383,6 +383,10 @@
     height: clamp(72px, 10vw, 96px);
     margin-bottom: clamp(32px, 5vw, 48px);
     position: relative;
+    /* Ensure icon stays centered */
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
 .onboarding-spinner-ring {
@@ -395,11 +399,10 @@
 }
 
 .onboarding-spinner-icon {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
+    position: relative;
+    /* Changed from absolute to flow naturally in flex */
     color: var(--neon-green);
+    z-index: 2;
 }
 
 @keyframes spin {
@@ -663,10 +666,11 @@
    ============================================ */
 
 @media (min-width: 768px) {
-    /* Split-screen layout for desktop */
+
+    /* Split-screen layout for desktop - Equal 50/50 split */
     .onboarding-screen {
         display: grid;
-        grid-template-columns: 1fr 1fr;
+        grid-template-columns: 50% 50%;
         grid-template-rows: auto 1fr auto;
         grid-template-areas:
             "skip skip"
@@ -719,12 +723,12 @@
         }
     }
 
-    /* Illustration SVG - Properly constrained */
+    /* Illustration SVG - Larger and properly constrained */
     .onboarding-illustration {
         width: 100%;
         height: auto;
-        max-width: 500px;
-        max-height: 70vh;
+        max-width: 90%;
+        max-height: 80vh;
         object-fit: contain;
         opacity: 0;
         animation: illustrationFadeIn 0.8s ease forwards 0.2s;
@@ -735,104 +739,107 @@
             opacity: 0;
             transform: scale(0.98);
         }
+
         to {
             opacity: 1;
             transform: scale(1);
         }
     }
 
-    /* Right panel - Content area - More compact */
+    /* Right panel - Content area - Very compact to fit all content */
     .onboarding-content {
         grid-area: right;
-        max-width: 550px;
-        padding: clamp(16px, 2vw, 24px);
-        padding-top: 70px; /* Account for skip button */
+        max-width: 100%;
+        padding: clamp(12px, 1.5vw, 20px);
+        padding-top: 60px;
+        /* Account for skip button */
         justify-content: flex-start;
         overflow-y: auto;
-        max-height: calc(100vh - 90px); /* Leave room for footer */
+        max-height: calc(100vh - 80px);
+        /* Leave room for footer */
     }
 
-    /* Footer spans right side only */
+    /* Footer spans right side only - Very compact */
     .onboarding-footer {
         grid-area: footer;
-        max-width: 600px;
-        padding: clamp(16px, 2vw, 24px) clamp(20px, 3vw, 32px);
+        max-width: 100%;
+        padding: clamp(12px, 1.5vw, 18px) clamp(12px, 1.5vw, 20px);
     }
 
-    /* Enhanced typography on desktop - More compact */
+    /* Enhanced typography on desktop - Extra compact to fit without scroll */
     .onboarding-welcome-title {
-        font-size: clamp(2rem, 2.5vw + 0.5rem, 3rem);
-        line-height: 1.15;
-        letter-spacing: -0.02em;
-        margin-bottom: clamp(16px, 2vw, 24px);
-    }
-
-    .onboarding-welcome-subtitle {
-        font-size: clamp(1rem, 1.2vw + 0.5rem, 1.125rem);
-        line-height: 1.6;
-        max-width: 500px;
-    }
-
-    .onboarding-question-title {
-        font-size: clamp(1.5rem, 2vw + 0.5rem, 1.875rem);
-        line-height: 1.25;
+        font-size: clamp(1.75rem, 2vw + 0.5rem, 2.25rem);
+        line-height: 1.2;
         letter-spacing: -0.015em;
         margin-bottom: clamp(12px, 1.5vw, 16px);
     }
 
-    .onboarding-question-subtitle {
-        font-size: clamp(0.9375rem, 1.2vw + 0.5rem, 1.0625rem);
-        line-height: 1.6;
-        margin-bottom: clamp(20px, 3vw, 28px);
-        max-width: 520px;
+    .onboarding-welcome-subtitle {
+        font-size: clamp(0.9375rem, 1vw + 0.5rem, 1.0625rem);
+        line-height: 1.55;
+        max-width: 100%;
     }
 
-    /* Enhanced stats on desktop - More compact */
+    .onboarding-question-title {
+        font-size: clamp(1.375rem, 1.8vw + 0.5rem, 1.625rem);
+        line-height: 1.3;
+        letter-spacing: -0.01em;
+        margin-bottom: clamp(8px, 1vw, 12px);
+    }
+
+    .onboarding-question-subtitle {
+        font-size: clamp(0.875rem, 1vw + 0.5rem, 0.9375rem);
+        line-height: 1.5;
+        margin-bottom: clamp(14px, 2vw, 20px);
+        max-width: 100%;
+    }
+
+    /* Enhanced stats on desktop - Extra compact */
     .onboarding-welcome-stats {
-        gap: clamp(24px, 3vw, 36px);
-        padding: clamp(20px, 3vw, 28px) clamp(28px, 4vw, 40px);
-        margin-bottom: clamp(24px, 3vw, 32px);
+        gap: clamp(16px, 2vw, 24px);
+        padding: clamp(14px, 2vw, 20px) clamp(20px, 3vw, 28px);
+        margin-bottom: clamp(16px, 2vw, 24px);
     }
 
     .onboarding-stat-value {
-        font-size: clamp(1.5rem, 2vw + 0.5rem, 1.875rem);
+        font-size: clamp(1.25rem, 1.5vw + 0.5rem, 1.5rem);
         line-height: 1.2;
-        letter-spacing: -0.015em;
+        letter-spacing: -0.01em;
     }
 
     .onboarding-stat-label {
-        font-size: clamp(0.6875rem, 0.8vw + 0.25rem, 0.8125rem);
-        letter-spacing: 0.12em;
+        font-size: clamp(0.625rem, 0.7vw + 0.25rem, 0.75rem);
+        letter-spacing: 0.1em;
     }
 
-    /* Enhanced badges on desktop - More compact */
+    /* Enhanced badges on desktop - Extra compact */
     .onboarding-trust-badge {
-        padding: 10px 20px;
-        font-size: clamp(0.875rem, 0.9vw + 0.5rem, 0.9375rem);
-        line-height: 1.4;
-        gap: 10px;
-        letter-spacing: 0.03em;
+        padding: 8px 16px;
+        font-size: clamp(0.8125rem, 0.85vw + 0.5rem, 0.875rem);
+        line-height: 1.3;
+        gap: 8px;
+        letter-spacing: 0.02em;
     }
 
     .onboarding-trust-badge svg {
-        width: 16px;
-        height: 16px;
+        width: 14px;
+        height: 14px;
     }
 
-    /* Grid layout for option cards on desktop - Compact version */
+    /* Grid layout for option cards on desktop - Auto-fit for 2-3 items */
     .onboarding-options-grid {
         max-width: 100%;
         display: grid;
-        grid-template-columns: repeat(2, 1fr);
-        gap: clamp(12px, 2vw, 16px);
+        grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+        gap: clamp(10px, 1.5vw, 14px);
     }
 
     .onboarding-option-card {
         flex-direction: column;
         text-align: center;
-        padding: clamp(16px, 2.5vw, 24px);
-        min-height: 140px;
-        max-height: 160px;
+        padding: clamp(14px, 2vw, 20px);
+        min-height: 130px;
+        max-height: 150px;
     }
 
     .onboarding-option-icon {
@@ -863,13 +870,13 @@
 /* Ultra-wide screens (≥1200px) - Keep compact */
 @media (min-width: 1200px) {
     .onboarding-content {
-        max-width: 600px;
-        padding: clamp(24px, 3vw, 36px);
+        max-width: 100%;
+        padding: clamp(16px, 2vw, 24px);
     }
 
     .onboarding-footer {
-        max-width: 600px;
-        padding: clamp(20px, 2.5vw, 28px) clamp(24px, 3vw, 36px);
+        max-width: 100%;
+        padding: clamp(14px, 1.8vw, 20px) clamp(16px, 2vw, 24px);
     }
 
     /* Enhanced typography for ultra-wide - Moderate sizing */
@@ -933,15 +940,15 @@
 /* Tablet-specific adjustments (768px - 1024px) */
 @media (min-width: 768px) and (max-width: 1024px) {
     .onboarding-screen {
-        grid-template-columns: 45% 55%;
+        grid-template-columns: 50% 50%;
     }
 
     .onboarding-content {
-        max-width: 500px;
+        max-width: 100%;
     }
 
     .onboarding-footer {
-        max-width: 500px;
+        max-width: 100%;
     }
 }
 
@@ -1076,23 +1083,25 @@
 }
 
 @keyframes spin {
-    to { transform: translate(-50%, -50%) rotate(360deg); }
+    to {
+        transform: translate(-50%, -50%) rotate(360deg);
+    }
 }
 
-/* Desktop Button Enhancements */
+/* Desktop Button Enhancements - Compact */
 @media (min-width: 768px) {
     .onboarding-screen .btn-primary {
-        min-height: 60px;
-        height: 60px;
-        font-size: 1.125rem;
-        padding: 0 var(--space-3xl);
+        min-height: 52px;
+        height: 52px;
+        font-size: 1rem;
+        padding: 0 clamp(24px, 3vw, 36px);
     }
 
     .onboarding-back-btn {
-        top: var(--space-xl);
-        left: var(--space-xl);
-        padding: 12px 24px;
-        font-size: 1rem;
+        top: clamp(16px, 2vw, 24px);
+        left: clamp(16px, 2vw, 24px);
+        padding: 10px 20px;
+        font-size: 0.9375rem;
     }
 }
 
@@ -1142,7 +1151,7 @@
     border-width: 1.5px;
     background: rgba(10, 10, 15, 0.7);
     backdrop-filter: blur(16px);
-    box-shadow: 
+    box-shadow:
         0 10px 40px rgba(0, 0, 0, 0.3),
         inset 0 1px 0 rgba(255, 255, 255, 0.1);
 }
@@ -1175,10 +1184,13 @@
 }
 
 @keyframes pulse {
-    0%, 100% {
+
+    0%,
+    100% {
         opacity: 1;
         transform: scale(1);
     }
+
     50% {
         opacity: 0.8;
         transform: scale(1.05);
@@ -1215,7 +1227,7 @@
 .onboarding-option-card.selected {
     border-color: var(--primary);
     background: rgba(159, 239, 0, 0.08);
-    box-shadow: 
+    box-shadow:
         0 0 0 3px rgba(159, 239, 0, 0.2),
         0 12px 32px rgba(159, 239, 0, 0.3);
 }
@@ -1322,6 +1334,7 @@
     0% {
         transform: translateX(-100%);
     }
+
     100% {
         transform: translateX(100%);
     }
@@ -1360,12 +1373,15 @@
         top: -100%;
         opacity: 0;
     }
+
     10% {
         opacity: 1;
     }
+
     90% {
         opacity: 1;
     }
+
     100% {
         top: 100%;
         opacity: 0;
@@ -1398,6 +1414,7 @@
     0% {
         transform: translateY(0);
     }
+
     100% {
         transform: translateY(400px);
     }
@@ -1410,10 +1427,21 @@
     animation: typeLine 0.5s ease forwards;
 }
 
-.onboarding-terminal-line:nth-child(1) { animation-delay: 0.2s; }
-.onboarding-terminal-line:nth-child(2) { animation-delay: 0.6s; }
-.onboarding-terminal-line:nth-child(3) { animation-delay: 1s; }
-.onboarding-terminal-line:nth-child(4) { animation-delay: 1.4s; }
+.onboarding-terminal-line:nth-child(1) {
+    animation-delay: 0.2s;
+}
+
+.onboarding-terminal-line:nth-child(2) {
+    animation-delay: 0.6s;
+}
+
+.onboarding-terminal-line:nth-child(3) {
+    animation-delay: 1s;
+}
+
+.onboarding-terminal-line:nth-child(4) {
+    animation-delay: 1.4s;
+}
 
 @keyframes typeLine {
     to {
@@ -1431,10 +1459,14 @@
 }
 
 @keyframes blink {
-    0%, 50% {
+
+    0%,
+    50% {
         opacity: 1;
     }
-    50.1%, 100% {
+
+    50.1%,
+    100% {
         opacity: 0;
     }
 }
@@ -1467,42 +1499,54 @@
 }
 
 @keyframes circuitFlowH {
-    0%, 100% {
+
+    0%,
+    100% {
         transform: scaleX(0);
         transform-origin: left;
         opacity: 0;
     }
+
     10% {
         opacity: 1;
     }
+
     50% {
         transform: scaleX(1);
         opacity: 1;
     }
+
     51% {
         transform-origin: right;
     }
+
     90% {
         opacity: 1;
     }
 }
 
 @keyframes circuitFlowV {
-    0%, 100% {
+
+    0%,
+    100% {
         transform: scaleY(0);
         transform-origin: top;
         opacity: 0;
     }
+
     10% {
         opacity: 1;
     }
+
     50% {
         transform: scaleY(1);
         opacity: 1;
     }
+
     51% {
         transform-origin: bottom;
     }
+
     90% {
         opacity: 1;
     }
@@ -1519,10 +1563,13 @@
 }
 
 @keyframes nodePulse {
-    0%, 100% {
+
+    0%,
+    100% {
         transform: scale(1);
         opacity: 0.6;
     }
+
     50% {
         transform: scale(1.5);
         opacity: 1;
@@ -1536,15 +1583,21 @@
 }
 
 @keyframes glitch {
-    0%, 96%, 100% {
+
+    0%,
+    96%,
+    100% {
         transform: translate(0);
     }
+
     97% {
         transform: translate(-2px, 2px);
     }
+
     98% {
         transform: translate(2px, -2px);
     }
+
     99% {
         transform: translate(-2px, 2px);
     }
@@ -1574,28 +1627,38 @@
 }
 
 @keyframes glitchBefore {
-    0%, 96%, 100% {
+
+    0%,
+    96%,
+    100% {
         opacity: 0;
         transform: translate(0);
     }
+
     97% {
         opacity: 0.7;
         transform: translate(-2px, 0);
     }
+
     99% {
         opacity: 0;
     }
 }
 
 @keyframes glitchAfter {
-    0%, 96%, 100% {
+
+    0%,
+    96%,
+    100% {
         opacity: 0;
         transform: translate(0);
     }
+
     98% {
         opacity: 0.7;
         transform: translate(2px, 0);
     }
+
     100% {
         opacity: 0;
     }
@@ -1625,12 +1688,15 @@
         transform: translate(0, 0);
         opacity: 0;
     }
+
     10% {
         opacity: 1;
     }
+
     90% {
         opacity: 1;
     }
+
     100% {
         transform: translate(var(--tx), var(--ty));
         opacity: 0;
@@ -1646,11 +1712,10 @@
     position: absolute;
     width: 100%;
     height: 2px;
-    background: linear-gradient(90deg, 
-        transparent, 
-        rgba(159, 239, 0, 0.8) 50%, 
-        transparent
-    );
+    background: linear-gradient(90deg,
+            transparent,
+            rgba(159, 239, 0, 0.8) 50%,
+            transparent);
     box-shadow: 0 0 20px rgba(159, 239, 0, 0.6);
     animation: scanBeam 3s ease-in-out infinite;
 }
@@ -1660,12 +1725,15 @@
         top: 0;
         opacity: 0;
     }
+
     10% {
         opacity: 1;
     }
+
     90% {
         opacity: 1;
     }
+
     100% {
         top: 100%;
         opacity: 0;
@@ -1691,6 +1759,7 @@
     from {
         transform: translateX(100%);
     }
+
     to {
         transform: translateX(-100%);
     }
@@ -1708,20 +1777,22 @@
 
 .onboarding-cyber-progress-fill {
     height: 100%;
-    background: linear-gradient(90deg, 
-        var(--primary-dark), 
-        var(--primary), 
-        var(--primary-light)
-    );
+    background: linear-gradient(90deg,
+            var(--primary-dark),
+            var(--primary),
+            var(--primary-light));
     box-shadow: 0 0 12px rgba(159, 239, 0, 0.8);
     position: relative;
     animation: progressPulse 2s ease-in-out infinite;
 }
 
 @keyframes progressPulse {
-    0%, 100% {
+
+    0%,
+    100% {
         box-shadow: 0 0 12px rgba(159, 239, 0, 0.8);
     }
+
     50% {
         box-shadow: 0 0 20px rgba(159, 239, 0, 1);
     }
@@ -1734,11 +1805,10 @@
     left: 0;
     right: 0;
     bottom: 0;
-    background: linear-gradient(90deg, 
-        transparent 0%, 
-        rgba(255, 255, 255, 0.5) 50%, 
-        transparent 100%
-    );
+    background: linear-gradient(90deg,
+            transparent 0%,
+            rgba(255, 255, 255, 0.5) 50%,
+            transparent 100%);
     animation: progressShine 2s linear infinite;
 }
 
@@ -1746,6 +1816,7 @@
     0% {
         transform: translateX(-100%);
     }
+
     100% {
         transform: translateX(200%);
     }
@@ -1779,10 +1850,14 @@
 }
 
 @keyframes dotBounce {
-    0%, 60%, 100% {
+
+    0%,
+    60%,
+    100% {
         transform: translateY(0);
         opacity: 0.7;
     }
+
     30% {
         transform: translateY(-12px);
         opacity: 1;
@@ -1791,6 +1866,7 @@
 
 /* Disable animations for reduced motion */
 @media (prefers-reduced-motion: reduce) {
+
     .onboarding-matrix-column,
     .onboarding-terminal::before,
     .onboarding-terminal-cursor,
@@ -1875,6 +1951,7 @@
 
 /* Print styles */
 @media print {
+
     .onboarding-bg-grid,
     .onboarding-left-panel,
     .onboarding-skip-btn,
@@ -1885,5 +1962,189 @@
     .onboarding-screen {
         background: white !important;
         color: black !important;
+    }
+}
+
+/* ============================================
+   DESKTOP OPTIMIZATIONS (Fix for Large Screens)
+   ============================================ */
+@media (min-width: 1024px) {
+
+    /* 1. Global Desktop Layout Structure */
+    .onboarding-screen {
+        /* Force single viewport page */
+        height: 100vh;
+        max-height: 100vh;
+        overflow: hidden;
+        /* No scrollbars by default */
+        display: grid;
+        grid-template-columns: 50% 50%;
+        grid-template-areas: "left right";
+    }
+
+    /* Left Panel (Illustration) */
+    .onboarding-left-panel {
+        grid-area: left;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        height: 100%;
+        padding: 40px;
+    }
+
+    /* Right Panel (Content) container */
+    .onboarding-content {
+        grid-area: right;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        /* Vertical Center */
+        align-items: flex-start;
+        /* Left Align */
+        text-align: left;
+
+        padding: 0 80px;
+        /* Horizontal padding only */
+        max-width: 720px;
+        margin: 0;
+        /* Removing auto margins */
+
+        height: 100%;
+        /* Fill vertical space */
+        overflow-y: hidden;
+        /* Prevent internal scroll if possible */
+        position: relative;
+    }
+
+    /* Fallback for very short screens */
+    @media (max-height: 750px) {
+        .onboarding-content {
+            overflow-y: auto;
+            display: block;
+            /* Switch to block to allow scroll */
+            padding-top: 60px;
+        }
+    }
+
+    /* 2. Typography - Compacted for Desktop */
+    .onboarding-welcome-title {
+        font-size: 2.25rem;
+        line-height: 1.1;
+        margin-bottom: 16px;
+    }
+
+    .onboarding-welcome-subtitle {
+        font-size: 1.05rem;
+        margin-bottom: 24px;
+        max-width: 100%;
+    }
+
+    .onboarding-question-title {
+        font-size: 1.75rem;
+        margin-bottom: 12px;
+    }
+
+    .onboarding-question-subtitle {
+        margin-left: 0;
+        margin-bottom: 32px;
+    }
+
+    /* 3. Grid for Options - Z-Index & Gap Fix */
+    .onboarding-options-grid {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 24px;
+        /* Wide gap as requested */
+        width: 100%;
+        margin-bottom: 32px;
+        perspective: 1000px;
+        /* For 3D fx if present */
+    }
+
+    .onboarding-option-card {
+        height: 100%;
+        text-align: left;
+        align-items: flex-start;
+        padding: 20px 24px;
+
+        /* Critical Z-Index Stacking Fix */
+        position: relative;
+        z-index: 1;
+        transform-style: preserve-3d;
+        overflow: visible;
+        /* Allow radio circle to protrude if needed */
+    }
+
+    /* Selected card needs to be 'higher' to show radio circle over neighbors */
+    .onboarding-option-card.selected {
+        z-index: 10;
+        border-color: var(--neon-green);
+        box-shadow: 0 0 0 1px var(--neon-green), 0 10px 40px -10px rgba(159, 239, 0, 0.3);
+    }
+
+    /* Make Radio Circle Visible */
+    .onboarding-option-card .onboarding-option-radio {
+        z-index: 20;
+        background: var(--bg-card);
+        /* Ensure no see-through */
+    }
+
+    .onboarding-option-card.selected .onboarding-option-radio {
+        background: var(--neon-green);
+        box-shadow: 0 0 15px var(--neon-green);
+    }
+
+    /* 4. Spinner Fix for Analysis Page */
+    .onboarding-analysis-spinner {
+        display: flex;
+        /* Flex centering is more stable than absolute */
+        align-items: center;
+        justify-content: center;
+        margin: 0 auto 40px auto;
+    }
+
+    .onboarding-spinner-icon {
+        position: relative;
+        top: auto;
+        left: auto;
+        transform: none;
+    }
+
+    /* 5. Component Specifics */
+    .onboarding-welcome-stats {
+        width: 100%;
+        justify-content: flex-start;
+        padding: 20px 32px;
+        gap: 40px;
+    }
+
+    /* Button sizing */
+    .onboarding-screen .btn-full {
+        width: auto;
+        min-width: 240px;
+        display: inline-flex;
+    }
+
+    /* Skip button fixed position */
+    .onboarding-skip-btn {
+        position: absolute;
+        top: 40px;
+        right: 40px;
+        z-index: 50;
+    }
+
+    /* Badges */
+    .onboarding-trust-badges {
+        justify-content: flex-start;
+    }
+
+    /* Center alignment overrides for specific pages */
+    .onboarding-content:has(.premium-badge) {
+        align-items: center;
+        text-align: center;
+    }
+
+    .onboarding-content:has(.premium-badge) .onboarding-welcome-title {
+        text-align: center;
     }
 }
