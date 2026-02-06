@@ -451,6 +451,8 @@
     gap: var(--space-xl);
     scroll-behavior: smooth;
     -webkit-overflow-scrolling: touch;
+    width: 100%;
+    box-sizing: border-box;
 }
 
 @media (max-width: 768px) {

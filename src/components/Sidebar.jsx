@@ -34,6 +34,9 @@ export default function Sidebar() {
 
     const isActive = (path) => location.pathname === path;
 
+    // Hide logout button on Profile and Settings pages on desktop
+    const shouldShowLogout = !['/profile', '/settings'].includes(location.pathname);
+
     const handleLogout = async () => {
         try {
             await logout();
@@ -47,12 +50,12 @@ export default function Sidebar() {
         <aside className="sidebar">
             {/* Brand */}
             <div className="sidebar-brand">
-                <div className="brand-icon">
-                    <Zap size={24} strokeWidth={2.5} />
+                <div className="brand-logo">
+                    <img src="/logo.svg" alt="Bugora" />
                 </div>
                 <div className="brand-content">
                     <span className="brand-name">Bugora</span>
-                    <span className="brand-tagline">Elite Training</span>
+                    <span className="brand-tagline">Bug Bounty Platform</span>
                 </div>
             </div>
 
@@ -109,13 +112,15 @@ export default function Sidebar() {
                 </div>
             </nav>
 
-            {/* Logout Button */}
-            <div className="sidebar-footer">
-                <button className="logout-btn" onClick={handleLogout}>
-                    <LogOut size={20} strokeWidth={2} />
-                    <span>Logout</span>
-                </button>
-            </div>
+            {/* Logout Button - Hidden on Profile/Settings pages on desktop */}
+            {shouldShowLogout && (
+                <div className="sidebar-footer">
+                    <button className="logout-btn" onClick={handleLogout}>
+                        <LogOut size={20} strokeWidth={2} />
+                        <span>Logout</span>
+                    </button>
+                </div>
+            )}
         </aside>
     );
 }

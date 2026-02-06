@@ -124,10 +124,9 @@ export default function SignUp() {
             <div className="auth-content">
                 <div className="auth-logo">
                     <div className="logo-wrapper">
-                        <Shield size={40} strokeWidth={1.5} />
-                        <Bug className="logo-bug" size={18} />
+                        <img src="/logo.svg" alt="Bugora" className="logo-image" />
                     </div>
-                    <span className="logo-text">Bounty<span className="text-accent">Prep</span></span>
+                    <span className="logo-text">Bugo<span className="text-accent">ra</span></span>
                 </div>
 
                 <h1 className="auth-title">Create Your Account</h1>
