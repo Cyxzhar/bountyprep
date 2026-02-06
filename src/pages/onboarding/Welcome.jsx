@@ -74,8 +74,7 @@ export default function Welcome() {
                         </div>
 
                         <h1 className="onboarding-welcome-title">
-                            Master Bug Bounties<br />
-                            <span className="text-gradient">in 10 Minutes Daily</span>
+                            Master Bug Bounties in 10 Minutes Daily
                         </h1>
 
                         <p className="onboarding-welcome-subtitle">
@@ -124,7 +123,6 @@ export default function Welcome() {
                         Start Your Journey
                         <ChevronRight size={20} />
                     </button>
-                    <p className="onboarding-footer-text">Free to start • No credit card required</p>
                 </div>
             </div>
         </PageTransition>

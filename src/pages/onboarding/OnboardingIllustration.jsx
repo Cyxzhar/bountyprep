@@ -1,4 +1,4 @@
-import { memo } from 'react';
+import { memo, useState, useEffect } from 'react';
 import { DollarSign, Shield, Sword, Microscope, Flame } from 'lucide-react';
 
 /**
@@ -9,6 +9,52 @@ import { DollarSign, Shield, Sword, Microscope, Flame } from 'lucide-react';
 
 // Welcome: Lab setup with terminal
 function WelcomeIllustration() {
+  const [lines, setLines] = useState([
+    { text: '', type: 'command' }
+  ]);
+  const [cursorVisible, setCursorVisible] = useState(true);
+
+  // Blinking cursor effect
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setCursorVisible(v => !v);
+    }, 500);
+    return () => clearInterval(interval);
+  }, []);
+
+  // Typing sequence
+  useEffect(() => {
+    let timeout;
+    
+    const sequence = async () => {
+      // 1. Type command
+      const command = "$ bugora init";
+      for (let i = 1; i <= command.length; i++) {
+        await new Promise(r => setTimeout(r, 50));
+        setLines([{ text: command.slice(0, i), type: 'command' }]);
+      }
+
+      await new Promise(r => setTimeout(r, 400));
+
+      // 2. Output lines
+      setLines(prev => [...prev, { text: "Initializing lab environment...", type: 'info', opacity: 0.8 }]);
+      await new Promise(r => setTimeout(r, 300));
+      
+      setLines(prev => [...prev, { text: "[OK] Workspace ready", type: 'success', opacity: 0.6 }]);
+      await new Promise(r => setTimeout(r, 300));
+      
+      setLines(prev => [...prev, { text: "[OK] Tools loaded", type: 'success', opacity: 0.4 }]);
+      
+      // 3. Final prompt
+      await new Promise(r => setTimeout(r, 400));
+      setLines(prev => [...prev, { text: "$ _", type: 'prompt' }]);
+    };
+
+    sequence();
+
+    return () => clearTimeout(timeout);
+  }, []);
+
   return (
     <svg viewBox="0 0 500 600" fill="none" xmlns="http://www.w3.org/2000/svg" className="onboarding-illustration" preserveAspectRatio="xMidYMid meet">
       {/* Gradients */}
@@ -35,13 +81,24 @@ function WelcomeIllustration() {
         <circle cx="45" cy="15" r="4" fill="#27C93F" />
 
         {/* Terminal Text Lines */}
-        <text x="15" y="60" fontSize="12" fill="#9FEF00" fontFamily="monospace" className="terminal-text">$ bugora init</text>
-        <text x="15" y="85" fontSize="12" fill="#9FEF00" fontFamily="monospace" className="terminal-text" opacity="0.8">Initializing lab environment...</text>
-        <text x="15" y="110" fontSize="12" fill="#9FEF00" fontFamily="monospace" className="terminal-text" opacity="0.6">[OK] Workspace ready</text>
-        <text x="15" y="135" fontSize="12" fill="#9FEF00" fontFamily="monospace" className="terminal-text" opacity="0.4">[OK] Tools loaded</text>
-
-        {/* Cursor */}
-        <rect x="15" y="155" width="8" height="14" fill="#9FEF00" className="onboarding-terminal-cursor" />
+        {lines.map((line, index) => (
+          <text 
+            key={index} 
+            x="15" 
+            y={60 + (index * 25)} 
+            fontSize="12" 
+            fill="#9FEF00" 
+            fontFamily="monospace" 
+            className="terminal-text"
+            opacity={line.opacity || 1}
+          >
+            {line.text === "$ _" ? (
+              <>
+                $ <tspan opacity={cursorVisible ? 1 : 0}>_</tspan>
+              </>
+            ) : line.text}
+          </text>
+        ))}
       </g>
 
       {/* Floating Code Symbols */}

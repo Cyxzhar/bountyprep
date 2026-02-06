@@ -32,8 +32,8 @@ export default function OnboardingProgress({ currentStep }) {
                     >
                         <div className={`onboarding-progress-dot ${step.id === currentStep ? 'active' : step.id < currentStep ? 'completed' : ''}`}>
                             {step.id < currentStep && (
-                                <svg width="12" height="12" viewBox="0 0 12 12" fill="none">
-                                    <path d="M2 6L5 9L10 3" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+                                <svg width="10" height="10" viewBox="0 0 12 12" fill="none">
+                                    <path d="M2 6L5 9L10 3" stroke="#000" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" />
                                 </svg>
                             )}
                         </div>

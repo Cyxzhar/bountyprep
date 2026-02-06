@@ -22,12 +22,13 @@
 
 .onboarding-progress-step.clickable:hover .onboarding-progress-dot {
     transform: scale(1.15);
-    box-shadow: 0 0 15px rgba(0, 212, 255, 0.4);
+    box-shadow: 0 0 15px rgba(159, 239, 0, 0.6);
+    border-color: var(--neon-green);
 }
 
 .onboarding-progress-dot {
-    width: 12px;
-    height: 12px;
+    width: 14px;
+    height: 14px;
     border-radius: 50%;
     background: var(--bg-card);
     border: 2px solid var(--border-color);
@@ -38,32 +39,43 @@
 }
 
 .onboarding-progress-dot.active {
-    width: 16px;
-    height: 16px;
+    width: 18px;
+    height: 18px;
+    background: var(--bg-dark);
+    border: 2px solid var(--neon-green);
+    box-shadow: 0 0 15px rgba(159, 239, 0, 0.5);
+}
+
+/* Inner dot for active state */
+.onboarding-progress-dot.active::after {
+    content: '';
+    width: 6px;
+    height: 6px;
     background: var(--neon-green);
-    border-color: var(--neon-green);
-    box-shadow: 0 0 12px rgba(159, 239, 0, 0.4);
+    border-radius: 50%;
+    box-shadow: 0 0 5px var(--neon-green);
 }
 
 .onboarding-progress-dot.completed {
-    background: linear-gradient(135deg, #00d4ff, #0099cc);
-    border-color: #00d4ff;
-    width: 14px;
-    height: 14px;
-    box-shadow: 0 0 10px rgba(0, 212, 255, 0.3);
+    background: var(--neon-green);
+    border-color: var(--neon-green);
+    width: 16px;
+    height: 16px;
+    box-shadow: 0 0 10px rgba(159, 239, 0, 0.3);
 }
 
 .onboarding-progress-line {
     width: 40px;
-    height: 2px;
-    background: var(--border-color);
+    height: 3px; /* Thicker line */
+    background: rgba(255, 255, 255, 0.1);
     margin: 0 8px;
     transition: all var(--transition-fast);
+    border-radius: 4px;
 }
 
 .onboarding-progress-line.completed {
-    background: linear-gradient(90deg, #00d4ff, #0099cc);
-    box-shadow: 0 0 4px rgba(0, 212, 255, 0.4);
+    background: var(--neon-green);
+    box-shadow: 0 0 8px rgba(159, 239, 0, 0.4);
 }
 
 /* Responsive */

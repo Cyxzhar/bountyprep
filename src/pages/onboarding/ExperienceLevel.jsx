@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
-import { Sprout, BookOpen, Rocket, ChevronRight } from 'lucide-react';
+import { Sprout, BookOpen, Rocket, ChevronRight, ChevronLeft } from 'lucide-react';
 import PageTransition, { SLIDE_LEFT, SLIDE_RIGHT } from '../../components/PageTransition/PageTransition';
 import OnboardingProgress from '../../components/OnboardingProgress/OnboardingProgress';
 import OnboardingIllustration from './OnboardingIllustration';
@@ -19,10 +19,20 @@ export default function ExperienceLevel() {
 
     const direction = location.state?.direction === 'back' ? SLIDE_RIGHT : SLIDE_LEFT;
 
+    const handleBack = () => {
+        navigate('/onboarding/goal', { state: { direction: 'back' } });
+    };
+
     return (
         <PageTransition pageName="onboarding-experience" direction={direction}>
             <div className="onboarding-screen">
                 <div className="onboarding-bg-grid"></div>
+
+                {/* Back Button */}
+                <button className="onboarding-back-btn" onClick={handleBack}>
+                    <ChevronLeft size={20} />
+                    Back
+                </button>
 
                 {/* Left Panel Illustration (Desktop Only) */}
                 <OnboardingIllustration step="experience" />

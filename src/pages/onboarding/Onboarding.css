@@ -31,25 +31,29 @@
 /* Skip Button */
 .onboarding-skip-btn {
     position: absolute;
-    top: calc(var(--space-md) + env(safe-area-inset-top));
-    right: var(--space-md);
+    top: calc(16px + env(safe-area-inset-top)); /* Fixed top spacing */
+    right: 16px; /* Fixed right spacing */
     display: flex;
     align-items: center;
-    gap: var(--space-xs);
-    background: transparent;
-    border: none;
-    color: var(--text-muted);
-    font-size: clamp(0.875rem, 1vw + 0.5rem, 0.9375rem);
-    line-height: 1.4;
-    font-weight: 500;
+    gap: 6px;
+    padding: 8px 16px; /* Larger touch target */
+    background: rgba(0, 0, 0, 0.4); /* Darker background for contrast */
+    border: 1px solid rgba(255, 255, 255, 0.1); /* Subtle border */
+    border-radius: 100px; /* Pill shape */
+    color: rgba(255, 255, 255, 0.9); /* High contrast text */
+    font-size: 0.875rem;
+    font-weight: 600;
     letter-spacing: 0.02em;
     cursor: pointer;
-    z-index: 10;
-    transition: color var(--transition-fast);
+    z-index: 100; /* Ensure it stays on top */
+    backdrop-filter: blur(8px); /* Blur effect */
+    transition: all 0.2s ease;
 }
 
 .onboarding-skip-btn:hover {
-    color: var(--text-secondary);
+    background: rgba(255, 255, 255, 0.1);
+    color: #fff;
+    border-color: rgba(255, 255, 255, 0.3);
 }
 
 /* Content */
@@ -1029,7 +1033,7 @@
 /* Back Button (for future implementation) */
 .onboarding-back-btn {
     position: absolute;
-    top: calc(var(--space-md) + env(safe-area-inset-top));
+    top: calc(11px + env(safe-area-inset-top));
     left: var(--space-md);
     display: flex;
     align-items: center;
@@ -1972,14 +1976,15 @@
 
     /* 1. Global Desktop Layout Structure */
     .onboarding-screen {
-        /* Force single viewport page */
         height: 100vh;
         max-height: 100vh;
         overflow: hidden;
-        /* No scrollbars by default */
         display: grid;
         grid-template-columns: 50% 50%;
-        grid-template-areas: "left right";
+        grid-template-rows: 1fr auto;
+        grid-template-areas:
+            "left right"
+            "left footer";
     }
 
     /* Left Panel (Illustration) */
@@ -1990,6 +1995,7 @@
         justify-content: center;
         height: 100%;
         padding: 40px;
+        background: radial-gradient(circle at center, #1a1a24 0%, #000000 100%);
     }
 
     /* Right Panel (Content) container */
@@ -1998,153 +2004,197 @@
         display: flex;
         flex-direction: column;
         justify-content: center;
-        /* Vertical Center */
         align-items: flex-start;
-        /* Left Align */
         text-align: left;
 
-        padding: 0 80px;
-        /* Horizontal padding only */
-        max-width: 720px;
-        margin: 0;
-        /* Removing auto margins */
-
+        /* Compact padding to avoid scroll */
+        padding: 60px 48px 16px;
+        width: 100%;
+        max-width: 600px;
+        margin: 0 auto;
         height: 100%;
-        /* Fill vertical space */
-        overflow-y: hidden;
-        /* Prevent internal scroll if possible */
+        overflow-y: hidden; /* Prevent scroll per user request */
         position: relative;
     }
 
-    /* Fallback for very short screens */
-    @media (max-height: 750px) {
-        .onboarding-content {
-            overflow-y: auto;
-            display: block;
-            /* Switch to block to allow scroll */
-            padding-top: 60px;
-        }
-    }
-
-    /* 2. Typography - Compacted for Desktop */
+    /* 2. Compact Typography */
     .onboarding-welcome-title {
-        font-size: 2.25rem;
-        line-height: 1.1;
-        margin-bottom: 16px;
+        font-size: 2rem !important; /* Increased to 2rem per request */
+        line-height: 1.2;
+        margin-bottom: 12px;
+        white-space: break-spaces;
+        max-width: 100%;
+        text-align: left;
     }
 
     .onboarding-welcome-subtitle {
-        font-size: 1.05rem;
+        font-size: 1rem;
         margin-bottom: 24px;
         max-width: 100%;
     }
 
     .onboarding-question-title {
-        font-size: 1.75rem;
+        font-size: 1.75rem; /* Reduced */
         margin-bottom: 12px;
     }
 
     .onboarding-question-subtitle {
+        font-size: 0.95rem;
         margin-left: 0;
-        margin-bottom: 32px;
+        margin-bottom: 24px;
+    }
+    
+    /* 3. Compact Stats & Badges */
+    .onboarding-welcome-stats {
+        width: 100%;
+        justify-content: flex-start;
+        padding: 16px 24px;
+        gap: 32px;
+        margin-bottom: 24px;
+    }
+    
+    .onboarding-stat-value {
+        font-size: 1.25rem;
     }
 
-    /* 3. Grid for Options - Z-Index & Gap Fix */
+    .onboarding-trust-badges {
+        justify-content: flex-start;
+        gap: 10px; /* Tighter gap to ensure fit */
+        margin-bottom: 32px;
+        flex-wrap: nowrap;
+        width: 100%;
+        overflow-x: hidden; /* Prevent scrollbar, clip if absolutely necessary */
+        display: flex;
+    }
+    
+    .onboarding-trust-badge {
+        padding: 6px 10px; /* Minimal padding */
+        font-size: 0.75rem;
+        white-space: nowrap;
+        flex: 0 1 auto; /* Allow shrinking but prefer auto width */
+        min-width: 0; /* Enable shrinking below content size if needed */
+        text-overflow: ellipsis;
+        overflow: hidden;
+    }
+
+    /* 4. Compact Options Grid */
     .onboarding-options-grid {
         display: grid;
         grid-template-columns: repeat(2, 1fr);
-        gap: 24px;
-        /* Wide gap as requested */
+        gap: 16px; /* Reduced gap */
         width: 100%;
-        margin-bottom: 32px;
-        perspective: 1000px;
-        /* For 3D fx if present */
+        margin-bottom: 24px;
     }
 
     .onboarding-option-card {
-        height: 100%;
-        text-align: left;
+        flex-direction: column;
         align-items: flex-start;
-        padding: 20px 24px;
-
-        /* Critical Z-Index Stacking Fix */
+        text-align: left;
+        padding: 16px; /* Compact padding */
+        min-height: auto; /* Allow auto height */
+        
+        /* Fix overlapping/intersection */
         position: relative;
         z-index: 1;
-        transform-style: preserve-3d;
-        overflow: visible;
-        /* Allow radio circle to protrude if needed */
+        transform: translateZ(0); /* Hardware accelerate */
+        background: var(--bg-card); /* Ensure solid background */
     }
 
-    /* Selected card needs to be 'higher' to show radio circle over neighbors */
-    .onboarding-option-card.selected {
-        z-index: 10;
-        border-color: var(--neon-green);
-        box-shadow: 0 0 0 1px var(--neon-green), 0 10px 40px -10px rgba(159, 239, 0, 0.3);
+    .onboarding-option-icon {
+        width: 40px;
+        height: 40px;
+        margin-bottom: 12px;
     }
-
-    /* Make Radio Circle Visible */
-    .onboarding-option-card .onboarding-option-radio {
+    
+    .onboarding-option-title {
+        font-size: 1rem;
+    }
+    
+    .onboarding-option-desc {
+        font-size: 0.85rem;
+        line-height: 1.4;
+    }
+    
+    /* Radio Button Positioning Fix */
+    .onboarding-option-radio {
+        position: absolute;
+        top: 16px;
+        right: 16px;
+        width: 20px;
+        height: 20px;
         z-index: 20;
-        background: var(--bg-card);
-        /* Ensure no see-through */
     }
 
-    .onboarding-option-card.selected .onboarding-option-radio {
-        background: var(--neon-green);
-        box-shadow: 0 0 15px var(--neon-green);
-    }
-
-    /* 4. Spinner Fix for Analysis Page */
+    /* 5. Spinner Fix - Perfect Centering & Rotation */
     .onboarding-analysis-spinner {
-        display: flex;
-        /* Flex centering is more stable than absolute */
-        align-items: center;
-        justify-content: center;
-        margin: 0 auto 40px auto;
+        display: grid;
+        place-items: center;
+        width: 80px;
+        height: 80px;
+        margin: 0 auto 32px auto;
+        position: relative;
+    }
+
+    .onboarding-spinner-ring {
+        position: absolute;
+        inset: 0;
+        width: 80px; /* Fixed width */
+        height: 80px; /* Fixed height */
+        border: 3px solid var(--border-color);
+        border-top-color: var(--neon-green);
+        border-radius: 50%;
+        box-sizing: border-box;
+        animation: spin 1s linear infinite;
+        transform-origin: center center;
     }
 
     .onboarding-spinner-icon {
         position: relative;
-        top: auto;
-        left: auto;
-        transform: none;
-    }
-
-    /* 5. Component Specifics */
-    .onboarding-welcome-stats {
+        z-index: 2;
+        display: flex;
+        align-items: center;
+        justify-content: center;
         width: 100%;
-        justify-content: flex-start;
-        padding: 20px 32px;
-        gap: 40px;
+        height: 100%;
     }
 
-    /* Button sizing */
+    /* 6. Footer & Skip Button */
+    .onboarding-footer {
+        grid-area: footer;
+        width: 100%;
+        max-width: 600px;
+        margin: 0 auto;
+        padding: 0 48px 32px;
+        justify-self: center;
+        /* Ensure footer doesn't float too high */
+        margin-top: auto; 
+    }
+    
     .onboarding-screen .btn-full {
         width: auto;
-        min-width: 240px;
+        min-width: 200px; /* Smaller min-width */
+        height: 48px; /* Compact button height */
         display: inline-flex;
     }
 
-    /* Skip button fixed position */
     .onboarding-skip-btn {
         position: absolute;
-        top: 40px;
-        right: 40px;
+        top: 32px;
+        right: 48px;
         z-index: 50;
     }
 
-    /* Badges */
-    .onboarding-trust-badges {
-        justify-content: flex-start;
-    }
-
-    /* Center alignment overrides for specific pages */
-    .onboarding-content:has(.premium-badge) {
+    /* 7. Specific Page Overrides */
+    
+    /* Center alignment for analysis/paywall/welcome if needed */
+    .onboarding-content:has(.premium-badge),
+    .onboarding-content:has(.onboarding-analysis-spinner) {
         align-items: center;
         text-align: center;
     }
 
-    .onboarding-content:has(.premium-badge) .onboarding-welcome-title {
+    .onboarding-content:has(.premium-badge) .onboarding-welcome-title,
+    .onboarding-content:has(.onboarding-analysis-spinner) .onboarding-question-title {
         text-align: center;
     }
 }

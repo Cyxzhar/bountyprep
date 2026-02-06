@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
-import { DollarSign, Briefcase, Target, Wrench, ChevronRight } from 'lucide-react';
+import { DollarSign, Briefcase, Target, Wrench, ChevronRight, ChevronLeft } from 'lucide-react';
 import PageTransition, { SLIDE_LEFT, SLIDE_RIGHT } from '../../components/PageTransition/PageTransition';
 import OnboardingProgress from '../../components/OnboardingProgress/OnboardingProgress';
 import OnboardingIllustration from './OnboardingIllustration';
@@ -21,10 +21,20 @@ export default function GoalSelection() {
     // Use SLIDE_RIGHT if coming from a future step (back navigation)
     const direction = location.state?.direction === 'back' ? SLIDE_RIGHT : SLIDE_LEFT;
 
+    const handleBack = () => {
+        navigate('/onboarding/welcome', { state: { direction: 'back' } });
+    };
+
     return (
         <PageTransition pageName="onboarding-goal" direction={direction}>
             <div className="onboarding-screen">
                 <div className="onboarding-bg-grid"></div>
+
+                {/* Back Button */}
+                <button className="onboarding-back-btn" onClick={handleBack}>
+                    <ChevronLeft size={20} />
+                    Back
+                </button>
 
                 {/* Left Panel Illustration (Desktop Only) */}
                 <OnboardingIllustration step="goal" />
