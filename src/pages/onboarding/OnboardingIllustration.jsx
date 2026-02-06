@@ -1,4 +1,5 @@
 import { memo } from 'react';
+import { DollarSign, Shield, Sword, Microscope, Flame } from 'lucide-react';
 
 /**
  * Onboarding Left Panel Illustrations
@@ -9,7 +10,7 @@ import { memo } from 'react';
 // Welcome: Lab setup with terminal
 function WelcomeIllustration() {
   return (
-    <svg viewBox="0 0 600 800" fill="none" xmlns="http://www.w3.org/2000/svg" className="onboarding-illustration">
+    <svg viewBox="0 0 500 600" fill="none" xmlns="http://www.w3.org/2000/svg" className="onboarding-illustration" preserveAspectRatio="xMidYMid meet">
       {/* Gradients */}
       <defs>
         <linearGradient id="welcomeGradient" x1="0%" y1="0%" x2="100%" y2="100%">
@@ -23,7 +24,7 @@ function WelcomeIllustration() {
       </defs>
 
       {/* Central Terminal Window */}
-      <g className="terminal-window" transform="translate(150, 200)">
+      <g className="terminal-window" transform="translate(100, 150)">
         {/* Window Frame */}
         <rect x="0" y="0" width="300" height="400" rx="8" fill="none" stroke="url(#welcomeGradient)" strokeWidth="2" />
         <rect x="0" y="0" width="300" height="30" rx="8" fill="rgba(159, 239, 0, 0.1)" />
@@ -58,7 +59,7 @@ function WelcomeIllustration() {
       </g>
 
       {/* Glow Effect */}
-      <circle cx="300" cy="400" r="200" fill="url(#welcomeGlow)" />
+      <circle cx="250" cy="300" r="180" fill="url(#welcomeGlow)" />
     </svg>
   );
 }
@@ -66,7 +67,7 @@ function WelcomeIllustration() {
 // Goal: Target with pathways
 function GoalIllustration() {
   return (
-    <svg viewBox="0 0 600 800" fill="none" xmlns="http://www.w3.org/2000/svg" className="onboarding-illustration">
+    <svg viewBox="0 0 500 600" fill="none" xmlns="http://www.w3.org/2000/svg" className="onboarding-illustration" preserveAspectRatio="xMidYMid meet">
       <defs>
         <linearGradient id="goalGradient" x1="0%" y1="0%" x2="100%" y2="100%">
           <stop offset="0%" stopColor="#9FEF00" />
@@ -79,8 +80,8 @@ function GoalIllustration() {
       </defs>
 
       {/* Central Target */}
-      <g className="target-center" transform="translate(300, 400)">
-        <circle cx="0" cy="0" r="200" fill="url(#goalGlow)" className="shield-glow" />
+      <g className="target-center" transform="translate(250, 300)">
+        <circle cx="0" cy="0" r="160" fill="url(#goalGlow)" className="shield-glow" />
         <circle cx="0" cy="0" r="100" fill="none" stroke="#9FEF00" strokeWidth="3" opacity="0.2" />
         <circle cx="0" cy="0" r="70" fill="none" stroke="#9FEF00" strokeWidth="3" opacity="0.4" />
         <circle cx="0" cy="0" r="40" fill="none" stroke="#9FEF00" strokeWidth="3" opacity="0.6" />
@@ -94,31 +95,39 @@ function GoalIllustration() {
       {/* Pathways */}
       <g className="pathways">
         {/* Bug Bounty Path */}
-        <g transform="translate(100, 150)">
-          <circle cx="0" cy="0" r="30" fill="rgba(159, 239, 0, 0.1)" stroke="#9FEF00" strokeWidth="2" />
-          <text x="-15" y="5" fontSize="24" fill="#9FEF00">$</text>
-          <path d="M 30 20 L 150 250" stroke="#9FEF00" strokeWidth="2" strokeDasharray="5,5" opacity="0.5" className="circuit-line" />
+        <g transform="translate(70, 110)">
+          <circle cx="0" cy="0" r="28" fill="rgba(159, 239, 0, 0.1)" stroke="#9FEF00" strokeWidth="2" />
+          <foreignObject x="-12" y="-12" width="24" height="24">
+            <DollarSign size={24} color="#9FEF00" />
+          </foreignObject>
+          <path d="M 28 18 L 140 180" stroke="#9FEF00" strokeWidth="2" strokeDasharray="5,5" opacity="0.5" className="circuit-line" />
         </g>
 
         {/* Security Analyst Path */}
-        <g transform="translate(500, 200)">
-          <circle cx="0" cy="0" r="30" fill="rgba(159, 239, 0, 0.1)" stroke="#9FEF00" strokeWidth="2" />
-          <text x="-12" y="8" fontSize="30" fill="#9FEF00">🛡</text>
-          <path d="M -30 20 L -150 200" stroke="#9FEF00" strokeWidth="2" strokeDasharray="5,5" opacity="0.5" className="circuit-line" />
+        <g transform="translate(430, 150)">
+          <circle cx="0" cy="0" r="28" fill="rgba(159, 239, 0, 0.1)" stroke="#9FEF00" strokeWidth="2" />
+          <foreignObject x="-12" y="-12" width="24" height="24">
+            <Shield size={24} color="#9FEF00" />
+          </foreignObject>
+          <path d="M -28 18 L -120 140" stroke="#9FEF00" strokeWidth="2" strokeDasharray="5,5" opacity="0.5" className="circuit-line" />
         </g>
 
         {/* Pentester Path */}
-        <g transform="translate(150, 650)">
-          <circle cx="0" cy="0" r="30" fill="rgba(159, 239, 0, 0.1)" stroke="#9FEF00" strokeWidth="2" />
-          <text x="-12" y="8" fontSize="28" fill="#9FEF00">⚔️</text>
-          <path d="M 30 -20 L 120 -200" stroke="#9FEF00" strokeWidth="2" strokeDasharray="5,5" opacity="0.5" className="circuit-line" />
+        <g transform="translate(110, 490)">
+          <circle cx="0" cy="0" r="28" fill="rgba(159, 239, 0, 0.1)" stroke="#9FEF00" strokeWidth="2" />
+          <foreignObject x="-12" y="-12" width="24" height="24">
+            <Sword size={24} color="#9FEF00" />
+          </foreignObject>
+          <path d="M 28 -18 L 110 -150" stroke="#9FEF00" strokeWidth="2" strokeDasharray="5,5" opacity="0.5" className="circuit-line" />
         </g>
 
         {/* Researcher Path */}
-        <g transform="translate(450, 600)">
-          <circle cx="0" cy="0" r="30" fill="rgba(159, 239, 0, 0.1)" stroke="#9FEF00" strokeWidth="2" />
-          <text x="-12" y="8" fontSize="26" fill="#9FEF00">🔬</text>
-          <path d="M -20 -30 L -100 -150" stroke="#9FEF00" strokeWidth="2" strokeDasharray="5,5" opacity="0.5" className="circuit-line" />
+        <g transform="translate(390, 450)">
+          <circle cx="0" cy="0" r="28" fill="rgba(159, 239, 0, 0.1)" stroke="#9FEF00" strokeWidth="2" />
+          <foreignObject x="-12" y="-12" width="24" height="24">
+            <Microscope size={24} color="#9FEF00" />
+          </foreignObject>
+          <path d="M -18 -28 L -90 -120" stroke="#9FEF00" strokeWidth="2" strokeDasharray="5,5" opacity="0.5" className="circuit-line" />
         </g>
       </g>
 
@@ -148,7 +157,7 @@ function GoalIllustration() {
 // Experience: Level progression visual
 function ExperienceIllustration() {
   return (
-    <svg viewBox="0 0 600 800" fill="none" xmlns="http://www.w3.org/2000/svg" className="onboarding-illustration">
+    <svg viewBox="0 0 500 600" fill="none" xmlns="http://www.w3.org/2000/svg" className="onboarding-illustration" preserveAspectRatio="xMidYMid meet">
       <defs>
         <linearGradient id="expGradient" x1="0%" y1="0%" x2="100%" y2="100%">
           <stop offset="0%" stopColor="#9FEF00" />
@@ -159,52 +168,52 @@ function ExperienceIllustration() {
       {/* Level Progression Steps */}
       <g className="level-steps">
         {/* Level 1 - Beginner */}
-        <g transform="translate(100, 650)" className="level-item">
-          <circle cx="0" cy="0" r="40" fill="rgba(159, 239, 0, 0.2)" stroke="#9FEF00" strokeWidth="3" />
-          <text x="-8" y="8" fontSize="24" fill="#9FEF00" fontWeight="bold">1</text>
-          <text x="-30" y="70" fontSize="14" fill="#9FEF00">Beginner</text>
-          <line x1="40" y1="-30" x2="180" y2="-130" stroke="#9FEF00" strokeWidth="3" />
+        <g transform="translate(80, 480)" className="level-item">
+          <circle cx="0" cy="0" r="30" fill="rgba(159, 239, 0, 0.15)" stroke="#9FEF00" strokeWidth="2" />
+          <text x="-6" y="6" fontSize="20" fill="#9FEF00" fontWeight="bold">1</text>
+          <text x="-26" y="50" fontSize="12" fill="#9FEF00">Beginner</text>
+          <line x1="28" y1="-20" x2="120" y2="-80" stroke="#9FEF00" strokeWidth="2" opacity="0.5" />
         </g>
 
         {/* Level 2 - Intermediate */}
-        <g transform="translate(280, 520)" className="level-item">
-          <circle cx="0" cy="0" r="45" fill="rgba(159, 239, 0, 0.3)" stroke="#9FEF00" strokeWidth="3" />
-          <text x="-10" y="8" fontSize="26" fill="#9FEF00" fontWeight="bold">2</text>
-          <text x="-45" y="75" fontSize="14" fill="#9FEF00">Intermediate</text>
-          <line x1="35" y1="-35" x2="135" y2="-120" stroke="#9FEF00" strokeWidth="3" />
+        <g transform="translate(200, 400)" className="level-item">
+          <circle cx="0" cy="0" r="33" fill="rgba(159, 239, 0, 0.2)" stroke="#9FEF00" strokeWidth="2" />
+          <text x="-8" y="7" fontSize="22" fill="#9FEF00" fontWeight="bold">2</text>
+          <text x="-38" y="55" fontSize="12" fill="#9FEF00">Intermediate</text>
+          <line x1="25" y1="-25" x2="90" y2="-80" stroke="#9FEF00" strokeWidth="2" opacity="0.5" />
         </g>
 
         {/* Level 3 - Advanced */}
-        <g transform="translate(415, 400)" className="level-item">
-          <circle cx="0" cy="0" r="50" fill="rgba(159, 239, 0, 0.4)" stroke="#9FEF00" strokeWidth="3" />
-          <text x="-12" y="10" fontSize="28" fill="#9FEF00" fontWeight="bold">3</text>
-          <text x="-40" y="80" fontSize="14" fill="#9FEF00">Advanced</text>
-          <line x1="-30" y1="-40" x2="-100" y2="-120" stroke="#9FEF00" strokeWidth="3" />
+        <g transform="translate(310, 320)" className="level-item">
+          <circle cx="0" cy="0" r="36" fill="rgba(159, 239, 0, 0.25)" stroke="#9FEF00" strokeWidth="2" />
+          <text x="-10" y="8" fontSize="24" fill="#9FEF00" fontWeight="bold">3</text>
+          <text x="-32" y="58" fontSize="12" fill="#9FEF00">Advanced</text>
+          <line x1="-22" y1="-28" x2="-70" y2="-80" stroke="#9FEF00" strokeWidth="2" opacity="0.5" />
         </g>
 
         {/* Level 4 - Expert */}
-        <g transform="translate(315, 280)" className="level-item">
-          <circle cx="0" cy="0" r="55" fill="rgba(159, 239, 0, 0.5)" stroke="#9FEF00" strokeWidth="3" />
-          <text x="-14" y="12" fontSize="30" fill="#9FEF00" fontWeight="bold">4</text>
-          <text x="-30" y="85" fontSize="14" fill="#9FEF00">Expert</text>
-          <polygon points="0,-70 15,-90 -15,-90" fill="#9FEF00" opacity="0.8" />
+        <g transform="translate(240, 240)" className="level-item">
+          <circle cx="0" cy="0" r="40" fill="rgba(159, 239, 0, 0.3)" stroke="#9FEF00" strokeWidth="2" />
+          <text x="-11" y="10" fontSize="26" fill="#9FEF00" fontWeight="bold">4</text>
+          <text x="-24" y="62" fontSize="12" fill="#9FEF00">Expert</text>
+          <polygon points="0,-52 10,-65 -10,-65" fill="#9FEF00" opacity="0.7" />
         </g>
       </g>
 
-      {/* Progress Bar */}
-      <g className="progress-visualization" transform="translate(50, 150)">
-        <rect x="0" y="0" width="500" height="12" rx="6" fill="rgba(255, 255, 255, 0.1)" />
-        <rect x="0" y="0" width="375" height="12" rx="6" fill="url(#expGradient)" className="onboarding-progress-fill">
-          <animate attributeName="width" from="0" to="375" dur="2s" fill="freeze" />
+      {/* Progress Bar - Properly constrained */}
+      <g className="progress-visualization" transform="translate(50, 130)">
+        <rect x="0" y="0" width="400" height="8" rx="4" fill="rgba(255, 255, 255, 0.1)" />
+        <rect x="0" y="0" width="300" height="8" rx="4" fill="url(#expGradient)">
+          <animate attributeName="width" from="0" to="300" dur="1.5s" fill="freeze" />
         </rect>
-        <text x="250" y="-15" fontSize="16" fill="#9FEF00" textAnchor="middle">75% Complete</text>
+        <text x="200" y="-12" fontSize="14" fill="#9FEF00" textAnchor="middle" opacity="0.8">75% Complete</text>
       </g>
 
       {/* Floating XP Icons */}
-      <g className="floating-xp" opacity="0.4">
-        <text x="450" y="200" fontSize="20" fill="#9FEF00" className="code-bracket">+50 XP</text>
-        <text x="100" y="400" fontSize="18" fill="#9FEF00" className="code-bracket">+100 XP</text>
-        <text x="500" y="550" fontSize="18" fill="#9FEF00" className="code-bracket">+150 XP</text>
+      <g className="floating-xp" opacity="0.3">
+        <text x="370" y="180" fontSize="16" fill="#9FEF00" className="code-bracket">+50</text>
+        <text x="70" y="340" fontSize="15" fill="#9FEF00" className="code-bracket">+100</text>
+        <text x="400" y="420" fontSize="15" fill="#9FEF00" className="code-bracket">+150</text>
       </g>
     </svg>
   );
@@ -213,7 +222,7 @@ function ExperienceIllustration() {
 // Commitment: Calendar/streak visual
 function CommitmentIllustration() {
   return (
-    <svg viewBox="0 0 600 800" fill="none" xmlns="http://www.w3.org/2000/svg" className="onboarding-illustration">
+    <svg viewBox="0 0 500 600" fill="none" xmlns="http://www.w3.org/2000/svg" className="onboarding-illustration" preserveAspectRatio="xMidYMid meet">
       <defs>
         <linearGradient id="commitGradient" x1="0%" y1="0%" x2="100%" y2="100%">
           <stop offset="0%" stopColor="#9FEF00" />
@@ -222,17 +231,17 @@ function CommitmentIllustration() {
       </defs>
 
       {/* Calendar Grid */}
-      <g className="calendar" transform="translate(100, 250)">
+      <g className="calendar" transform="translate(50, 80)">
         {/* Calendar Header */}
-        <rect x="0" y="0" width="400" height="60" rx="8" fill="rgba(159, 239, 0, 0.1)" stroke="#9FEF00" strokeWidth="2" />
-        <text x="200" y="38" fontSize="20" fill="#9FEF00" textAnchor="middle" fontWeight="bold">Daily Streak</text>
+        <rect x="0" y="0" width="350" height="50" rx="8" fill="rgba(159, 239, 0, 0.1)" stroke="#9FEF00" strokeWidth="2" />
+        <text x="175" y="32" fontSize="18" fill="#9FEF00" textAnchor="middle" fontWeight="bold">Daily Streak</text>
 
         {/* Calendar Body */}
-        <rect x="0" y="60" width="400" height="300" rx="8" fill="rgba(10, 10, 15, 0.8)" stroke="#9FEF00" strokeWidth="2" />
+        <rect x="0" y="50" width="350" height="250" rx="8" fill="rgba(10, 10, 15, 0.8)" stroke="#9FEF00" strokeWidth="2" />
 
         {/* Day Labels */}
         {['M', 'T', 'W', 'T', 'F', 'S', 'S'].map((day, i) => (
-          <text key={i} x={30 + i * 55} y="95" fontSize="14" fill="#9FEF00" opacity="0.6">{day}</text>
+          <text key={i} x={25 + i * 48} y="78" fontSize="12" fill="#9FEF00" opacity="0.6">{day}</text>
         ))}
 
         {/* Calendar Days (Activity Heatmap Style) */}
@@ -245,10 +254,10 @@ function CommitmentIllustration() {
           return (
             <rect
               key={i}
-              x={15 + col * 55}
-              y={110 + row * 50}
-              width="45"
-              height="40"
+              x={12 + col * 48}
+              y={92 + row * 42}
+              width="40"
+              height="35"
               rx="4"
               fill="#9FEF00"
               opacity={opacity}
@@ -270,10 +279,15 @@ function CommitmentIllustration() {
       </g>
 
       {/* Streak Counter */}
-      <g className="streak-counter" transform="translate(300, 600)">
-        <circle cx="0" cy="0" r="80" fill="rgba(159, 239, 0, 0.1)" stroke="#9FEF00" strokeWidth="3" className="shield-glow" />
-        <text x="0" y="-10" fontSize="48" fill="url(#commitGradient)" textAnchor="middle" fontWeight="bold">21</text>
-        <text x="0" y="25" fontSize="16" fill="#9FEF00" textAnchor="middle" opacity="0.8">Day Streak 🔥</text>
+      <g className="streak-counter" transform="translate(250, 500)">
+        <circle cx="0" cy="0" r="60" fill="rgba(159, 239, 0, 0.1)" stroke="#9FEF00" strokeWidth="3" className="shield-glow" />
+        <text x="0" y="-5" fontSize="40" fill="url(#commitGradient)" textAnchor="middle" fontWeight="bold">21</text>
+        <g transform="translate(-10, 20)">
+          <text x="-8" y="5" fontSize="14" fill="#9FEF00" textAnchor="middle" opacity="0.8">Day Streak</text>
+          <foreignObject x="35" y="-10" width="20" height="20">
+            <Flame size={18} color="#9FEF00" />
+          </foreignObject>
+        </g>
       </g>
 
       {/* Floating Checkmarks */}
@@ -289,7 +303,7 @@ function CommitmentIllustration() {
 // Analysis: Loading/processing animation
 function AnalysisIllustration() {
   return (
-    <svg viewBox="0 0 600 800" fill="none" xmlns="http://www.w3.org/2000/svg" className="onboarding-illustration">
+    <svg viewBox="0 0 500 600" fill="none" xmlns="http://www.w3.org/2000/svg" className="onboarding-illustration" preserveAspectRatio="xMidYMid meet">
       <defs>
         <linearGradient id="analysisGradient" x1="0%" y1="0%" x2="100%" y2="100%">
           <stop offset="0%" stopColor="#9FEF00" />
@@ -302,8 +316,8 @@ function AnalysisIllustration() {
       </defs>
 
       {/* Central Processing Core */}
-      <g className="processing-core" transform="translate(300, 400)">
-        <circle cx="0" cy="0" r="250" fill="url(#analysisGlow)" className="shield-glow" />
+      <g className="processing-core" transform="translate(250, 300)">
+        <circle cx="0" cy="0" r="200" fill="url(#analysisGlow)" className="shield-glow" />
 
         {/* Rotating Rings */}
         <circle cx="0" cy="0" r="100" fill="none" stroke="#9FEF00" strokeWidth="2" opacity="0.3" strokeDasharray="10,5">
@@ -357,10 +371,10 @@ function AnalysisIllustration() {
       <g className="data-lines">
         {[0, 45, 90, 135, 180, 225, 270, 315].map((angle, i) => {
           const rad = (angle * Math.PI) / 180;
-          const x1 = 300 + Math.cos(rad) * 180;
-          const y1 = 400 + Math.sin(rad) * 180;
-          const x2 = 300 + Math.cos(rad) * 280;
-          const y2 = 400 + Math.sin(rad) * 280;
+          const x1 = 250 + Math.cos(rad) * 140;
+          const y1 = 300 + Math.sin(rad) * 140;
+          const x2 = 250 + Math.cos(rad) * 220;
+          const y2 = 300 + Math.sin(rad) * 220;
 
           return (
             <line
@@ -387,22 +401,22 @@ function AnalysisIllustration() {
 
       {/* Status Text */}
       <g className="status-text">
-        <text x="300" y="150" fontSize="18" fill="#9FEF00" textAnchor="middle" opacity="0">
+        <text x="250" y="100" fontSize="16" fill="#9FEF00" textAnchor="middle" opacity="0">
           Analyzing your profile...
           <animate attributeName="opacity" values="0;1;1;0" dur="3s" repeatCount="indefinite" begin="0s" />
         </text>
-        <text x="300" y="150" fontSize="18" fill="#9FEF00" textAnchor="middle" opacity="0">
+        <text x="250" y="100" fontSize="16" fill="#9FEF00" textAnchor="middle" opacity="0">
           Generating personalized path...
           <animate attributeName="opacity" values="0;1;1;0" dur="3s" repeatCount="indefinite" begin="3s" />
         </text>
-        <text x="300" y="150" fontSize="18" fill="#9FEF00" textAnchor="middle" opacity="0">
+        <text x="250" y="100" fontSize="16" fill="#9FEF00" textAnchor="middle" opacity="0">
           Optimizing learning journey...
           <animate attributeName="opacity" values="0;1;1;0" dur="3s" repeatCount="indefinite" begin="6s" />
         </text>
       </g>
 
       {/* Progress Percentage */}
-      <text x="300" y="690" fontSize="32" fill="url(#analysisGradient)" textAnchor="middle" fontWeight="bold">
+      <text x="250" y="540" fontSize="28" fill="url(#analysisGradient)" textAnchor="middle" fontWeight="bold">
         <tspan>
           <animate attributeName="opacity" values="1" dur="0.1s" />
           85%
@@ -415,7 +429,7 @@ function AnalysisIllustration() {
 // Paywall: Premium features showcase
 function PaywallIllustration() {
   return (
-    <svg viewBox="0 0 600 800" fill="none" xmlns="http://www.w3.org/2000/svg" className="onboarding-illustration">
+    <svg viewBox="0 0 500 600" fill="none" xmlns="http://www.w3.org/2000/svg" className="onboarding-illustration" preserveAspectRatio="xMidYMid meet">
       <defs>
         <linearGradient id="premiumGradient" x1="0%" y1="0%" x2="100%" y2="100%">
           <stop offset="0%" stopColor="#9FEF00" />
@@ -429,8 +443,8 @@ function PaywallIllustration() {
       </defs>
 
       {/* Premium Badge/Crown */}
-      <g className="premium-badge" transform="translate(300, 250)">
-        <circle cx="0" cy="0" r="180" fill="url(#premiumGlow)" className="shield-glow" />
+      <g className="premium-badge" transform="translate(250, 180)">
+        <circle cx="0" cy="0" r="140" fill="url(#premiumGlow)" className="shield-glow" />
 
         {/* Crown */}
         <path
@@ -454,29 +468,29 @@ function PaywallIllustration() {
       {/* Feature Icons */}
       <g className="feature-showcase">
         {/* Unlimited Access */}
-        <g transform="translate(120, 480)">
-          <circle cx="0" cy="0" r="45" fill="rgba(159, 239, 0, 0.1)" stroke="#9FEF00" strokeWidth="2" />
-          <text x="0" y="8" fontSize="32" textAnchor="middle">∞</text>
-          <text x="0" y="75" fontSize="12" fill="#9FEF00" textAnchor="middle">Unlimited</text>
+        <g transform="translate(90, 380)">
+          <circle cx="0" cy="0" r="35" fill="rgba(159, 239, 0, 0.1)" stroke="#9FEF00" strokeWidth="2" />
+          <text x="0" y="6" fontSize="26" textAnchor="middle">∞</text>
+          <text x="0" y="60" fontSize="11" fill="#9FEF00" textAnchor="middle">Unlimited</text>
         </g>
 
         {/* AI Coach */}
-        <g transform="translate(300, 480)">
-          <circle cx="0" cy="0" r="45" fill="rgba(159, 239, 0, 0.1)" stroke="#9FEF00" strokeWidth="2" />
-          <text x="0" y="10" fontSize="28" textAnchor="middle">🤖</text>
-          <text x="0" y="75" fontSize="12" fill="#9FEF00" textAnchor="middle">AI Coach</text>
+        <g transform="translate(250, 380)">
+          <circle cx="0" cy="0" r="35" fill="rgba(159, 239, 0, 0.1)" stroke="#9FEF00" strokeWidth="2" />
+          <text x="0" y="8" fontSize="24" textAnchor="middle">🤖</text>
+          <text x="0" y="60" fontSize="11" fill="#9FEF00" textAnchor="middle">AI Coach</text>
         </g>
 
         {/* Expert Labs */}
-        <g transform="translate(480, 480)">
-          <circle cx="0" cy="0" r="45" fill="rgba(159, 239, 0, 0.1)" stroke="#9FEF00" strokeWidth="2" />
-          <text x="0" y="10" fontSize="28" textAnchor="middle">⚡</text>
-          <text x="0" y="75" fontSize="12" fill="#9FEF00" textAnchor="middle">Expert Labs</text>
+        <g transform="translate(410, 380)">
+          <circle cx="0" cy="0" r="35" fill="rgba(159, 239, 0, 0.1)" stroke="#9FEF00" strokeWidth="2" />
+          <text x="0" y="8" fontSize="24" textAnchor="middle">⚡</text>
+          <text x="0" y="60" fontSize="11" fill="#9FEF00" textAnchor="middle">Expert Labs</text>
         </g>
       </g>
 
       {/* Price Tag */}
-      <g className="price-tag" transform="translate(300, 650)">
+      <g className="price-tag" transform="translate(250, 500)">
         <rect x="-100" y="-50" width="200" height="80" rx="12" fill="rgba(159, 239, 0, 0.1)" stroke="#9FEF00" strokeWidth="2" />
         <text x="0" y="-10" fontSize="14" fill="#9FEF00" textAnchor="middle" opacity="0.8">Only</text>
         <text x="0" y="25" fontSize="36" fill="url(#premiumGradient)" textAnchor="middle" fontWeight="bold">$4.99</text>
@@ -487,9 +501,9 @@ function PaywallIllustration() {
       <g className="sparkles">
         {[...Array(12)].map((_, i) => {
           const angle = (i * 30 * Math.PI) / 180;
-          const radius = 200 + (i % 2) * 30;
-          const x = 300 + Math.cos(angle) * radius;
-          const y = 250 + Math.sin(angle) * radius;
+          const radius = 160 + (i % 2) * 25;
+          const x = 250 + Math.cos(angle) * radius;
+          const y = 180 + Math.sin(angle) * radius;
 
           return (
             <g key={i} transform={`translate(${x}, ${y})`}>
