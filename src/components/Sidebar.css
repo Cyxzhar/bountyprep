@@ -192,7 +192,7 @@
     height: auto !important;
     width: auto !important;
     background: transparent;
-    border: none;
+    border: 1px solid transparent;
     border-radius: var(--radius-md);
     color: var(--text-secondary);
     font-size: 0.9rem;
