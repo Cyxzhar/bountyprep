@@ -1,0 +1,9 @@
+/* BountyPrep Design System v2 - HackTheBox Inspired */
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap');
+
+/* Modular CSS Imports - Relative to src/styles/ */
+@import './global/variables.css';
+@import './global/reset.css';
+@import './global/typography.css';
+@import './global/utilities.css';
+@import './global/components.css';

@@ -1,0 +1,69 @@
+/* Modern CSS Reset & Base Styles */
+
+/* Box Sizing Reset */
+*,
+*::before,
+*::after {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    -webkit-tap-highlight-color: transparent;
+}
+
+/* Remove default focus outlines - we use custom styles */
+button,
+a,
+input,
+textarea,
+select {
+    outline: none;
+    touch-action: manipulation;
+}
+
+button:focus-visible,
+a:focus-visible,
+input:focus-visible {
+    outline: 2px solid var(--neon-green);
+    outline-offset: 2px;
+}
+
+html {
+    font-size: 16px;
+    scroll-behavior: smooth;
+    height: 100%;
+}
+
+body {
+    font-family: var(--font-main);
+    background: var(--bg-dark);
+    color: var(--text-primary);
+    line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    min-height: 100vh;
+    min-height: 100dvh;
+    overflow-x: hidden;
+    overscroll-behavior-y: none;
+    -webkit-user-select: none;
+    user-select: none;
+}
+
+/* Allow text selection on content */
+p,
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+span,
+li,
+input,
+textarea {
+    -webkit-user-select: text;
+    user-select: text;
+}
+
+#root {
+    min-height: 100vh;
+}

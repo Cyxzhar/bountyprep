@@ -1,0 +1,96 @@
+/* CSS Variables - Color Palette & Design Tokens */
+:root {
+    /* Primary Accent Colors - Bugora Cyberpunk Theme */
+    --primary: #9FEF00;
+    --primary-dark: #7BC100;
+    --primary-light: #B8FF33;
+    --accent-cyan: #00F0FF;
+    /* Cyber Blue */
+    --accent-green: #00FF9D;
+    /* Matrix Green */
+    --accent-orange: #FF5E00;
+    /* Warning Orange */
+    --accent-yellow: #FAFF00;
+    /* Hazard Yellow */
+    --accent-red: #FF003C;
+    /* Error Red */
+    --accent-purple: #BC13FE;
+    /* Neon Purple */
+
+    /* Legacy neon (updated to match new palette) */
+    --neon-green: #9FEF00;
+    --neon-green-dark: #7BC100;
+    --neon-blue: #00F0FF;
+    --neon-purple: #BC13FE;
+    --neon-pink: #FF0055;
+    --neon-orange: #FF5E00;
+
+    /* Background Colors - Deep Void */
+    --bg-dark: #05050A;
+    /* Near Black */
+    --bg-darker: #000000;
+    /* Absolute Black */
+    --bg-card: rgba(20, 20, 30, 0.6);
+    --bg-card-hover: rgba(30, 30, 45, 0.8);
+    --bg-elevated: #151520;
+    --bg-glass: rgba(15, 15, 25, 0.7);
+
+    /* Text Colors */
+    --text-primary: #FFFFFF;
+    --text-secondary: #9494A8;
+    --text-muted: #5A5A6E;
+    --text-disabled: #3A3A4A;
+
+    /* Border Colors */
+    --border-color: rgba(255, 255, 255, 0.08);
+    --border-light: rgba(255, 255, 255, 0.15);
+    --border-active: var(--primary);
+    --border-glow: rgba(159, 239, 0, 0.4);
+
+    /* Gradients */
+    --gradient-primary: linear-gradient(135deg, #9FEF00 0%, #7BC100 100%);
+    --gradient-accent: linear-gradient(135deg, #00F0FF 0%, #9FEF00 100%);
+    --gradient-card: linear-gradient(180deg, rgba(255, 255, 255, 0.03) 0%, rgba(255, 255, 255, 0.01) 100%);
+    --gradient-dark: linear-gradient(180deg, #05050A 0%, #000000 100%);
+    --gradient-glow: radial-gradient(circle at center, rgba(159, 239, 0, 0.15) 0%, transparent 70%);
+
+    /* Spacing - 8px grid system */
+    --space-xs: 4px;
+    --space-sm: 8px;
+    --space-md: 16px;
+    --space-lg: 24px;
+    --space-xl: 32px;
+    --space-2xl: 48px;
+    --space-3xl: 64px;
+
+    /* Typography */
+    --font-main: 'Poppins', -apple-system, BlinkMacSystemFont, sans-serif;
+    --font-mono: 'JetBrains Mono', 'Fira Code', monospace;
+
+    /* Border Radius */
+    --radius-sm: 8px;
+    --radius-md: 12px;
+    --radius-lg: 16px;
+    --radius-xl: 20px;
+    --radius-2xl: 24px;
+    --radius-full: 9999px;
+
+    /* Shadows */
+    --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.2);
+    --shadow-md: 0 4px 16px rgba(0, 0, 0, 0.25);
+    --shadow-lg: 0 8px 32px rgba(0, 0, 0, 0.4);
+    --shadow-xl: 0 16px 48px rgba(0, 0, 0, 0.5);
+    --shadow-primary: 0 4px 16px rgba(159, 239, 0, 0.35);
+    --shadow-primary-lg: 0 8px 24px rgba(159, 239, 0, 0.3);
+    --shadow-glow: 0 0 20px rgba(159, 239, 0, 0.2);
+    --shadow-card: 0 4px 16px rgba(0, 0, 0, 0.25);
+
+    /* Transitions */
+    --transition-fast: 150ms ease;
+    --transition-base: 200ms ease;
+    --transition-slow: 300ms ease;
+
+    /* Container */
+    --max-width: 1200px;
+    --container-padding: var(--space-lg);
+}
