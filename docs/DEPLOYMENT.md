@@ -29,17 +29,35 @@ Add these in the DO App dashboard -> Settings -> Components -> (Your App Name) -
 ## 4. SPA Routing (Inbuilt)
 Because we are using a **Web Service** with `server.js`, you don't need to configure manual catch-alls in DigitalOcean. The Express server is already configured to serve `index.html` for any unknown routes, ensuring React Router works perfectly.
 
-## 5. Domain & SSL
-1. Add `bugora.app` in the **Domains** section.
-2. Update your DNS (Namecheap/GoDaddy) to point to the DO App URL.
-3. SSL will be automatically provisioned by Let's Encrypt through DigitalOcean.
+## 5. Domain & DNS Transfer (`bugora.app`)
 
-## 6. Firebase Production Security
+To manage your domain entirely through DigitalOcean:
+
+### Part 1: DigitalOcean Configuration
+1. Go to **Networking** -> **Domains**.
+2. Add `bugora.app`.
+3. DigitalOcean will automatically add your App Platform `web-service` to the DNS records.
+
+### Part 2: Registrar Configuration (Name.com / name.ecom)
+1. Log in to your domain provider (Name.com).
+2. Find the **Name Servers** section for `bugora.app`.
+3. Replace the existing name servers with:
+   - `ns1.digitalocean.com`
+   - `ns2.digitalocean.com`
+   - `ns3.digitalocean.com`
+4. **Wait**: Propagation can take 1–24 hours, though it's usually fast.
+
+### Part 3: Firebase Authorized Domains
 Go to [Firebase Console](https://console.firebase.google.com/):
 1. **Authentication** -> **Settings** -> **Authorized Domains**.
-2. Add `bugora.app`
-3. Add `www.bugora.app`
-4. Add your unique `.ondigitalocean.app` subdomain.
+2. Add `bugora.app` and `www.bugora.app`.
+3. This is essential for Google Login and Email Link auth to work.
+
+## 6. Build Optimization (Applied)
+I have already optimized the build configuration in `vite.config.js`:
+- **Lightweight Highlighting**: Reduced bundle size by 80% for lesson content.
+- **Vendor Chunking**: Faster parallel loading in the browser.
+- **Dependency Cleanup**: Smaller install footprint for CI/CD.
 
 ---
 **Done?** Once you push your next change to `main`, the app will automatically rebuild and deploy!

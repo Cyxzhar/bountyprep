@@ -46,4 +46,32 @@ export default defineConfig({
       }
     })
   ],
+  build: {
+    rollupOptions: {
+      output: {
+        manualChunks(id) {
+          if (id.includes('node_modules')) {
+            // Group heavy libraries into their own chunks
+            if (id.includes('firebase')) {
+              return 'vendor-firebase';
+            }
+            if (id.includes('react-syntax-highlighter')) {
+              return 'vendor-syntax';
+            }
+            if (id.includes('react-markdown') || id.includes('remark') || id.includes('rehype')) {
+              return 'vendor-markdown';
+            }
+            if (id.includes('lucide-react')) {
+              return 'vendor-ui-icons';
+            }
+
+            // Core react and other smaller utilities in one vendor chunk
+            // Moving react out of 'vendor-react-core' to avoid circular dependencies with other libs
+            return 'vendor';
+          }
+        }
+      }
+    },
+    chunkSizeWarningLimit: 1200,
+  }
 })
