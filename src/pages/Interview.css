@@ -334,7 +334,8 @@
 
 .interview-screen .cta-section .btn {
     width: 100%;
-    max-width: 100%;
+    max-width: 500px;
+    margin: 0 auto;
 }
 
 .resume-btn {
