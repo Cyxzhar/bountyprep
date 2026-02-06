@@ -1260,7 +1260,18 @@
     }
 
     .terminal-drawer {
-        height: 40%;
+        height: 0;
+        max-height: 180px;
+        position: relative;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        z-index: 20;
+    }
+
+    .terminal-drawer.open {
+        height: 180px;
+        border-top: 1px solid rgba(159, 239, 0, 0.2);
     }
 
     .terminal-body {
@@ -2256,8 +2267,15 @@
     }
 
     .reveal-body {
-        height: auto;
-        min-height: 400px;
+        height: 520px !important;
+        overflow: hidden;
+        display: flex;
+        flex-direction: column;
+    }
+
+    .reveal-app-layout {
+        flex-direction: column;
+        height: 100%;
     }
 
     .reveal-sidebar {
@@ -2266,8 +2284,25 @@
     }
 
     .reveal-main {
-        padding: 24px 20px;
-        gap: 20px;
+        padding: 16px;
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        overflow: hidden;
+        gap: 16px;
+    }
+
+    .simulation-container {
+        height: 100%;
+        display: flex;
+        flex-direction: column;
+        overflow: hidden;
+    }
+
+    .editor-content {
+        flex: 1;
+        overflow-y: auto;
+        min-height: 150px;
     }
 
     .reveal-line.title {
