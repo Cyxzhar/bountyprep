@@ -59,12 +59,21 @@ async function loadUserProfile(user) {
         }
 
         // Profile doesn't exist - create it
+        // Capture onboarding data if available
+        const onboardingData = {
+            goal: localStorage.getItem('onboarding_goal'),
+            experience: localStorage.getItem('onboarding_experience'),
+            commitment: localStorage.getItem('onboarding_commitment'),
+            capturedAt: new Date().toISOString()
+        };
+
         const newProfile = {
             uid: user.uid,
             email: user.email,
             displayName: user.displayName || user.email?.split('@')[0] || 'Hacker',
             photoURL: user.photoURL || null,
             ...DEFAULT_PROFILE,
+            onboarding: onboardingData.goal ? onboardingData : null,
             createdAt: serverTimestamp(),
             updatedAt: serverTimestamp(),
         };
@@ -90,12 +99,22 @@ async function loadUserProfile(user) {
 async function createUserProfile(user) {
     try {
         const userRef = doc(db, 'users', user.uid);
+
+        // Capture onboarding data if available
+        const onboardingData = {
+            goal: localStorage.getItem('onboarding_goal'),
+            experience: localStorage.getItem('onboarding_experience'),
+            commitment: localStorage.getItem('onboarding_commitment'),
+            capturedAt: new Date().toISOString()
+        };
+
         await withTimeout(setDoc(userRef, {
             uid: user.uid,
             email: user.email,
             displayName: user.displayName || user.email?.split('@')[0] || 'Hacker',
             photoURL: user.photoURL || null,
             ...DEFAULT_PROFILE,
+            onboarding: onboardingData.goal ? onboardingData : null,
             createdAt: serverTimestamp(),
             updatedAt: serverTimestamp(),
         }, { merge: true }), 5000);

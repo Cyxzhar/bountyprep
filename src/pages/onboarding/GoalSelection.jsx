@@ -16,10 +16,20 @@ const goals = [
 export default function GoalSelection() {
     const navigate = useNavigate();
     const location = useLocation();
-    const [selected, setSelected] = useState(null);
+    const [selected, setSelected] = useState(() => {
+        const saved = localStorage.getItem('onboarding_goal');
+        return saved || null;
+    });
 
     // Use SLIDE_RIGHT if coming from a future step (back navigation)
     const direction = location.state?.direction === 'back' ? SLIDE_RIGHT : SLIDE_LEFT;
+
+    const handleContinue = () => {
+        if (selected) {
+            localStorage.setItem('onboarding_goal', selected);
+            navigate('/onboarding/experience');
+        }
+    };
 
     const handleBack = () => {
         navigate('/onboarding/welcome', { state: { direction: 'back' } });
@@ -73,7 +83,7 @@ export default function GoalSelection() {
                     <button
                         className="btn btn-primary btn-full"
                         disabled={!selected}
-                        onClick={() => navigate('/onboarding/experience')}
+                        onClick={handleContinue}
                     >
                         Continue
                         <ChevronRight size={20} />

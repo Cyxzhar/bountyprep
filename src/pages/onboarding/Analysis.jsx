@@ -1,9 +1,10 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { Cpu, Check, Circle, BookOpen, Target, Trophy, ChevronRight } from 'lucide-react';
 import PageTransition, { SLIDE_UP, FADE, SLIDE_LEFT, SLIDE_RIGHT } from '../../components/PageTransition/PageTransition';
 import OnboardingProgress from '../../components/OnboardingProgress/OnboardingProgress';
 import OnboardingIllustration from './OnboardingIllustration';
+import { calculatePersonalizedPlan } from '../../utils/onboardingUtils';
 import './Onboarding.css';
 
 const loadingSteps = [
@@ -19,6 +20,14 @@ export default function Analysis() {
     const [currentStep, setCurrentStep] = useState(0);
 
     const direction = location.state?.direction === 'back' ? SLIDE_RIGHT : SLIDE_LEFT;
+
+    // Calculate plan based on selections
+    const plan = useMemo(() => {
+        const goal = localStorage.getItem('onboarding_goal');
+        const experience = localStorage.getItem('onboarding_experience');
+        const commitment = localStorage.getItem('onboarding_commitment');
+        return calculatePersonalizedPlan(goal, experience, commitment);
+    }, []);
 
     useEffect(() => {
         const stepInterval = setInterval(() => {
@@ -76,23 +85,23 @@ export default function Analysis() {
                     <h2 className="onboarding-question-title">Your Personalized Plan</h2>
 
                     <div className="onboarding-results-card">
-                        <div className="onboarding-results-number">87</div>
+                        <div className="onboarding-results-number">{plan.days}</div>
                         <div className="onboarding-results-label">Days</div>
-                        <p className="onboarding-results-subtitle">Until your first $500 bounty</p>
+                        <p className="onboarding-results-subtitle">{plan.subtitle}</p>
                     </div>
 
                     <div className="onboarding-results-stats">
                         <div className="onboarding-result-stat">
                             <BookOpen size={16} />
-                            <span>48 Challenges</span>
+                            <span>{plan.challenges} Challenges</span>
                         </div>
                         <div className="onboarding-result-stat">
                             <Target size={16} />
-                            <span>12 Skills</span>
+                            <span>{plan.skills} Skills</span>
                         </div>
                         <div className="onboarding-result-stat">
                             <Trophy size={16} />
-                            <span>Top 15%</span>
+                            <span>{plan.rank}</span>
                         </div>
                     </div>
 

@@ -15,9 +15,19 @@ const commitments = [
 export default function DailyCommitment() {
     const navigate = useNavigate();
     const location = useLocation();
-    const [selected, setSelected] = useState('10');
+    const [selected, setSelected] = useState(() => {
+        const saved = localStorage.getItem('onboarding_commitment');
+        return saved || '10';
+    });
 
     const direction = location.state?.direction === 'back' ? SLIDE_RIGHT : SLIDE_LEFT;
+
+    const handleContinue = () => {
+        if (selected) {
+            localStorage.setItem('onboarding_commitment', selected);
+            navigate('/onboarding/analysis');
+        }
+    };
 
     return (
         <PageTransition pageName="onboarding-commitment" direction={direction}>
@@ -59,7 +69,7 @@ export default function DailyCommitment() {
                 <div className="onboarding-footer">
                     <button
                         className="btn btn-primary btn-full"
-                        onClick={() => navigate('/onboarding/analysis')}
+                        onClick={handleContinue}
                     >
                         Continue
                         <ChevronRight size={20} />

@@ -11,6 +11,8 @@ import {
 import { FirstVisitTransition } from '../../components/PageTransition/PageTransition';
 import { challenges, skillModules } from '../../data/challenges';
 import { calculateLevel, getLevelProgress, getLevelTitle, formatXp } from '../../utils/xp';
+import { getMilestones } from '../../utils/onboardingUtils';
+import Roadmap from '../../components/Roadmap/Roadmap';
 import './Home.css';
 
 // Map icon names to components
@@ -29,6 +31,9 @@ export default function Home() {
     const { stopBGM, playSFX, toggleMute, isMuted } = useSound();
     const { info } = useToast();
     const todayChallenge = challenges[0];
+
+    // Get milestones based on user goal
+    const milestones = getMilestones(currentUser?.onboarding?.goal);
 
     // No BGM on Home Page
     useEffect(() => {
@@ -145,6 +150,9 @@ export default function Home() {
                             <span className="home-stat-label">Level</span>
                         </div>
                     </section>
+
+                    {/* Personalized Roadmap */}
+                    <Roadmap milestones={milestones} />
 
                     {/* Learning Path */}
                     <section className="home-learning-section">

@@ -15,9 +15,19 @@ const levels = [
 export default function ExperienceLevel() {
     const navigate = useNavigate();
     const location = useLocation();
-    const [selected, setSelected] = useState(null);
+    const [selected, setSelected] = useState(() => {
+        const saved = localStorage.getItem('onboarding_experience');
+        return saved || null;
+    });
 
     const direction = location.state?.direction === 'back' ? SLIDE_RIGHT : SLIDE_LEFT;
+
+    const handleContinue = () => {
+        if (selected) {
+            localStorage.setItem('onboarding_experience', selected);
+            navigate('/onboarding/commitment');
+        }
+    };
 
     return (
         <PageTransition pageName="onboarding-experience" direction={direction}>
@@ -60,7 +70,7 @@ export default function ExperienceLevel() {
                     <button
                         className="btn btn-primary btn-full"
                         disabled={!selected}
-                        onClick={() => navigate('/onboarding/commitment')}
+                        onClick={handleContinue}
                     >
                         Continue
                         <ChevronRight size={20} />
