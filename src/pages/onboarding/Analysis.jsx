@@ -3,6 +3,7 @@ import { useNavigate, useLocation } from 'react-router-dom';
 import { Cpu, Check, Circle, BookOpen, Target, Trophy, ChevronRight } from 'lucide-react';
 import PageTransition, { SLIDE_UP, FADE, SLIDE_LEFT, SLIDE_RIGHT } from '../../components/PageTransition/PageTransition';
 import OnboardingProgress from '../../components/OnboardingProgress/OnboardingProgress';
+import OnboardingIllustration from './OnboardingIllustration';
 import './Onboarding.css';
 
 const loadingSteps = [
@@ -64,6 +65,9 @@ export default function Analysis() {
         <PageTransition pageName="onboarding-analysis" direction={direction} duration={400}>
             <div className="onboarding-screen">
                 <div className="onboarding-bg-grid"></div>
+
+                {/* Left Panel Illustration (Desktop Only) */}
+                <OnboardingIllustration step="analysis" />
 
                 <div className="onboarding-content">
                     <OnboardingProgress currentStep={4} />

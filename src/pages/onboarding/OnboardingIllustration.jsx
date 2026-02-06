@@ -1,0 +1,540 @@
+import { memo } from 'react';
+
+/**
+ * Onboarding Left Panel Illustrations
+ * Dynamic SVG illustrations for each onboarding step
+ * Theme: Cybersecurity, Hacking Lab, Bug Bounty
+ */
+
+// Welcome: Lab setup with terminal
+function WelcomeIllustration() {
+  return (
+    <svg viewBox="0 0 600 800" fill="none" xmlns="http://www.w3.org/2000/svg" className="onboarding-illustration">
+      {/* Gradients */}
+      <defs>
+        <linearGradient id="welcomeGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+          <stop offset="0%" stopColor="#9FEF00" />
+          <stop offset="100%" stopColor="#7BC100" />
+        </linearGradient>
+        <radialGradient id="welcomeGlow">
+          <stop offset="0%" stopColor="#9FEF00" stopOpacity="0.4" />
+          <stop offset="100%" stopColor="#9FEF00" stopOpacity="0" />
+        </radialGradient>
+      </defs>
+
+      {/* Central Terminal Window */}
+      <g className="terminal-window" transform="translate(150, 200)">
+        {/* Window Frame */}
+        <rect x="0" y="0" width="300" height="400" rx="8" fill="none" stroke="url(#welcomeGradient)" strokeWidth="2" />
+        <rect x="0" y="0" width="300" height="30" rx="8" fill="rgba(159, 239, 0, 0.1)" />
+
+        {/* Window Buttons */}
+        <circle cx="15" cy="15" r="4" fill="#FF5F56" />
+        <circle cx="30" cy="15" r="4" fill="#FFBD2E" />
+        <circle cx="45" cy="15" r="4" fill="#27C93F" />
+
+        {/* Terminal Text Lines */}
+        <text x="15" y="60" fontSize="12" fill="#9FEF00" fontFamily="monospace" className="terminal-text">$ bugora init</text>
+        <text x="15" y="85" fontSize="12" fill="#9FEF00" fontFamily="monospace" className="terminal-text" opacity="0.8">Initializing lab environment...</text>
+        <text x="15" y="110" fontSize="12" fill="#9FEF00" fontFamily="monospace" className="terminal-text" opacity="0.6">[OK] Workspace ready</text>
+        <text x="15" y="135" fontSize="12" fill="#9FEF00" fontFamily="monospace" className="terminal-text" opacity="0.4">[OK] Tools loaded</text>
+
+        {/* Cursor */}
+        <rect x="15" y="155" width="8" height="14" fill="#9FEF00" className="onboarding-terminal-cursor" />
+      </g>
+
+      {/* Floating Code Symbols */}
+      <g className="floating-symbols" opacity="0.3">
+        <text x="80" y="150" fontSize="24" fill="#9FEF00" className="code-bracket">&lt;/&gt;</text>
+        <text x="480" y="250" fontSize="24" fill="#9FEF00" className="code-bracket">{ }</text>
+        <text x="100" y="650" fontSize="20" fill="#9FEF00" className="code-bracket">[ ]</text>
+        <text x="450" y="680" fontSize="20" fill="#9FEF00" className="code-bracket">$</text>
+      </g>
+
+      {/* Circuit Lines */}
+      <g className="circuit-lines" opacity="0.2">
+        <path d="M 100 100 L 200 100 L 200 150" stroke="#9FEF00" strokeWidth="2" fill="none" className="circuit-line" />
+        <path d="M 500 600 L 400 600 L 400 650" stroke="#9FEF00" strokeWidth="2" fill="none" className="circuit-line" />
+      </g>
+
+      {/* Glow Effect */}
+      <circle cx="300" cy="400" r="200" fill="url(#welcomeGlow)" />
+    </svg>
+  );
+}
+
+// Goal: Target with pathways
+function GoalIllustration() {
+  return (
+    <svg viewBox="0 0 600 800" fill="none" xmlns="http://www.w3.org/2000/svg" className="onboarding-illustration">
+      <defs>
+        <linearGradient id="goalGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+          <stop offset="0%" stopColor="#9FEF00" />
+          <stop offset="100%" stopColor="#7BC100" />
+        </linearGradient>
+        <radialGradient id="goalGlow">
+          <stop offset="0%" stopColor="#9FEF00" stopOpacity="0.5" />
+          <stop offset="100%" stopColor="#9FEF00" stopOpacity="0" />
+        </radialGradient>
+      </defs>
+
+      {/* Central Target */}
+      <g className="target-center" transform="translate(300, 400)">
+        <circle cx="0" cy="0" r="200" fill="url(#goalGlow)" className="shield-glow" />
+        <circle cx="0" cy="0" r="100" fill="none" stroke="#9FEF00" strokeWidth="3" opacity="0.2" />
+        <circle cx="0" cy="0" r="70" fill="none" stroke="#9FEF00" strokeWidth="3" opacity="0.4" />
+        <circle cx="0" cy="0" r="40" fill="none" stroke="#9FEF00" strokeWidth="3" opacity="0.6" />
+        <circle cx="0" cy="0" r="15" fill="#9FEF00" opacity="0.8" className="shield-glow" />
+
+        {/* Crosshair */}
+        <line x1="-120" y1="0" x2="120" y2="0" stroke="#9FEF00" strokeWidth="2" opacity="0.5" />
+        <line x1="0" y1="-120" x2="0" y2="120" stroke="#9FEF00" strokeWidth="2" opacity="0.5" />
+      </g>
+
+      {/* Pathways */}
+      <g className="pathways">
+        {/* Bug Bounty Path */}
+        <g transform="translate(100, 150)">
+          <circle cx="0" cy="0" r="30" fill="rgba(159, 239, 0, 0.1)" stroke="#9FEF00" strokeWidth="2" />
+          <text x="-15" y="5" fontSize="24" fill="#9FEF00">$</text>
+          <path d="M 30 20 L 150 250" stroke="#9FEF00" strokeWidth="2" strokeDasharray="5,5" opacity="0.5" className="circuit-line" />
+        </g>
+
+        {/* Security Analyst Path */}
+        <g transform="translate(500, 200)">
+          <circle cx="0" cy="0" r="30" fill="rgba(159, 239, 0, 0.1)" stroke="#9FEF00" strokeWidth="2" />
+          <text x="-12" y="8" fontSize="30" fill="#9FEF00">🛡</text>
+          <path d="M -30 20 L -150 200" stroke="#9FEF00" strokeWidth="2" strokeDasharray="5,5" opacity="0.5" className="circuit-line" />
+        </g>
+
+        {/* Pentester Path */}
+        <g transform="translate(150, 650)">
+          <circle cx="0" cy="0" r="30" fill="rgba(159, 239, 0, 0.1)" stroke="#9FEF00" strokeWidth="2" />
+          <text x="-12" y="8" fontSize="28" fill="#9FEF00">⚔️</text>
+          <path d="M 30 -20 L 120 -200" stroke="#9FEF00" strokeWidth="2" strokeDasharray="5,5" opacity="0.5" className="circuit-line" />
+        </g>
+
+        {/* Researcher Path */}
+        <g transform="translate(450, 600)">
+          <circle cx="0" cy="0" r="30" fill="rgba(159, 239, 0, 0.1)" stroke="#9FEF00" strokeWidth="2" />
+          <text x="-12" y="8" fontSize="26" fill="#9FEF00">🔬</text>
+          <path d="M -20 -30 L -100 -150" stroke="#9FEF00" strokeWidth="2" strokeDasharray="5,5" opacity="0.5" className="circuit-line" />
+        </g>
+      </g>
+
+      {/* Particles */}
+      <g className="onboarding-particles">
+        {[...Array(8)].map((_, i) => (
+          <circle
+            key={i}
+            cx={100 + i * 60}
+            cy={100 + (i % 2) * 600}
+            r="2"
+            fill="#9FEF00"
+            opacity="0.6"
+            className="onboarding-particle"
+            style={{
+              '--tx': `${Math.random() * 200 - 100}px`,
+              '--ty': `${Math.random() * 200 - 100}px`,
+              animationDelay: `${i * 0.5}s`
+            }}
+          />
+        ))}
+      </g>
+    </svg>
+  );
+}
+
+// Experience: Level progression visual
+function ExperienceIllustration() {
+  return (
+    <svg viewBox="0 0 600 800" fill="none" xmlns="http://www.w3.org/2000/svg" className="onboarding-illustration">
+      <defs>
+        <linearGradient id="expGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+          <stop offset="0%" stopColor="#9FEF00" />
+          <stop offset="100%" stopColor="#7BC100" />
+        </linearGradient>
+      </defs>
+
+      {/* Level Progression Steps */}
+      <g className="level-steps">
+        {/* Level 1 - Beginner */}
+        <g transform="translate(100, 650)" className="level-item">
+          <circle cx="0" cy="0" r="40" fill="rgba(159, 239, 0, 0.2)" stroke="#9FEF00" strokeWidth="3" />
+          <text x="-8" y="8" fontSize="24" fill="#9FEF00" fontWeight="bold">1</text>
+          <text x="-30" y="70" fontSize="14" fill="#9FEF00">Beginner</text>
+          <line x1="40" y1="-30" x2="180" y2="-130" stroke="#9FEF00" strokeWidth="3" />
+        </g>
+
+        {/* Level 2 - Intermediate */}
+        <g transform="translate(280, 520)" className="level-item">
+          <circle cx="0" cy="0" r="45" fill="rgba(159, 239, 0, 0.3)" stroke="#9FEF00" strokeWidth="3" />
+          <text x="-10" y="8" fontSize="26" fill="#9FEF00" fontWeight="bold">2</text>
+          <text x="-45" y="75" fontSize="14" fill="#9FEF00">Intermediate</text>
+          <line x1="35" y1="-35" x2="135" y2="-120" stroke="#9FEF00" strokeWidth="3" />
+        </g>
+
+        {/* Level 3 - Advanced */}
+        <g transform="translate(415, 400)" className="level-item">
+          <circle cx="0" cy="0" r="50" fill="rgba(159, 239, 0, 0.4)" stroke="#9FEF00" strokeWidth="3" />
+          <text x="-12" y="10" fontSize="28" fill="#9FEF00" fontWeight="bold">3</text>
+          <text x="-40" y="80" fontSize="14" fill="#9FEF00">Advanced</text>
+          <line x1="-30" y1="-40" x2="-100" y2="-120" stroke="#9FEF00" strokeWidth="3" />
+        </g>
+
+        {/* Level 4 - Expert */}
+        <g transform="translate(315, 280)" className="level-item">
+          <circle cx="0" cy="0" r="55" fill="rgba(159, 239, 0, 0.5)" stroke="#9FEF00" strokeWidth="3" />
+          <text x="-14" y="12" fontSize="30" fill="#9FEF00" fontWeight="bold">4</text>
+          <text x="-30" y="85" fontSize="14" fill="#9FEF00">Expert</text>
+          <polygon points="0,-70 15,-90 -15,-90" fill="#9FEF00" opacity="0.8" />
+        </g>
+      </g>
+
+      {/* Progress Bar */}
+      <g className="progress-visualization" transform="translate(50, 150)">
+        <rect x="0" y="0" width="500" height="12" rx="6" fill="rgba(255, 255, 255, 0.1)" />
+        <rect x="0" y="0" width="375" height="12" rx="6" fill="url(#expGradient)" className="onboarding-progress-fill">
+          <animate attributeName="width" from="0" to="375" dur="2s" fill="freeze" />
+        </rect>
+        <text x="250" y="-15" fontSize="16" fill="#9FEF00" textAnchor="middle">75% Complete</text>
+      </g>
+
+      {/* Floating XP Icons */}
+      <g className="floating-xp" opacity="0.4">
+        <text x="450" y="200" fontSize="20" fill="#9FEF00" className="code-bracket">+50 XP</text>
+        <text x="100" y="400" fontSize="18" fill="#9FEF00" className="code-bracket">+100 XP</text>
+        <text x="500" y="550" fontSize="18" fill="#9FEF00" className="code-bracket">+150 XP</text>
+      </g>
+    </svg>
+  );
+}
+
+// Commitment: Calendar/streak visual
+function CommitmentIllustration() {
+  return (
+    <svg viewBox="0 0 600 800" fill="none" xmlns="http://www.w3.org/2000/svg" className="onboarding-illustration">
+      <defs>
+        <linearGradient id="commitGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+          <stop offset="0%" stopColor="#9FEF00" />
+          <stop offset="100%" stopColor="#7BC100" />
+        </linearGradient>
+      </defs>
+
+      {/* Calendar Grid */}
+      <g className="calendar" transform="translate(100, 250)">
+        {/* Calendar Header */}
+        <rect x="0" y="0" width="400" height="60" rx="8" fill="rgba(159, 239, 0, 0.1)" stroke="#9FEF00" strokeWidth="2" />
+        <text x="200" y="38" fontSize="20" fill="#9FEF00" textAnchor="middle" fontWeight="bold">Daily Streak</text>
+
+        {/* Calendar Body */}
+        <rect x="0" y="60" width="400" height="300" rx="8" fill="rgba(10, 10, 15, 0.8)" stroke="#9FEF00" strokeWidth="2" />
+
+        {/* Day Labels */}
+        {['M', 'T', 'W', 'T', 'F', 'S', 'S'].map((day, i) => (
+          <text key={i} x={30 + i * 55} y="95" fontSize="14" fill="#9FEF00" opacity="0.6">{day}</text>
+        ))}
+
+        {/* Calendar Days (Activity Heatmap Style) */}
+        {[...Array(28)].map((_, i) => {
+          const row = Math.floor(i / 7);
+          const col = i % 7;
+          const isActive = i < 21; // 21 days streak
+          const opacity = isActive ? (0.3 + (i / 28) * 0.7) : 0.05;
+
+          return (
+            <rect
+              key={i}
+              x={15 + col * 55}
+              y={110 + row * 50}
+              width="45"
+              height="40"
+              rx="4"
+              fill="#9FEF00"
+              opacity={opacity}
+              stroke={isActive ? "#9FEF00" : "rgba(159, 239, 0, 0.2)"}
+              strokeWidth="1"
+            >
+              {isActive && (
+                <animate
+                  attributeName="opacity"
+                  values={`${opacity};${opacity + 0.2};${opacity}`}
+                  dur="2s"
+                  repeatCount="indefinite"
+                  begin={`${i * 0.1}s`}
+                />
+              )}
+            </rect>
+          );
+        })}
+      </g>
+
+      {/* Streak Counter */}
+      <g className="streak-counter" transform="translate(300, 600)">
+        <circle cx="0" cy="0" r="80" fill="rgba(159, 239, 0, 0.1)" stroke="#9FEF00" strokeWidth="3" className="shield-glow" />
+        <text x="0" y="-10" fontSize="48" fill="url(#commitGradient)" textAnchor="middle" fontWeight="bold">21</text>
+        <text x="0" y="25" fontSize="16" fill="#9FEF00" textAnchor="middle" opacity="0.8">Day Streak 🔥</text>
+      </g>
+
+      {/* Floating Checkmarks */}
+      <g className="floating-checks" opacity="0.3">
+        <text x="50" y="180" fontSize="30" fill="#9FEF00" className="code-bracket">✓</text>
+        <text x="520" y="220" fontSize="28" fill="#9FEF00" className="code-bracket">✓</text>
+        <text x="80" y="680" fontSize="26" fill="#9FEF00" className="code-bracket">✓</text>
+      </g>
+    </svg>
+  );
+}
+
+// Analysis: Loading/processing animation
+function AnalysisIllustration() {
+  return (
+    <svg viewBox="0 0 600 800" fill="none" xmlns="http://www.w3.org/2000/svg" className="onboarding-illustration">
+      <defs>
+        <linearGradient id="analysisGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+          <stop offset="0%" stopColor="#9FEF00" />
+          <stop offset="100%" stopColor="#7BC100" />
+        </linearGradient>
+        <radialGradient id="analysisGlow">
+          <stop offset="0%" stopColor="#9FEF00" stopOpacity="0.6" />
+          <stop offset="100%" stopColor="#9FEF00" stopOpacity="0" />
+        </radialGradient>
+      </defs>
+
+      {/* Central Processing Core */}
+      <g className="processing-core" transform="translate(300, 400)">
+        <circle cx="0" cy="0" r="250" fill="url(#analysisGlow)" className="shield-glow" />
+
+        {/* Rotating Rings */}
+        <circle cx="0" cy="0" r="100" fill="none" stroke="#9FEF00" strokeWidth="2" opacity="0.3" strokeDasharray="10,5">
+          <animateTransform
+            attributeName="transform"
+            type="rotate"
+            from="0 0 0"
+            to="360 0 0"
+            dur="8s"
+            repeatCount="indefinite"
+          />
+        </circle>
+
+        <circle cx="0" cy="0" r="130" fill="none" stroke="#9FEF00" strokeWidth="2" opacity="0.4" strokeDasharray="15,10">
+          <animateTransform
+            attributeName="transform"
+            type="rotate"
+            from="360 0 0"
+            to="0 0 0"
+            dur="10s"
+            repeatCount="indefinite"
+          />
+        </circle>
+
+        <circle cx="0" cy="0" r="160" fill="none" stroke="#9FEF00" strokeWidth="2" opacity="0.5" strokeDasharray="20,15">
+          <animateTransform
+            attributeName="transform"
+            type="rotate"
+            from="0 0 0"
+            to="360 0 0"
+            dur="12s"
+            repeatCount="indefinite"
+          />
+        </circle>
+
+        {/* Central Icon */}
+        <circle cx="0" cy="0" r="40" fill="rgba(159, 239, 0, 0.2)" stroke="#9FEF00" strokeWidth="3" />
+        <path d="M -15 0 L -5 -15 L 15 -5 L 5 15 Z" fill="#9FEF00" opacity="0.8">
+          <animateTransform
+            attributeName="transform"
+            type="rotate"
+            from="0 0 0"
+            to="360 0 0"
+            dur="3s"
+            repeatCount="indefinite"
+          />
+        </path>
+      </g>
+
+      {/* Data Processing Lines */}
+      <g className="data-lines">
+        {[0, 45, 90, 135, 180, 225, 270, 315].map((angle, i) => {
+          const rad = (angle * Math.PI) / 180;
+          const x1 = 300 + Math.cos(rad) * 180;
+          const y1 = 400 + Math.sin(rad) * 180;
+          const x2 = 300 + Math.cos(rad) * 280;
+          const y2 = 400 + Math.sin(rad) * 280;
+
+          return (
+            <line
+              key={i}
+              x1={x1}
+              y1={y1}
+              x2={x2}
+              y2={y2}
+              stroke="#9FEF00"
+              strokeWidth="2"
+              opacity="0"
+            >
+              <animate
+                attributeName="opacity"
+                values="0;0.8;0"
+                dur="2s"
+                repeatCount="indefinite"
+                begin={`${i * 0.25}s`}
+              />
+            </line>
+          );
+        })}
+      </g>
+
+      {/* Status Text */}
+      <g className="status-text">
+        <text x="300" y="150" fontSize="18" fill="#9FEF00" textAnchor="middle" opacity="0">
+          Analyzing your profile...
+          <animate attributeName="opacity" values="0;1;1;0" dur="3s" repeatCount="indefinite" begin="0s" />
+        </text>
+        <text x="300" y="150" fontSize="18" fill="#9FEF00" textAnchor="middle" opacity="0">
+          Generating personalized path...
+          <animate attributeName="opacity" values="0;1;1;0" dur="3s" repeatCount="indefinite" begin="3s" />
+        </text>
+        <text x="300" y="150" fontSize="18" fill="#9FEF00" textAnchor="middle" opacity="0">
+          Optimizing learning journey...
+          <animate attributeName="opacity" values="0;1;1;0" dur="3s" repeatCount="indefinite" begin="6s" />
+        </text>
+      </g>
+
+      {/* Progress Percentage */}
+      <text x="300" y="690" fontSize="32" fill="url(#analysisGradient)" textAnchor="middle" fontWeight="bold">
+        <tspan>
+          <animate attributeName="opacity" values="1" dur="0.1s" />
+          85%
+        </tspan>
+      </text>
+    </svg>
+  );
+}
+
+// Paywall: Premium features showcase
+function PaywallIllustration() {
+  return (
+    <svg viewBox="0 0 600 800" fill="none" xmlns="http://www.w3.org/2000/svg" className="onboarding-illustration">
+      <defs>
+        <linearGradient id="premiumGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+          <stop offset="0%" stopColor="#9FEF00" />
+          <stop offset="50%" stopColor="#FFD700" />
+          <stop offset="100%" stopColor="#9FEF00" />
+        </linearGradient>
+        <radialGradient id="premiumGlow">
+          <stop offset="0%" stopColor="#FFD700" stopOpacity="0.4" />
+          <stop offset="100%" stopColor="#9FEF00" stopOpacity="0" />
+        </radialGradient>
+      </defs>
+
+      {/* Premium Badge/Crown */}
+      <g className="premium-badge" transform="translate(300, 250)">
+        <circle cx="0" cy="0" r="180" fill="url(#premiumGlow)" className="shield-glow" />
+
+        {/* Crown */}
+        <path
+          d="M -60 20 L -40 -40 L -20 0 L 0 -50 L 20 0 L 40 -40 L 60 20 L 60 40 L -60 40 Z"
+          fill="url(#premiumGradient)"
+          stroke="#9FEF00"
+          strokeWidth="2"
+        >
+          <animate attributeName="opacity" values="0.8;1;0.8" dur="2s" repeatCount="indefinite" />
+        </path>
+
+        {/* Crown Jewels */}
+        <circle cx="-40" cy="-30" r="5" fill="#FFD700" />
+        <circle cx="0" cy="-40" r="6" fill="#FFD700" />
+        <circle cx="40" cy="-30" r="5" fill="#FFD700" />
+
+        {/* Premium Text */}
+        <text x="0" y="90" fontSize="24" fill="url(#premiumGradient)" textAnchor="middle" fontWeight="bold">PREMIUM</text>
+      </g>
+
+      {/* Feature Icons */}
+      <g className="feature-showcase">
+        {/* Unlimited Access */}
+        <g transform="translate(120, 480)">
+          <circle cx="0" cy="0" r="45" fill="rgba(159, 239, 0, 0.1)" stroke="#9FEF00" strokeWidth="2" />
+          <text x="0" y="8" fontSize="32" textAnchor="middle">∞</text>
+          <text x="0" y="75" fontSize="12" fill="#9FEF00" textAnchor="middle">Unlimited</text>
+        </g>
+
+        {/* AI Coach */}
+        <g transform="translate(300, 480)">
+          <circle cx="0" cy="0" r="45" fill="rgba(159, 239, 0, 0.1)" stroke="#9FEF00" strokeWidth="2" />
+          <text x="0" y="10" fontSize="28" textAnchor="middle">🤖</text>
+          <text x="0" y="75" fontSize="12" fill="#9FEF00" textAnchor="middle">AI Coach</text>
+        </g>
+
+        {/* Expert Labs */}
+        <g transform="translate(480, 480)">
+          <circle cx="0" cy="0" r="45" fill="rgba(159, 239, 0, 0.1)" stroke="#9FEF00" strokeWidth="2" />
+          <text x="0" y="10" fontSize="28" textAnchor="middle">⚡</text>
+          <text x="0" y="75" fontSize="12" fill="#9FEF00" textAnchor="middle">Expert Labs</text>
+        </g>
+      </g>
+
+      {/* Price Tag */}
+      <g className="price-tag" transform="translate(300, 650)">
+        <rect x="-100" y="-50" width="200" height="80" rx="12" fill="rgba(159, 239, 0, 0.1)" stroke="#9FEF00" strokeWidth="2" />
+        <text x="0" y="-10" fontSize="14" fill="#9FEF00" textAnchor="middle" opacity="0.8">Only</text>
+        <text x="0" y="25" fontSize="36" fill="url(#premiumGradient)" textAnchor="middle" fontWeight="bold">$4.99</text>
+        <text x="0" y="45" fontSize="12" fill="#9FEF00" textAnchor="middle" opacity="0.6">/month</text>
+      </g>
+
+      {/* Sparkles */}
+      <g className="sparkles">
+        {[...Array(12)].map((_, i) => {
+          const angle = (i * 30 * Math.PI) / 180;
+          const radius = 200 + (i % 2) * 30;
+          const x = 300 + Math.cos(angle) * radius;
+          const y = 250 + Math.sin(angle) * radius;
+
+          return (
+            <g key={i} transform={`translate(${x}, ${y})`}>
+              <path d="M 0 -8 L 2 -2 L 8 0 L 2 2 L 0 8 L -2 2 L -8 0 L -2 -2 Z" fill="#FFD700" opacity="0">
+                <animate
+                  attributeName="opacity"
+                  values="0;1;0"
+                  dur="2s"
+                  repeatCount="indefinite"
+                  begin={`${i * 0.15}s`}
+                />
+                <animateTransform
+                  attributeName="transform"
+                  type="rotate"
+                  from="0 0 0"
+                  to="180 0 0"
+                  dur="2s"
+                  repeatCount="indefinite"
+                  begin={`${i * 0.15}s`}
+                />
+              </path>
+            </g>
+          );
+        })}
+      </g>
+    </svg>
+  );
+}
+
+// Main component that renders based on step
+function OnboardingIllustration({ step }) {
+  const illustrations = {
+    welcome: <WelcomeIllustration />,
+    goal: <GoalIllustration />,
+    experience: <ExperienceIllustration />,
+    commitment: <CommitmentIllustration />,
+    analysis: <AnalysisIllustration />,
+    paywall: <PaywallIllustration />
+  };
+
+  return (
+    <div className="onboarding-left-panel">
+      {illustrations[step] || illustrations.welcome}
+    </div>
+  );
+}
+
+export default memo(OnboardingIllustration);

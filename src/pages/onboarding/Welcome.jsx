@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { Shield, Bug, ChevronRight, Calculator, Terminal, Award, Zap, Bot, Target, LockOpen } from 'lucide-react';
 import { useSound } from '../../context/SoundContext';
 import PageTransition, { FADE } from '../../components/PageTransition/PageTransition';
+import OnboardingIllustration from './OnboardingIllustration';
 import './Onboarding.css';
 
 export default function Welcome() {
@@ -52,6 +53,9 @@ export default function Welcome() {
                     Skip
                     <ChevronRight size={16} />
                 </button>
+
+                {/* Left Panel Illustration (Desktop Only) */}
+                <OnboardingIllustration step="welcome" />
 
                 <div className="onboarding-content">
                     {/* Hero Section */}

@@ -705,6 +705,35 @@
         background: linear-gradient(135deg, #000000 0%, #0a0a0f 50%, #000000 100%);
         position: relative;
         overflow: hidden;
+        padding: var(--space-3xl);
+    }
+
+    /* Hide left panel on mobile */
+    @media (max-width: 767px) {
+        .onboarding-left-panel {
+            display: none;
+        }
+    }
+
+    /* Illustration SVG */
+    .onboarding-illustration {
+        width: 100%;
+        height: 100%;
+        max-width: 600px;
+        max-height: 800px;
+        opacity: 0;
+        animation: illustrationFadeIn 1s ease forwards 0.3s;
+    }
+
+    @keyframes illustrationFadeIn {
+        from {
+            opacity: 0;
+            transform: scale(0.95);
+        }
+        to {
+            opacity: 1;
+            transform: scale(1);
+        }
     }
 
     /* Right panel - Content area */

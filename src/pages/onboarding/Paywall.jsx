@@ -6,6 +6,7 @@ import {
 } from 'lucide-react';
 import { useSound } from '../../context/SoundContext';
 import PageTransition, { SLIDE_UP } from '../../components/PageTransition/PageTransition';
+import OnboardingIllustration from './OnboardingIllustration';
 import './Paywall.css';
 
 const features = [
@@ -36,15 +37,18 @@ export default function Paywall() {
 
     return (
         <PageTransition pageName="onboarding-paywall" direction={SLIDE_UP} duration={450}>
-            <div className="paywall-screen">
-                <div className="paywall-bg"></div>
+            <div className="onboarding-screen paywall-screen">
+                <div className="onboarding-bg-grid paywall-bg"></div>
 
                 {/* Close Button */}
-                <button className="paywall-close-btn" onClick={handleNavigateToSignup}>
+                <button className="paywall-close-btn onboarding-skip-btn" onClick={handleNavigateToSignup}>
                     <X size={20} />
                 </button>
 
-                <div className="paywall-content">
+                {/* Left Panel Illustration (Desktop Only) */}
+                <OnboardingIllustration step="paywall" />
+
+                <div className="paywall-content onboarding-content">
                     {/* Header */}
                     <div className="paywall-header">
                         <div className="paywall-crown-badge">

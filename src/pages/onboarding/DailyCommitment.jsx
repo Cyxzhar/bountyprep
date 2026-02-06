@@ -3,6 +3,7 @@ import { useNavigate, useLocation } from 'react-router-dom';
 import { Zap, Star, Flame, ChevronRight } from 'lucide-react';
 import PageTransition, { SLIDE_LEFT, SLIDE_RIGHT } from '../../components/PageTransition/PageTransition';
 import OnboardingProgress from '../../components/OnboardingProgress/OnboardingProgress';
+import OnboardingIllustration from './OnboardingIllustration';
 import './Onboarding.css';
 
 const commitments = [
@@ -22,6 +23,9 @@ export default function DailyCommitment() {
         <PageTransition pageName="onboarding-commitment" direction={direction}>
             <div className="onboarding-screen">
                 <div className="onboarding-bg-grid"></div>
+
+                {/* Left Panel Illustration (Desktop Only) */}
+                <OnboardingIllustration step="commitment" />
 
                 <div className="onboarding-content">
                     <OnboardingProgress currentStep={3} />
