@@ -336,7 +336,6 @@ export default function Interview() {
                             <button
                                 className="btn btn-secondary btn-full resume-btn"
                                 onClick={() => setShowHistory(true)}
-                                style={{ marginTop: '12px' }}
                             >
                                 <History size={18} />
                                 View History & Resume

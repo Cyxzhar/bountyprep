@@ -327,33 +327,74 @@
     font-weight: 600;
 }
 
-/* CTA Section */
+/* CTA Section - Cohesive Button Group */
 .interview-screen .cta-section {
     margin-top: auto;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    align-items: center;
 }
 
-/* Override btn-full class for Interview page CTA buttons */
+/* Base styling for all CTA buttons */
 .interview-screen .cta-section .btn,
 .interview-screen .cta-section .btn-full {
     width: 100% !important;
     max-width: 500px !important;
     margin-left: auto !important;
     margin-right: auto !important;
-}
-
-.interview-screen .cta-section .btn-primary {
-    min-height: 56px;
-}
-
-.interview-screen .cta-section .btn-secondary {
-    min-height: 52px;
-}
-
-.resume-btn {
     display: flex;
     align-items: center;
     justify-content: center;
-    gap: var(--space-sm);
+    gap: 10px;
+    height: 56px;
+    min-height: 56px;
+    border-radius: 14px;
+    font-size: 1rem;
+    font-weight: 600;
+    transition: all 0.2s ease;
+}
+
+/* Primary Button - Main Action */
+.interview-screen .cta-section .btn-primary {
+    background: var(--neon-green) !important;
+    color: #000 !important;
+    border: none !important;
+    box-shadow: 0 4px 16px rgba(159, 239, 0, 0.2);
+}
+
+.interview-screen .cta-section .btn-primary:hover:not(:disabled) {
+    background: #B8FF33 !important;
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(159, 239, 0, 0.3);
+}
+
+.interview-screen .cta-section .btn-primary:active:not(:disabled) {
+    transform: translateY(0);
+}
+
+/* Secondary Button - Supporting Action */
+.interview-screen .cta-section .btn-secondary {
+    background: transparent !important;
+    color: var(--neon-green) !important;
+    border: 2px solid rgba(159, 239, 0, 0.3) !important;
+}
+
+.interview-screen .cta-section .btn-secondary:hover:not(:disabled) {
+    background: rgba(159, 239, 0, 0.1) !important;
+    border-color: var(--neon-green) !important;
+    transform: translateY(-2px);
+}
+
+.interview-screen .cta-section .btn-secondary:active:not(:disabled) {
+    transform: translateY(0);
+    background: rgba(159, 239, 0, 0.15) !important;
+}
+
+/* Icon alignment fix */
+.interview-screen .cta-section .btn svg {
+    flex-shrink: 0;
+    vertical-align: middle;
 }
 
 /* Chat Mode */
