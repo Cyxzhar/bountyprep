@@ -244,32 +244,64 @@
     overflow: hidden;
 }
 
-.sidebar .logout-btn {
-    display: flex !important;
+/* Sidebar Logout Button - Unique styling to avoid conflicts */
+.sidebar-logout-btn {
+    /* Display & Layout */
+    display: flex;
     align-items: center;
     justify-content: center;
-    gap: var(--space-sm);
-    width: 100% !important;
-    max-width: 100% !important;
-    padding: var(--space-sm) var(--space-md) !important;
-    min-height: auto !important;
-    height: auto !important;
+    gap: 10px;
+
+    /* Sizing - Very specific to prevent overrides */
+    width: 100%;
+    max-width: 100%;
+    min-width: 0;
+    padding: 10px 16px;
+    min-height: unset;
+    height: auto;
+
+    /* Visual Styling */
     background: rgba(255, 69, 58, 0.1);
     border: 1px solid rgba(255, 69, 58, 0.2);
-    border-radius: var(--radius-md);
+    border-radius: 12px;
+
+    /* Typography */
     color: #ff453a;
     font-size: 0.9rem;
     font-weight: 600;
-    cursor: pointer;
-    transition: all 0.2s;
+    font-family: inherit;
+    text-align: center;
+
+    /* Overflow Control */
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
+
+    /* Interaction */
+    cursor: pointer;
+    transition: all 0.2s ease;
+
+    /* Box Model */
+    box-sizing: border-box;
+
+    /* Reset any inherited button styles */
+    appearance: none;
+    -webkit-appearance: none;
+    outline: none;
 }
 
-.sidebar .logout-btn:hover {
+.sidebar-logout-btn:hover {
     background: rgba(255, 69, 58, 0.2);
     border-color: #ff453a;
+}
+
+.sidebar-logout-btn:focus {
+    outline: 2px solid rgba(255, 69, 58, 0.3);
+    outline-offset: 2px;
+}
+
+.sidebar-logout-btn:active {
+    transform: scale(0.98);
 }
 
 /* Animations */

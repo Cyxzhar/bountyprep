@@ -115,7 +115,7 @@ export default function Sidebar() {
             {/* Logout Button - Hidden on Profile/Settings pages on desktop */}
             {shouldShowLogout && (
                 <div className="sidebar-footer">
-                    <button className="logout-btn" onClick={handleLogout}>
+                    <button className="sidebar-logout-btn" onClick={handleLogout}>
                         <LogOut size={20} strokeWidth={2} />
                         <span>Logout</span>
                     </button>

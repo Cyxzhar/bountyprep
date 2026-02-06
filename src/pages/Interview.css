@@ -332,10 +332,21 @@
     margin-top: auto;
 }
 
-.interview-screen .cta-section .btn {
-    width: 100%;
-    max-width: 500px;
-    margin: 0 auto;
+/* Override btn-full class for Interview page CTA buttons */
+.interview-screen .cta-section .btn,
+.interview-screen .cta-section .btn-full {
+    width: 100% !important;
+    max-width: 500px !important;
+    margin-left: auto !important;
+    margin-right: auto !important;
+}
+
+.interview-screen .cta-section .btn-primary {
+    min-height: 56px;
+}
+
+.interview-screen .cta-section .btn-secondary {
+    min-height: 52px;
 }
 
 .resume-btn {
