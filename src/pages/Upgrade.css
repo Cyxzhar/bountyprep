@@ -437,6 +437,147 @@
     line-height: 1.6;
 }
 
+/* ========================================
+   WAITLIST CONFIRMATION - REDESIGNED
+   ======================================== */
+
+.waitlist-hero {
+    max-width: 600px;
+    margin: 0 auto;
+    padding: var(--space-2xl) var(--space-lg);
+    text-align: center;
+}
+
+.waitlist-icon {
+    width: 100px;
+    height: 100px;
+    margin: 0 auto var(--space-xl);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: linear-gradient(135deg, rgba(159, 239, 0, 0.2), rgba(159, 239, 0, 0.1));
+    border: 2px solid rgba(159, 239, 0, 0.4);
+    border-radius: 50%;
+    position: relative;
+    animation: pulse 2s ease-in-out infinite;
+}
+
+@keyframes pulse {
+    0%, 100% {
+        box-shadow: 0 0 20px rgba(159, 239, 0, 0.3);
+    }
+    50% {
+        box-shadow: 0 0 40px rgba(159, 239, 0, 0.5);
+    }
+}
+
+.waitlist-icon::before {
+    content: '';
+    position: absolute;
+    inset: -8px;
+    background: linear-gradient(135deg, rgba(159, 239, 0, 0.1), transparent);
+    border-radius: 50%;
+    opacity: 0.5;
+    filter: blur(10px);
+}
+
+.waitlist-hero h1 {
+    font-size: clamp(2rem, 5vw, 2.75rem);
+    font-weight: 800;
+    margin-bottom: var(--space-md);
+    color: var(--text-primary);
+    letter-spacing: -0.02em;
+}
+
+.waitlist-hero > p {
+    font-size: clamp(1rem, 2.5vw, 1.125rem);
+    color: var(--text-secondary);
+    line-height: 1.6;
+    margin-bottom: var(--space-2xl);
+    max-width: 500px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+/* Waitlist Success Card */
+.waitlist-card-success {
+    background: linear-gradient(135deg, rgba(159, 239, 0, 0.05), rgba(19, 19, 26, 0.8));
+    border: 1px solid rgba(159, 239, 0, 0.2);
+    border-radius: var(--radius-lg);
+    padding: var(--space-xl);
+    margin-bottom: var(--space-xl);
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-lg);
+    backdrop-filter: blur(10px);
+}
+
+.w-param {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: var(--space-md) 0;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+.w-param:last-child {
+    border-bottom: none;
+}
+
+.w-label {
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: var(--text-secondary);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+}
+
+.w-value {
+    font-size: 1rem;
+    font-weight: 700;
+    color: var(--text-primary);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.w-value.on-list {
+    color: var(--neon-green);
+}
+
+.w-value.highlight {
+    color: var(--neon-green);
+    background: rgba(159, 239, 0, 0.1);
+    padding: 6px 12px;
+    border-radius: var(--radius-sm);
+    border: 1px solid rgba(159, 239, 0, 0.3);
+}
+
+.status-dot {
+    width: 8px;
+    height: 8px;
+    background: var(--neon-green);
+    border-radius: 50%;
+    display: inline-block;
+    animation: pulse-dot 2s ease-in-out infinite;
+}
+
+@keyframes pulse-dot {
+    0%, 100% {
+        box-shadow: 0 0 4px rgba(159, 239, 0, 0.6);
+    }
+    50% {
+        box-shadow: 0 0 8px rgba(159, 239, 0, 0.8);
+    }
+}
+
+.waitlist-hero .btn {
+    margin-top: var(--space-md);
+    min-height: 56px;
+    font-size: 1rem;
+    font-weight: 700;
+}
+
 /* Mobile Responsive */
 @media (max-width: 768px) {
     .pricing-container {
@@ -462,5 +603,55 @@
 
     .features-grid {
         grid-template-columns: 1fr;
+    }
+
+    /* Waitlist Mobile */
+    .waitlist-hero {
+        padding: var(--space-xl) var(--space-md);
+    }
+
+    .waitlist-icon {
+        width: 80px;
+        height: 80px;
+        margin-bottom: var(--space-lg);
+    }
+
+    .waitlist-card-success {
+        padding: var(--space-lg);
+        gap: var(--space-md);
+    }
+
+    .w-param {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: var(--space-xs);
+        padding: var(--space-md) 0;
+    }
+
+    .w-label {
+        font-size: 0.8rem;
+    }
+
+    .w-value {
+        font-size: 1.1rem;
+    }
+}
+
+@media (min-width: 1024px) {
+    .waitlist-hero {
+        padding: var(--space-3xl) var(--space-xl);
+    }
+
+    .waitlist-icon {
+        width: 120px;
+        height: 120px;
+    }
+
+    .waitlist-card-success {
+        padding: var(--space-2xl);
+    }
+
+    .w-param {
+        padding: var(--space-lg) 0;
     }
 }
