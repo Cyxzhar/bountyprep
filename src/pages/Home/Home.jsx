@@ -154,38 +154,37 @@ export default function Home() {
                     {/* Personalized Roadmap */}
                     <Roadmap milestones={milestones} />
 
-                    {/* Learning Path */}
                     <section className="home-learning-section">
-                        <div className="section-header">
-                            <h3 className="section-title">Your Learning Path</h3>
+                        <div className="dash-section-header">
+                            <h3 className="dash-section-title">Your Learning Path</h3>
                             <button className="btn-ghost" onClick={() => { playSFX('click'); navigate('/challenges'); }}>See All</button>
                         </div>
 
-                        <div className="modules-scroll">
+                        <div className="home-modules-scroll">
                             {skillModules.map((module) => {
                                 const IconComponent = iconComponents[module.iconName] || Lock;
                                 return (
                                     <div
                                         key={module.id}
-                                        className="module-card"
+                                        className="home-module-card"
                                         onClick={() => { playSFX('click'); navigate(`/challenges?filter=${encodeURIComponent(module.name)}`); }}
                                     >
-                                        <div className="module-icon">
+                                        <div className="home-module-icon">
                                             <IconComponent size={24} />
                                         </div>
                                         <div className="module-progress-ring">
                                             <svg viewBox="0 0 36 36">
-                                                <circle className="ring-bg" cx="18" cy="18" r="16" />
+                                                <circle className="home-ring-bg" cx="18" cy="18" r="16" />
                                                 <circle
-                                                    className="ring-fill"
+                                                    className="home-ring-fill"
                                                     cx="18" cy="18" r="16"
                                                     strokeDasharray={`${module.progress} 100`}
                                                 />
                                             </svg>
-                                            <span className="ring-percent">{module.progress}%</span>
+                                            <span className="home-ring-percent">{module.progress}%</span>
                                         </div>
-                                        <h4 className="module-name">{module.name}</h4>
-                                        <p className="module-status">{module.completed}/{module.total} Complete</p>
+                                        <h4 className="home-module-name">{module.name}</h4>
+                                        <p className="home-module-status">{module.completed}/{module.total} Complete</p>
                                     </div>
                                 );
                             })}
@@ -193,7 +192,7 @@ export default function Home() {
                     </section>
 
                     {/* AI Interview Card */}
-                    <section className="ai-card" onClick={() => navigate('/interview')}>
+                    <section className="home-ai-card" onClick={() => navigate('/interview')}>
                         <div className="ai-icon-wrapper">
                             <Bot size={32} />
                         </div>
@@ -205,25 +204,25 @@ export default function Home() {
                     </section>
 
                     {/* Quick Challenges */}
-                    <section className="quick-challenges">
-                        <div className="section-header">
-                            <h3 className="section-title">Quick Challenges</h3>
+                    <section className="home-quick-challenges">
+                        <div className="dash-section-header">
+                            <h3 className="dash-section-title">Quick Challenges</h3>
                             <button className="btn-ghost" onClick={() => navigate('/challenges')}>Browse All</button>
                         </div>
 
-                        <div className="quick-list">
+                        <div className="home-quick-list">
                             {challenges.slice(1, 4).map((challenge) => (
                                 <div
                                     key={challenge.id}
-                                    className="quick-item"
+                                    className="home-quick-item"
                                     onClick={() => navigate(`/challenge/${challenge.id}`)}
                                 >
-                                    <div className="quick-icon">
+                                    <div className="home-quick-icon">
                                         {challenge.isPremium ? <Lock size={18} /> : <Unlock size={18} />}
                                     </div>
-                                    <div className="quick-info">
-                                        <span className="quick-name">{challenge.title}</span>
-                                        <span className="quick-meta">{challenge.type} • {challenge.estimatedTime}m</span>
+                                    <div className="home-quick-info">
+                                        <span className="home-quick-name">{challenge.title}</span>
+                                        <span className="home-quick-meta">{challenge.type} • {challenge.estimatedTime}m</span>
                                     </div>
                                     <span className={`badge ${challenge.difficulty === 'easy' ? 'badge-success' :
                                         challenge.difficulty === 'medium' ? 'badge-warning' : 'badge-danger'
@@ -236,48 +235,48 @@ export default function Home() {
                     </section>
 
                     {/* Coming Soon Section */}
-                    <section className="coming-soon-section">
-                        <div className="section-header">
-                            <h3 className="section-title">Coming Soon</h3>
-                            <span className="coming-soon-badge">Roadmap</span>
+                    <section className="home-cs-section">
+                        <div className="dash-section-header">
+                            <h3 className="dash-section-title">Coming Soon</h3>
+                            <span className="home-cs-badge">Roadmap</span>
                         </div>
 
-                        <div className="coming-soon-grid">
-                            <div className="coming-soon-card" onClick={() => handleComingSoon('Global Leaderboard')}>
-                                <div className="cs-icon">
+                        <div className="home-cs-grid">
+                            <div className="home-cs-card" onClick={() => handleComingSoon('Global Leaderboard')}>
+                                <div className="home-cs-icon">
                                     <Trophy size={24} />
                                 </div>
-                                <div className="cs-content">
+                                <div className="home-cs-content">
                                     <h4>Global Leaderboard</h4>
                                     <p>Compete with hackers worldwide</p>
                                 </div>
                             </div>
 
-                            <div className="coming-soon-card" onClick={() => handleComingSoon('Live Hacking Labs')}>
-                                <div className="cs-icon">
+                            <div className="home-cs-card" onClick={() => handleComingSoon('Live Hacking Labs')}>
+                                <div className="home-cs-icon">
                                     <Beaker size={24} />
                                 </div>
-                                <div className="cs-content">
+                                <div className="home-cs-content">
                                     <h4>Live Hacking Labs</h4>
                                     <p>Real environments to exploit</p>
                                 </div>
                             </div>
 
-                            <div className="coming-soon-card" onClick={() => handleComingSoon('Certifications')}>
-                                <div className="cs-icon">
+                            <div className="home-cs-card" onClick={() => handleComingSoon('Certifications')}>
+                                <div className="home-cs-icon">
                                     <Award size={24} />
                                 </div>
-                                <div className="cs-content">
+                                <div className="home-cs-content">
                                     <h4>Certifications</h4>
                                     <p>Earn verified security certs</p>
                                 </div>
                             </div>
 
-                            <div className="coming-soon-card" onClick={() => handleComingSoon('CTF Simulator')}>
-                                <div className="cs-icon">
+                            <div className="home-cs-card" onClick={() => handleComingSoon('CTF Simulator')}>
+                                <div className="home-cs-icon">
                                     <Gamepad2 size={24} />
                                 </div>
-                                <div className="cs-content">
+                                <div className="home-cs-content">
                                     <h4>CTF Simulator</h4>
                                     <p>Practice capture-the-flag</p>
                                 </div>
