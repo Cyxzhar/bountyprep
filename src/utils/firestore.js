@@ -16,9 +16,7 @@ export async function recordActivity(userId) {
         const dateStr = now.toISOString().split('T')[0]; // YYYY-MM-DD
 
         await setDoc(userRef, {
-            activity: {
-                [dateStr]: increment(1)
-            },
+            [`activity.${dateStr}`]: increment(1),
             lastActivityDate: serverTimestamp(),
             updatedAt: serverTimestamp()
         }, { merge: true });
