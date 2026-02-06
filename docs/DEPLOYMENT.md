@@ -6,12 +6,12 @@ Follow this checklist to ensure a smooth deployment on DigitalOcean App Platform
 - **Source**: GitHub repo `Cyxzhar/bountyprep`
 - **Region**: NYC/SGP/AMS (Choose closest to users)
 - **Branch**: `main`
-- **Plan**: Starter (Free for static sites)
+- **Plan**: Basic (Requires a "Web Service" component, not just "Static Site")
 
-## 2. Build Settings
+## 2. Build & Run Settings
 - **Build Command**: `npm run build`
-- **Output Directory**: `dist`
-- **Environment**: Node.js
+- **Run Command**: `npm start`
+- **HTTP Port**: `8080`
 
 ## 3. Environment Variables (Critical)
 Add these in the DO App dashboard -> Settings -> Components -> (Your App Name) -> Environment Variables:
