@@ -28,35 +28,29 @@
     pointer-events: none;
 }
 
-/* Skip Button */
+/* Skip Button Base */
 .onboarding-skip-btn {
     position: absolute;
     top: calc(16px + env(safe-area-inset-top));
-    /* Fixed top spacing */
     right: 16px;
-    /* Fixed right spacing */
     display: flex;
     align-items: center;
     gap: 6px;
     padding: 8px 16px;
-    /* Larger touch target */
+    min-width: 44px;
+    min-height: 44px;
     background: rgba(0, 0, 0, 0.4);
-    /* Darker background for contrast */
     border: 1px solid rgba(255, 255, 255, 0.1);
-    /* Subtle border */
     border-radius: 100px;
-    /* Pill shape */
     color: rgba(255, 255, 255, 0.9);
-    /* High contrast text */
     font-size: 0.875rem;
     font-weight: 600;
     letter-spacing: 0.02em;
     cursor: pointer;
     z-index: 100;
-    /* Ensure it stays on top */
     backdrop-filter: blur(8px);
-    /* Blur effect */
     transition: all 0.2s ease;
+    width: fit-content;
 }
 
 .onboarding-skip-btn:hover {
@@ -1076,15 +1070,7 @@
     max-width: 100%;
 }
 
-/* Skip Button Enhanced */
-.onboarding-skip-btn {
-    min-width: 44px;
-    min-height: 44px;
-    font-weight: 600;
-    letter-spacing: 0.02em;
-    position: relative;
-}
-
+/* Skip Button Enhancement Interaction */
 .onboarding-skip-btn::after {
     content: '';
     position: absolute;
