@@ -386,8 +386,8 @@
 }
 
 .legend-cells .heat-cell {
-    width: 14px;
-    height: 14px;
+    width: 16px;
+    height: 16px;
     aspect-ratio: 1;
 }
 
@@ -715,15 +715,15 @@
     }
 
     .heatmap-grid {
-        max-width: fit-content;
-        gap: 4px;
-        margin: 0 auto var(--space-xl);
-        padding: var(--space-lg);
+        max-width: 100%;
+        gap: 5px;
+        margin: 0 0 var(--space-xl) 0;
+        padding: var(--space-2xl);
     }
 
     .heat-cell {
-        width: 13px;
-        height: 13px;
+        width: 18px;
+        height: 18px;
     }
 
     .stat-card {
