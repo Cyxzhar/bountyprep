@@ -47,6 +47,13 @@
     overflow-y: auto;
 }
 
+/* Desktop Grid Compatibility */
+@media (min-width: 768px) {
+    .paywall-content {
+        overflow-y: visible;
+    }
+}
+
 /* Header */
 .paywall-header {
     text-align: center;

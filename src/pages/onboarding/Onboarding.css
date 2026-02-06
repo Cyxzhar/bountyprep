@@ -1789,12 +1789,88 @@
     .onboarding-scan-beam,
     .onboarding-data-stream-text,
     .onboarding-cyber-progress-fill,
-    .onboarding-loading-dot {
+    .onboarding-loading-dot,
+    .code-bracket,
+    .circuit-line,
+    .shield-glow,
+    .onboarding-illustration {
         animation: none !important;
+        transition: none !important;
     }
 
     .onboarding-terminal-line {
         opacity: 1;
         animation: none;
+    }
+
+    .onboarding-illustration {
+        opacity: 1;
+        transform: none;
+    }
+}
+
+/* High contrast mode support */
+@media (prefers-contrast: high) {
+    .onboarding-screen {
+        --border-color: rgba(159, 239, 0, 0.8);
+    }
+
+    .onboarding-option-card {
+        border-width: 3px;
+    }
+
+    .onboarding-trust-badge,
+    .onboarding-welcome-stats {
+        border-width: 2px;
+    }
+}
+
+/* Performance optimizations */
+.onboarding-illustration,
+.onboarding-bg-grid,
+.onboarding-circuit-line,
+.code-bracket,
+.shield-glow {
+    will-change: auto;
+}
+
+/* Force GPU acceleration only for animations */
+.onboarding-illustration svg {
+    transform: translateZ(0);
+    backface-visibility: hidden;
+}
+
+/* Focus visible styles for keyboard navigation */
+.onboarding-option-card:focus-visible,
+.onboarding-skip-btn:focus-visible,
+.btn:focus-visible {
+    outline: 3px solid var(--primary);
+    outline-offset: 3px;
+    box-shadow: 0 0 0 3px rgba(159, 239, 0, 0.3);
+}
+
+/* Ensure proper touch target sizes (min 44x44px) */
+.onboarding-option-radio {
+    min-width: 44px;
+    min-height: 44px;
+    padding: 10px;
+}
+
+.onboarding-trust-badge {
+    min-height: 44px;
+}
+
+/* Print styles */
+@media print {
+    .onboarding-bg-grid,
+    .onboarding-left-panel,
+    .onboarding-skip-btn,
+    .onboarding-illustration {
+        display: none !important;
+    }
+
+    .onboarding-screen {
+        background: white !important;
+        color: black !important;
     }
 }
