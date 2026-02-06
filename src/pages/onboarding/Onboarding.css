@@ -2127,35 +2127,37 @@
 
     /* 5. Spinner Fix - Perfect Centering & Rotation */
     .onboarding-analysis-spinner {
-        display: grid;
-        place-items: center;
+        position: relative; /* Anchor for absolute children */
         width: 80px;
         height: 80px;
         margin: 0 auto 32px auto;
-        position: relative;
+        /* Remove grid/flex centering to rely on absolute positioning */
     }
 
     .onboarding-spinner-ring {
         position: absolute;
-        inset: 0;
-        width: 80px; /* Fixed width */
-        height: 80px; /* Fixed height */
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
         border: 3px solid var(--border-color);
         border-top-color: var(--neon-green);
         border-radius: 50%;
         box-sizing: border-box;
         animation: spin 1s linear infinite;
-        transform-origin: center center;
+        will-change: transform;
     }
 
     .onboarding-spinner-icon {
-        position: relative;
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
         z-index: 2;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        width: 100%;
-        height: 100%;
+        /* Ensure no extra spacing affects centering */
+        margin: 0;
+        padding: 0;
+        display: block;
     }
 
     /* 6. Footer & Skip Button */

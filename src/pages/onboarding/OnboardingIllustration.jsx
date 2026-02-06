@@ -382,14 +382,19 @@ function CommitmentIllustration() {
 
       {/* Streak Counter */}
       <g className="streak-counter" transform="translate(250, 500)">
-        <circle cx="0" cy="0" r="60" fill="rgba(159, 239, 0, 0.1)" stroke="#9FEF00" strokeWidth="3" className="shield-glow" />
-        <text x="0" y="-5" fontSize="40" fill="url(#commitGradient)" textAnchor="middle" fontWeight="bold">21</text>
-        <g transform="translate(-10, 20)">
-          <text x="-8" y="5" fontSize="14" fill="#9FEF00" textAnchor="middle" opacity="0.8">Day Streak</text>
-          <foreignObject x="35" y="-10" width="20" height="20">
-            <Flame size={18} color="#9FEF00" />
-          </foreignObject>
-        </g>
+        {/* Increased radius to avoid collision */}
+        <circle cx="0" cy="0" r="75" fill="rgba(159, 239, 0, 0.1)" stroke="#9FEF00" strokeWidth="3" className="shield-glow" />
+        
+        {/* Flame Icon at Top */}
+        <foreignObject x="-12" y="-55" width="24" height="24">
+            <Flame size={24} color="#9FEF00" fill="rgba(159, 239, 0, 0.2)" />
+        </foreignObject>
+
+        {/* Number Centered */}
+        <text x="0" y="15" fontSize="48" fill="url(#commitGradient)" textAnchor="middle" fontWeight="bold">21</text>
+        
+        {/* Label at Bottom */}
+        <text x="0" y="40" fontSize="14" fill="#9FEF00" textAnchor="middle" opacity="0.8" letterSpacing="0.05em">DAY STREAK</text>
       </g>
 
       {/* Floating Checkmarks */}
