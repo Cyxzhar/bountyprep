@@ -5,9 +5,9 @@ import { useToast } from '../../context/ToastContext'; // Added useToast
 import { useSound } from '../../context/SoundContext';
 import { refreshUserProfile } from '../../utils/firestore';
 import { validatePassword, hashPassword } from '../../utils/validation';
-import { updateProfile, updatePassword, EmailAuthProvider, reauthenticateWithCredential, deleteUser } from 'firebase/auth';
+import { getAuth, updateProfile, updatePassword, EmailAuthProvider, reauthenticateWithCredential, deleteUser } from 'firebase/auth';
 import { doc, getDoc, updateDoc, deleteDoc, serverTimestamp } from 'firebase/firestore';
-import { db, auth } from '../../lib/firebase';
+import { db } from '../../lib/firebase';
 import {
     Camera, User, Mail, Bell, Shield, Lock, LogOut,
     ChevronRight, Moon, Sun, Loader2, Check, ChevronLeft,
@@ -161,13 +161,18 @@ export default function Settings() {
         setChangingPassword(true);
 
         try {
-            // Get the raw Firebase User instance (context user might be a spread copy)
-            const firebaseUser = auth.currentUser;
+            // Get a FRESH Firebase User instance via getAuth() — the module-level
+            // singleton can produce User objects missing internal methods in Firebase v12+
+            const freshAuth = getAuth();
+            const firebaseUser = freshAuth.currentUser;
             if (!firebaseUser) {
                 showError('Session expired. Please log in again.');
                 setChangingPassword(false);
                 return;
             }
+
+            // Reload to ensure the user object is fully hydrated with all internal methods
+            await firebaseUser.reload();
 
             // 1. Check Password History (Used Passwords)
             const userRef = doc(db, 'users', firebaseUser.uid);
@@ -249,9 +254,11 @@ export default function Settings() {
         try {
             // 1. Delete Firestore Data
             await deleteDoc(doc(db, 'users', currentUser.uid));
-            // 2. Delete Auth User (Must use the real auth instance, not the context copy)
-            const user = auth.currentUser;
+            // 2. Delete Auth User — use getAuth() fresh to avoid Firebase v12 internal method bug
+            const freshAuth = getAuth();
+            const user = freshAuth.currentUser;
             if (user) {
+                await user.reload();
                 await deleteUser(user);
             }
             // 3. Complete Cleanup
