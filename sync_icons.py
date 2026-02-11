@@ -19,7 +19,7 @@ def process_logo(source_path, public_dir):
     bbox = diff.getbbox()
     if bbox:
         # Add slight margin
-        margin = 10
+        margin = 20
         img = img.crop((
             max(0, bbox[0] - margin),
             max(0, bbox[1] - margin),
@@ -27,13 +27,14 @@ def process_logo(source_path, public_dir):
             min(img.height, bbox[3] + margin)
         ))
     
-    # 2. Convert black background to transparency using Screen blend/Alpha mapping
-    # Since the logo is bright on black, we can use the max(R,G,B) as the alpha mask
+    # 2. Convert black background to transparency
+    # Using the brightness of the image as the alpha mask
     r, g, b, a = img.split()
-    # Boost the mask a bit to ensure the core strokes are solid
-    mask = ImageChops.screen(r.point(lambda x: min(255, x*2.5)), 
-                             g.point(lambda x: min(255, x*2.5)))
-    mask = ImageChops.screen(mask, b.point(lambda x: min(255, x*2.5)))
+    # Mask = (R + G + B) or max(R, G, B)
+    # Let's use max for neon colors
+    mask = ImageChops.screen(r.point(lambda x: min(255, x*2)), 
+                             g.point(lambda x: min(255, x*2)))
+    mask = ImageChops.screen(mask, b.point(lambda x: min(255, x*2)))
     img.putalpha(mask)
     
     # 3. Square the image with padding
@@ -55,19 +56,10 @@ def process_logo(source_path, public_dir):
         dest = os.path.join(public_dir, filename)
         resized = new_img.resize(size, Image.Resampling.LANCZOS)
         resized.save(dest)
-        print(f"✅ Saved {dest} ({size[0]}x{size[1]})")
+        print(f"Saved {dest} ({size[0]}x{size[1]})")
 
 if __name__ == "__main__":
-    # INSTRUCTIONS:
-    # 1. Open public/logo.svg in your browser.
-    # 2. Take a high-res screenshot (min 1024x1024) of the logo ON A PURE BLACK BACKGROUND.
-    # 3. Update the path below to point to your screenshot.
-    # 4. Run: python3 sync_icons.py
+    SCREENSHOT_PATH = "/Users/binodacharya/.gemini/antigravity/brain/e5a00675-dc98-444a-8a57-97911a5ec6c1/high_res_logo_black_bg_1770788476423.png"
+    PUBLIC_DIR = "/Users/binodacharya/Documents/bountyprep/public"
     
-    SCREENSHOT_PATH = "path/to/your/screenshot.png" # <--- UPDATE THIS
-    PUBLIC_DIR = "./public"
-    
-    if os.path.exists(SCREENSHOT_PATH):
-        process_logo(SCREENSHOT_PATH, PUBLIC_DIR)
-    else:
-        print("Please update SCREENSHOT_PATH in sync_icons.py with your logo screenshot.")
+    process_logo(SCREENSHOT_PATH, PUBLIC_DIR)
