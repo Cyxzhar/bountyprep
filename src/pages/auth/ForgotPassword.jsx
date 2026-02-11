@@ -1,13 +1,14 @@
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { sendPasswordResetEmail } from 'firebase/auth';
-import { auth } from '../../lib/firebase';
-import { Mail, ArrowLeft, CheckCircle, AlertCircle, Loader2 } from 'lucide-react';
+import { collection, query, where, getDocs } from 'firebase/firestore';
+import { auth, db } from '../../lib/firebase';
+import { Mail, ArrowLeft, CheckCircle, AlertCircle, Loader2, UserPlus } from 'lucide-react';
 import './ForgotPassword.css';
 
 export default function ForgotPassword() {
     const [email, setEmail] = useState('');
-    const [status, setStatus] = useState('idle'); // idle, loading, success, error
+    const [status, setStatus] = useState('idle'); // idle, loading, success, error, not-found
     const [errorMessage, setErrorMessage] = useState('');
 
     const handleSubmit = async (e) => {
@@ -18,13 +19,25 @@ export default function ForgotPassword() {
         setErrorMessage('');
 
         try {
-            await sendPasswordResetEmail(auth, email);
+            // Step 1: Check if email exists in Firestore users collection
+            const usersRef = collection(db, 'users');
+            const q = query(usersRef, where('email', '==', email.trim().toLowerCase()));
+            const snapshot = await getDocs(q);
+
+            if (snapshot.empty) {
+                // Email not registered — show sign-up prompt
+                setStatus('not-found');
+                return;
+            }
+
+            // Step 2: Email exists — send reset link
+            await sendPasswordResetEmail(auth, email.trim());
             setStatus('success');
         } catch (err) {
             setStatus('error');
             switch (err.code) {
                 case 'auth/user-not-found':
-                    setErrorMessage('No account found with this email address.');
+                    setStatus('not-found');
                     break;
                 case 'auth/invalid-email':
                     setErrorMessage('Please enter a valid email address.');
@@ -71,6 +84,28 @@ export default function ForgotPassword() {
                             Try another email
                         </button>
                     </div>
+                ) : status === 'not-found' ? (
+                    <div className="auth-success-state">
+                        <div className="auth-error-icon">
+                            <AlertCircle size={48} />
+                        </div>
+                        <h2>Email not registered</h2>
+                        <p>
+                            No account found for <strong>{email}</strong>.
+                            You need to create an account first.
+                        </p>
+                        <Link to="/auth/signup" className="btn btn-primary btn-full" style={{ textDecoration: 'none', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '8px' }}>
+                            <UserPlus size={20} />
+                            Sign Up Now
+                        </Link>
+                        <button
+                            className="btn btn-secondary btn-full"
+                            onClick={() => { setStatus('idle'); setEmail(''); }}
+                            style={{ marginTop: '12px' }}
+                        >
+                            Try another email
+                        </button>
+                    </div>
                 ) : (
                     <form onSubmit={handleSubmit} className="auth-form">
                         <div className="input-group">
@@ -105,7 +140,7 @@ export default function ForgotPassword() {
                             {status === 'loading' ? (
                                 <>
                                     <Loader2 className="spin" size={20} />
-                                    Sending...
+                                    Verifying...
                                 </>
                             ) : (
                                 'Send Reset Link'
