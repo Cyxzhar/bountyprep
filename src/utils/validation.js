@@ -67,8 +67,35 @@ export const checkPasswordStrength = (password) => {
 };
 
 export const validatePassword = (password) => {
-    if (!password || password.length < 6) {
-        return { isValid: false, message: 'Password must be at least 6 characters long' };
+    if (!password) {
+        return { isValid: false, message: 'Password is required' };
+    }
+    if (password.length < 8) {
+        return { isValid: false, message: 'Password must be at least 8 characters long' };
+    }
+    if (!/[A-Z]/.test(password)) {
+        return { isValid: false, message: 'Password must contain at least one uppercase letter' };
+    }
+    if (!/[a-z]/.test(password)) {
+        return { isValid: false, message: 'Password must contain at least one lowercase letter' };
+    }
+    if (!/[0-9]/.test(password)) {
+        return { isValid: false, message: 'Password must contain at least one number' };
+    }
+    if (!/[^A-Za-z0-9]/.test(password)) {
+        return { isValid: false, message: 'Password must contain at least one special character' };
     }
     return { isValid: true, message: '' };
+};
+
+/**
+ * Hashes a string using SHA-256
+ * @param {string} string 
+ * @returns {Promise<string>}
+ */
+export const hashPassword = async (string) => {
+    const utf8 = new TextEncoder().encode(string);
+    const hashBuffer = await crypto.subtle.digest('SHA-256', utf8);
+    const hashArray = Array.from(new Uint8Array(hashBuffer));
+    return hashArray.map((b) => b.toString(16).padStart(2, '0')).join('');
 };
