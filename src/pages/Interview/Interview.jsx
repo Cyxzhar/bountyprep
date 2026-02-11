@@ -182,7 +182,9 @@ export default function Interview() {
     useEffect(() => {
         if (started && currentUser?.uid && messages.length > 1 && sessionId) {
             const timeout = setTimeout(() => {
-                saveInterviewSession(currentUser.uid, messages, elapsedTime, sessionId);
+                // Strip shouldAnimate before saving — it's a UI-only flag
+                const cleanMessages = messages.map(({ shouldAnimate, ...rest }) => rest);
+                saveInterviewSession(currentUser.uid, cleanMessages, elapsedTime, sessionId);
             }, 1000);
             return () => clearTimeout(timeout);
         }
@@ -199,7 +201,9 @@ export default function Interview() {
     const handleResumeSession = (session) => {
         if (session) {
             setSessionId(session.id);
-            setMessages(session.messages);
+            // Strip shouldAnimate from all restored messages so nothing replays typing
+            const cleanMessages = (session.messages || []).map(({ shouldAnimate, ...rest }) => rest);
+            setMessages(cleanMessages);
             setElapsedTime(session.elapsedTime || 0);
             setStarted(true);
             setShowHistory(false);
