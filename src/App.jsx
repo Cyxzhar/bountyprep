@@ -1,4 +1,5 @@
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
+import ScrollToTop from './components/ScrollToTop';
 import { Suspense, lazy } from 'react';
 import { AnimationProvider } from './context/AnimationContext';
 import { AuthProvider } from './context/AuthContext';
@@ -47,6 +48,7 @@ const PageLoader = () => (
 function App() {
   return (
     <BrowserRouter>
+      <ScrollToTop />
       <AnimationProvider>
         <AuthProvider>
           <ToastProvider>
