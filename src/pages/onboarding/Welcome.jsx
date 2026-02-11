@@ -63,7 +63,7 @@ export default function Welcome() {
                         <div className="onboarding-hero-illustration">
                             <div className="onboarding-hero-glow"></div>
                             <div className="onboarding-hero-icon-main">
-                                <img src="/logo.svg" alt="Bugora" style={{ width: '100px', height: '100px' }} />
+                                <img src="/logo.png" alt="Bugora" style={{ width: '100px', height: '100px' }} />
                             </div>
                             <div className="onboarding-hero-particles">
                                 <span style={{ top: '10%', left: '20%', animationDelay: '0s' }}></span>

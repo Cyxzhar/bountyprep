@@ -51,7 +51,7 @@ export default function Sidebar() {
             {/* Brand */}
             <div className="sidebar-brand">
                 <div className="brand-logo">
-                    <img src="/logo.svg" alt="Bugora" />
+                    <img src="/logo.png" alt="Bugora" />
                 </div>
                 <span className="brand-name">Bug<span className="brand-accent">ora</span></span>
             </div>

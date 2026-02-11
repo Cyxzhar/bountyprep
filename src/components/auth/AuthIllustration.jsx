@@ -191,7 +191,7 @@ function AuthIllustration() {
       {/* Overlay Content */}
       <div className="auth-illustration-content">
         <div className="auth-illustration-logo">
-          <img src="/logo.svg" alt="" className="auth-illustration-logo-img" />
+          <img src="/logo.png" alt="" className="auth-illustration-logo-img" />
           <h1 className="auth-illustration-title">
             Bugo<span style={{ color: '#9FEF00' }}>ra</span>
           </h1>
