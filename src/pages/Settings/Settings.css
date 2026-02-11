@@ -162,6 +162,7 @@
     cursor: not-allowed;
     background: var(--bg-darker);
     text-overflow: ellipsis;
+    font-size: 0.9rem;
 }
 
 .input-group .input-icon {
@@ -446,7 +447,43 @@ input:checked+.slider:before {
     .toggle-switch {
         align-self: flex-end;
     }
+
+    /* Email - show full email on small devices */
+    .input-group.disabled .input {
+        font-size: 0.75rem;
+        padding-right: 80px;
+        text-overflow: clip;
+        overflow: visible;
+        white-space: nowrap;
+    }
+
+    .verified-badge {
+        font-size: 0.65rem;
+        padding: 2px 6px;
+    }
+
+    /* Password form - prevent button overflow */
+    .password-change-form {
+        padding: var(--space-md);
+    }
+
+    .password-change-form .form-actions {
+        flex-direction: column;
+        gap: var(--space-sm);
+    }
+
+    .password-change-form .btn {
+        padding: var(--space-md) var(--space-md);
+        font-size: 0.85rem;
+        white-space: nowrap;
+    }
+
+    .password-change-form input[type="password"] {
+        padding: var(--space-sm) var(--space-md);
+        font-size: 0.9rem;
+    }
 }
+
 /* ============================================
    DESKTOP RESPONSIVE STYLES
    ============================================ */
@@ -631,8 +668,13 @@ input:checked+.slider:before {
 }
 
 @keyframes spin {
-    from { transform: rotate(0deg); }
-    to { transform: rotate(360deg); }
+    from {
+        transform: rotate(0deg);
+    }
+
+    to {
+        transform: rotate(360deg);
+    }
 }
 
 @media (min-width: 1024px) {
