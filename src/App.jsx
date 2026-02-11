@@ -28,7 +28,7 @@ const ChallengeDetail = lazy(() => import('./pages/ChallengeDetail/ChallengeDeta
 const Interview = lazy(() => import('./pages/Interview/Interview'));
 const Progress = lazy(() => import('./pages/Progress/Progress'));
 const Profile = lazy(() => import('./pages/Profile/Profile'));
-const AdminSeeder = lazy(() => import('./pages/AdminSeeder/AdminSeeder'));
+// AdminSeeder removed for security — use Firebase Admin SDK for seeding
 const NotFound = lazy(() => import('./pages/NotFound/NotFound'));
 
 // Protected Layout Component
@@ -80,7 +80,7 @@ function App() {
                     <Route path="/settings" element={<ProtectedRoute><Settings /></ProtectedRoute>} />
                     <Route path="/upgrade" element={<ProtectedRoute><Upgrade /></ProtectedRoute>} />
 
-                    <Route path="/admin-seed" element={<AdminSeeder />} />
+                    {/* Admin seeder removed for security */}
                     <Route path="*" element={<NotFound />} />
                   </Routes>
                 </Suspense>

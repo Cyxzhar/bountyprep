@@ -47,33 +47,35 @@ service cloud.firestore {
       }
     }
 
-    // Challenges collection (read-only for clients, write allowed for seeding)
+    // Challenges collection (LOCKED: read-only, writes via Admin SDK only)
     match /challenges/{challengeId} {
       allow read: if isAuthenticated();
-      allow write: if isAuthenticated(); // Enabled for seeding
+      allow write: if false;
     }
 
-    // Courses collection (read-only for clients, write allowed for seeding)
+    // Courses collection (LOCKED: read-only, writes via Admin SDK only)
     match /courses/{courseId} {
       allow read: if isAuthenticated();
-      allow write: if isAuthenticated(); // Enabled for seeding
+      allow write: if false;
     }
 
-    // Achievements master collection (write allowed for seeding)
+    // Achievements master collection (LOCKED: read-only, writes via Admin SDK only)
     match /achievements/{achievementId} {
       allow read: if isAuthenticated();
-      allow write: if isAuthenticated();
+      allow write: if false;
     }
 
-    // Skill Modules collection (write allowed for seeding)
+    // Skill Modules collection (LOCKED: read-only, writes via Admin SDK only)
     match /skill_modules/{moduleId} {
       allow read: if isAuthenticated();
-      allow write: if isAuthenticated();
+      allow write: if false;
     }
 
-    // Waitlist collection
+    // Waitlist collection (validated creates only)
     match /waitlist/{entryId} {
-      allow create: if true;
+      allow create: if request.resource.data.email is string
+                    && request.resource.data.email.size() > 0
+                    && request.resource.data.email.size() < 255;
       allow read, update, delete: if isOwner(entryId);
     }
   }

@@ -1,27 +1,94 @@
 /**
  * Vercel Serverless Function - AI Interview Proxy
  * 
- * This function securely proxies requests to the Perplexity API,
- * keeping the API key server-side only.
+ * SECURITY:
+ * - Firebase auth token verification (H2)
+ * - Restricted CORS origins (H3)
+ * - Input sanitization / prompt injection prevention (M2)
+ * - Server-side quota enforcement (H4)
  */
 
-export default async function handler(req, res) {
-    // Only allow POST requests
-    if (req.method !== 'POST') {
-        return res.status(405).json({ error: 'Method not allowed' });
-    }
+import admin from 'firebase-admin';
 
-    // CORS headers for local development
-    res.setHeader('Access-Control-Allow-Origin', '*');
+// Initialize Firebase Admin (singleton)
+if (!admin.apps.length) {
+    admin.initializeApp({
+        credential: admin.credential.cert({
+            projectId: process.env.FIREBASE_PROJECT_ID,
+            clientEmail: process.env.FIREBASE_CLIENT_EMAIL,
+            privateKey: process.env.FIREBASE_PRIVATE_KEY?.replace(/\\n/g, '\n'),
+        }),
+    });
+}
+
+const ALLOWED_ORIGINS = [
+    'https://bugora.app',
+    'https://www.bugora.app',
+    'http://localhost:5173',
+    'http://localhost:8080',
+];
+
+const FREE_DAILY_LIMIT = 10;
+const PREMIUM_DAILY_LIMIT = 50;
+
+export default async function handler(req, res) {
+    // CORS: Restrict to allowed origins
+    const origin = req.headers.origin;
+    if (ALLOWED_ORIGINS.includes(origin)) {
+        res.setHeader('Access-Control-Allow-Origin', origin);
+    }
     res.setHeader('Access-Control-Allow-Methods', 'POST, OPTIONS');
-    res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
+    res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization');
 
     if (req.method === 'OPTIONS') {
         return res.status(200).end();
     }
 
-    const apiKey = process.env.PERPLEXITY_API_KEY;
+    if (req.method !== 'POST') {
+        return res.status(405).json({ error: 'Method not allowed' });
+    }
 
+    // ── AUTH: Verify Firebase ID token ──────────────────────────
+    const authHeader = req.headers.authorization;
+    if (!authHeader?.startsWith('Bearer ')) {
+        return res.status(401).json({ error: 'Authentication required' });
+    }
+
+    let uid;
+    try {
+        const token = authHeader.split('Bearer ')[1];
+        const decoded = await admin.auth().verifyIdToken(token);
+        uid = decoded.uid;
+    } catch (err) {
+        return res.status(401).json({ error: 'Invalid or expired token' });
+    }
+
+    // ── QUOTA: Server-side rate limiting ────────────────────────
+    const today = new Date().toISOString().split('T')[0];
+    const quotaRef = admin.firestore().doc(`users/${uid}/quota/${today}`);
+
+    try {
+        const quotaSnap = await quotaRef.get();
+        const quotaData = quotaSnap.exists ? quotaSnap.data() : { used: 0 };
+        const limit = FREE_DAILY_LIMIT; // TODO: check user.isPremium for PREMIUM_DAILY_LIMIT
+
+        if (quotaData.used >= limit) {
+            return res.status(429).json({
+                error: 'Daily quota exceeded',
+                remaining: 0,
+                resetAt: `${today}T23:59:59Z`
+            });
+        }
+
+        // Increment quota
+        await quotaRef.set({ used: (quotaData.used || 0) + 1, date: today }, { merge: true });
+    } catch (err) {
+        console.error('Quota check failed:', err);
+        // Fail open for now — don't block users if quota check fails
+    }
+
+    // ── API KEY ─────────────────────────────────────────────────
+    const apiKey = process.env.PERPLEXITY_API_KEY;
     if (!apiKey) {
         console.error('Missing PERPLEXITY_API_KEY environment variable');
         return res.status(500).json({ error: 'Server configuration error' });
@@ -34,10 +101,19 @@ export default async function handler(req, res) {
             return res.status(400).json({ error: 'Invalid request: messages array required' });
         }
 
+        // ── INPUT SANITIZATION: Prevent prompt injection ───────
+        const sanitizedMessages = messages
+            .filter(m => m.role !== 'system') // Block client-sent system prompts
+            .slice(-20) // Limit conversation length
+            .map(m => ({
+                role: m.role === 'user' ? 'user' : 'assistant',
+                content: String(m.content || '').slice(0, 2000) // Limit message length
+            }));
+
         const systemPrompt = `You are an expert Security Engineer conducting a FAANG-level security interview.
         
-        Difficulty: ${difficulty || 'mid'}
-        Primary Topic: ${topic || 'General Application Security'}
+        Difficulty: ${String(difficulty || 'mid').slice(0, 20)}
+        Primary Topic: ${String(topic || 'General Application Security').slice(0, 100)}
         
         Guidelines:
         1. Act exactly like a senior interviewer - be professional but encouraging.
@@ -58,7 +134,7 @@ export default async function handler(req, res) {
                 model: 'sonar',
                 messages: [
                     { role: 'system', content: systemPrompt },
-                    ...messages
+                    ...sanitizedMessages
                 ],
                 temperature: 0.2,
                 max_tokens: 1000,
