@@ -4,8 +4,9 @@ import { useAuth } from '../../context/AuthContext';
 import { useToast } from '../../context/ToastContext'; // Added useToast
 import { useSound } from '../../context/SoundContext';
 import { refreshUserProfile } from '../../utils/firestore';
+import { validatePassword, hashPassword } from '../../utils/validation';
 import { updateProfile, updatePassword, EmailAuthProvider, reauthenticateWithCredential, deleteUser } from 'firebase/auth';
-import { doc, updateDoc, deleteDoc, serverTimestamp } from 'firebase/firestore';
+import { doc, getDoc, updateDoc, deleteDoc, serverTimestamp } from 'firebase/firestore';
 import { db, auth } from '../../lib/firebase';
 import {
     Camera, User, Mail, Bell, Shield, Lock, LogOut,
@@ -141,14 +142,14 @@ export default function Settings() {
     const handlePasswordChange = async (e) => {
         e.preventDefault();
 
-        // Validation
-        if (!currentPassword || !newPassword || !confirmPassword) {
-            showError('Please fill in all password fields');
+        if (newPassword === currentPassword) {
+            showError('New password cannot be the same as current password');
             return;
         }
 
-        if (newPassword.length < 6) {
-            showError('New password must be at least 6 characters');
+        const { isValid, message: validationMessage } = validatePassword(newPassword);
+        if (!isValid) {
+            showError(`Weak Password: ${validationMessage}`);
             return;
         }
 
@@ -160,15 +161,45 @@ export default function Settings() {
         setChangingPassword(true);
 
         try {
-            // Re-authenticate user with current password
+            // Get the raw Firebase User instance (context user might be a spread copy)
+            const firebaseUser = auth.currentUser;
+            if (!firebaseUser) {
+                showError('Session expired. Please log in again.');
+                setChangingPassword(false);
+                return;
+            }
+
+            // 1. Check Password History (Used Passwords)
+            const userRef = doc(db, 'users', firebaseUser.uid);
+            const userSnap = await getDoc(userRef);
+            const userData = userSnap.exists() ? userSnap.data() : {};
+            const passwordHistory = userData.passwordHistory || [];
+
+            const newPasswordHash = await hashPassword(newPassword);
+
+            if (passwordHistory.includes(newPasswordHash)) {
+                showError('You have used this password before. Please choose a new one.');
+                setChangingPassword(false);
+                return;
+            }
+
+            // 2. Re-authenticate user with current password
             const credential = EmailAuthProvider.credential(
-                currentUser.email,
+                firebaseUser.email,
                 currentPassword
             );
-            await reauthenticateWithCredential(currentUser, credential);
+            await reauthenticateWithCredential(firebaseUser, credential);
 
-            // Update password
-            await updatePassword(currentUser, newPassword);
+            // 3. Update password in Firebase Auth
+            await updatePassword(firebaseUser, newPassword);
+
+            // 4. Update Password History in Firestore
+            // Keep only the last 5 passwords
+            const updatedHistory = [newPasswordHash, ...passwordHistory].slice(0, 5);
+            await updateDoc(userRef, {
+                passwordHistory: updatedHistory,
+                updatedAt: serverTimestamp()
+            });
 
             success('Password changed successfully');
             setShowPasswordForm(false);
@@ -176,13 +207,28 @@ export default function Settings() {
             setNewPassword('');
             setConfirmPassword('');
         } catch (err) {
-            console.error('Password change failed:', err);
-            if (err.code === 'auth/wrong-password') {
-                showError('Current password is incorrect');
-            } else if (err.code === 'auth/weak-password') {
-                showError('New password is too weak');
+            console.error('Detailed Password Change Error:', err);
+
+            // Extract error code from various possible locations in the error object
+            const errorCode = err.code ||
+                (err.message?.includes('auth/') ? err.message.match(/auth\/[a-z-]+/)?.[0] : null);
+
+            if (errorCode === 'auth/wrong-password' || errorCode === 'auth/invalid-credential') {
+                showError('Current password is incorrect. Please check and try again.');
+            } else if (errorCode === 'auth/weak-password' || err.message?.includes('weak-password')) {
+                showError('The new password is too weak. Please include letters, numbers, and symbols.');
+            } else if (err.message) {
+                // If it's a known Firebase error message but code didn't match
+                if (err.message.includes('invalid-credential') || err.message.includes('wrong-password')) {
+                    showError('Authentication failed: Current password is incorrect.');
+                } else if (err.message.includes('is not a function')) {
+                    showError('Auth Error: Internal sync issue. Please refresh the page and try again.');
+                } else {
+                    // Show a slightly more descriptive message than before
+                    showError(`Error: ${err.message.split('.')[0]}`);
+                }
             } else {
-                showError('Failed to change password. Please try again.');
+                showError('Update failed. Please check your internet and current password.');
             }
         } finally {
             setChangingPassword(false);
