@@ -19,7 +19,7 @@ const LandingFooter = () => {
                 {/* Brand & Status */}
                 <div className="footer-brand-simple">
                     <div className="brand-logo-simple">
-                        <img src="/logo.png" alt="Bugora" className="footer-logo-img" />
+                        <img src="/logo.svg" alt="Bugora" className="footer-logo-img" />
                         <span className="brand-text">Bug<span className="brand-accent">ora</span></span>
                     </div>
                     <p className="footer-tagline">

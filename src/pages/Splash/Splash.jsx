@@ -37,7 +37,7 @@ export default function Splash() {
             <div className="splash-content">
                 {/* Logo */}
                 <div className="splash-logo animate-float">
-                    <img src="/logo.png" alt="Bugora" style={{ width: '80px', height: '80px' }} />
+                    <img src="/logo.svg" alt="Bugora" style={{ width: '80px', height: '80px' }} />
                 </div>
 
                 {/* Brand */}

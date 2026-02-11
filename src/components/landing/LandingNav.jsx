@@ -47,7 +47,7 @@ const LandingNav = () => {
         <nav className={`landing-nav ${isMenuOpen ? 'menu-active' : ''}`}>
             <div className="nav-container">
                 <div className="landing-logo">
-                    <img src="/logo.png" alt="Bugora" />
+                    <img src="/logo.svg" alt="Bugora" />
                     <span className="brand-text">Bug<span className="brand-accent">ora</span></span>
                 </div>
 

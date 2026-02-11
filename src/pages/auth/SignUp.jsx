@@ -133,7 +133,7 @@ export default function SignUp() {
             <div className="auth-content">
                 <div className="auth-logo" onClick={() => navigate('/')} style={{ cursor: 'pointer' }}>
                     <div className="auth-logo-wrapper">
-                        <img src="/logo.png" alt="Bugora" className="auth-logo-image" />
+                        <img src="/logo.svg" alt="Bugora" className="auth-logo-image" />
                     </div>
                     <span className="auth-logo-text">Bugo<span className="auth-text-accent">ra</span></span>
                 </div>
