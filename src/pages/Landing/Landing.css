@@ -1350,29 +1350,34 @@
     border: 1px solid rgba(255, 255, 255, 0.08);
     padding: 60px 48px;
     border-radius: 32px;
-    transition: all 0.5s var(--transition-smooth);
+    transition: all 0.4s cubic-bezier(0.22, 1, 0.36, 1);
     overflow: hidden;
     display: flex;
     flex-direction: column;
     z-index: 1;
+    will-change: transform;
+    --mouse-x: 50%;
+    --mouse-y: 50%;
 }
 
 .feature-card::before {
     content: '';
     position: absolute;
     inset: 0;
-    background: linear-gradient(135deg, rgba(159, 239, 0, 0.05) 0%, transparent 100%);
+    background: radial-gradient(600px circle at var(--mouse-x) var(--mouse-y),
+            rgba(159, 239, 0, 0.08) 0%,
+            transparent 60%);
     opacity: 0;
-    transition: opacity 0.5s var(--transition-smooth);
+    transition: opacity 0.4s ease;
     z-index: -1;
 }
 
 .feature-card:hover {
-    transform: translateY(-16px) scale(1.02);
-    border-color: rgba(159, 239, 0, 0.4);
+    transform: translateY(-4px);
+    border-color: rgba(159, 239, 0, 0.3);
     box-shadow:
-        0 40px 100px rgba(0, 0, 0, 0.5),
-        0 0 40px rgba(159, 239, 0, 0.15);
+        0 20px 60px rgba(0, 0, 0, 0.4),
+        0 0 30px rgba(159, 239, 0, 0.08);
 }
 
 .feature-card:hover::before {
@@ -1439,8 +1444,9 @@
 }
 
 .feature-card:hover .feature-icon {
-    transform: rotate(8deg);
+    transform: scale(1.08);
     border-color: var(--primary);
+    box-shadow: 0 0 20px rgba(159, 239, 0, 0.2);
 }
 
 .feature-card h3 {
@@ -1549,124 +1555,173 @@
     box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
 }
 
-.module-stack {
+/* --- Module Carousel (replaces module-stack) --- */
+.module-carousel {
     position: relative;
-    width: 420px;
-    height: 480px;
-    margin: 0 auto;
-    perspective: 2000px;
-}
-
-.module-item {
-    background: rgba(15, 15, 25, 0.7);
-    backdrop-filter: blur(25px);
-    -webkit-backdrop-filter: blur(25px);
-    border: 1px solid rgba(255, 255, 255, 0.12);
-    padding: 40px;
-    border-radius: 28px;
-    font-weight: 700;
-    font-size: 1.5rem;
-    font-family: 'JetBrains Mono', 'Fira Mono', monospace !important;
-    box-shadow:
-        0 40px 80px rgba(0, 0, 0, 0.7),
-        inset 0 0 20px rgba(255, 255, 255, 0.02);
-    position: absolute;
     width: 100%;
-    transition: all 0.7s cubic-bezier(0.19, 1, 0.22, 1);
-    cursor: pointer;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
+    height: 340px;
+    margin: 0 auto;
+    overflow: visible;
 }
 
-.module-item:hover {
-    transform: translateZ(50px) translateY(-15px) !important;
-    border-color: var(--primary);
-    background: rgba(20, 20, 35, 0.9);
-    box-shadow:
-        0 80px 160px rgba(0, 0, 0, 0.8),
-        0 0 40px rgba(159, 239, 0, 0.25),
-        inset 0 0 30px rgba(159, 239, 0, 0.05);
-}
-
-/* Enhanced Visual Stacking */
-.module-item.p1 {
+.module-card {
+    position: absolute;
     top: 50%;
     left: 50%;
+    width: 320px;
+    padding: 40px 36px;
+    border-radius: 24px;
+    background: rgba(15, 15, 25, 0.85);
+    backdrop-filter: blur(25px);
+    -webkit-backdrop-filter: blur(25px);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    font-family: 'JetBrains Mono', 'Fira Mono', monospace;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    cursor: pointer;
+    transition: all 0.6s cubic-bezier(0.22, 1, 0.36, 1);
+    will-change: transform, opacity, filter;
+    pointer-events: none;
+    opacity: 0;
+}
+
+.module-card.center {
+    transform: translate(-50%, -50%) scale(1);
     z-index: 10;
-    transform: translate(-50%, -50%) translateZ(100px) scale(1.1);
-    border-color: rgba(159, 239, 0, 0.6);
-    box-shadow: 0 40px 100px rgba(0, 0, 0, 0.6), 0 0 0 1px rgba(159, 239, 0, 0.2);
     opacity: 1;
+    pointer-events: auto;
+    border-color: rgba(159, 239, 0, 0.35);
+    box-shadow:
+        0 30px 80px rgba(0, 0, 0, 0.5),
+        0 0 0 1px rgba(159, 239, 0, 0.15);
+}
+
+.module-card.right-1 {
+    transform: translate(calc(-50% + 180px), -50%) scale(0.88) rotate(2deg);
+    z-index: 5;
+    opacity: 0.5;
+    filter: brightness(0.6) blur(1px);
     pointer-events: auto;
 }
 
-.module-item.p2 {
-    top: 50%;
-    left: 50%;
-    z-index: 8;
-    transform: translate(-50%, -50%) translate(45%, 15%) translateZ(40px) rotate(-4deg) scale(0.95);
-    opacity: 0.75;
-    pointer-events: none;
-    filter: brightness(0.7);
+.module-card.right-2 {
+    transform: translate(calc(-50% + 320px), -50%) scale(0.76) rotate(4deg);
+    z-index: 2;
+    opacity: 0.25;
+    filter: brightness(0.4) blur(2px);
 }
 
-.module-item.p3 {
-    top: 50%;
-    left: 50%;
-    z-index: 6;
-    transform: translate(-50%, -50%) translate(80%, 30%) translateZ(-20px) rotate(-8deg) scale(0.85);
+.module-card.left-1 {
+    transform: translate(calc(-50% - 180px), -50%) scale(0.88) rotate(-2deg);
+    z-index: 5;
     opacity: 0.5;
-    pointer-events: none;
-    filter: brightness(0.5) blur(1px);
+    filter: brightness(0.6) blur(1px);
+    pointer-events: auto;
 }
 
-.module-item.p4 {
-    top: 50%;
-    left: 50%;
-    z-index: 6;
-    transform: translate(-50%, -50%) translate(-80%, 30%) translateZ(-20px) rotate(8deg) scale(0.85);
-    opacity: 0.5;
-    pointer-events: none;
-    filter: brightness(0.5) blur(1px);
+.module-card.left-2 {
+    transform: translate(calc(-50% - 320px), -50%) scale(0.76) rotate(-4deg);
+    z-index: 2;
+    opacity: 0.25;
+    filter: brightness(0.4) blur(2px);
 }
 
-.module-item.p5 {
-    top: 50%;
-    left: 50%;
-    z-index: 8;
-    transform: translate(-50%, -50%) translate(-45%, 15%) translateZ(40px) rotate(4deg) scale(0.95);
-    opacity: 0.75;
+.module-card.hidden {
+    transform: translate(-50%, -50%) scale(0.6);
+    opacity: 0;
     pointer-events: none;
-    filter: brightness(0.7);
+}
+
+/* Animated gradient border for active card */
+.card-border-glow {
+    position: absolute;
+    inset: -1px;
+    border-radius: 24px;
+    background: linear-gradient(135deg, rgba(159, 239, 0, 0.4), rgba(0, 240, 255, 0.2), rgba(159, 239, 0, 0.1));
+    z-index: -1;
+    opacity: 0.8;
+    animation: border-rotate 4s linear infinite;
+}
+
+@keyframes border-rotate {
+    0% {
+        filter: hue-rotate(0deg);
+    }
+
+    100% {
+        filter: hue-rotate(360deg);
+    }
 }
 
 .module-tag {
     display: inline-block;
-    padding: 6px 12px;
-    background: rgba(159, 239, 0, 0.1);
+    padding: 6px 14px;
+    background: rgba(159, 239, 0, 0.08);
     border: 1px solid rgba(159, 239, 0, 0.2);
     border-radius: 8px;
-    font-size: 0.75rem;
+    font-size: 0.72rem;
     color: var(--primary);
     text-shadow: 0 0 10px rgba(159, 239, 0, 0.3);
     letter-spacing: 0.15em;
     font-weight: 800;
-    margin-bottom: 20px;
     width: fit-content;
 }
 
-.module-item::after {
-    content: '';
-    position: absolute;
-    bottom: 32px;
-    right: 32px;
-    width: 48px;
-    height: 4px;
+.module-title {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: var(--text-primary);
+    line-height: 1.2;
+}
+
+/* Progress bar on active card */
+.card-progress-track {
+    width: 100%;
+    height: 3px;
+    background: rgba(255, 255, 255, 0.06);
+    border-radius: 3px;
+    overflow: hidden;
+    margin-top: 8px;
+}
+
+.card-progress-fill {
+    height: 100%;
+    background: linear-gradient(90deg, var(--primary), rgba(0, 240, 255, 0.8));
+    border-radius: 3px;
+    transition: width 40ms linear;
+    box-shadow: 0 0 8px rgba(159, 239, 0, 0.4);
+}
+
+/* Dot indicators */
+.carousel-dots {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    margin-top: 40px;
+}
+
+.carousel-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    background: transparent;
+    cursor: pointer;
+    padding: 0;
+    transition: all 0.3s ease;
+}
+
+.carousel-dot.active {
     background: var(--primary);
-    border-radius: 4px;
-    box-shadow: 0 0 10px var(--primary);
-    opacity: 0.5;
+    border-color: var(--primary);
+    box-shadow: 0 0 10px rgba(159, 239, 0, 0.4);
+    transform: scale(1.3);
+}
+
+.carousel-dot:hover:not(.active) {
+    border-color: rgba(255, 255, 255, 0.5);
+    background: rgba(255, 255, 255, 0.1);
 }
 
 /* --- Pricing --- */
@@ -2344,26 +2399,42 @@
         align-items: flex-start;
     }
 
-    .module-stack {
-        width: 85%;
-        max-width: 300px;
-        height: 340px;
-        margin: 48px auto 0;
+    .module-carousel {
+        width: 100%;
+        height: 280px;
+        margin: 40px auto 0;
     }
 
-    .module-item {
-        padding: 24px 20px;
-        font-size: 1rem;
+    .module-card {
+        width: 240px;
+        padding: 28px 24px;
+        border-radius: 18px;
     }
 
-    .module-item.p2 {
-        left: -12px;
-        top: 60px;
+    .module-card.right-1 {
+        transform: translate(calc(-50% + 100px), -50%) scale(0.85) rotate(2deg);
     }
 
-    .module-item.p3 {
-        left: 12px;
-        top: 120px;
+    .module-card.left-1 {
+        transform: translate(calc(-50% - 100px), -50%) scale(0.85) rotate(-2deg);
+    }
+
+    .module-card.right-2,
+    .module-card.left-2 {
+        opacity: 0;
+    }
+
+    .module-title {
+        font-size: 1.1rem;
+    }
+
+    .module-tag {
+        font-size: 0.65rem;
+        padding: 4px 10px;
+    }
+
+    .carousel-dots {
+        margin-top: 24px;
     }
 
     .landing-pricing-card {

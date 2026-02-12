@@ -17,15 +17,13 @@ const AppReveal = () => {
     const [terminalLogs, setTerminalLogs] = useState([]);
     const terminalBodyRef = useRef(null);
 
-    // Auto-scroll terminal to bottom
+    // Gentle auto-scroll — nudge down by ~15% instead of jumping to absolute bottom
     useEffect(() => {
         if (terminalBodyRef.current) {
-            // Smooth scroll with small delay to ensure rendering is complete
+            const el = terminalBodyRef.current;
+            const scrollAmount = el.clientHeight * 0.15;
             const scrollTimeout = setTimeout(() => {
-                terminalBodyRef.current.scrollTo({
-                    top: terminalBodyRef.current.scrollHeight,
-                    behavior: 'smooth'
-                });
+                el.scrollBy({ top: scrollAmount, behavior: 'smooth' });
             }, 50);
             return () => clearTimeout(scrollTimeout);
         }

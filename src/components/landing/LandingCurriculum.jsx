@@ -1,8 +1,63 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { CheckCircle } from 'lucide-react';
 
+const MODULES = [
+    { tag: "WEB EXPLOIT", title: "SQLi Mastery", accent: "#ff5555" },
+    { tag: "RECON", title: "XSS Exploitation", accent: "#f1fa8c" },
+    { tag: "CLOUD", title: "Cloud Security", accent: "#8be9fd" },
+    { tag: "NETWORK", title: "Network Penetration", accent: "#bd93f9" },
+    { tag: "MOBILE", title: "Android Hacking", accent: "#50fa7b" }
+];
+
 const LandingCurriculum = ({ onAction }) => {
-    const [activeModule, setActiveModule] = useState(0);
+    const [activeIndex, setActiveIndex] = useState(0);
+    const [progress, setProgress] = useState(0);
+    const [isPaused, setIsPaused] = useState(false);
+    const intervalRef = useRef(null);
+    const progressRef = useRef(null);
+    const total = MODULES.length;
+
+    const CYCLE_MS = 4000; // 4 seconds per card
+    const TICK_MS = 40;    // Progress bar update interval
+
+    const advance = useCallback(() => {
+        setActiveIndex(prev => (prev + 1) % total);
+        setProgress(0);
+    }, [total]);
+
+    // Auto-rotation with progress bar
+    useEffect(() => {
+        if (isPaused) return;
+
+        progressRef.current = setInterval(() => {
+            setProgress(prev => {
+                const next = prev + (TICK_MS / CYCLE_MS) * 100;
+                if (next >= 100) {
+                    advance();
+                    return 0;
+                }
+                return next;
+            });
+        }, TICK_MS);
+
+        return () => clearInterval(progressRef.current);
+    }, [isPaused, advance]);
+
+    const goTo = (index) => {
+        setActiveIndex(index);
+        setProgress(0);
+    };
+
+    // Position mapping: calculate offset from active
+    const getPosition = (index) => {
+        const diff = index - activeIndex;
+        if (diff === 0) return 'center';
+        if (diff === 1 || diff === -(total - 1)) return 'right-1';
+        if (diff === 2 || diff === -(total - 2)) return 'right-2';
+        if (diff === -1 || diff === (total - 1)) return 'left-1';
+        if (diff === -2 || diff === (total - 2)) return 'left-2';
+        return 'hidden';
+    };
 
     return (
         <section id="curriculum" className="landing-curriculum">
@@ -24,33 +79,54 @@ const LandingCurriculum = ({ onAction }) => {
                             Start Hacking
                         </button>
                     </div>
-                    <div className="curriculum-visual animate-fade-in-up">
-                        <div className="module-stack">
-                            {[0, 1, 2, 3, 4].map((i) => {
-                                // Calculate dynamic position class based on rotation
-                                const total = 5;
-                                const pos = (i - activeModule + total) % total;
-                                const posClass = `p${pos + 1}`; // p1 through p5
 
-                                const moduleData = [
-                                    { tag: "WEB EXPLOIT", title: "SQLi Mastery" },
-                                    { tag: "RECON", title: "XSS Exploitation" },
-                                    { tag: "CLOUD", title: "Cloud Security" },
-                                    { tag: "NETWORK", title: "Network Penetration" },
-                                    { tag: "MOBILE", title: "Android Hacking" }
-                                ];
+                    <div
+                        className="curriculum-visual animate-fade-in-up"
+                        onMouseEnter={() => setIsPaused(true)}
+                        onMouseLeave={() => setIsPaused(false)}
+                    >
+                        <div className="module-carousel">
+                            {MODULES.map((mod, i) => {
+                                const position = getPosition(i);
+                                const isActive = i === activeIndex;
 
                                 return (
                                     <div
                                         key={i}
-                                        className={`module-item ${posClass}`}
-                                        onClick={() => setActiveModule((activeModule + 1) % total)}
+                                        className={`module-card ${position} ${isActive ? 'active' : ''}`}
+                                        onClick={() => !isActive && goTo(i)}
+                                        style={{ '--accent': mod.accent }}
                                     >
-                                        <span className="module-tag">{moduleData[i].tag}</span>
-                                        {moduleData[i].title}
+                                        {/* Animated border glow for active card */}
+                                        {isActive && <div className="card-border-glow" />}
+
+                                        <span className="module-tag">{mod.tag}</span>
+                                        <span className="module-title">{mod.title}</span>
+
+                                        {/* Progress bar on active card */}
+                                        {isActive && (
+                                            <div className="card-progress-track">
+                                                <div
+                                                    className="card-progress-fill"
+                                                    style={{ width: `${progress}%` }}
+                                                />
+                                            </div>
+                                        )}
                                     </div>
                                 );
                             })}
+                        </div>
+
+                        {/* Dot indicators */}
+                        <div className="carousel-dots">
+                            {MODULES.map((_, i) => (
+                                <button
+                                    key={i}
+                                    className={`carousel-dot ${i === activeIndex ? 'active' : ''}`}
+                                    onClick={() => goTo(i)}
+                                    aria-label={`Go to module ${i + 1}`}
+                                />
+                            ))}
                         </div>
                     </div>
                 </div>
