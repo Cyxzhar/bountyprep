@@ -122,36 +122,78 @@ const AppReveal = () => {
 
         // --- 2. Terminal Handshake Phase ---
         else if (hackStep === 1) {
-            const commands = ["cd labs", "ls -la", "python3 payload.py"];
-            const currentCmd = commands[terminalStep];
+            // Each attack gets its own set of cool terminal commands
+            const cmdSets = [
+                // Attack 0: SQLi — recon + exploitation workflow
+                [
+                    {
+                        cmd: "nmap -sV -p 80,443 api.target.com", dir: "~", output: [
+                            { text: "Starting Nmap 7.94 ( https://nmap.org )", type: "info" },
+                            { text: "PORT   STATE SERVICE VERSION", type: "info" },
+                            { text: "80/tcp open  http    Apache/2.4.52", type: "success" },
+                            { text: "443/tcp open ssl/http nginx 1.18.0", type: "success" },
+                        ]
+                    },
+                    {
+                        cmd: "nikto -h api.target.com -Tuning 9", dir: "~", output: [
+                            { text: "+ Target IP:   203.0.113.42", type: "info" },
+                            { text: "+ OSVDB-3092: /users?id=: Parameter 'id' injectable", type: "success" },
+                        ]
+                    },
+                    {
+                        cmd: "sqlmap -u \"api.target.com/users?id=1\" --dbs", dir: "~", output: [
+                            { text: "[*] testing connection to the target URL", type: "info" },
+                            { text: "[!] parameter 'id' is vulnerable. Type: UNION query", type: "success" },
+                            { text: "[+] available databases: vault_prod, information_schema", type: "success" },
+                        ]
+                    },
+                    { cmd: "python3 payload.py", dir: "~/labs", output: [] }
+                ],
+                // Attack 1: SSRF — cloud recon + IAM workflow
+                [
+                    {
+                        cmd: "curl -s http://169.254.169.254/latest/meta-data/", dir: "~", output: [
+                            { text: "ami-id\ninstance-type\niam/", type: "info" },
+                        ]
+                    },
+                    {
+                        cmd: "aws sts get-caller-identity --profile stolen", dir: "~", output: [
+                            { text: '{ "Account": "314159265358", "Arn": "arn:aws:iam::role/web-app-prod" }', type: "success" },
+                        ]
+                    },
+                    {
+                        cmd: "nmap -sn 10.0.0.0/24 --open", dir: "~", output: [
+                            { text: "Nmap scan report for 10.0.0.12 (svc.internal-proxy)", type: "info" },
+                            { text: "Host is up (0.0023s latency). 3 hosts discovered.", type: "success" },
+                        ]
+                    },
+                    { cmd: "python3 payload.py", dir: "~/labs", output: [] }
+                ]
+            ];
 
-            if (terminalTypedText.length < currentCmd.length) {
-                // Type the command
-                const char = currentCmd[terminalTypedText.length];
+            const commands = cmdSets[attackIndex] || cmdSets[0];
+            const currentEntry = commands[terminalStep];
+
+            if (!currentEntry) {
+                // All commands done — go to execution phase
+                setHackStep(2);
+            } else if (terminalTypedText.length < currentEntry.cmd.length) {
+                // Type the command character by character
+                const char = currentEntry.cmd[terminalTypedText.length];
                 timeout = setTimeout(() => {
                     setTerminalTypedText(prev => prev + char);
-                }, 60);
+                }, 45);
             } else {
-                // Finish command - hold then "Enter"
+                // Command typed — press "Enter": add command + output, advance
                 timeout = setTimeout(() => {
-                    if (terminalStep === 0) {
-                        setTerminalLogs(prev => [...prev, { text: `cd labs`, type: "command", dir: "~" }]);
-                        setTerminalStep(1);
-                        setTerminalTypedText("");
-                    } else if (terminalStep === 1) {
-                        setTerminalLogs(prev => [
-                            ...prev,
-                            { text: `ls -la`, type: "command", dir: "~/labs" },
-                            { text: "total 24K\ndrwxr-xr-x 2 root root 4.0K Feb 5 23:55 .\ndrwxr-xr-x 4 root root 4.0K Feb 5 23:54 ..\n-rw-r--r-- 1 root root  827 Feb 5 23:56 payload.py\n-rw-r--r-- 1 root root  142 Feb 5 23:56 .env", type: "info" }
-                        ]);
-                        setTerminalStep(2);
-                        setTerminalTypedText("");
-                    } else if (terminalStep === 2) {
-                        setTerminalLogs(prev => [...prev, { text: `python3 payload.py`, type: "command", dir: "~/labs" }]);
-                        // Final command done: transition to execution phase
-                        setHackStep(2);
-                    }
-                }, 600);
+                    setTerminalLogs(prev => [
+                        ...prev,
+                        { text: currentEntry.cmd, type: "command", dir: currentEntry.dir },
+                        ...currentEntry.output
+                    ]);
+                    setTerminalStep(prev => prev + 1);
+                    setTerminalTypedText("");
+                }, 400);
             }
         }
 
@@ -299,20 +341,27 @@ const AppReveal = () => {
                                                 ))}
 
                                                 {/* Active Typing Handshake */}
-                                                {hackStep === 1 && (
-                                                    <div className="term-line command">
-                                                        <span className="prompt-user">root@kali</span>
-                                                        <span className="prompt-sep">:</span>
-                                                        <span className="prompt-dir">
-                                                            {terminalStep === 0 ? '~' : '~/labs'}
-                                                        </span>
-                                                        <span className="prompt-char">#</span>
-                                                        <span className="typed-text ml-2">
-                                                            {terminalTypedText}
-                                                            <span className="terminal-cursor"></span>
-                                                        </span>
-                                                    </div>
-                                                )}
+                                                {hackStep === 1 && (() => {
+                                                    const cmdSets = [
+                                                        [{ dir: "~" }, { dir: "~" }, { dir: "~" }, { dir: "~/labs" }],
+                                                        [{ dir: "~" }, { dir: "~" }, { dir: "~" }, { dir: "~/labs" }]
+                                                    ];
+                                                    const activeDir = (cmdSets[attackIndex] || cmdSets[0])[terminalStep]?.dir || "~";
+                                                    return (
+                                                        <div className="term-line command">
+                                                            <span className="prompt-user">root@kali</span>
+                                                            <span className="prompt-sep">:</span>
+                                                            <span className="prompt-dir">
+                                                                {activeDir}
+                                                            </span>
+                                                            <span className="prompt-char">#</span>
+                                                            <span className="typed-text ml-2">
+                                                                {terminalTypedText}
+                                                                <span className="terminal-cursor"></span>
+                                                            </span>
+                                                        </div>
+                                                    );
+                                                })()}
 
                                                 {/* Main Hacking Execution Logs */}
                                                 {hackStep >= 2 && currentAttack.terminal.map((line, i) => (
