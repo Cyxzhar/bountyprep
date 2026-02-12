@@ -480,6 +480,8 @@
     height: 680px;
     /* Increased from 560px for expert look */
     display: flex;
+    position: relative;
+    overflow: hidden;
 }
 
 .reveal-app-layout {
@@ -519,6 +521,7 @@
     flex-direction: column;
     gap: 32px;
     overflow-y: hidden;
+    position: relative;
 }
 
 .reveal-content-meta {
@@ -924,34 +927,38 @@
 .simulation-modal-overlay {
     position: absolute;
     inset: 0;
-    background: rgba(0, 0, 0, 0.6);
-    backdrop-filter: blur(8px);
+    background: rgba(0, 0, 0, 0.7);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
     display: flex;
     align-items: center;
     justify-content: center;
     z-index: 50;
     opacity: 0;
     animation: fadeIn 0.3s forwards;
+    overflow-y: auto;
+    padding: 20px;
 }
 
 .victory-modal {
-    background: rgba(30, 30, 46, 0.98);
-    border: 1px solid rgba(159, 239, 0, 0.4);
-    padding: 56px 64px;
-    border-radius: 32px;
+    background: linear-gradient(165deg, rgba(30, 30, 50, 0.98) 0%, rgba(18, 18, 30, 0.99) 100%);
+    border: 1px solid rgba(159, 239, 0, 0.3);
+    padding: 36px 40px 32px;
+    border-radius: 24px;
     text-align: center;
     position: relative;
-    max-width: 540px;
-    width: 90%;
+    max-width: 460px;
+    width: 92%;
     box-shadow:
-        0 40px 100px rgba(0, 0, 0, 0.8),
-        0 0 60px rgba(159, 239, 0, 0.1),
-        inset 0 0 0 1px rgba(255, 255, 255, 0.05);
+        0 30px 80px rgba(0, 0, 0, 0.7),
+        0 0 80px rgba(159, 239, 0, 0.08),
+        inset 0 1px 0 rgba(255, 255, 255, 0.06);
     transform: scale(0.9);
-    overflow: hidden;
+    overflow: visible;
     display: flex;
     flex-direction: column;
     align-items: center;
+    margin: auto;
 }
 
 .victory-glow {
@@ -967,9 +974,9 @@
 
 .victory-icon-wrapper {
     position: relative;
-    width: 80px;
-    height: 80px;
-    margin: 0 auto 24px;
+    width: 64px;
+    height: 64px;
+    margin: 0 auto 20px;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -991,22 +998,22 @@
 }
 
 .victory-title {
-    font-size: 1.6rem;
+    font-size: 1.4rem;
     font-weight: 800;
     color: #fff;
-    margin-bottom: 20px;
+    margin-bottom: 16px;
     letter-spacing: -0.02em;
 }
 
 /* Modal Result Terminal */
 .modal-result-terminal {
-    background: #11111b;
-    border: 1px solid #313244;
+    background: rgba(10, 10, 18, 0.9);
+    border: 1px solid rgba(255, 255, 255, 0.08);
     border-radius: 12px;
-    margin-bottom: 32px;
+    margin-bottom: 20px;
     text-align: left;
     overflow: hidden;
-    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3);
     width: 100%;
 }
 
@@ -1050,18 +1057,26 @@
 }
 
 .xp-gain {
-    font-size: 2rem;
+    font-size: 1.8rem;
     font-weight: 900;
     color: var(--primary);
-    margin-bottom: 24px;
+    margin-bottom: 20px;
     text-shadow: 0 0 20px rgba(159, 239, 0, 0.4);
+    display: flex;
+    align-items: baseline;
+    gap: 4px;
+}
+
+.xp-gain .plus {
+    font-size: 1.2rem;
+    opacity: 0.7;
 }
 
 .xp-gain .unit {
-    font-size: 1rem;
+    font-size: 0.85rem;
     color: #a6adc8;
     font-weight: 700;
-    margin-left: 4px;
+    margin-left: 2px;
 }
 
 .victory-desc {
@@ -1072,26 +1087,26 @@
 
 .btn-victory-primary {
     width: 100%;
-    background: var(--primary);
-    color: #11111b;
-    padding: 18px;
-    border-radius: 14px;
+    background: linear-gradient(135deg, var(--primary) 0%, #8ed600 100%);
+    color: #0a0a0f;
+    padding: 14px;
+    border-radius: 12px;
     font-weight: 800;
-    font-size: 1.1rem;
+    font-size: 1rem;
     border: none;
     cursor: pointer;
     display: flex;
     align-items: center;
     justify-content: center;
-    gap: 10px;
-    box-shadow: 0 10px 30px rgba(159, 239, 0, 0.3);
-    transition: all 0.2s;
-    margin-bottom: 12px;
+    gap: 8px;
+    box-shadow: 0 8px 24px rgba(159, 239, 0, 0.25);
+    transition: all 0.25s cubic-bezier(0.22, 1, 0.36, 1);
+    margin-bottom: 10px;
 }
 
 .btn-victory-primary:hover {
     transform: translateY(-2px);
-    box-shadow: 0 15px 40px rgba(159, 239, 0, 0.4);
+    box-shadow: 0 12px 32px rgba(159, 239, 0, 0.35);
 }
 
 .btn-victory-text {
@@ -1210,23 +1225,27 @@
 @media (max-width: 768px) {
 
     /* Victory Modal Mobile */
+    .simulation-modal-overlay {
+        padding: 12px;
+    }
+
     .victory-modal {
-        padding: 24px 16px;
+        padding: 24px 20px 20px;
         width: 95%;
-        max-width: 360px;
+        max-width: 340px;
         overflow: visible;
-        max-height: none;
+        border-radius: 20px;
     }
 
     .victory-icon-wrapper {
-        width: 56px;
-        height: 56px;
-        margin-bottom: 16px;
+        width: 48px;
+        height: 48px;
+        margin-bottom: 14px;
     }
 
     .victory-icon {
-        width: 32px;
-        height: 32px;
+        width: 28px;
+        height: 28px;
     }
 
     .victory-title {
