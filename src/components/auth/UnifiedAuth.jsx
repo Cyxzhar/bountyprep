@@ -164,6 +164,7 @@ export default function UnifiedAuth() {
 
   // Google OAuth handler
   const handleGoogleAuth = async () => {
+    setLoading(true);
     try {
       const result = await signInWithPopup(auth, googleProvider);
       const additionalInfo = getAdditionalUserInfo(result);
@@ -186,6 +187,8 @@ export default function UnifiedAuth() {
       }
       const msg = getAuthErrorMessage(err.code);
       if (msg) toastError(msg);
+    } finally {
+      setLoading(false);
     }
   };
 

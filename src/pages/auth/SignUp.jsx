@@ -99,6 +99,7 @@ export default function SignUp() {
     };
 
     const handleGoogleSignUp = async () => {
+        setLoading(true);
         try {
             const result = await signInWithPopup(auth, googleProvider);
             const additionalInfo = getAdditionalUserInfo(result);
@@ -118,6 +119,8 @@ export default function SignUp() {
             }
             const msg = getAuthErrorMessage(err.code);
             if (msg) toastError(msg);
+        } finally {
+            setLoading(false);
         }
     };
 
