@@ -1,13 +1,15 @@
-import { useMemo, useState } from 'react';
+import { useMemo, useState, useEffect } from 'react';
 import {
     Flame, Target, Trophy, ChevronRight, Calendar,
     CheckCircle, Zap, Award, Lock, Syringe, Link, IdCard, RefreshCw, Upload,
     ChevronLeft
 } from 'lucide-react';
 import { useAuth } from '../../context/AuthContext';
+import { collection, getDocs } from 'firebase/firestore';
+import { db } from '../../lib/firebase';
 import { FirstVisitTransition } from '../../components/PageTransition/PageTransition';
-import { skillModules } from '../../data/challenges';
-import { achievements } from '../../data/achievements';
+import { SKILL_CATEGORIES } from '../../config/skills';
+import { useChallenges, useAchievements } from '../../hooks/useContent';
 import AchievementCard from '../../components/AchievementCard/AchievementCard';
 import { calculateLevel, getLevelProgress, getLevelTitle, getXpToNextLevel, formatXp } from '../../utils/xp';
 import './Progress.css';
@@ -24,8 +26,57 @@ const iconComponents = {
 
 export default function Progress() {
     const { currentUser } = useAuth();
+    const { challenges } = useChallenges();
+    const { achievements } = useAchievements();
     const currentYear = new Date().getFullYear();
     const [selectedYear, setSelectedYear] = useState(currentYear);
+    const [completedChallengeIds, setCompletedChallengeIds] = useState(new Set());
+
+    // Fetch user's completed challenges to calculate skill progress
+    useEffect(() => {
+        async function fetchCompleted() {
+            if (!currentUser?.uid) return;
+            try {
+                const userChallengesRef = collection(db, 'users', currentUser.uid, 'challenges');
+                const snap = await getDocs(userChallengesRef);
+                const completed = new Set();
+                snap.docs.forEach(doc => {
+                    if (doc.data().completed) {
+                        completed.add(doc.id);
+                    }
+                });
+                setCompletedChallengeIds(completed);
+            } catch (err) {
+                console.error("Error fetching completed challenges:", err);
+            }
+        }
+        fetchCompleted();
+    }, [currentUser?.uid]);
+
+    // Calculate dynamic skill progress
+    const skillModules = useMemo(() => {
+        return SKILL_CATEGORIES.map(category => {
+            // Find challenges matching this category
+            const relevantChallenges = challenges.filter(c => {
+                const type = (c.type || '').toLowerCase();
+                const title = (c.title || '').toLowerCase();
+                return category.matchType.some(term =>
+                    type.includes(term.toLowerCase()) || title.includes(term.toLowerCase())
+                );
+            });
+
+            const total = relevantChallenges.length;
+            const completedCount = relevantChallenges.filter(c => completedChallengeIds.has(c.id)).length;
+            const progress = total > 0 ? Math.round((completedCount / total) * 100) : 0;
+
+            return {
+                ...category,
+                progress,
+                completed: completedCount,
+                total
+            };
+        });
+    }, [challenges, completedChallengeIds]);
 
     // Real user stats from Firestore
     const xp = currentUser?.xp || 0;
@@ -266,7 +317,6 @@ export default function Progress() {
                 </section>
 
                 {/* Achievements */}
-                {/* Achievements */}
                 <section className="section">
                     <div className="section-header">
                         <h3 className="section-title">Achievements</h3>
@@ -276,20 +326,13 @@ export default function Progress() {
                     </div>
                     <div className="achievements-grid">
                         {achievements.map(achievement => {
-                            // Firestore saves timestamp objects, need to verify structure if unlocked
-                            // Currently we only store ID list in `achievements` array
-                            // To store dates, we'd need a map or subcollection. 
-                            // For MVP simplicity: Checks if ID in array.
                             const isUnlocked = (currentUser?.achievements || []).includes(achievement.id);
-
-                            // Mock unlockedAt date for now since we just store IDs array
-                            // In a full implementation, we'd store { id: 'x', unlockedAt: Timestamp } in a subcollection
                             const unlockedAt = isUnlocked ? { seconds: Date.now() / 1000 } : null;
 
                             return (
                                 <AchievementCard
                                     key={achievement.id}
-                                    achievementId={achievement.id}
+                                    achievement={achievement}
                                     unlockedAt={unlockedAt}
                                 />
                             );

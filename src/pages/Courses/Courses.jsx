@@ -1,19 +1,20 @@
 import { useNavigate } from 'react-router-dom';
 import {
-    BookOpen, Trophy, Clock, ChevronRight, Play, CheckCircle
+    BookOpen, Trophy, Clock, ChevronRight
 } from 'lucide-react';
-import { useState, useEffect } from 'react'; // Added useState, useEffect
-import { courses } from '../../data/courses';
-import { useAuth } from '../../context/AuthContext'; // Added useAuth
-import { getAllCoursesProgress } from '../../utils/firestore'; // Added import
+import { useState, useEffect } from 'react';
+import { useAuth } from '../../context/AuthContext';
+import { getAllCoursesProgress } from '../../utils/firestore';
+import { useCourses } from '../../hooks/useContent';
+import { getIcon } from '../../utils/icons';
 import './Courses.css';
 
 export default function Courses() {
     const navigate = useNavigate();
-    const { currentUser } = useAuth(); // Get user
-    const [allProgress, setAllProgress] = useState({}); // Store progress map
+    const { currentUser } = useAuth();
+    const { courses, loading: coursesLoading } = useCourses();
+    const [allProgress, setAllProgress] = useState({});
 
-    // Fetch real progress
     useEffect(() => {
         async function loadProgress() {
             if (currentUser) {
@@ -42,6 +43,14 @@ export default function Courses() {
         return Math.min(100, Math.round((completedCount / totalLessons) * 100));
     };
 
+    if (coursesLoading) {
+        return (
+            <div className="page-container flex items-center justify-center min-h-[50vh]">
+                <div className="text-neon animate-pulse">Loading Courses...</div>
+            </div>
+        );
+    }
+
     return (
         <div className="page-container">
             <header className="page-header">
@@ -57,7 +66,6 @@ export default function Courses() {
                             <span className="stat-label">Courses</span>
                         </div>
                     </div>
-                    {/* Placeholder for total user XP if we want to fetch it later */}
                     <div className="stat-card">
                         <Trophy size={20} className="text-purple" />
                         <div className="stat-info">
@@ -72,7 +80,8 @@ export default function Courses() {
                 {courses.map(course => {
                     const progress = getProgress(course.id);
                     const isStarted = progress > 0;
-                    const Icon = course.icon;
+                    // Use getIcon helper with iconName from Firestore
+                    const Icon = getIcon(course.iconName);
 
                     return (
                         <div
@@ -100,7 +109,7 @@ export default function Courses() {
                                     </div>
                                     <div className="meta-item">
                                         <BookOpen size={14} className="text-neon" />
-                                        <span>{course.modules.length} Modules</span>
+                                        <span>{course.modules?.length || 0} Modules</span>
                                     </div>
                                 </div>
 

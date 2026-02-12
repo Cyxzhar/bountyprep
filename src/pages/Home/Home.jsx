@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
 import { useSound } from '../../context/SoundContext';
@@ -8,8 +8,11 @@ import {
     Bot, Lock, Unlock, Syringe, Link, IdCard, RefreshCw, Upload, Star,
     Trophy, Beaker, Award, Gamepad2, Volume2, VolumeX
 } from 'lucide-react';
+import { collection, getDocs } from 'firebase/firestore';
+import { db } from '../../lib/firebase';
 import { FirstVisitTransition } from '../../components/PageTransition/PageTransition';
-import { challenges, skillModules } from '../../data/challenges';
+import { SKILL_CATEGORIES } from '../../config/skills';
+import { useChallenges } from '../../hooks/useContent';
 import { calculateLevel, getLevelProgress, getLevelTitle, formatXp } from '../../utils/xp';
 import { getMilestones } from '../../utils/onboardingUtils';
 import Roadmap from '../../components/Roadmap/Roadmap';
@@ -30,7 +33,57 @@ export default function Home() {
     const { currentUser } = useAuth();
     const { stopBGM, playSFX, toggleMute, isMuted } = useSound();
     const { info } = useToast();
-    const todayChallenge = challenges[0];
+
+    // Fetch challenges and calculate skills
+    const { challenges, loading } = useChallenges();
+    const [completedChallengeIds, setCompletedChallengeIds] = useState(new Set());
+
+    // Fetch user's completed challenges to calculate skill progress
+    useEffect(() => {
+        async function fetchCompleted() {
+            if (!currentUser?.uid) return;
+            try {
+                const userChallengesRef = collection(db, 'users', currentUser.uid, 'challenges');
+                const snap = await getDocs(userChallengesRef);
+                const completed = new Set();
+                snap.docs.forEach(doc => {
+                    if (doc.data().completed) {
+                        completed.add(doc.id);
+                    }
+                });
+                setCompletedChallengeIds(completed);
+            } catch (err) {
+                console.error("Error fetching completed challenges:", err);
+            }
+        }
+        fetchCompleted();
+    }, [currentUser?.uid]);
+
+    // Calculate dynamic skill progress
+    const skillModules = useMemo(() => {
+        return SKILL_CATEGORIES.map(category => {
+            const relevantChallenges = challenges.filter(c => {
+                const type = (c.type || '').toLowerCase();
+                const title = (c.title || '').toLowerCase();
+                return category.matchType.some(term =>
+                    type.includes(term.toLowerCase()) || title.includes(term.toLowerCase())
+                );
+            });
+
+            const total = relevantChallenges.length;
+            const completedCount = relevantChallenges.filter(c => completedChallengeIds.has(c.id)).length;
+            const progress = total > 0 ? Math.round((completedCount / total) * 100) : 0;
+
+            return {
+                ...category,
+                progress,
+                completed: completedCount,
+                total
+            };
+        });
+    }, [challenges, completedChallengeIds]);
+
+    const todayChallenge = challenges.length > 0 ? challenges[0] : null;
 
     // Get milestones based on user goal
     const milestones = getMilestones(currentUser?.onboarding?.goal);
@@ -64,6 +117,10 @@ export default function Home() {
         playSFX('click');
         info(`${feature} is coming soon! Join the waitlist for updates.`);
     };
+
+    if (loading) {
+        return <div className="home-screen flex items-center justify-center"><div className="loading-spinner"></div></div>;
+    }
 
     return (
         <FirstVisitTransition pageName="home">
@@ -104,27 +161,29 @@ export default function Home() {
                     </section>
 
                     {/* Today's Challenge */}
-                    <section className="home-today-challenge card-glow" onClick={() => handleChallengeClick(todayChallenge.id)}>
-                        <div className="home-challenge-glow"></div>
-                        <div className="home-challenge-header">
-                            <div className="home-challenge-badges">
-                                <span className="badge badge-info">{todayChallenge.type}</span>
-                                <span className="badge badge-warning">{todayChallenge.difficulty}</span>
+                    {todayChallenge && (
+                        <section className="home-today-challenge card-glow" onClick={() => handleChallengeClick(todayChallenge.id)}>
+                            <div className="home-challenge-glow"></div>
+                            <div className="home-challenge-header">
+                                <div className="home-challenge-badges">
+                                    <span className="badge badge-info">{todayChallenge.type}</span>
+                                    <span className="badge badge-warning">{todayChallenge.difficulty}</span>
+                                </div>
+                                <div className="home-challenge-time">
+                                    <Clock size={14} />
+                                    <span>{todayChallenge.estimatedTime} min</span>
+                                </div>
                             </div>
-                            <div className="home-challenge-time">
-                                <Clock size={14} />
-                                <span>{todayChallenge.estimatedTime} min</span>
-                            </div>
-                        </div>
 
-                        <h2 className="home-challenge-title">{todayChallenge.title}</h2>
-                        <p className="home-challenge-desc">{todayChallenge.description}</p>
+                            <h2 className="home-challenge-title">{todayChallenge.title}</h2>
+                            <p className="home-challenge-desc">{todayChallenge.description}</p>
 
-                        <button className="btn btn-primary btn-full mt-md">
-                            Start Challenge
-                            <ChevronRight size={20} />
-                        </button>
-                    </section>
+                            <button className="btn btn-primary btn-full mt-md">
+                                Start Challenge
+                                <ChevronRight size={20} />
+                            </button>
+                        </section>
+                    )}
 
                     {/* Quick Stats */}
                     <section className="home-stats-grid">

@@ -4,8 +4,8 @@ import {
     BookOpen, Zap, Target
 } from 'lucide-react';
 import { useState, useEffect } from 'react';
-import { courses } from '../../data/courses';
 import { useAuth } from '../../context/AuthContext';
+import { useCourses } from '../../hooks/useContent';
 import { getCourseProgress } from '../../utils/firestore';
 import './CourseDetail.css';
 
@@ -13,20 +13,10 @@ export default function CourseDetail() {
     const { id } = useParams();
     const navigate = useNavigate();
     const { currentUser } = useAuth();
+    const { courses, loading } = useCourses();
 
     // Find course or fallback to first one data doesn't match
     const course = courses.find(c => c.id === id);
-
-    if (!course) {
-        return (
-            <div className="page-container center-content">
-                <h2>Course not found</h2>
-                <button className="primary-btn" onClick={() => navigate('/courses')}>
-                    Back to Courses
-                </button>
-            </div>
-        );
-    }
 
     const [courseProgress, setCourseProgress] = useState(null);
 
@@ -39,6 +29,21 @@ export default function CourseDetail() {
         };
         fetchProgress();
     }, [currentUser, id]);
+
+    if (loading) {
+        return <div className="page-container center-content"><div className="loading-spinner"></div></div>;
+    }
+
+    if (!course) {
+        return (
+            <div className="page-container center-content">
+                <h2>Course not found</h2>
+                <button className="primary-btn" onClick={() => navigate('/courses')}>
+                    Back to Courses
+                </button>
+            </div>
+        );
+    }
 
     // Determine lesson status based on progress
     const getLessonStatus = (lessonId) => {

@@ -5,7 +5,8 @@ import { useAuth } from '../../context/AuthContext';
 import { collection, getDocs } from 'firebase/firestore';
 import { db } from '../../lib/firebase';
 import { FirstVisitTransition } from '../../components/PageTransition/PageTransition';
-import { challenges as localChallenges } from '../../data/challenges';
+// Removed local data import
+import { useChallenges } from '../../hooks/useContent';
 import './Challenges.css';
 
 // Challenge type filters with icons
@@ -30,9 +31,15 @@ export default function Challenges() {
     const [searchQuery, setSearchQuery] = useState('');
     const [activeChallengeType, setActiveChallengeType] = useState('all');
     const [activeVulnFilter, setActiveVulnFilter] = useState(initialFilter);
-    const [challenges, setChallenges] = useState(localChallenges);
+
+    const { challenges, loading: challengesLoading } = useChallenges();
+
     const [completedChallenges, setCompletedChallenges] = useState(cachedCompletedChallenges || new Set());
-    const [loading, setLoading] = useState(false);
+    // loading state is now handled by challengesLoading, but we keep local loading for completion sync if needed, 
+    // though the UI used 'loading' for challenges list.
+    // Let's alias challengesLoading to a checked loading state
+    const loading = challengesLoading;
+
     const [showFilters, setShowFilters] = useState(true);
 
     const isPremium = currentUser?.isPremium || false;

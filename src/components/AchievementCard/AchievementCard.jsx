@@ -1,12 +1,8 @@
 import { Lock, HelpCircle } from 'lucide-react';
-import { getAchievementById } from '../../data/achievements';
 import './AchievementCard.css';
 
-export default function AchievementCard({ achievementId, unlockedAt }) {
-    // Get full achievement data
-    const achievement = getAchievementById(achievementId);
-
-    // If definition missing (removed/changed), show fallback or null
+export default function AchievementCard({ achievement, unlockedAt }) {
+    // If not provided, show nothing
     if (!achievement) return null;
 
     const isUnlocked = !!unlockedAt;

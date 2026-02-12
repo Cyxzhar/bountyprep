@@ -4,7 +4,7 @@ import { useAuth } from '../../context/AuthContext';
 import { useToast } from '../../context/ToastContext';
 import { useAchievement } from '../../context/AchievementContext';
 import { useSound } from '../../context/SoundContext';
-import { challenges } from '../../data/challenges';
+import { useChallenges } from '../../hooks/useContent';
 import { updateStreak, getChallengeProgress, updateUserStats, saveChallengeProgress, markChallengeCompleted } from '../../utils/firestore';
 import { checkLevelUp } from '../../utils/xp';
 import { ArrowLeft, Clock, Volume2, VolumeX } from 'lucide-react';
@@ -28,7 +28,9 @@ export default function ChallengeDetailNew() {
     const { success, error: showError, info } = useToast();
     const { playBGM, stopBGM, playSFX } = useSound();
     const { unlockMultiple } = useAchievement();
-    const challenge = challenges.find(c => c.id === id) || challenges[0];
+
+    const { challenges, loading } = useChallenges();
+    const challenge = challenges.find(c => c.id === id);
 
     const { elapsedTime, formattedTime, start, stop } = useTimer();
     const hasShownToastRef = useRef(false);
@@ -39,6 +41,8 @@ export default function ChallengeDetailNew() {
 
     // Initial setup
     useEffect(() => {
+        if (loading || !challenge) return;
+
         start();
 
         if (!localMuted) {
@@ -46,7 +50,28 @@ export default function ChallengeDetailNew() {
         }
 
         return () => stopBGM(true);
-    }, []);
+    }, [loading, challenge]);
+
+    // Handle Loading
+    if (loading) {
+        return (
+            <div className="detail-screen flex items-center justify-center">
+                <div className="text-neon animate-pulse">Loading Challenge...</div>
+            </div>
+        );
+    }
+
+    // Handle Not Found
+    if (!challenge) {
+        return (
+            <div className="detail-screen flex flex-col items-center justify-center gap-4">
+                <h2>Challenge not found</h2>
+                <button className="btn btn-primary" onClick={() => navigate('/challenges')}>
+                    Return to Challenges
+                </button>
+            </div>
+        );
+    }
 
     // Toggle audio
     const handleAudioToggle = () => {

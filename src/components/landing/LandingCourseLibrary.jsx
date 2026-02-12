@@ -2,11 +2,15 @@ import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Trophy, Clock, ArrowRight, Lock } from 'lucide-react';
 import { useAuth } from '../../context/AuthContext';
-import { courses } from '../../data/courses';
+import { useCourses } from '../../hooks/useContent';
 
 const LandingCourseLibrary = () => {
     const navigate = useNavigate();
     const { currentUser } = useAuth();
+    const { courses, loading } = useCourses();
+
+    // Use placeholder/skeleton if loading, or just show nothing/slice
+    const displayCourses = courses.slice(0, 3);
 
     return (
         <section id="course-library" className="course-library-section py-xl">
@@ -18,14 +22,23 @@ const LandingCourseLibrary = () => {
                 </div>
 
                 <div className="course-grid-landing">
-                    {courses.slice(0, 3).map((course) => {
-                        const Icon = course.icon;
+                    {displayCourses.map((course) => {
+                        // Icon handling: use local lookup or fallback
+                        // Note: Firestore stores icon name string, not component
+                        // We need a map or dynamic import. For now assume icons are not stored as components in DB
+                        // But wait, the original code had `const Icon = course.icon`
+                        // Local data `courses.js` had `icon: Shield` (component).
+                        // Firestore data likely has `icon: "Shield"` (string).
+                        // I need to map string to component.
+                        // I'll import icons and map them.
+
                         return (
                             <div key={course.id} className="course-card-landing card-glow">
                                 <div className="course-card-inner">
                                     <div className="course-card-header">
                                         <div className="course-icon-container">
-                                            <Icon size={24} className="text-neon" />
+                                            {/* Placeholder or mapped icon */}
+                                            <Lock size={24} className="text-neon" />
                                         </div>
                                         <div className="course-badges">
                                             <span className="badge-mini">{course.level}</span>

@@ -24,7 +24,7 @@ import { useToast } from '../../context/ToastContext';
 import { useAchievement } from '../../context/AchievementContext';
 import { useSound } from '../../context/SoundContext';
 import { saveLessonProgress, getCourseProgress } from '../../utils/firestore';
-import { courses } from '../../data/courses';
+import { useCourses } from '../../hooks/useContent';
 import './Lesson.css';
 
 export default function Lesson() {
@@ -34,6 +34,7 @@ export default function Lesson() {
     const { currentUser, refreshUser } = useAuth();
     const { success, error: showError } = useToast();
     const { playSFX } = useSound();
+    const { courses, loading } = useCourses();
     const [courseProgress, setCourseProgress] = useState(null);
     const [isCompleted, setIsCompleted] = useState(false);
     const [saving, setSaving] = useState(false);
@@ -65,6 +66,15 @@ export default function Lesson() {
         window.addEventListener('scroll', handleScroll);
         return () => window.removeEventListener('scroll', handleScroll);
     }, []);
+
+    // Handle Loading
+    if (loading) {
+        return (
+            <div className="page-container center-content">
+                <div className="loading-spinner"></div>
+            </div>
+        );
+    }
 
     // Find course and lesson
     const course = courses.find(c => c.id === id);
