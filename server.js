@@ -16,6 +16,7 @@ const PORT = process.env.PORT || 8080;
 app.use(helmet({
     contentSecurityPolicy: false, // CSP handled by meta tag or separate config
     crossOriginEmbedderPolicy: false,
+    crossOriginOpenerPolicy: { policy: "same-origin-allow-popups" }, // Allow Google Auth popups
 }));
 
 // CORS: Restrict to allowed origins
