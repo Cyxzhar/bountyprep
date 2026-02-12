@@ -1200,6 +1200,7 @@
     border-radius: var(--radius-md);
     overflow: hidden;
     min-height: 450px;
+    min-width: 0;
 }
 
 .tools-tabs {
@@ -1248,6 +1249,7 @@
     overflow: hidden;
     display: flex;
     flex-direction: column;
+    min-width: 0;
 }
 
 /* --- Mobile Responsive --- */
@@ -1276,6 +1278,23 @@
 
     .lab-tools-panel {
         min-height: calc(100vh - 280px);
+        overflow: hidden;
+    }
+
+    .tools-tabs {
+        padding: 4px;
+        gap: 1px;
+    }
+
+    .tool-tab {
+        padding: 5px 8px;
+        font-size: 0.72rem;
+        gap: 4px;
+    }
+
+    .active-tool-container {
+        min-width: 0;
+        overflow: hidden;
     }
 }
 

@@ -9,9 +9,13 @@ export default function Terminal({ onCommand, initialHistory = [] }) {
     const bottomRef = useRef(null);
     const inputRef = useRef(null);
 
-    // Auto-scroll to bottom
+    // Gentle auto-scroll — nudge down by ~15% of viewport instead of jumping to bottom
+    const viewportRef = useRef(null);
     useEffect(() => {
-        bottomRef.current?.scrollIntoView({ behavior: 'smooth' });
+        const vp = viewportRef.current;
+        if (!vp) return;
+        const scrollAmount = vp.clientHeight * 0.15;
+        vp.scrollBy({ top: scrollAmount, behavior: 'smooth' });
     }, [history]);
 
     // Focus input on click
@@ -58,7 +62,7 @@ export default function Terminal({ onCommand, initialHistory = [] }) {
                 </div>
             </div>
 
-            <div className="terminal-viewport">
+            <div className="terminal-viewport" ref={viewportRef}>
                 <div className="terminal-content">
                     {history.map((line, i) => (
                         <div key={i} className={`term-line ${line.type}`}>

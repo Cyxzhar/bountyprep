@@ -788,6 +788,91 @@
 }
 
 /* ========================================
+   TERMINAL — MOBILE RESPONSIVE
+   ======================================== */
+
+@media (max-width: 768px) {
+    .tool-terminal {
+        min-height: 280px;
+        border-radius: var(--radius-sm, 8px);
+    }
+
+    .terminal-header {
+        padding: 4px 8px;
+    }
+
+    .terminal-title {
+        font-size: 0.7rem;
+        gap: 6px;
+    }
+
+    .terminal-viewport {
+        font-size: 0.75rem;
+        padding: 8px;
+        overflow-x: hidden;
+    }
+
+    .terminal-content {
+        gap: 2px;
+    }
+
+    .term-line {
+        word-break: break-all;
+        overflow-wrap: anywhere;
+        line-height: 1.4;
+        font-size: 0.75rem;
+    }
+
+    .term-line.output {
+        white-space: pre-wrap;
+        word-break: break-all;
+    }
+
+    .term-input-line {
+        flex-wrap: wrap;
+        gap: 2px;
+    }
+
+    .term-input-line input {
+        font-size: 0.75rem;
+        min-width: 40%;
+    }
+
+    .prompt {
+        font-size: 0.72rem;
+        margin-right: 4px;
+    }
+
+    .prompt .user,
+    .prompt .path {
+        font-size: 0.72rem;
+    }
+}
+
+@media (max-width: 400px) {
+    .tool-terminal {
+        min-height: 240px;
+    }
+
+    .terminal-viewport {
+        font-size: 0.65rem;
+        padding: 6px;
+    }
+
+    .term-line {
+        font-size: 0.65rem;
+    }
+
+    .term-input-line input {
+        font-size: 0.65rem;
+    }
+
+    .prompt {
+        font-size: 0.62rem;
+    }
+}
+
+/* ========================================
    BURP REPEATER
    ======================================== */
 

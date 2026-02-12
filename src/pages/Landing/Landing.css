@@ -702,7 +702,8 @@
     color: #cdd6f4;
     padding-right: 20px;
     min-width: 0;
-    overflow: hidden;
+    overflow-x: auto;
+    overflow-y: hidden;
 }
 
 .code-area pre {
@@ -784,9 +785,8 @@
 .terminal-drawer {
     background: #0d0d12;
     border-top: 1px solid rgba(137, 180, 250, 0.2);
-    height: 45%;
-    /* Increased from 35% */
-    min-height: 250px;
+    height: 32%;
+    min-height: 180px;
     display: flex;
     flex-direction: column;
     transform: translateY(100%);
@@ -2216,20 +2216,54 @@
         flex: 1;
         overflow-y: auto;
         min-height: 120px;
+    }
+
+    .code-area {
+        font-size: 0.7rem;
+        line-height: 1.5;
+        padding-right: 8px;
+        overflow-x: auto;
+    }
+
+    .code-area pre {
+        white-space: pre-wrap;
+        word-break: break-all;
+        overflow-wrap: anywhere;
+    }
+
+    .line-numbers {
+        width: 32px;
+        padding-right: 8px;
+        font-size: 0.7rem;
+    }
+
+    .editor-header-tabs .tab {
+        padding: 0 10px;
+        font-size: 0.75rem;
+        gap: 4px;
+    }
+
+    .pre-output {
+        margin-left: 4px;
         font-size: 0.65rem;
-        /* Even smaller for max visibility */
+    }
+
+    .terminal-body .term-line {
+        word-break: break-all;
+        overflow-wrap: anywhere;
     }
 
     .terminal-drawer {
         height: 0;
-        max-height: 200px;
+        max-height: 160px;
+        min-height: 0;
         position: relative;
         z-index: 20;
         transition: height 0.4s cubic-bezier(0.4, 0, 0.2, 1);
     }
 
     .terminal-drawer.open {
-        height: 190px;
+        height: 140px;
         border-top: 1px solid rgba(159, 239, 0, 0.2);
     }
 
@@ -2237,6 +2271,7 @@
         font-size: 0.65rem;
         padding: 8px;
         overflow-y: auto;
+        overflow-x: hidden;
         scroll-behavior: smooth;
         display: flex;
         flex-direction: column;
