@@ -283,7 +283,7 @@ export default function UnifiedAuth() {
                     className="split-forgot-link"
                     onClick={() => navigate('/auth/forgot-password')}
                   >
-                    Forgot?
+                    Forgot Password?
                   </button>
                 )}
               </div>
@@ -317,9 +317,8 @@ export default function UnifiedAuth() {
                     {[1, 2, 3, 4].map((level) => (
                       <div
                         key={level}
-                        className={`split-strength-segment ${
-                          passStrength.score >= level ? 'active' : ''
-                        } ${passStrength.label.toLowerCase()}`}
+                        className={`split-strength-segment ${passStrength.score >= level ? 'active' : ''
+                          } ${passStrength.label.toLowerCase()}`}
                       />
                     ))}
                   </div>
