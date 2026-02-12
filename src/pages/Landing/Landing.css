@@ -623,6 +623,16 @@
     font-weight: bold;
 }
 
+.file-icon.go {
+    color: #89dceb;
+    font-weight: bold;
+}
+
+.file-icon.sh {
+    color: #a6e3a1;
+    font-weight: bold;
+}
+
 .file-icon {
     color: #6c7086;
 }
@@ -681,9 +691,9 @@
     display: flex;
     padding-top: 16px;
     background: #1e1e2e;
-    /* Match window bg */
     min-width: 0;
-    /* Allow shrinking */
+    min-height: 0;
+    overflow: hidden;
 }
 
 .line-numbers {
@@ -795,6 +805,7 @@
     transform: translateY(100%);
     transition: transform 0.6s cubic-bezier(0.16, 1, 0.3, 1);
     opacity: 0;
+    overflow: hidden;
 }
 
 .terminal-drawer.open {
