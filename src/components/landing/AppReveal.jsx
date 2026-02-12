@@ -17,12 +17,12 @@ const AppReveal = () => {
     const [terminalLogs, setTerminalLogs] = useState([]);
     const terminalBodyRef = useRef(null);
 
-    // Auto-scroll terminal to bottom so latest output is always visible
+    // Auto-scroll terminal — gentle nudge to keep latest output visible
     useEffect(() => {
         if (terminalBodyRef.current) {
             const el = terminalBodyRef.current;
             const scrollTimeout = setTimeout(() => {
-                el.scrollTop = el.scrollHeight;
+                el.scrollBy({ top: 10, behavior: 'smooth' });
             }, 50);
             return () => clearTimeout(scrollTimeout);
         }
