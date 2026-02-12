@@ -1,8 +1,7 @@
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { sendPasswordResetEmail } from 'firebase/auth';
-import { collection, query, where, getDocs } from 'firebase/firestore';
-import { auth, db } from '../../lib/firebase';
+import { auth } from '../../lib/firebase';
 import { Mail, ArrowLeft, CheckCircle, AlertCircle, Loader2, UserPlus } from 'lucide-react';
 import './ForgotPassword.css';
 
@@ -19,21 +18,11 @@ export default function ForgotPassword() {
         setErrorMessage('');
 
         try {
-            // Step 1: Check if email exists in Firestore users collection
-            const usersRef = collection(db, 'users');
-            const q = query(usersRef, where('email', '==', email.trim().toLowerCase()));
-            const snapshot = await getDocs(q);
-
-            if (snapshot.empty) {
-                // Email not registered — show sign-up prompt
-                setStatus('not-found');
-                return;
-            }
-
-            // Step 2: Email exists — send reset link
+            // Send reset link directly — Firebase handles invalid/unknown emails
             await sendPasswordResetEmail(auth, email.trim());
             setStatus('success');
         } catch (err) {
+            console.error('Password reset error:', err.code, err.message);
             setStatus('error');
             switch (err.code) {
                 case 'auth/user-not-found':
@@ -46,7 +35,7 @@ export default function ForgotPassword() {
                     setErrorMessage('Too many attempts. Please try again later.');
                     break;
                 default:
-                    setErrorMessage('Something went wrong. Please try again.');
+                    setErrorMessage(`Something went wrong (${err.code || 'unknown'}). Please try again.`);
             }
         }
     };
