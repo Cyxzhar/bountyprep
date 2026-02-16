@@ -6,6 +6,7 @@ import { AuthProvider } from './context/AuthContext';
 import { ToastProvider } from './context/ToastContext';
 import { AchievementProvider } from './context/AchievementContext';
 import { SoundProvider } from './context/SoundContext';
+import { ThemeProvider } from './context/ThemeContext';
 import { Loader2 } from 'lucide-react';
 
 // Lazy load pages for performance
@@ -54,38 +55,40 @@ function App() {
           <ToastProvider>
             <AchievementProvider>
               <SoundProvider>
-                <Suspense fallback={<PageLoader />}>
-                  <Routes>
-                    {/* Public Routes */}
-                    <Route path="/" element={<Landing />} />
-                    <Route path="/splash" element={<Splash />} />
-                    <Route path="/onboarding/welcome" element={<Welcome />} />
-                    <Route path="/onboarding/goal" element={<GoalSelection />} />
-                    <Route path="/onboarding/experience" element={<ExperienceLevel />} />
-                    <Route path="/onboarding/commitment" element={<DailyCommitment />} />
-                    <Route path="/onboarding/analysis" element={<Analysis />} />
-                    <Route path="/onboarding/paywall" element={<Paywall />} />
-                    <Route path="/auth/signup" element={<AuthSignUpRouter />} />
-                    <Route path="/auth/login" element={<AuthLoginRouter />} />
-                    <Route path="/auth/forgot-password" element={<ForgotPassword />} />
-                    <Route path="/course/:id" element={<CourseDetail />} /> {/* Public Preview */}
+                <ThemeProvider> {/* Added ThemeProvider */}
+                  <Suspense fallback={<PageLoader />}>
+                    <Routes>
+                      {/* Public Routes */}
+                      <Route path="/" element={<Landing />} />
+                      <Route path="/splash" element={<Splash />} />
+                      <Route path="/onboarding/welcome" element={<Welcome />} />
+                      <Route path="/onboarding/goal" element={<GoalSelection />} />
+                      <Route path="/onboarding/experience" element={<ExperienceLevel />} />
+                      <Route path="/onboarding/commitment" element={<DailyCommitment />} />
+                      <Route path="/onboarding/analysis" element={<Analysis />} />
+                      <Route path="/onboarding/paywall" element={<Paywall />} />
+                      <Route path="/auth/signup" element={<AuthSignUpRouter />} />
+                      <Route path="/auth/login" element={<AuthLoginRouter />} />
+                      <Route path="/auth/forgot-password" element={<ForgotPassword />} />
+                      <Route path="/course/:id" element={<CourseDetail />} /> {/* Public Preview */}
 
-                    {/* Protected Routes */}
-                    <Route path="/home" element={<ProtectedRoute><Home /></ProtectedRoute>} />
-                    <Route path="/courses" element={<ProtectedRoute><Courses /></ProtectedRoute>} />
-                    <Route path="/course/:id/lesson/:lessonId" element={<ProtectedRoute><Lesson /></ProtectedRoute>} />
-                    <Route path="/challenges" element={<ProtectedRoute><Challenges /></ProtectedRoute>} />
-                    <Route path="/challenge/:id" element={<ProtectedRoute><ChallengeDetail /></ProtectedRoute>} />
-                    <Route path="/interview" element={<ProtectedRoute><Interview /></ProtectedRoute>} />
-                    <Route path="/progress" element={<ProtectedRoute><Progress /></ProtectedRoute>} />
-                    <Route path="/profile" element={<ProtectedRoute><Profile /></ProtectedRoute>} />
-                    <Route path="/settings" element={<ProtectedRoute><Settings /></ProtectedRoute>} />
-                    <Route path="/upgrade" element={<ProtectedRoute><Upgrade /></ProtectedRoute>} />
+                      {/* Protected Routes */}
+                      <Route path="/home" element={<ProtectedRoute><Home /></ProtectedRoute>} />
+                      <Route path="/courses" element={<ProtectedRoute><Courses /></ProtectedRoute>} />
+                      <Route path="/course/:id/lesson/:lessonId" element={<ProtectedRoute><Lesson /></ProtectedRoute>} />
+                      <Route path="/challenges" element={<ProtectedRoute><Challenges /></ProtectedRoute>} />
+                      <Route path="/challenge/:id" element={<ProtectedRoute><ChallengeDetail /></ProtectedRoute>} />
+                      <Route path="/interview" element={<ProtectedRoute><Interview /></ProtectedRoute>} />
+                      <Route path="/progress" element={<ProtectedRoute><Progress /></ProtectedRoute>} />
+                      <Route path="/profile" element={<ProtectedRoute><Profile /></ProtectedRoute>} />
+                      <Route path="/settings" element={<ProtectedRoute><Settings /></ProtectedRoute>} />
+                      <Route path="/upgrade" element={<ProtectedRoute><Upgrade /></ProtectedRoute>} />
 
-                    {/* Admin seeder removed for security */}
-                    <Route path="*" element={<NotFound />} />
-                  </Routes>
-                </Suspense>
+                      {/* Admin seeder removed for security */}
+                      <Route path="*" element={<NotFound />} />
+                    </Routes>
+                  </Suspense>
+                </ThemeProvider>
               </SoundProvider>
             </AchievementProvider>
           </ToastProvider>

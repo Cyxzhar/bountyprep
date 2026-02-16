@@ -9,15 +9,18 @@ import {
     BookOpen,
     MessageSquare,
     LogOut,
-    Zap
+    Sun,
+    Moon
 } from 'lucide-react';
 import { useAuth } from '../../context/AuthContext';
+import { useTheme } from '../../context/ThemeContext';
 import './Sidebar.css';
 
 export default function Sidebar() {
     const navigate = useNavigate();
     const location = useLocation();
     const { currentUser, logout } = useAuth();
+    const { theme, toggleTheme } = useTheme();
 
     const mainNav = [
         { path: '/home', icon: Home, label: 'Home' },
@@ -109,15 +112,22 @@ export default function Sidebar() {
                 </div>
             </nav>
 
-            {/* Logout Button - Hidden on Profile/Settings pages on desktop */}
-            {shouldShowLogout && (
-                <div className="sidebar-footer">
-                    <button className="sidebar-logout-btn" onClick={handleLogout}>
+            {/* Footer Actions */}
+            <div className="sidebar-footer">
+                <button
+                    className="sidebar-theme-btn"
+                    onClick={toggleTheme}
+                    title={`Switch to ${theme === 'dark' ? 'light' : 'dark'} mode`}
+                >
+                    {theme === 'dark' ? <Sun size={20} /> : <Moon size={20} />}
+                </button>
+
+                {shouldShowLogout && (
+                    <button className="sidebar-logout-btn" onClick={handleLogout} title="Logout">
                         <LogOut size={20} strokeWidth={2} />
-                        <span>Logout</span>
                     </button>
-                </div>
-            )}
+                )}
+            </div>
         </aside>
     );
 }
