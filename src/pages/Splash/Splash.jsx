@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Shield, Bug, Zap } from 'lucide-react';
+import Logo from '../../components/Logo/Logo';
 import './Splash.css';
 
 export default function Splash() {
@@ -37,7 +38,7 @@ export default function Splash() {
             <div className="splash-content">
                 {/* Logo */}
                 <div className="splash-logo animate-float">
-                    <img src="/logo.svg" alt="Bugora" style={{ width: '80px', height: '80px' }} />
+                    <Logo style={{ width: '80px', height: '80px' }} />
                 </div>
 
                 {/* Brand */}

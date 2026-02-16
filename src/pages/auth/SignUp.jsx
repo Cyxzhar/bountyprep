@@ -7,6 +7,7 @@ import { useToast } from '../../context/ToastContext';
 import { useAuth } from '../../context/AuthContext';
 import { getAuthErrorMessage, validatePassword, isValidEmail, checkPasswordStrength } from '../../utils/validation';
 import './Auth.css';
+import Logo from '../../components/Logo/Logo';
 
 export default function SignUp() {
     const navigate = useNavigate();
@@ -136,7 +137,7 @@ export default function SignUp() {
             <div className="auth-content">
                 <div className="auth-logo" onClick={() => navigate('/')} style={{ cursor: 'pointer' }}>
                     <div className="auth-logo-wrapper">
-                        <img src="/logo.svg" alt="Bugora" className="auth-logo-image" />
+                        <Logo className="auth-logo-image" style={{ width: '100%', height: '100%' }} />
                     </div>
                     <span className="auth-logo-text">Bugo<span className="auth-text-accent">ra</span></span>
                 </div>
@@ -254,7 +255,7 @@ export default function SignUp() {
                     Already have an account? <button onClick={() => navigate('/auth/login')}>Log In</button>
                     <br /><span style={{ fontSize: '0.7rem', opacity: 0.5 }}>v1.1.1 (Clean UI)</span>
                 </p>
-            </div>
-        </div>
+            </div >
+        </div >
     );
 }

@@ -4,6 +4,7 @@ import { Shield, Bug, ChevronRight, Calculator, Terminal, Award, Zap, Bot, Targe
 import { useSound } from '../../context/SoundContext';
 import PageTransition, { FADE } from '../../components/PageTransition/PageTransition';
 import OnboardingIllustration from './OnboardingIllustration';
+import Logo from '../../components/Logo/Logo';
 import './Onboarding.css';
 
 export default function Welcome() {
@@ -63,7 +64,7 @@ export default function Welcome() {
                         <div className="onboarding-hero-illustration">
                             <div className="onboarding-hero-glow"></div>
                             <div className="onboarding-hero-icon-main">
-                                <img src="/logo.svg" alt="Bugora" style={{ width: '100px', height: '100px' }} />
+                                <Logo style={{ width: '100px', height: '100px' }} />
                             </div>
                             <div className="onboarding-hero-particles">
                                 <span style={{ top: '10%', left: '20%', animationDelay: '0s' }}></span>

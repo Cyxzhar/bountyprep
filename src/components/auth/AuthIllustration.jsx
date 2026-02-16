@@ -1,4 +1,5 @@
 import { memo } from 'react';
+import Logo from '../Logo/Logo';
 import './AuthIllustration.css';
 
 /**
@@ -191,7 +192,7 @@ function AuthIllustration() {
       {/* Overlay Content */}
       <div className="auth-illustration-content">
         <div className="auth-illustration-logo">
-          <img src="/logo.svg" alt="" className="auth-illustration-logo-img" />
+          <Logo className="auth-illustration-logo-img" style={{ width: '80px', height: '80px' }} />
           <h1 className="auth-illustration-title">
             Bugo<span style={{ color: '#9FEF00' }}>ra</span>
           </h1>
@@ -202,19 +203,19 @@ function AuthIllustration() {
         <div className="auth-illustration-features">
           <div className="auth-feature-item">
             <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
-              <path d="M7 10L9 12L13 8M19 10C19 14.9706 14.9706 19 10 19C5.02944 19 1 14.9706 1 10C1 5.02944 5.02944 1 10 1C14.9706 1 19 5.02944 19 10Z" stroke="#9FEF00" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+              <path d="M7 10L9 12L13 8M19 10C19 14.9706 14.9706 19 10 19C5.02944 19 1 14.9706 1 10C1 5.02944 5.02944 1 10 1C14.9706 1 19 5.02944 19 10Z" stroke="#9FEF00" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
             </svg>
             <span>Interactive Challenges</span>
           </div>
           <div className="auth-feature-item">
             <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
-              <path d="M7 10L9 12L13 8M19 10C19 14.9706 14.9706 19 10 19C5.02944 19 1 14.9706 1 10C1 5.02944 5.02944 1 10 1C14.9706 1 19 5.02944 19 10Z" stroke="#9FEF00" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+              <path d="M7 10L9 12L13 8M19 10C19 14.9706 14.9706 19 10 19C5.02944 19 1 14.9706 1 10C1 5.02944 5.02944 1 10 1C14.9706 1 19 5.02944 19 10Z" stroke="#9FEF00" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
             </svg>
             <span>AI-Powered Interview Coach</span>
           </div>
           <div className="auth-feature-item">
             <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
-              <path d="M7 10L9 12L13 8M19 10C19 14.9706 14.9706 19 10 19C5.02944 19 1 14.9706 1 10C1 5.02944 5.02944 1 10 1C14.9706 1 19 5.02944 19 10Z" stroke="#9FEF00" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+              <path d="M7 10L9 12L13 8M19 10C19 14.9706 14.9706 19 10 19C5.02944 19 1 14.9706 1 10C1 5.02944 5.02944 1 10 1C14.9706 1 19 5.02944 19 10Z" stroke="#9FEF00" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
             </svg>
             <span>Structured Learning Paths</span>
           </div>

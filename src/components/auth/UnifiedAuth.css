@@ -88,6 +88,7 @@
     opacity: 0;
     transform: translateY(20px);
   }
+
   to {
     opacity: 1;
     transform: translateY(0);
@@ -209,7 +210,7 @@
   transition: color var(--transition-base);
 }
 
-.split-auth-container .split-input:focus ~ .split-input-icon {
+.split-auth-container .split-input:focus~.split-input-icon {
   color: var(--primary);
 }
 
@@ -255,6 +256,7 @@
     opacity: 0;
     transform: translateY(-4px);
   }
+
   to {
     opacity: 1;
     transform: translateY(0);
@@ -385,6 +387,7 @@
   from {
     transform: rotate(0deg);
   }
+
   to {
     transform: rotate(360deg);
   }
@@ -568,6 +571,7 @@
 
 /* Reduced Motion */
 @media (prefers-reduced-motion: reduce) {
+
   .split-auth-container .split-auth-form-wrapper,
   .split-auth-container .split-validation,
   .split-auth-container .split-strength-segment,
@@ -615,4 +619,82 @@
 .split-auth-container .split-auth-right {
   scrollbar-width: thin;
   scrollbar-color: rgba(159, 239, 0, 0.2) transparent;
+}
+
+/* =========================================
+   Light Mode Overrides
+   ========================================= */
+[data-theme="light"] .split-auth-container {
+  background: var(--bg-dark);
+}
+
+[data-theme="light"] .split-auth-container .split-auth-left {
+  background: linear-gradient(135deg, #F5F7FA 0%, #FFFFFF 50%, #F0F2F5 100%);
+  border-right: 1px solid var(--border-color);
+}
+
+[data-theme="light"] .split-auth-container .split-auth-right {
+  background: var(--bg-darker);
+}
+
+[data-theme="light"] .split-auth-container .split-auth-back-btn {
+  background: rgba(0, 0, 0, 0.05);
+  border-color: rgba(0, 0, 0, 0.1);
+  color: var(--text-secondary);
+}
+
+[data-theme="light"] .split-auth-container .split-auth-back-btn:hover {
+  background: rgba(159, 239, 0, 0.1);
+  border-color: var(--primary);
+  color: var(--primary-dark);
+}
+
+[data-theme="light"] .split-auth-container .split-input {
+  background: #FFFFFF;
+  border-color: rgba(0, 0, 0, 0.15);
+  color: var(--text-primary);
+}
+
+[data-theme="light"] .split-auth-container .split-input:hover {
+  background: #FFFFFF;
+  border-color: rgba(0, 0, 0, 0.3);
+}
+
+[data-theme="light"] .split-auth-container .split-input:focus {
+  background: #FFFFFF;
+  border-color: var(--primary-dark);
+  box-shadow: 0 0 0 3px rgba(123, 193, 0, 0.2);
+}
+
+[data-theme="light"] .split-auth-container .split-input::placeholder {
+  color: var(--text-muted);
+}
+
+[data-theme="light"] .split-auth-container .split-input-toggle {
+  color: var(--text-muted);
+}
+
+[data-theme="light"] .split-auth-container .split-input-toggle:hover {
+  color: var(--text-primary);
+  background: rgba(0, 0, 0, 0.05);
+}
+
+[data-theme="light"] .split-auth-container .split-strength-segment {
+  background: rgba(0, 0, 0, 0.1);
+}
+
+[data-theme="light"] .split-auth-container .split-btn-social {
+  background: #FFFFFF;
+  border-color: rgba(0, 0, 0, 0.15);
+  color: var(--text-primary);
+}
+
+[data-theme="light"] .split-auth-container .split-btn-social:hover {
+  background: rgba(0, 0, 0, 0.03);
+  border-color: rgba(0, 0, 0, 0.3);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+}
+
+[data-theme="light"] .split-auth-container .split-btn-primary {
+  color: #000;
 }

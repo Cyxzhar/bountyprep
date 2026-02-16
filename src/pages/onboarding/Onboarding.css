@@ -152,8 +152,8 @@
     justify-content: center;
     gap: clamp(24px, 4vw, 40px);
     padding: clamp(20px, 3vw, 28px) clamp(28px, 4vw, 40px);
-    background: rgba(10, 10, 15, 0.6);
-    border: 1px solid rgba(255, 255, 255, 0.08);
+    background: var(--bg-glass);
+    border: 1px solid var(--border-color);
     border-radius: clamp(12px, 2vw, 16px);
     margin-bottom: clamp(32px, 5vw, 48px);
     backdrop-filter: blur(8px);
@@ -798,140 +798,140 @@
         max-height: 80vh;
         object-fit: contain;
         opacity: 0;
-        animation: illustrationFadeIn 0.8s ease forwards 0.2s;
+        animation: authFadeIn 0.8s ease forwards 0.3s;
+    }
+}
+
+@keyframes illustrationFadeIn {
+    from {
+        opacity: 0;
+        transform: scale(0.98);
     }
 
-    @keyframes illustrationFadeIn {
-        from {
-            opacity: 0;
-            transform: scale(0.98);
-        }
-
-        to {
-            opacity: 1;
-            transform: scale(1);
-        }
+    to {
+        opacity: 1;
+        transform: scale(1);
     }
+}
 
-    /* Right panel - Content area - Very compact to fit all content */
-    .onboarding-content {
-        grid-area: right;
-        max-width: 100%;
-        padding: clamp(12px, 1.5vw, 20px);
-        padding-top: 60px;
-        /* Account for skip button */
-        justify-content: flex-start;
-        overflow-y: auto;
-        max-height: calc(100vh - 80px);
-        /* Leave room for footer */
-    }
+/* Right panel - Content area - Very compact to fit all content */
+.onboarding-content {
+    grid-area: right;
+    max-width: 100%;
+    padding: clamp(12px, 1.5vw, 20px);
+    padding-top: 60px;
+    /* Account for skip button */
+    justify-content: flex-start;
+    overflow-y: auto;
+    max-height: calc(100vh - 80px);
+    /* Leave room for footer */
+}
 
-    /* Footer spans right side only - Very compact */
-    .onboarding-footer {
-        grid-area: footer;
-        max-width: 100%;
-        padding: clamp(12px, 1.5vw, 18px) clamp(12px, 1.5vw, 20px);
-    }
+/* Footer spans right side only - Very compact */
+.onboarding-footer {
+    grid-area: footer;
+    max-width: 100%;
+    padding: clamp(12px, 1.5vw, 18px) clamp(12px, 1.5vw, 20px);
+}
 
-    /* Enhanced typography on desktop - Extra compact to fit without scroll */
-    .onboarding-welcome-title {
-        font-size: clamp(1.75rem, 2vw + 0.5rem, 2.25rem);
-        line-height: 1.2;
-        letter-spacing: -0.015em;
-        margin-bottom: clamp(12px, 1.5vw, 16px);
-    }
+/* Enhanced typography on desktop - Extra compact to fit without scroll */
+.onboarding-welcome-title {
+    font-size: clamp(1.75rem, 2vw + 0.5rem, 2.25rem);
+    line-height: 1.2;
+    letter-spacing: -0.015em;
+    margin-bottom: clamp(12px, 1.5vw, 16px);
+}
 
-    .onboarding-welcome-subtitle {
-        font-size: clamp(0.9375rem, 1vw + 0.5rem, 1.0625rem);
-        line-height: 1.55;
-        max-width: 100%;
-    }
+.onboarding-welcome-subtitle {
+    font-size: clamp(0.9375rem, 1vw + 0.5rem, 1.0625rem);
+    line-height: 1.55;
+    max-width: 100%;
+}
 
-    .onboarding-question-title {
-        font-size: clamp(1.375rem, 1.8vw + 0.5rem, 1.625rem);
-        line-height: 1.3;
-        letter-spacing: -0.01em;
-        margin-bottom: clamp(8px, 1vw, 12px);
-    }
+.onboarding-question-title {
+    font-size: clamp(1.375rem, 1.8vw + 0.5rem, 1.625rem);
+    line-height: 1.3;
+    letter-spacing: -0.01em;
+    margin-bottom: clamp(8px, 1vw, 12px);
+}
 
-    .onboarding-question-subtitle {
-        font-size: clamp(0.875rem, 1vw + 0.5rem, 0.9375rem);
-        line-height: 1.5;
-        margin-bottom: clamp(14px, 2vw, 20px);
-        max-width: 100%;
-    }
+.onboarding-question-subtitle {
+    font-size: clamp(0.875rem, 1vw + 0.5rem, 0.9375rem);
+    line-height: 1.5;
+    margin-bottom: clamp(14px, 2vw, 20px);
+    max-width: 100%;
+}
 
-    /* Enhanced stats on desktop - Extra compact */
-    .onboarding-welcome-stats {
-        gap: clamp(16px, 2vw, 24px);
-        padding: clamp(14px, 2vw, 20px) clamp(20px, 3vw, 28px);
-        margin-bottom: clamp(16px, 2vw, 24px);
-    }
+/* Enhanced stats on desktop - Extra compact */
+.onboarding-welcome-stats {
+    gap: clamp(16px, 2vw, 24px);
+    padding: clamp(14px, 2vw, 20px) clamp(20px, 3vw, 28px);
+    margin-bottom: clamp(16px, 2vw, 24px);
+}
 
-    .onboarding-stat-value {
-        font-size: clamp(1.25rem, 1.5vw + 0.5rem, 1.5rem);
-        line-height: 1.2;
-        letter-spacing: -0.01em;
-    }
+.onboarding-stat-value {
+    font-size: clamp(1.25rem, 1.5vw + 0.5rem, 1.5rem);
+    line-height: 1.2;
+    letter-spacing: -0.01em;
+}
 
-    .onboarding-stat-label {
-        font-size: clamp(0.625rem, 0.7vw + 0.25rem, 0.75rem);
-        letter-spacing: 0.1em;
-    }
+.onboarding-stat-label {
+    font-size: clamp(0.625rem, 0.7vw + 0.25rem, 0.75rem);
+    letter-spacing: 0.1em;
+}
 
-    /* Enhanced badges on desktop - Extra compact */
-    .onboarding-trust-badge {
-        padding: 8px 16px;
-        font-size: clamp(0.8125rem, 0.85vw + 0.5rem, 0.875rem);
-        line-height: 1.3;
-        gap: 8px;
-        letter-spacing: 0.02em;
-    }
+/* Enhanced badges on desktop - Extra compact */
+.onboarding-trust-badge {
+    padding: 8px 16px;
+    font-size: clamp(0.8125rem, 0.85vw + 0.5rem, 0.875rem);
+    line-height: 1.3;
+    gap: 8px;
+    letter-spacing: 0.02em;
+}
 
-    .onboarding-trust-badge svg {
-        width: 14px;
-        height: 14px;
-    }
+.onboarding-trust-badge svg {
+    width: 14px;
+    height: 14px;
+}
 
-    /* Grid layout for option cards on desktop - Auto-fit for 2-3 items */
-    .onboarding-options-grid {
-        max-width: 100%;
-        display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
-        gap: clamp(10px, 1.5vw, 14px);
-    }
+/* Grid layout for option cards on desktop - Auto-fit for 2-3 items */
+.onboarding-options-grid {
+    max-width: 100%;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+    gap: clamp(10px, 1.5vw, 14px);
+}
 
-    .onboarding-option-card {
-        flex-direction: column;
-        text-align: center;
-        padding: clamp(14px, 2vw, 20px);
-        min-height: 130px;
-        max-height: 150px;
-    }
+.onboarding-option-card {
+    flex-direction: column;
+    text-align: center;
+    padding: clamp(14px, 2vw, 20px);
+    min-height: 130px;
+    max-height: 150px;
+}
 
-    .onboarding-option-icon {
-        width: 48px;
-        height: 48px;
-        margin-bottom: clamp(8px, 1.5vw, 12px);
-    }
+.onboarding-option-icon {
+    width: 48px;
+    height: 48px;
+    margin-bottom: clamp(8px, 1.5vw, 12px);
+}
 
-    .onboarding-option-icon svg {
-        width: 24px;
-        height: 24px;
-    }
+.onboarding-option-icon svg {
+    width: 24px;
+    height: 24px;
+}
 
-    .onboarding-option-title {
-        font-size: clamp(1.125rem, 1.5vw + 0.5rem, 1.25rem);
-        line-height: 1.3;
-        letter-spacing: -0.015em;
-        margin-bottom: 8px;
-    }
+.onboarding-option-title {
+    font-size: clamp(1.125rem, 1.5vw + 0.5rem, 1.25rem);
+    line-height: 1.3;
+    letter-spacing: -0.015em;
+    margin-bottom: 8px;
+}
 
-    .onboarding-option-desc {
-        font-size: clamp(0.9375rem, 1vw + 0.5rem, 1.0625rem);
-        line-height: 1.6;
-        letter-spacing: 0.015em;
-    }
+.onboarding-option-desc {
+    font-size: clamp(0.9375rem, 1vw + 0.5rem, 1.0625rem);
+    line-height: 1.6;
+    letter-spacing: 0.015em;
 }
 
 /* Ultra-wide screens (≥1200px) - Keep compact */
@@ -1208,7 +1208,7 @@
 .onboarding-welcome-stats {
     position: relative;
     border-width: 1.5px;
-    background: rgba(10, 10, 15, 0.7);
+    background: var(--bg-glass);
     backdrop-filter: blur(16px);
     box-shadow:
         0 10px 40px rgba(0, 0, 0, 0.3),
@@ -2241,4 +2241,131 @@
     .onboarding-content:has(.onboarding-analysis-spinner) .onboarding-question-title {
         text-align: center;
     }
+}
+
+/* ============================================
+   LIGHT MODE OVERRIDES
+   ============================================ */
+
+/* Global Onboarding Background */
+[data-theme="light"] .onboarding-screen {
+    background: #F5F7FA;
+    /* var(--bg-darker) override */
+    color: var(--text-primary);
+}
+
+[data-theme="light"] .onboarding-bg-grid {
+    background-image:
+        linear-gradient(rgba(0, 0, 0, 0.03) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(0, 0, 0, 0.03) 1px, transparent 1px);
+    opacity: 1;
+}
+
+[data-theme="light"] .onboarding-left-panel {
+    background: linear-gradient(135deg, #F5F7FA 0%, #FFFFFF 50%, #F0F2F5 100%);
+    border-right: 1px solid rgba(0, 0, 0, 0.1);
+}
+
+/* Badges & Stats */
+[data-theme="light"] .onboarding-badge {
+    background: rgba(0, 0, 0, 0.05);
+    border: 1px solid rgba(0, 0, 0, 0.1);
+    color: var(--text-primary);
+}
+
+[data-theme="light"] .onboarding-welcome-stats,
+[data-theme="light"] .onboarding-stats {
+    background: rgba(255, 255, 255, 0.7);
+    border: 1px solid rgba(0, 0, 0, 0.08);
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.05);
+}
+
+[data-theme="light"] .onboarding-stat-value {
+    color: var(--text-primary);
+}
+
+[data-theme="light"] .onboarding-stat-divider {
+    background: rgba(0, 0, 0, 0.1);
+}
+
+[data-theme="light"] .onboarding-trust-badge {
+    background: rgba(159, 239, 0, 0.1);
+    border: 1px solid rgba(159, 239, 0, 0.3);
+    color: var(--primary-dark);
+}
+
+/* Cards & Options */
+[data-theme="light"] .goal-card,
+[data-theme="light"] .experience-option,
+[data-theme="light"] .commitment-option,
+[data-theme="light"] .onboarding-option-card {
+    background: #FFFFFF;
+    border: 1px solid rgba(0, 0, 0, 0.1);
+}
+
+[data-theme="light"] .goal-card:hover,
+[data-theme="light"] .experience-option:hover,
+[data-theme="light"] .commitment-option:hover,
+[data-theme="light"] .onboarding-option-card:hover {
+    background: #F8F9FA;
+    border-color: var(--primary);
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+}
+
+[data-theme="light"] .onboarding-option-card.selected {
+    background: rgba(159, 239, 0, 0.1);
+    border-color: var(--primary-dark);
+}
+
+[data-theme="light"] .onboarding-option-icon {
+    background: rgba(0, 0, 0, 0.05);
+}
+
+[data-theme="light"] .onboarding-option-card.selected .onboarding-option-icon {
+    background: var(--primary-dark);
+    color: #FFFFFF;
+}
+
+/* Radio Buttons */
+[data-theme="light"] .onboarding-option-radio {
+    border-color: rgba(0, 0, 0, 0.2);
+}
+
+[data-theme="light"] .onboarding-option-card.selected .onboarding-option-radio {
+    border-color: var(--primary-dark);
+    background: var(--primary-dark);
+}
+
+[data-theme="light"] .onboarding-option-card.selected .onboarding-option-radio::after {
+    background: #FFFFFF;
+}
+
+/* Skip Button */
+[data-theme="light"] .onboarding-skip-btn {
+    background: rgba(0, 0, 0, 0.05);
+    border: 1px solid rgba(0, 0, 0, 0.1);
+    color: var(--text-secondary);
+}
+
+[data-theme="light"] .onboarding-skip-btn:hover {
+    background: rgba(0, 0, 0, 0.1);
+    color: var(--primary-dark);
+    border-color: var(--primary);
+}
+
+/* Result Cards */
+[data-theme="light"] .onboarding-results-card {
+    background: linear-gradient(135deg, #FFFFFF 0%, rgba(159, 239, 0, 0.1) 100%);
+    border-color: rgba(159, 239, 0, 0.3);
+}
+
+[data-theme="light"] .onboarding-result-stat {
+    background: #FFFFFF;
+    border-color: rgba(0, 0, 0, 0.1);
+    color: var(--text-secondary);
+}
+
+/* Modals */
+[data-theme="light"] .modal-overlay {
+    background: rgba(0, 0, 0, 0.6);
 }

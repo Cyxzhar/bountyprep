@@ -44,9 +44,12 @@
 }
 
 @keyframes float {
-  0%, 100% {
+
+  0%,
+  100% {
     transform: translateY(0px);
   }
+
   50% {
     transform: translateY(-10px);
   }
@@ -106,6 +109,7 @@
     opacity: 0;
     transform: translateY(20px);
   }
+
   to {
     opacity: 1;
     transform: translateY(0);
@@ -120,10 +124,13 @@
 }
 
 @keyframes pulse {
-  0%, 100% {
+
+  0%,
+  100% {
     opacity: 0.3;
     transform: scale(1);
   }
+
   50% {
     opacity: 0.6;
     transform: scale(1.1);
@@ -155,9 +162,11 @@
     stroke-dashoffset: 300;
     opacity: 0;
   }
+
   50% {
     opacity: 1;
   }
+
   100% {
     stroke-dashoffset: 0;
     opacity: 0;
@@ -182,10 +191,13 @@
 }
 
 @keyframes floatCode {
-  0%, 100% {
+
+  0%,
+  100% {
     transform: translateY(0px);
     opacity: 0.2;
   }
+
   50% {
     transform: translateY(-20px);
     opacity: 0.6;
@@ -226,12 +238,15 @@
     transform: translateY(0);
     opacity: 0;
   }
+
   10% {
     opacity: 0.3;
   }
+
   90% {
     opacity: 0.3;
   }
+
   100% {
     transform: translateY(900px);
     opacity: 0;
@@ -272,12 +287,15 @@
     transform: translateY(-100px);
     opacity: 0;
   }
+
   10% {
     opacity: 1;
   }
+
   90% {
     opacity: 1;
   }
+
   100% {
     transform: translateY(1000px);
     opacity: 0;
@@ -302,22 +320,28 @@
 }
 
 @keyframes glitchFlashH {
-  0%, 100% {
+
+  0%,
+  100% {
     opacity: 0;
     transform: translateX(0);
   }
+
   1% {
     opacity: 0.8;
     transform: translateX(-5px);
   }
+
   2% {
     opacity: 0.6;
     transform: translateX(5px);
   }
+
   3% {
     opacity: 0.9;
     transform: translateX(-3px);
   }
+
   4% {
     opacity: 0;
     transform: translateX(0);
@@ -342,22 +366,28 @@
 }
 
 @keyframes glitchFlashV {
-  0%, 100% {
+
+  0%,
+  100% {
     opacity: 0;
     transform: translateY(0);
   }
+
   1% {
     opacity: 0.8;
     transform: translateY(-5px);
   }
+
   2% {
     opacity: 0.6;
     transform: translateY(5px);
   }
+
   3% {
     opacity: 0.9;
     transform: translateY(-3px);
   }
+
   4% {
     opacity: 0;
     transform: translateY(0);
@@ -366,6 +396,7 @@
 
 /* Reduced Motion Support */
 @media (prefers-reduced-motion: reduce) {
+
   .auth-illustration-logo-img,
   .shield-glow,
   .shield-outline,
@@ -411,4 +442,18 @@
   .auth-illustration {
     display: none;
   }
+}
+
+/* =========================================
+   Light Mode Overrides
+   ========================================= */
+[data-theme="light"] .auth-illustration {
+  background: linear-gradient(135deg, #F5F7FA 0%, #FFFFFF 50%, #F0F2F5 100%);
+}
+
+[data-theme="light"] .auth-illustration-title {
+  background: linear-gradient(135deg, #1A1A2E 0%, #7BC100 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
 }
