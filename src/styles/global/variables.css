@@ -2,44 +2,49 @@
 :root {
     /* Primary Accent Colors - Bugora Cyberpunk Theme */
     --primary: #9FEF00;
+    /* Lime Green - Core identity */
     --primary-dark: #7BC100;
     --primary-light: #B8FF33;
-    --accent-cyan: #00F0FF;
-    /* Cyber Blue */
-    --accent-green: #00FF9D;
-    /* Matrix Green */
-    --accent-orange: #FF5E00;
-    /* Warning Orange */
-    --accent-yellow: #FAFF00;
-    /* Hazard Yellow */
-    --accent-red: #FF003C;
-    /* Error Red */
-    --accent-purple: #BC13FE;
-    /* Neon Purple */
 
-    /* Legacy neon (updated to match new palette) */
-    --neon-green: #9FEF00;
-    --neon-green-dark: #7BC100;
-    --neon-blue: #00F0FF;
-    --neon-purple: #BC13FE;
-    --neon-pink: #FF0055;
-    --neon-orange: #FF5E00;
+    /* Secondary Accents */
+    --accent-cyan: #00F0FF;
+    /* Cyber Blue - Info, Auth */
+    --accent-green: #00FF9D;
+    /* Matrix Green - Success, Easy */
+    --accent-orange: #FF5E00;
+    /* Warning Orange - Medium, XSS */
+    --accent-yellow: #FAFF00;
+    /* Hazard Yellow - Warnings, CSRF */
+    --accent-red: #FF003C;
+    /* Error Red - Hard, SQLi */
+    --accent-purple: #BC13FE;
+    /* Neon Purple - Premium, IDOR */
+
+    /* Legacy compatibility (mapped to new palette) */
+    --neon-green: var(--primary);
+    --neon-green-dark: var(--primary-dark);
+    --neon-blue: var(--accent-cyan);
+    --neon-purple: var(--accent-purple);
+    --neon-pink: var(--accent-red);
+    --neon-orange: var(--accent-orange);
 
     /* Background Colors - Deep Void */
     --bg-dark: #05050A;
-    /* Near Black */
+    /* Almost Black */
     --bg-darker: #000000;
-    /* Absolute Black */
+    /* Pure Black */
     --bg-card: rgba(20, 20, 30, 0.6);
     --bg-card-hover: rgba(30, 30, 45, 0.8);
     --bg-elevated: #151520;
     --bg-glass: rgba(15, 15, 25, 0.7);
+    --bg-overlay: rgba(0, 0, 0, 0.85);
 
     /* Text Colors */
     --text-primary: #FFFFFF;
     --text-secondary: #9494A8;
     --text-muted: #5A5A6E;
     --text-disabled: #3A3A4A;
+    --text-inverse: #000000;
 
     /* Border Colors */
     --border-color: rgba(255, 255, 255, 0.08);
@@ -50,6 +55,7 @@
     /* Gradients */
     --gradient-primary: linear-gradient(135deg, #9FEF00 0%, #7BC100 100%);
     --gradient-accent: linear-gradient(135deg, #00F0FF 0%, #9FEF00 100%);
+    --gradient-cyber: linear-gradient(135deg, #BC13FE 0%, #FF5E00 100%);
     --gradient-card: linear-gradient(180deg, rgba(255, 255, 255, 0.03) 0%, rgba(255, 255, 255, 0.01) 100%);
     --gradient-dark: linear-gradient(180deg, #05050A 0%, #000000 100%);
     --gradient-glow: radial-gradient(circle at center, rgba(159, 239, 0, 0.15) 0%, transparent 70%);
@@ -84,6 +90,9 @@
     --shadow-primary-lg: 0 8px 24px rgba(159, 239, 0, 0.3);
     --shadow-glow: 0 0 20px rgba(159, 239, 0, 0.2);
     --shadow-card: 0 4px 16px rgba(0, 0, 0, 0.25);
+    --shadow-cyan: 0 0 20px rgba(0, 240, 255, 0.2);
+    --shadow-purple: 0 0 20px rgba(188, 19, 254, 0.2);
+    --shadow-red: 0 0 20px rgba(255, 0, 60, 0.2);
 
     /* Transitions */
     --transition-fast: 150ms ease;
@@ -93,4 +102,46 @@
     /* Container */
     --max-width: 1200px;
     --container-padding: var(--space-lg);
+}
+
+/* Light Mode Overrides */
+[data-theme="light"] {
+    /* Backgrounds */
+    --bg-dark: #F5F7FA;
+    /* Light Gray Background */
+    --bg-darker: #FFFFFF;
+    /* Pure White */
+    --bg-card: rgba(255, 255, 255, 0.8);
+    --bg-card-hover: rgba(255, 255, 255, 1);
+    --bg-elevated: #FFFFFF;
+    --bg-glass: rgba(255, 255, 255, 0.7);
+    --bg-overlay: rgba(255, 255, 255, 0.85);
+
+    /* Text Colors */
+    --text-primary: #1A1A2E;
+    /* Dark Navy */
+    --text-secondary: #5A5A6E;
+    --text-muted: #8A8A9E;
+    --text-disabled: #A0A0B0;
+    --text-inverse: #FFFFFF;
+
+    /* Border Colors */
+    --border-color: rgba(0, 0, 0, 0.08);
+    --border-light: rgba(0, 0, 0, 0.12);
+    --border-active: var(--primary-dark);
+    --border-glow: rgba(123, 193, 0, 0.4);
+
+    /* Gradients (Adjusted for Light Mode) */
+    --gradient-card: linear-gradient(180deg, rgba(255, 255, 255, 0.6) 0%, rgba(255, 255, 255, 0.4) 100%);
+    --gradient-dark: linear-gradient(180deg, #F5F7FA 0%, #FFFFFF 100%);
+
+    /* Shadows - softer and darker for depth on light bg */
+    --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.05);
+    --shadow-md: 0 4px 16px rgba(0, 0, 0, 0.08);
+    --shadow-lg: 0 8px 32px rgba(0, 0, 0, 0.1);
+    --shadow-xl: 0 16px 48px rgba(0, 0, 0, 0.12);
+    --shadow-card: 0 4px 16px rgba(0, 0, 0, 0.06);
+
+    /* Adjust Accents brightness if needed, 
+       but keeping them vibrant is key to the "Cyberpunk Light" feel */
 }
