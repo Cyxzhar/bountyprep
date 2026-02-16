@@ -71,7 +71,7 @@
     justify-content: space-between;
     align-items: center;
     padding: var(--space-sm) var(--space-md);
-    background: rgba(0, 0, 0, 0.4);
+    background: var(--bg-elevated);
     border-bottom: 1px solid var(--border-color);
 }
 
@@ -1195,7 +1195,7 @@
 .lab-tools-panel {
     display: flex;
     flex-direction: column;
-    background: rgba(10, 10, 18, 0.8);
+    background: var(--bg-card);
     border: 1px solid var(--border-color);
     border-radius: var(--radius-md);
     overflow: hidden;
@@ -1308,4 +1308,15 @@
         opacity: 1;
         transform: translateY(0);
     }
+}
+
+/* Light mode overrides */
+[data-theme="light"] .code-editor-header,
+[data-theme="light"] .code-preview-header,
+[data-theme="light"] .console-header {
+    background: #F5F7FA;
+}
+
+[data-theme="light"] .lab-tools-panel {
+    background: rgba(255, 255, 255, 0.98);
 }

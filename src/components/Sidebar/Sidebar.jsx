@@ -14,6 +14,7 @@ import {
 } from 'lucide-react';
 import { useAuth } from '../../context/AuthContext';
 import { useTheme } from '../../context/ThemeContext';
+import Logo from '../Logo/Logo'; // Import Logo
 import './Sidebar.css';
 
 export default function Sidebar() {
@@ -54,7 +55,7 @@ export default function Sidebar() {
             {/* Brand */}
             <div className="sidebar-brand">
                 <div className="brand-logo">
-                    <img src="/logo.svg" alt="Bugora" />
+                    <Logo size="md" /> {/* Use Logo component */}
                 </div>
                 <span className="brand-name">Bug<span className="brand-accent">ora</span></span>
             </div>

@@ -28,7 +28,7 @@
     max-width: 400px;
     padding: 12px 16px;
     border-radius: 12px;
-    background: rgba(10, 10, 15, 0.95);
+    background: var(--bg-card);
     backdrop-filter: blur(10px);
     -webkit-backdrop-filter: blur(10px);
     border: 1px solid rgba(255, 255, 255, 0.1);
@@ -112,4 +112,21 @@
 .toast-close:hover {
     color: #fff;
     background: rgba(255, 255, 255, 0.1);
+}
+
+/* Light mode overrides */
+[data-theme="light"] .toast {
+    background: rgba(255, 255, 255, 0.98);
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+    border: 1px solid rgba(0, 0, 0, 0.1);
+    color: var(--text-primary);
+}
+
+[data-theme="light"] .toast-close {
+    color: rgba(0, 0, 0, 0.5);
+}
+
+[data-theme="light"] .toast-close:hover {
+    color: var(--text-primary);
+    background: rgba(0, 0, 0, 0.1);
 }

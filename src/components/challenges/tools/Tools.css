@@ -379,7 +379,7 @@
 
 .repeater-response {
     border-top: 1px solid var(--border-color, rgba(255, 255, 255, 0.08));
-    background: rgba(10, 10, 15, 0.8);
+    background: var(--bg-card);
     padding: 12px;
     max-height: 45%;
     overflow-y: auto;
@@ -487,7 +487,7 @@
 }
 
 .graphql-result {
-    background: rgba(10, 10, 15, 0.6);
+    background: var(--bg-glass);
 }
 
 .editor-label {
@@ -1051,4 +1051,103 @@
         border-bottom: 1px solid #333;
         height: 50%;
     }
+}
+
+/* Light mode overrides */
+[data-theme="light"] .tool-section-header,
+[data-theme="light"] .decoder-formats,
+[data-theme="light"] .jwt-section-header,
+[data-theme="light"] .burp-pane-label,
+[data-theme="light"] .graphql-toolbar {
+    background: rgba(0, 0, 0, 0.05);
+}
+
+[data-theme="light"] .repeater-response,
+[data-theme="light"] .graphql-result {
+    background: rgba(255, 255, 255, 0.7);
+}
+
+/* Extended Light Mode Overrides for Virtual Tools */
+[data-theme="light"] .tool-repeater,
+[data-theme="light"] .tool-browser,
+[data-theme="light"] .tool-graphql,
+[data-theme="light"] .tool-terminal {
+    background: #FFFFFF;
+    border-color: rgba(0, 0, 0, 0.1);
+}
+
+[data-theme="light"] .browser-bar,
+[data-theme="light"] .repeater-controls,
+[data-theme="light"] .graphql-header,
+[data-theme="light"] .terminal-header {
+    background: #F5F7FA;
+    border-bottom-color: rgba(0, 0, 0, 0.1);
+}
+
+[data-theme="light"] .address-bar,
+[data-theme="light"] .url-input,
+[data-theme="light"] .header-row input {
+    background: #FFFFFF;
+    border-color: rgba(0, 0, 0, 0.1);
+    color: var(--text-primary);
+}
+
+[data-theme="light"] .address-bar input {
+    color: var(--text-primary);
+}
+
+[data-theme="light"] .browser-viewport {
+    background: #FFFFFF;
+    border-color: rgba(0, 0, 0, 0.1);
+}
+
+[data-theme="light"] .browser-content {
+    color: var(--text-secondary);
+}
+
+[data-theme="light"] .browser-content pre {
+    background: #F5F7FA;
+    border-color: rgba(0, 0, 0, 0.1);
+    color: var(--text-primary);
+}
+
+[data-theme="light"] .terminal-viewport {
+    background: #FFFFFF;
+    color: #000;
+}
+
+[data-theme="light"] .term-line.output {
+    color: var(--text-secondary);
+}
+
+[data-theme="light"] .term-input-line input {
+    color: #000;
+}
+
+[data-theme="light"] .prompt .path {
+    color: var(--primary-dark);
+}
+
+[data-theme="light"] .body-editor textarea,
+[data-theme="light"] .graphql-editor textarea,
+[data-theme="light"] .graphql-variables textarea {
+    background: #FFFFFF;
+    border: 1px solid rgba(0, 0, 0, 0.1);
+    color: var(--text-primary);
+}
+
+[data-theme="light"] .method-select {
+    background: #FFFFFF;
+    border-color: rgba(0, 0, 0, 0.1);
+    color: var(--text-primary);
+}
+
+[data-theme="light"] .method-select option {
+    background: #FFFFFF;
+    color: var(--text-primary);
+}
+
+[data-theme="light"] .btn-icon:hover {
+    background: rgba(0, 0, 0, 0.05);
+    color: var(--text-primary);
 }

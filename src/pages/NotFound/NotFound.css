@@ -251,3 +251,40 @@
         clip: rect(90px, 9999px, 4px, 0);
     }
 }
+
+/* =========================================
+   Light Mode Overrides
+   ========================================= */
+[data-theme="light"] .notfound-screen {
+    background: #F5F7FA;
+    color: var(--text-primary);
+}
+
+[data-theme="light"] .error-code {
+    color: var(--text-primary);
+    text-shadow: 3px 3px 0 rgba(0, 240, 255, 0.5), -3px -3px 0 rgba(255, 0, 85, 0.5);
+}
+
+[data-theme="light"] .error-title {
+    color: var(--primary-dark);
+}
+
+[data-theme="light"] .error-message {
+    color: var(--text-secondary);
+}
+
+[data-theme="light"] .terminal-box {
+    background: #FFFFFF;
+    border-color: rgba(0, 0, 0, 0.1);
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+}
+
+[data-theme="light"] .terminal-header {
+    background: rgba(0, 0, 0, 0.05);
+    border-bottom-color: rgba(0, 0, 0, 0.1);
+    color: var(--primary-dark);
+}
+
+[data-theme="light"] .log-line {
+    color: var(--text-secondary);
+}

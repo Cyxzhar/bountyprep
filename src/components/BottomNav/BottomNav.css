@@ -5,7 +5,7 @@
     right: 0;
     height: auto;
     min-height: 72px;
-    background: rgba(10, 10, 15, 0.95);
+    background: var(--bg-card);
     backdrop-filter: blur(20px);
     -webkit-backdrop-filter: blur(20px);
     border-top: 1px solid var(--border-color);
@@ -16,6 +16,11 @@
     padding-bottom: max(10px, env(safe-area-inset-bottom));
     z-index: 1000;
     box-sizing: border-box;
+}
+
+[data-theme="light"] .bottom-nav {
+    background: rgba(255, 255, 255, 0.95);
+    border-top: 1px solid rgba(0, 0, 0, 0.05);
 }
 
 /* Hide bottom nav on desktop - show sidebar instead */
@@ -49,6 +54,18 @@
 
 .nav-item.active .nav-icon {
     filter: drop-shadow(0 0 8px rgba(159, 239, 0, 0.5));
+}
+
+[data-theme="light"] .nav-item {
+    color: var(--text-muted);
+}
+
+[data-theme="light"] .nav-item.active {
+    color: var(--primary-dark);
+}
+
+[data-theme="light"] .nav-item.active .nav-icon {
+    filter: drop-shadow(0 0 6px rgba(123, 193, 0, 0.3));
 }
 
 .nav-icon {
