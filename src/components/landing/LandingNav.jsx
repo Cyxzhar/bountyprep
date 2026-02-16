@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Menu, X } from 'lucide-react';
+import Logo from '../../components/Logo/Logo';
+import ThemeToggle from '../../components/ThemeToggle/ThemeToggle';
 import '../../pages/Landing/Landing.css'; // Ensure path is correct relative to components/landing
 
 const LandingNav = () => {
@@ -47,7 +49,7 @@ const LandingNav = () => {
         <nav className={`landing-nav ${isMenuOpen ? 'menu-active' : ''}`}>
             <div className="nav-container">
                 <div className="landing-logo">
-                    <img src="/logo.svg" alt="Bugora" />
+                    <Logo style={{ width: '32px', height: '32px' }} />
                     <span className="brand-text">Bug<span className="brand-accent">ora</span></span>
                 </div>
 
@@ -84,6 +86,7 @@ const LandingNav = () => {
                     </a>
 
                     <div className="nav-actions">
+                        <ThemeToggle className="landing-variant" />
                         <button className="nav-btn login-btn" onClick={() => { navigate('/auth/login'); setIsMenuOpen(false); }}>Login</button>
                         <button className="nav-btn primary" onClick={() => { navigate('/onboarding/welcome'); setIsMenuOpen(false); }}>Open App</button>
                     </div>
