@@ -1,0 +1,94 @@
+/* Universal Theme Toggle */
+.theme-toggle {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    min-width: 44px;
+    min-height: 44px;
+    padding: 10px;
+    background: var(--bg-card);
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-md);
+    color: var(--text-secondary);
+    cursor: pointer;
+    transition: all var(--transition-base);
+    overflow: hidden;
+}
+
+.theme-toggle:hover {
+    color: var(--primary);
+    border-color: var(--primary);
+    background: var(--bg-card-hover);
+    transform: scale(1.05);
+}
+
+.theme-toggle:active {
+    transform: scale(0.95);
+}
+
+.theme-toggle-icon-wrapper {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 20px;
+    height: 20px;
+}
+
+.theme-icon {
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Sun icon rotation on hover */
+.theme-toggle:hover .sun {
+    transform: rotate(45deg);
+}
+
+/* Moon icon subtle scale */
+.theme-toggle:hover .moon {
+    transform: scale(1.1);
+}
+
+/* Optional label */
+.theme-toggle-label {
+    font-size: 0.875rem;
+    font-weight: 500;
+    white-space: nowrap;
+}
+
+/* Light mode specific styles */
+[data-theme="light"] .theme-toggle {
+    background: rgba(255, 255, 255, 0.9);
+    box-shadow: var(--shadow-sm);
+}
+
+[data-theme="light"] .theme-toggle:hover {
+    box-shadow: var(--shadow-md);
+    background: rgba(255, 255, 255, 1);
+}
+
+/* Landing page variant (transparent background) */
+.theme-toggle.landing-variant {
+    background: rgba(255, 255, 255, 0.05);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+}
+
+[data-theme="light"] .theme-toggle.landing-variant {
+    background: rgba(0, 0, 0, 0.05);
+}
+
+/* Mobile optimization */
+@media (max-width: 768px) {
+    .theme-toggle {
+        min-width: 40px;
+        min-height: 40px;
+        padding: 8px;
+    }
+
+    .theme-toggle-label {
+        display: none; /* Hide label on mobile */
+    }
+}

@@ -1,7 +1,8 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
-import { useToast } from '../../context/ToastContext'; // Added useToast
+import { useTheme } from '../../context/ThemeContext'; // Added useTheme
+import { useToast } from '../../context/ToastContext';
 import { useSound } from '../../context/SoundContext';
 import { refreshUserProfile } from '../../utils/firestore';
 import { validatePassword, hashPassword } from '../../utils/validation';
@@ -19,15 +20,23 @@ import './Settings.css';
 
 export default function Settings() {
     const navigate = useNavigate();
-    const { currentUser, logout, setCurrentUser } = useAuth(); // Assuming 'auth' is accessible via currentUser or import
-    const { success, error: showError } = useToast(); // Using Toast context
+    const { currentUser, logout, setCurrentUser } = useAuth();
+    const { theme, toggleTheme } = useTheme(); // Use ThemeContext
+    const { success, error: showError } = useToast();
     const { isMuted, toggleMute } = useSound();
 
     const [displayName, setDisplayName] = useState('');
-    const [theme, setTheme] = useState('dark');
+    // const [theme, setTheme] = useState('dark'); // Removed local state
     const [notifications, setNotifications] = useState(true);
     const [saving, setSaving] = useState(false);
     const [uploading, setUploading] = useState(false);
+
+    // ... (rest of state)
+
+    // ... (handlers)
+
+
+
 
     // Password change form state
     const [showPasswordForm, setShowPasswordForm] = useState(false);
@@ -388,9 +397,9 @@ export default function Settings() {
                                 type="checkbox"
                                 checked={theme === 'dark'}
                                 onChange={() => {
+                                    toggleTheme();
                                     const newTheme = theme === 'dark' ? 'light' : 'dark';
-                                    setTheme(newTheme);
-                                    success(`Theme set to ${newTheme} mode`);
+                                    success(`Theme switched to ${newTheme} mode`);
                                 }}
                             />
                             <span className="slider round"></span>

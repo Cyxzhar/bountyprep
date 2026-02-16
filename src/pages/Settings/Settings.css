@@ -15,10 +15,10 @@
     position: sticky;
     top: 0;
     z-index: 100;
-    background: rgba(10, 10, 15, 0.9);
+    background: var(--bg-card);
     backdrop-filter: blur(12px);
     -webkit-backdrop-filter: blur(12px);
-    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+    border-bottom: 1px solid var(--border-color);
 }
 
 .page-header-nav h1 {
@@ -105,7 +105,7 @@
 .upload-overlay {
     position: absolute;
     inset: 0;
-    background: rgba(0, 0, 0, 0.5);
+    background: var(--bg-overlay);
     display: flex;
     align-items: center;
     justify-content: center;
@@ -347,7 +347,7 @@ input:checked+.slider:before {
 .settings-modal-overlay {
     position: fixed;
     inset: 0;
-    background: rgba(0, 0, 0, 0.7);
+    background: var(--bg-overlay);
     backdrop-filter: blur(4px);
     display: flex;
     align-items: center;
@@ -691,4 +691,48 @@ input:checked+.slider:before {
         min-height: 52px;
         font-size: 1rem;
     }
+}
+
+/* Light mode overrides */
+[data-theme="light"] .page-header-nav {
+    background: rgba(255, 255, 255, 0.95);
+    border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+}
+
+[data-theme="light"] .icon-btn:hover {
+    background: rgba(0, 0, 0, 0.05);
+}
+
+[data-theme="light"] .upload-overlay {
+    background: rgba(0, 0, 0, 0.6);
+}
+
+[data-theme="light"] .settings-modal-overlay {
+    background: rgba(0, 0, 0, 0.5);
+}
+
+[data-theme="light"] .password-change-form {
+    background: rgba(0, 0, 0, 0.02);
+    border: 1px solid rgba(0, 0, 0, 0.08);
+}
+
+[data-theme="light"] .password-change-form input[type="password"] {
+    background: #FFFFFF;
+    border: 1px solid rgba(0, 0, 0, 0.15);
+}
+
+[data-theme="light"] .password-change-form .btn-secondary {
+    border: 1px solid rgba(0, 0, 0, 0.2);
+}
+
+[data-theme="light"] .password-change-form .btn-secondary:hover:not(:disabled) {
+    background: rgba(0, 0, 0, 0.05);
+}
+
+[data-theme="light"] .logout-btn {
+    background: rgba(0, 0, 0, 0.03);
+}
+
+[data-theme="light"] .logout-btn:hover {
+    background: rgba(0, 0, 0, 0.08);
 }
