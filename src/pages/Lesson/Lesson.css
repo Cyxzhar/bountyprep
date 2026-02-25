@@ -126,7 +126,7 @@
     border: 1px solid rgba(255, 255, 255, 0.1);
 }
 
-.hero-content {
+.lesson-page .hero-content {
     max-width: 800px;
     margin: 0 auto;
 }
@@ -140,7 +140,7 @@
     margin-bottom: 16px;
 }
 
-.hero-title {
+.lesson-page .hero-title {
     font-family: var(--font-heading);
     font-size: clamp(2rem, 5vw, 3rem);
     line-height: 1.1;
@@ -505,7 +505,7 @@
         padding: 64px 3rem;
     }
 
-    .hero-title {
+    .lesson-page .hero-title {
         font-size: 3.75rem;
     }
 
@@ -635,7 +635,7 @@
         padding: 72px 4rem;
     }
 
-    .hero-title {
+    .lesson-page .hero-title {
         font-size: 4.5rem;
     }
 
@@ -815,7 +815,7 @@
         margin-bottom: 24px;
     }
 
-    .hero-title {
+    .lesson-page .hero-title {
         font-size: 2.25rem;
     }
 
@@ -823,7 +823,7 @@
         padding: 40px 16px;
     }
 
-    .section-header h2 {
+    .lesson-page .section-header h2 {
         font-size: 1.5rem;
         margin-top: 40px;
     }
@@ -891,7 +891,7 @@
         justify-content: center;
     }
 
-    .hero-title {
+    .lesson-page .hero-title {
         font-size: 1.75rem;
         letter-spacing: -0.02em;
     }
@@ -901,7 +901,7 @@
         margin-bottom: 12px;
     }
 
-    .section-header h2 {
+    .lesson-page .section-header h2 {
         font-size: 1.25rem;
         gap: 8px;
     }

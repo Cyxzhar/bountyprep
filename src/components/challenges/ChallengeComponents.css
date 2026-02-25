@@ -4,7 +4,7 @@
     margin-bottom: var(--space-xl);
 }
 
-.section-header {
+.challenge-section .section-header {
     display: flex;
     align-items: center;
     gap: var(--space-sm);
@@ -64,6 +64,8 @@
     border-radius: var(--radius-md);
     overflow: hidden;
     margin-bottom: var(--space-lg);
+    max-width: 100%;
+    box-sizing: border-box;
 }
 
 .code-editor-header {
@@ -91,6 +93,7 @@
 .code-editor {
     width: 100%;
     min-height: 300px;
+    max-height: 500px;
     padding: var(--space-lg);
     background: var(--bg-darker);
     border: none;
@@ -100,6 +103,8 @@
     line-height: 1.6;
     resize: vertical;
     outline: none;
+    overflow-y: auto;
+    box-sizing: border-box;
 }
 
 .code-editor::placeholder {

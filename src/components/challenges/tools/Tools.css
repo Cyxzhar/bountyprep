@@ -361,6 +361,7 @@
 .body-editor textarea {
     width: 100%;
     min-height: 100px;
+    max-height: 400px;
     padding: 10px;
     background: rgba(0, 0, 0, 0.4);
     border: 1px solid var(--border-color, rgba(255, 255, 255, 0.08));
@@ -370,6 +371,8 @@
     border-radius: var(--radius-sm, 8px);
     resize: vertical;
     transition: border-color 150ms ease;
+    overflow-y: auto;
+    box-sizing: border-box;
 }
 
 .body-editor textarea:focus {
@@ -512,6 +515,9 @@
     color: var(--text-primary, #fff);
     outline: none;
     line-height: 1.5;
+    overflow-y: auto;
+    max-height: 400px;
+    box-sizing: border-box;
 }
 
 .graphql-result pre {
@@ -551,6 +557,8 @@
     resize: none;
     font-family: var(--font-mono, monospace);
     font-size: 0.82rem;
+    overflow-y: auto;
+    box-sizing: border-box;
     color: var(--text-primary, #fff);
     outline: none;
 }

@@ -15,10 +15,6 @@ const LandingHero = ({ onOpenWaitlist, isJoined, onExplore }) => {
 
             <div className="landing-container">
                 <div className="hero-content">
-                    <div className="badge-promo animate-fade-in">
-                        <span className="badge-icon"><Zap size={12} /></span>
-                        v1.0.0 (Initial Release)
-                    </div>
                     <h1 className="hero-title animate-fade-in-up">
                         Master the Art of <br />
                         <span className="text-gradient">Cyber Exploration</span>

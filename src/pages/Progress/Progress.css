@@ -240,7 +240,7 @@
     }
 }
 
-.section-header {
+.progress-screen .section-header {
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -248,7 +248,7 @@
     gap: var(--space-md);
 }
 
-.section-title {
+.progress-screen .section-title {
     font-size: clamp(1rem, 3vw, 1.125rem);
     font-weight: 700;
     color: #fff;
