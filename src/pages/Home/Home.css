@@ -993,3 +993,144 @@
     color: var(--text-muted);
     line-height: 1.4;
 }
+
+/* ===========================================
+   LIGHT MODE OVERRIDES
+   =========================================== */
+[data-theme="light"] .home-greeting-text {
+    color: var(--text-primary);
+}
+
+[data-theme="light"] .home-today-challenge {
+    background: #FFFFFF;
+    border: 1px solid var(--border-color);
+    box-shadow: var(--shadow-sm);
+}
+
+[data-theme="light"] .home-today-challenge::before {
+    background: var(--neon-green);
+}
+
+[data-theme="light"] .home-challenge-glow {
+    background: radial-gradient(circle, rgba(74, 122, 0, 0.1) 0%, transparent 70%);
+}
+
+[data-theme="light"] .home-level-badge {
+    color: var(--text-primary);
+    text-shadow: none;
+}
+
+[data-theme="light"] .home-level-badge svg {
+    filter: none;
+    color: #8bbf3b;
+}
+
+[data-theme="light"] .home-xp-bar {
+    background: rgba(0, 0, 0, 0.08);
+}
+
+[data-theme="light"] .home-xp-fill {
+    box-shadow: none;
+    background: #8bbf3b;
+}
+
+[data-theme="light"] .home-xp-text {
+    color: #8bbf3b;
+}
+
+[data-theme="light"] .home-stat-card {
+    background: #FFFFFF;
+    border: 1px solid var(--border-color);
+    box-shadow: var(--shadow-sm);
+}
+
+[data-theme="light"] .home-stat-card:hover {
+    background: #FAFAFA;
+    border-color: rgba(74, 122, 0, 0.3);
+}
+
+[data-theme="light"] .home-stat-icon {
+    background: rgba(74, 122, 0, 0.1);
+    color: #8bbf3b;
+}
+
+[data-theme="light"] .home-stat-icon.fire {
+    background: rgba(255, 107, 53, 0.1);
+    color: #E65100;
+}
+
+[data-theme="light"] .home-stat-icon.target {
+    background: rgba(0, 188, 212, 0.1);
+    color: #00838F;
+}
+
+[data-theme="light"] .home-ai-card {
+    background: #FFFFFF;
+    border: 1px solid var(--border-color);
+    box-shadow: var(--shadow-sm);
+}
+
+[data-theme="light"] .home-ai-card:hover {
+    background: #FAFAFA;
+    border-color: rgba(74, 122, 0, 0.3);
+}
+
+[data-theme="light"] .home-quick-item {
+    background: #FFFFFF;
+    border: 1px solid var(--border-color);
+}
+
+[data-theme="light"] .home-quick-item:hover {
+    background: #FAFAFA;
+    border-color: rgba(74, 122, 0, 0.3);
+}
+
+[data-theme="light"] .home-cs-card {
+    background: #FFFFFF;
+    border: 1px solid var(--border-color);
+}
+
+[data-theme="light"] .home-cs-card:hover {
+    background: #FAFAFA;
+}
+
+/* Phase 2: Module card & progress rings */
+[data-theme="light"] .home-module-card {
+    background: #FFFFFF;
+    border-color: var(--border-color);
+    box-shadow: var(--shadow-sm);
+}
+
+[data-theme="light"] .home-module-card:hover,
+[data-theme="light"] .home-module-card:focus {
+    border-color: #8bbf3b;
+}
+
+[data-theme="light"] .home-module-icon {
+    background: rgba(139, 191, 59, 0.1);
+}
+
+[data-theme="light"] .home-ring-bg {
+    stroke: rgba(0, 0, 0, 0.1);
+}
+
+[data-theme="light"] .home-ring-fill {
+    stroke: #8bbf3b;
+}
+
+[data-theme="light"] .home-ring-percent {
+    color: #5c8a1e;
+}
+
+[data-theme="light"] .home-module-name {
+    color: var(--text-primary);
+}
+
+[data-theme="light"] .home-ai-icon-wrapper {
+    background: linear-gradient(135deg, #5c8a1e, #8bbf3b);
+    color: #FFFFFF;
+}
+
+[data-theme="light"] .home-challenge-title {
+    color: var(--text-primary);
+}

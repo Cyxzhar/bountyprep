@@ -994,3 +994,120 @@
         max-width: 1600px;
     }
 }
+
+/* ===========================================
+   LIGHT MODE OVERRIDES
+   =========================================== */
+[data-theme="light"] .progress-screen .section-title {
+    color: var(--text-primary);
+}
+
+[data-theme="light"] .progress-level-title {
+    color: var(--text-primary);
+}
+
+[data-theme="light"] .qs-card {
+    background: #FFFFFF;
+    border-color: var(--border-color);
+    box-shadow: var(--shadow-sm);
+}
+
+[data-theme="light"] .qs-value {
+    color: var(--text-primary);
+}
+
+[data-theme="light"] .heatmap-container {
+    background: #FFFFFF;
+    border-color: var(--border-color);
+    box-shadow: var(--shadow-sm);
+}
+
+[data-theme="light"] .heatmap-grid-full {
+    background: transparent;
+}
+
+[data-theme="light"] .heat-cell {
+    background: rgba(0, 0, 0, 0.05);
+    border-color: rgba(0, 0, 0, 0.05);
+}
+
+[data-theme="light"] .heat-cell.level-1 {
+    background: rgba(139, 191, 59, 0.25);
+    border-color: rgba(139, 191, 59, 0.12);
+}
+
+[data-theme="light"] .heat-cell.level-2 {
+    background: rgba(139, 191, 59, 0.5);
+    border-color: rgba(139, 191, 59, 0.25);
+}
+
+[data-theme="light"] .heat-cell.level-3 {
+    background: #8bbf3b;
+}
+
+[data-theme="light"] .heat-cell.level-4 {
+    background: #8bbf3b;
+}
+
+[data-theme="light"] .year-btn {
+    color: var(--text-secondary);
+}
+
+[data-theme="light"] .year-btn:hover {
+    background: rgba(0, 0, 0, 0.05);
+    color: var(--text-primary);
+}
+
+[data-theme="light"] .year-btn.active {
+    background: rgba(139, 191, 59, 0.12);
+    color: #8bbf3b;
+    box-shadow: none;
+}
+
+[data-theme="light"] .skill-row {
+    background: #FFFFFF;
+    border-color: var(--border-color);
+    box-shadow: var(--shadow-sm);
+}
+
+[data-theme="light"] .skill-name {
+    color: var(--text-primary);
+}
+
+[data-theme="light"] .progress-track {
+    background: rgba(0, 0, 0, 0.08);
+}
+
+[data-theme="light"] .skill-row:hover {
+    background: #FAFAFA;
+}
+
+/* Level card & ring overrides */
+[data-theme="light"] .level-number {
+    color: var(--text-primary);
+    text-shadow: none;
+}
+
+[data-theme="light"] .level-label {
+    color: #5c8a1e;
+}
+
+[data-theme="light"] .progress-level-title {
+    color: var(--text-primary);
+}
+
+[data-theme="light"] .progress-level-ring svg {
+    filter: drop-shadow(0 0 8px rgba(139, 191, 59, 0.15));
+}
+
+[data-theme="light"] .progress-level-ring .ring-bg {
+    stroke: rgba(0, 0, 0, 0.08);
+}
+
+[data-theme="light"] .mini-stat {
+    color: var(--text-secondary);
+}
+
+[data-theme="light"] .progress-xp-text {
+    color: var(--text-secondary);
+}
