@@ -138,10 +138,16 @@
     right: 2px;
     width: 12px;
     height: 12px;
-    background: #00ff88;
-    border: 2px solid var(--background);
+    background: #22c55e;
+    border: 2px solid var(--bg-card);
     border-radius: 50%;
-    box-shadow: 0 0 8px #00ff88;
+    box-shadow: 0 0 6px rgba(34, 197, 94, 0.5);
+}
+
+[data-theme="light"] .user-status {
+    background: #16a34a;
+    border-color: #FFFFFF;
+    box-shadow: 0 0 4px rgba(22, 163, 74, 0.3);
 }
 
 .user-info {

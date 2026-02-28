@@ -67,7 +67,6 @@ export default function Profile() {
             const newValue = !settings[key];
             const updated = updateSetting(key, newValue);
             setSettings(updated);
-            info(newValue ? 'Dark mode enabled' : 'Light mode coming soon!');
         } else if (key === 'learningReminders') {
             const newValue = !settings[key];
             const updated = updateSetting(key, newValue);

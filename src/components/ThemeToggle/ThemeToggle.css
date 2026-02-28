@@ -60,13 +60,17 @@
 
 /* Light mode specific styles */
 [data-theme="light"] .theme-toggle {
-    background: rgba(255, 255, 255, 0.9);
-    box-shadow: var(--shadow-sm);
+    background: transparent;
+    border-color: transparent;
+    box-shadow: none;
+    color: var(--text-secondary);
 }
 
 [data-theme="light"] .theme-toggle:hover {
-    box-shadow: var(--shadow-md);
-    background: rgba(255, 255, 255, 1);
+    background: rgba(0, 0, 0, 0.05);
+    border-color: var(--border-color);
+    box-shadow: none;
+    color: var(--text-primary);
 }
 
 /* Landing page variant (transparent background) */
@@ -89,6 +93,7 @@
     }
 
     .theme-toggle-label {
-        display: none; /* Hide label on mobile */
+        display: none;
+        /* Hide label on mobile */
     }
 }
