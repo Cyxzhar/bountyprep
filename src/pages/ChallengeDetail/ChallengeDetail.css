@@ -866,3 +866,149 @@
     opacity: 0.6;
     cursor: default;
 }
+
+/* ===========================================
+   LIGHT MODE OVERRIDES
+   =========================================== */
+
+/* Header */
+[data-theme="light"] .detail-screen {
+    background: var(--bg-dark);
+}
+
+[data-theme="light"] .detail-header {
+    background: rgba(255, 255, 255, 0.97);
+    border-bottom-color: var(--border-color);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+}
+
+[data-theme="light"] .back-btn {
+    background: #F5F7FA;
+    border-color: var(--border-color);
+    color: var(--text-secondary);
+}
+
+[data-theme="light"] .back-btn:hover {
+    border-color: #8bbf3b;
+    color: #5c8a1e;
+}
+
+[data-theme="light"] .audio-control-btn {
+    border-color: rgba(0, 0, 0, 0.1);
+}
+
+[data-theme="light"] .audio-control-btn:hover {
+    border-color: #8bbf3b;
+    background: rgba(139, 191, 59, 0.08);
+    color: #5c8a1e;
+    box-shadow: none;
+}
+
+/* Scenario card */
+[data-theme="light"] .scenario-card {
+    background: #FFFFFF;
+    border-color: var(--border-color);
+    box-shadow: var(--shadow-sm);
+}
+
+[data-theme="light"] .scenario-title {
+    color: var(--text-primary);
+}
+
+/* Code blocks */
+[data-theme="light"] .code-block {
+    background: #F8F8F8;
+    border-color: var(--border-color);
+}
+
+[data-theme="light"] .code-header {
+    background: rgba(0, 0, 0, 0.04);
+    border-bottom-color: var(--border-color);
+    color: var(--text-muted);
+}
+
+[data-theme="light"] .code-block pre {
+    color: #1A1A2E;
+}
+
+/* Option buttons */
+[data-theme="light"] .option-btn {
+    background: #FFFFFF;
+    border-color: var(--border-color);
+}
+
+[data-theme="light"] .option-btn:hover:not(:disabled) {
+    border-color: rgba(139, 191, 59, 0.4);
+    background: #FAFAFA;
+    box-shadow: none;
+}
+
+[data-theme="light"] .option-btn.selected {
+    border-color: #8bbf3b;
+    background: rgba(139, 191, 59, 0.08);
+}
+
+[data-theme="light"] .option-btn.correct {
+    border-color: #8bbf3b;
+    background: rgba(139, 191, 59, 0.1);
+}
+
+[data-theme="light"] .option-letter {
+    background: #F0F2F5;
+    color: var(--text-secondary);
+}
+
+[data-theme="light"] .option-btn.selected .option-letter,
+[data-theme="light"] .option-btn.correct .option-letter {
+    background: #8bbf3b;
+    color: #FFFFFF;
+}
+
+/* Hint */
+[data-theme="light"] .hint-btn {
+    border-color: rgba(0, 0, 0, 0.12);
+    color: var(--text-secondary);
+}
+
+[data-theme="light"] .hint-box {
+    background: rgba(230, 81, 0, 0.06);
+    border-color: rgba(230, 81, 0, 0.2);
+}
+
+/* Result boxes */
+[data-theme="light"] .result-box.success {
+    background: rgba(139, 191, 59, 0.08);
+    border-color: rgba(139, 191, 59, 0.3);
+}
+
+[data-theme="light"] .result-box.success .result-header {
+    color: #5c8a1e;
+}
+
+[data-theme="light"] .result-box.error {
+    background: rgba(211, 47, 47, 0.06);
+    border-color: rgba(211, 47, 47, 0.2);
+}
+
+[data-theme="light"] .result-box.error .result-header {
+    color: var(--accent-red);
+}
+
+[data-theme="light"] .xp-earned {
+    color: #5c8a1e;
+    border-top-color: rgba(139, 191, 59, 0.2);
+}
+
+/* Session XP */
+[data-theme="light"] .session-xp {
+    background: linear-gradient(135deg, rgba(139, 191, 59, 0.08), rgba(139, 191, 59, 0.04));
+    border-color: rgba(139, 191, 59, 0.25);
+    color: #5c8a1e;
+    animation: none;
+    /* Remove glow animation in light mode */
+}
+
+/* Progress bar */
+[data-theme="light"] .question-progress span {
+    color: var(--text-secondary);
+}

@@ -4,13 +4,13 @@
     background: var(--gradient-dark);
 }
 
-/* Page Header - HUD Style */
-.page-header {
+/* Page Header - scoped to challenges screen only */
+.challenges-screen .page-header {
     margin-bottom: var(--space-2xl);
     padding-top: max(var(--space-lg), env(safe-area-inset-top));
 }
 
-.page-header h1 {
+.challenges-screen .page-header h1 {
     font-size: clamp(2rem, 6vw, 3rem);
     font-weight: 800;
     margin-bottom: var(--space-sm);
@@ -591,15 +591,15 @@
         gap: var(--space-md);
     }
 
-    .page-header h1 {
+    .challenges-screen .page-header h1 {
         font-size: 2rem;
     }
 
-    .screen-content {
+    .challenges-screen .screen-content {
         padding: var(--space-md);
     }
 
-    .difficulty-section {
+    .challenges-screen .difficulty-section {
         padding-left: var(--space-md);
     }
 }
@@ -609,4 +609,91 @@
     .challenges-screen .screen-content {
         max-width: 1600px;
     }
+}
+
+/* ===========================================
+   LIGHT MODE OVERRIDES
+   =========================================== */
+[data-theme="light"] .page-header h1 {
+    color: var(--text-primary);
+    text-shadow: none;
+}
+
+[data-theme="light"] .search-input {
+    background: #FFFFFF;
+    border-color: var(--border-color);
+}
+
+[data-theme="light"] .filter-btn {
+    background: #FFFFFF;
+    border-color: var(--border-color);
+}
+
+[data-theme="light"] .filter-btn:hover {
+    background: #FAFAFA;
+    border-color: var(--neon-green);
+}
+
+[data-theme="light"] .filter-btn.active {
+    background: rgba(139, 191, 59, 0.1);
+    border-color: #8bbf3b;
+    color: #5c8a1e;
+}
+
+[data-theme="light"] .type-filter-btn {
+    background: #FFFFFF;
+}
+
+[data-theme="light"] .difficulty-title {
+    color: var(--text-primary);
+}
+
+[data-theme="light"] .difficulty-section::before {
+    opacity: 0.6;
+}
+
+[data-theme="light"] .ring-bg {
+    stroke: var(--border-color);
+}
+
+[data-theme="light"] .ring-percent {
+    color: var(--text-primary);
+}
+
+[data-theme="light"] .challenge-card-v2 {
+    background: #FFFFFF;
+    box-shadow: var(--shadow-sm);
+}
+
+[data-theme="light"] .challenge-card-v2:hover {
+    background: #FAFAFA;
+    box-shadow: var(--shadow-md);
+}
+
+[data-theme="light"] .challenge-number-icon {
+    background: rgba(0, 0, 0, 0.03);
+    border-color: var(--border-color);
+}
+
+[data-theme="light"] .challenge-title {
+    color: var(--text-primary);
+}
+
+[data-theme="light"] .challenge-meta-section {
+    border-top-color: var(--border-color);
+}
+
+[data-theme="light"] .challenge-action-btn {
+    color: #8bbf3b;
+    border-color: rgba(139, 191, 59, 0.3);
+}
+
+[data-theme="light"] .challenge-action-btn:hover {
+    color: #5c8a1e;
+    background: rgba(139, 191, 59, 0.12);
+    border-color: #8bbf3b;
+}
+
+[data-theme="light"] .challenge-card-v2.completed .challenge-number-icon {
+    color: #8bbf3b;
 }
