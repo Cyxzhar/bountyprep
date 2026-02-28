@@ -49,19 +49,19 @@ service cloud.firestore {
 
     // Challenges collection (LOCKED: read-only, writes via Admin SDK only)
     match /challenges/{challengeId} {
-      allow read: if isAuthenticated();
+      allow read: if true;
       allow write: if false;
     }
 
     // Courses collection (LOCKED: read-only, writes via Admin SDK only)
     match /courses/{courseId} {
-      allow read: if isAuthenticated();
+      allow read: if true;
       allow write: if false;
     }
 
     // Achievements master collection (LOCKED: read-only, writes via Admin SDK only)
     match /achievements/{achievementId} {
-      allow read: if isAuthenticated();
+      allow read: if true;
       allow write: if false;
     }
 
