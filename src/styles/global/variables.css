@@ -134,6 +134,7 @@
     /* Gradients (Adjusted for Light Mode) */
     --gradient-card: linear-gradient(180deg, rgba(255, 255, 255, 0.6) 0%, rgba(255, 255, 255, 0.4) 100%);
     --gradient-dark: linear-gradient(180deg, #F5F7FA 0%, #FFFFFF 100%);
+    --gradient-primary: linear-gradient(135deg, #8bbf3b 0%, #5c8a1e 100%);
 
     /* Shadows - softer and darker for depth on light bg */
     --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.05);
@@ -142,6 +143,30 @@
     --shadow-xl: 0 16px 48px rgba(0, 0, 0, 0.12);
     --shadow-card: 0 4px 16px rgba(0, 0, 0, 0.06);
 
-    /* Adjust Accents brightness if needed, 
-       but keeping them vibrant is key to the "Cyberpunk Light" feel */
+    /* High-Contrast Accents for Light Mode */
+    --primary: #8bbf3b;
+    /* Darker Green for visibility */
+    --primary-light: #7BC100;
+    --primary-dark: #5c8a1e;
+
+    --accent-cyan: #00838F;
+    /* Deeper Aqua/Cyan */
+    --accent-green: #008B53;
+    /* Deeper Matrix Green */
+    --accent-orange: #E65100;
+    /* Deeper Orange */
+    --accent-yellow: #F57F17;
+    /* Deeper Yellow/Amber */
+    --accent-red: #D32F2F;
+    /* Deeper Red */
+    --accent-purple: #7B1FA2;
+    /* Deeper Purple */
+
+    /* Re-map legacy to new values inside light mode scope to ensure they pick up the changes */
+    --neon-green: var(--primary);
+    --neon-green-dark: var(--primary-dark);
+    --neon-blue: var(--accent-cyan);
+    --neon-purple: var(--accent-purple);
+    --neon-pink: var(--accent-red);
+    --neon-orange: var(--accent-orange);
 }

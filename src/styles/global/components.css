@@ -356,3 +356,68 @@
     border-radius: var(--radius-full);
     transition: width var(--transition-slow);
 }
+
+/* ===========================================
+   LIGHT MODE OVERRIDES
+   =========================================== */
+[data-theme="light"] .btn-primary {
+    color: #FFFFFF;
+}
+
+[data-theme="light"] .btn-primary::before {
+    background: linear-gradient(135deg, #7BC100 0%, #8bbf3b 100%);
+}
+
+[data-theme="light"] .btn-secondary:hover {
+    background: rgba(74, 122, 0, 0.05);
+    box-shadow: 0 0 16px rgba(74, 122, 0, 0.1);
+}
+
+[data-theme="light"] .icon-btn:hover,
+[data-theme="light"] .btn-icon:hover {
+    background: rgba(74, 122, 0, 0.1);
+}
+
+[data-theme="light"] .input:focus {
+    box-shadow: 0 0 0 3px rgba(74, 122, 0, 0.15);
+}
+
+[data-theme="light"] .badge-success {
+    border-color: rgba(0, 139, 83, 0.3);
+    background: rgba(0, 139, 83, 0.1);
+}
+
+[data-theme="light"] .badge-warning {
+    border-color: rgba(245, 127, 23, 0.3);
+    background: rgba(245, 127, 23, 0.1);
+}
+
+[data-theme="light"] .badge-danger {
+    border-color: rgba(211, 47, 47, 0.3);
+    background: rgba(211, 47, 47, 0.1);
+}
+
+[data-theme="light"] .badge-info {
+    border-color: rgba(0, 131, 143, 0.3);
+    background: rgba(0, 131, 143, 0.1);
+}
+
+[data-theme="light"] .badge-premium {
+    border-color: rgba(123, 31, 162, 0.3);
+    background: rgba(123, 31, 162, 0.1);
+}
+
+[data-theme="light"] .badge-completed {
+    border-color: rgba(74, 122, 0, 0.3);
+    background: rgba(74, 122, 0, 0.1);
+}
+
+[data-theme="light"] .chip:hover {
+    background: rgba(74, 122, 0, 0.1);
+}
+
+[data-theme="light"] .chip:active,
+[data-theme="light"] .chip.active {
+    color: #FFFFFF;
+    box-shadow: 0 2px 8px rgba(74, 122, 0, 0.2);
+}
