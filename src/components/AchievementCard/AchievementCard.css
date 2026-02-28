@@ -98,3 +98,54 @@
     transform: translateY(-2px);
     box-shadow: 0 4px 12px rgba(159, 239, 0, 0.1);
 }
+
+/* ===========================================
+   LIGHT MODE OVERRIDES
+   =========================================== */
+[data-theme="light"] .achievement-card {
+    background: #FFFFFF;
+    border-color: var(--border-color);
+    box-shadow: var(--shadow-sm);
+}
+
+[data-theme="light"] .achievement-card.unlocked {
+    background: #F9FBF5;
+    border-color: rgba(139, 191, 59, 0.3);
+    box-shadow: 0 2px 8px rgba(139, 191, 59, 0.08);
+}
+
+[data-theme="light"] .achievement-card.unlocked:hover {
+    background: #F1F8E9;
+    border-color: #8bbf3b;
+    box-shadow: 0 4px 16px rgba(139, 191, 59, 0.15);
+    transform: translateY(-2px);
+}
+
+[data-theme="light"] .achievement-card.locked {
+    background: #F8F9FA;
+    border-color: rgba(0, 0, 0, 0.06);
+    opacity: 0.65;
+    filter: none;
+    /* remove grayscale in light mode — already desaturated */
+}
+
+[data-theme="light"] .achievement-icon {
+    background: #F0F2F5;
+    border-color: var(--border-color);
+}
+
+[data-theme="light"] .achievement-icon.glow {
+    background: rgba(139, 191, 59, 0.1);
+    border-color: #8bbf3b;
+    box-shadow: 0 0 10px rgba(139, 191, 59, 0.15);
+}
+
+[data-theme="light"] .achievement-date {
+    color: #5c8a1e;
+}
+
+[data-theme="light"] .xp-reward {
+    background: #F0F2F5;
+    color: var(--text-secondary);
+    border: 1px solid var(--border-color);
+}

@@ -1858,4 +1858,27 @@
     border-color: rgba(139, 191, 59, 0.4);
     color: #8bbf3b;
     box-shadow: 0 0 20px rgba(139, 191, 59, 0.2);
+    /* Remove the dark gradient background box */
+    background: rgba(139, 191, 59, 0.08);
+    animation: none;
+}
+
+[data-theme="light"] .intro-icon::before {
+    display: none;
+}
+
+/* Selected diff-card subtitle — overrides the dark-mode rgba(159,239,0,0.8) */
+[data-theme="light"] .diff-card.selected .diff-desc {
+    color: #5c8a1e;
+}
+
+[data-theme="light"] .diff-card.selected .diff-title {
+    color: #5c8a1e;
+    text-shadow: none;
+}
+
+/* Quota / top label contrast */
+[data-theme="light"] .quota-badge,
+[data-theme="light"] .quota-label {
+    color: var(--text-secondary);
 }
