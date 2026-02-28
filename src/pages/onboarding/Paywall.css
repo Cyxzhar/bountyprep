@@ -301,3 +301,57 @@
         margin: 0 auto;
     }
 }
+
+/* ===========================================
+   LIGHT MODE OVERRIDES
+   =========================================== */
+[data-theme="light"] .paywall-screen {
+    background: var(--bg-dark);
+}
+
+[data-theme="light"] .paywall-bg {
+    background:
+        radial-gradient(circle at 20% 20%, rgba(139, 191, 59, 0.06) 0%, transparent 40%),
+        radial-gradient(circle at 80% 80%, rgba(0, 131, 143, 0.04) 0%, transparent 40%);
+}
+
+[data-theme="light"] .paywall-pricing-card {
+    background: #FFFFFF;
+    border-color: var(--border-color);
+    box-shadow: var(--shadow-md);
+}
+
+[data-theme="light"] .paywall-pricing-card.waitlist-card {
+    background: #F1F8E9;
+    border-color: #8bbf3b;
+    box-shadow: 0 4px 20px rgba(139, 191, 59, 0.15);
+}
+
+[data-theme="light"] .paywall-plan-name {
+    color: var(--text-primary);
+}
+
+[data-theme="light"] .paywall-plan-savings {
+    color: #5c8a1e;
+}
+
+[data-theme="light"] .paywall-outcome {
+    background: rgba(139, 191, 59, 0.08);
+    border-color: rgba(139, 191, 59, 0.25);
+    color: #5c8a1e;
+}
+
+[data-theme="light"] .paywall-feature-item {
+    background: #FFFFFF;
+    border-color: var(--border-color);
+}
+
+[data-theme="light"] .testimonial {
+    background: #FFFFFF;
+    border-color: var(--border-color);
+    border-left-color: #8bbf3b;
+}
+
+[data-theme="light"] .paywall-footer {
+    background: linear-gradient(to top, var(--bg-dark) 50%, transparent);
+}
