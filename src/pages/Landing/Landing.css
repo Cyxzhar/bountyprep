@@ -853,7 +853,7 @@
     min-height: 0;
     padding: 16px;
     font-size: 0.8rem;
-    font-family: inherit;
+    font-family: 'JetBrains Mono', 'Fira Code', 'Hack', 'Source Code Pro', monospace;
     overflow-y: auto;
     color: #cdd6f4;
 }
@@ -949,7 +949,8 @@
     z-index: 50;
     opacity: 0;
     animation: fadeIn 0.3s forwards;
-    overflow: hidden;
+    overflow: auto;
+    padding: 16px;
 }
 
 .app-reveal .victory-modal {
@@ -966,11 +967,12 @@
         0 0 80px rgba(159, 239, 0, 0.08),
         inset 0 1px 0 rgba(255, 255, 255, 0.06);
     transform: scale(0.9);
-    overflow: visible;
+    overflow: hidden;
     display: flex;
     flex-direction: column;
     align-items: center;
     margin: auto;
+    max-height: 90vh;
 }
 
 .app-reveal .victory-glow {
@@ -1258,11 +1260,12 @@
     }
 
     .victory-modal {
-        padding: 24px 20px 20px;
-        width: 95%;
-        max-width: 340px;
-        overflow: visible;
-        border-radius: 20px;
+        padding: 20px 16px 16px;
+        width: 92%;
+        max-width: 320px;
+        overflow: hidden;
+        border-radius: 18px;
+        max-height: 85vh;
     }
 
     .victory-icon-wrapper {
@@ -1563,12 +1566,6 @@
     font-size: 1.15rem;
     color: var(--text-primary);
     padding: 8px 0;
-    transition: all 0.3s var(--transition-smooth);
-}
-
-.curriculum-list li:hover {
-    color: var(--primary);
-    transform: translateX(10px);
 }
 
 
@@ -3242,17 +3239,69 @@
     color: var(--text-muted);
 }
 
+/* Why Bugora comparison section - Light Mode */
+[data-theme="light"] .comparison-col.old-way {
+    background: rgba(0, 0, 0, 0.02);
+    border: 1px solid rgba(0, 0, 0, 0.06);
+}
+
+[data-theme="light"] .comparison-col.bugora-way {
+    background: rgba(123, 193, 0, 0.04);
+    border: 1px solid rgba(123, 193, 0, 0.15);
+    box-shadow: none;
+}
+
+[data-theme="light"] .col-header {
+    border-bottom-color: rgba(0, 0, 0, 0.08);
+}
+
+[data-theme="light"] .col-header h3 {
+    color: #1A1A2E;
+}
+
+[data-theme="light"] .comparison-card.dimmed {
+    opacity: 0.5;
+}
+
 [data-theme="light"] .comparison-card.glow-active {
-    background: rgba(255, 255, 255, 0.8);
+    background: rgba(255, 255, 255, 0.95);
     border: 1px solid rgba(123, 193, 0, 0.2);
 }
 
 [data-theme="light"] .comparison-card.glow-active:hover {
-    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+    border-color: rgba(123, 193, 0, 0.4);
+}
+
+[data-theme="light"] .comparison-card h4 {
+    color: #1A1A2E;
+}
+
+[data-theme="light"] .comparison-card p {
+    color: #4A5568;
+}
+
+[data-theme="light"] .icon-box {
+    background: rgba(0, 0, 0, 0.04);
+    color: #6B7280;
+}
+
+[data-theme="light"] .icon-box.active {
+    background: rgba(123, 193, 0, 0.1);
+    color: #8bbf3b;
+    box-shadow: none;
+}
+
+[data-theme="light"] .comparison-vs {
+    color: #9CA3AF;
+}
+
+[data-theme="light"] .comparison-vs::before {
+    background: rgba(0, 0, 0, 0.1);
 }
 
 [data-theme="light"] .mobile-menu-backdrop {
-    background: rgba(0, 0, 0, 0.3);
+    background: rgba(0, 0, 0, 0.4);
 }
 
 /* Light mode modal overlay (for video/demo modals) */
@@ -3312,48 +3361,52 @@
 
 /* Hero Section */
 [data-theme="light"] .hero-bg-image {
-    filter: saturate(1) brightness(1);
-    opacity: 0.1;
-    mask-image: none;
-    -webkit-mask-image: none;
+    filter: saturate(1.1) brightness(1.05);
+    opacity: 0.35;
+    mask-image: linear-gradient(to bottom, black 50%, transparent 100%);
+    -webkit-mask-image: linear-gradient(to bottom, black 50%, transparent 100%);
 }
 
 [data-theme="light"] .hero-overlay {
-    background: linear-gradient(180deg, rgba(255, 255, 255, 0.8) 0%, #F5F7FA 95%);
+    background: linear-gradient(180deg, rgba(245, 247, 250, 0.5) 0%, rgba(245, 247, 250, 0.7) 60%, #F5F7FA 95%);
 }
 
 [data-theme="light"] .landing-page .hero-title {
-    color: var(--text-primary);
+    color: #1A1A2E;
 }
 
 [data-theme="light"] .landing-page .hero-subtitle {
-    color: var(--text-secondary);
+    color: #4A5568;
 }
 
+/* Hero primary button — match "Open App" nav button for consistent contrast */
 [data-theme="light"] .btn-hero-primary {
-    background: var(--gradient-primary);
+    background: linear-gradient(135deg, #9FEF00 0%, #7BC100 100%);
     color: #000000;
-    box-shadow: 0 4px 16px rgba(159, 239, 0, 0.2);
+    font-weight: 800;
+    box-shadow: 0 4px 16px rgba(123, 193, 0, 0.35);
+    border: none;
 }
 
 [data-theme="light"] .btn-hero-primary:hover {
     background: linear-gradient(135deg, #B8FF33 0%, #9FEF00 100%);
-    box-shadow: 0 8px 24px rgba(159, 239, 0, 0.4);
-    transform: translateY(-2px);
+    box-shadow: 0 8px 28px rgba(123, 193, 0, 0.5);
+    transform: translateY(-3px);
 }
 
 [data-theme="light"] .btn-hero-secondary {
     background: #FFFFFF;
     color: #1A1A2E;
-    border: 2px solid rgba(0, 0, 0, 0.2);
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    border: 2px solid rgba(0, 0, 0, 0.15);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+    font-weight: 700;
 }
 
 [data-theme="light"] .btn-hero-secondary:hover {
     background: #F5F7FA;
-    border-color: var(--primary-dark);
-    color: var(--primary-dark);
-    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
+    border-color: #7BC100;
+    color: #8bbf3b;
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.12);
 }
 
 /* App Reveal / Terminal */
@@ -3592,15 +3645,37 @@
 }
 
 [data-theme="light"] .pricing-title {
-    color: var(--text-primary);
+    color: #1A1A2E;
 }
 
 [data-theme="light"] .price-tag {
-    color: var(--text-primary);
+    color: #1A1A2E;
 }
 
-[data-theme="light"] .pricing-features li {
-    color: var(--text-secondary);
+/* Fix $1 invisible — override gradient-text with solid dark color */
+[data-theme="light"] .landing-price-amount {
+    background: linear-gradient(135deg, #1A1A2E 30%, #8bbf3b 100%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+[data-theme="light"] .landing-price-currency {
+    color: #8bbf3b;
+}
+
+[data-theme="light"] .landing-price-period {
+    color: #4A5568;
+}
+
+[data-theme="light"] .pricing-features li,
+[data-theme="light"] .landing-pricing-features li {
+    color: #2D3748;
+}
+
+[data-theme="light"] .landing-pricing-features li svg {
+    color: #8bbf3b;
+    filter: none;
 }
 
 /* Course/Lab Cards - White background */
@@ -3641,25 +3716,26 @@
     color: var(--text-muted);
 }
 
-/* Buttons - Consistent with Auth page */
-[data-theme="light"] .btn-landing-primary,
+/* Buttons - Consistent with "Open App" nav button */
+[data-theme="light"] .landing-btn-primary,
 [data-theme="light"] .cta-button,
 [data-theme="light"] .get-started-btn,
 [data-theme="light"] .waitlist-submit,
 [data-theme="light"] .modal-submit-btn {
-    background: var(--gradient-primary);
+    background: linear-gradient(135deg, #9FEF00 0%, #7BC100 100%);
     color: #000000;
-    box-shadow: 0 4px 16px rgba(159, 239, 0, 0.2);
+    font-weight: 800;
+    box-shadow: 0 4px 16px rgba(123, 193, 0, 0.35);
     border: none;
 }
 
-[data-theme="light"] .btn-landing-primary:hover,
+[data-theme="light"] .landing-btn-primary:hover,
 [data-theme="light"] .cta-button:hover,
 [data-theme="light"] .get-started-btn:hover,
 [data-theme="light"] .waitlist-submit:hover,
 [data-theme="light"] .modal-submit-btn:hover {
     background: linear-gradient(135deg, #B8FF33 0%, #9FEF00 100%);
-    box-shadow: 0 8px 24px rgba(159, 239, 0, 0.4);
+    box-shadow: 0 8px 28px rgba(123, 193, 0, 0.5);
     transform: translateY(-2px);
 }
 
@@ -3853,14 +3929,20 @@
 [data-theme="light"] .victory-modal {
     background: rgba(255, 255, 255, 0.98);
     border: 1px solid rgba(0, 0, 0, 0.1);
+    box-shadow: 0 25px 60px rgba(0, 0, 0, 0.15);
 }
 
 [data-theme="light"] .victory-title {
-    color: var(--text-primary);
+    color: #1A1A2E;
 }
 
 [data-theme="light"] .victory-desc {
-    color: var(--text-secondary);
+    color: #4A5568;
+}
+
+[data-theme="light"] .modal-result-terminal {
+    background: #F5F7FA;
+    border: 1px solid rgba(0, 0, 0, 0.08);
 }
 
 [data-theme="light"] .mt-header {
@@ -3920,25 +4002,44 @@
 /* Mobile Navigation - Light mode */
 @media (max-width: 1024px) {
     [data-theme="light"] .nav-links {
-        background: rgba(255, 255, 255, 0.98);
-        border-left: 1px solid rgba(0, 0, 0, 0.1);
+        background: #FFFFFF;
+        border-left: 1px solid rgba(0, 0, 0, 0.08);
+        box-shadow: -8px 0 30px rgba(0, 0, 0, 0.1);
     }
 
     [data-theme="light"] .nav-links a {
-        color: var(--text-primary);
-        border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+        color: #1A1A2E;
+        border-bottom: 1px solid rgba(0, 0, 0, 0.06);
+        font-weight: 600;
     }
 
     [data-theme="light"] .nav-links a:hover,
     [data-theme="light"] .nav-links a.active {
-        color: var(--primary-dark);
+        color: #8bbf3b;
     }
 
     [data-theme="light"] .nav-links.open a.active::after {
-        background: var(--primary-dark);
+        background: #8bbf3b;
     }
 
     [data-theme="light"] .mobile-menu-backdrop {
-        background: rgba(0, 0, 0, 0.3);
+        background: rgba(0, 0, 0, 0.4);
+    }
+
+    /* Mobile menu theme toggle and nav buttons */
+    [data-theme="light"] .nav-actions .nav-btn {
+        color: #1A1A2E;
+    }
+
+    [data-theme="light"] .nav-actions .nav-btn.login-btn {
+        background: #F5F7FA;
+        border: 1px solid rgba(0, 0, 0, 0.12);
+        color: #1A1A2E;
+    }
+
+    [data-theme="light"] .nav-actions .nav-btn.primary {
+        background: linear-gradient(135deg, #9FEF00 0%, #7BC100 100%);
+        color: #000000;
+        font-weight: 800;
     }
 }
