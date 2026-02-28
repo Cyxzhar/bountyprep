@@ -141,11 +141,24 @@
     padding: var(--space-sm) var(--space-md);
     height: auto;
     min-height: unset;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    transition: all var(--transition-fast);
+    border-radius: var(--radius-sm);
+    font-weight: 600;
+    font-size: 0.875rem;
 }
 
 .btn-ghost:hover {
     color: var(--primary);
     background: rgba(255, 255, 255, 0.03);
+}
+
+[data-theme="light"] .btn-ghost:hover {
+    color: #5c8a1e;
+    background: rgba(139, 191, 59, 0.08);
 }
 
 .btn-link {

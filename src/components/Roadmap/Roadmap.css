@@ -145,6 +145,21 @@
     width: 100%;
     position: relative;
     transition: all var(--transition-base);
+    cursor: pointer;
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-xs);
+}
+
+.milestone-info {
+    flex: 1;
+    min-width: 0;
+}
+
+.milestone-info .milestone-title {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
 
 .roadmap-milestone-item.locked .milestone-content {
