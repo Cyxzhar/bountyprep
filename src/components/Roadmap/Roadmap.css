@@ -253,3 +253,73 @@
         font-size: 0.875rem;
     }
 }
+
+/* ===========================================
+   LIGHT MODE OVERRIDES
+   =========================================== */
+[data-theme="light"] .roadmap-timeline-track {
+    background: rgba(0, 0, 0, 0.08);
+}
+
+[data-theme="light"] .milestone-connector {
+    background: rgba(0, 0, 0, 0.08);
+}
+
+[data-theme="light"] .milestone-connector.completed {
+    background: #8bbf3b;
+}
+
+[data-theme="light"] .milestone-node {
+    background: #FFFFFF;
+    border-color: var(--border-color);
+    box-shadow: var(--shadow-sm);
+}
+
+[data-theme="light"] .roadmap-milestone-item.completed .milestone-node {
+    background: rgba(139, 191, 59, 0.1);
+    border-color: #8bbf3b;
+}
+
+[data-theme="light"] .roadmap-milestone-item.current .milestone-node {
+    background: #FFFFFF;
+    border-color: #8bbf3b;
+    box-shadow: 0 0 10px rgba(139, 191, 59, 0.2);
+}
+
+[data-theme="light"] .milestone-content {
+    background: #FFFFFF;
+    border-color: var(--border-color);
+    box-shadow: var(--shadow-sm);
+}
+
+[data-theme="light"] .roadmap-milestone-item.current .milestone-content {
+    background: #F1F8E9;
+    border-color: rgba(139, 191, 59, 0.3);
+}
+
+[data-theme="light"] .milestone-content:hover:not(.locked) {
+    background: #FAFAFA;
+    border-color: rgba(139, 191, 59, 0.3);
+}
+
+[data-theme="light"] .milestone-icon-wrapper {
+    background: rgba(0, 0, 0, 0.04);
+}
+
+[data-theme="light"] .roadmap-milestone-item.completed .milestone-icon-wrapper,
+[data-theme="light"] .roadmap-milestone-item.current .milestone-icon-wrapper {
+    background: rgba(139, 191, 59, 0.1);
+}
+
+[data-theme="light"] .milestone-title {
+    color: var(--text-primary);
+}
+
+[data-theme="light"] .current-badge {
+    background: rgba(139, 191, 59, 0.12);
+    color: #5c8a1e;
+}
+
+[data-theme="light"] .pulse-ring {
+    border-color: #8bbf3b;
+}

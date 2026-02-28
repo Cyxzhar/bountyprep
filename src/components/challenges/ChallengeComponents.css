@@ -1315,13 +1315,217 @@
     }
 }
 
-/* Light mode overrides */
+/* ===========================================
+   LIGHT MODE OVERRIDES
+   =========================================== */
+
+/* Code editor */
 [data-theme="light"] .code-editor-header,
 [data-theme="light"] .code-preview-header,
 [data-theme="light"] .console-header {
     background: #F5F7FA;
+    border-bottom-color: var(--border-color);
+}
+
+[data-theme="light"] .code-editor-wrapper {
+    background: #FFFFFF;
+    border-color: var(--border-color);
+}
+
+[data-theme="light"] .code-editor {
+    background: #FEFEFE;
+    color: #1A1A2E;
+}
+
+/* Objective card */
+[data-theme="light"] .objective-card {
+    background: #FFFFFF;
+    border-color: var(--border-color);
+    border-left-color: #8bbf3b;
+}
+
+[data-theme="light"] .objective-card h4 {
+    color: #5c8a1e;
+}
+
+/* Scenario text */
+[data-theme="light"] .scenario-text {
+    background: #FAFAFA;
+    border-color: var(--border-color);
+}
+
+/* Test cases */
+[data-theme="light"] .test-case {
+    background: #FFFFFF;
+    border-color: var(--border-color);
+}
+
+[data-theme="light"] .test-case.passed {
+    border-left-color: #8bbf3b;
+}
+
+[data-theme="light"] .test-case.passed .test-case-header {
+    color: #5c8a1e;
+}
+
+[data-theme="light"] .test-case-details {
+    border-top-color: var(--border-color);
+}
+
+/* Lab environment */
+[data-theme="light"] .lab-environment {
+    background: #FFFFFF;
+    border-color: var(--border-color);
+}
+
+[data-theme="light"] .lab-header {
+    background: #F5F7FA;
+    border-bottom-color: var(--border-color);
 }
 
 [data-theme="light"] .lab-tools-panel {
     background: rgba(255, 255, 255, 0.98);
+    border-color: var(--border-color);
+}
+
+[data-theme="light"] .tools-tabs {
+    background: #F0F2F5;
+    border-bottom-color: var(--border-color);
+}
+
+[data-theme="light"] .tool-tab:hover {
+    background: rgba(0, 0, 0, 0.04);
+    color: var(--text-secondary);
+}
+
+[data-theme="light"] .tool-tab.active {
+    background: rgba(139, 191, 59, 0.1);
+    border-color: rgba(139, 191, 59, 0.3);
+    color: #5c8a1e;
+}
+
+/* Steps guide */
+[data-theme="light"] .steps-guide {
+    background: #FFFFFF;
+    border-color: var(--border-color);
+}
+
+[data-theme="light"] .step-item {
+    background: #FAFAFA;
+    border-color: var(--border-color);
+}
+
+[data-theme="light"] .step-item:hover {
+    background: #F5F7FA;
+    border-color: rgba(139, 191, 59, 0.3);
+}
+
+[data-theme="light"] .step-item.active {
+    background: rgba(139, 191, 59, 0.08);
+    border-color: #8bbf3b;
+}
+
+[data-theme="light"] .step-number {
+    background: #F0F2F5;
+    color: var(--text-secondary);
+}
+
+[data-theme="light"] .step-item.active .step-number,
+[data-theme="light"] .step-item.completed .step-number {
+    background: #8bbf3b;
+    color: #FFFFFF;
+}
+
+/* Mock data */
+[data-theme="light"] .mock-data {
+    background: #F8F8F8;
+    border-color: var(--border-color);
+}
+
+/* Flag submission */
+[data-theme="light"] .flag-submission {
+    background: #FFFFFF;
+    border-color: var(--border-color);
+}
+
+[data-theme="light"] .flag-format {
+    background: #F5F7FA;
+    border-color: var(--border-color);
+}
+
+[data-theme="light"] .flag-format code {
+    color: #5c8a1e;
+}
+
+/* Practical steps progress */
+[data-theme="light"] .steps-progress {
+    background: #FFFFFF;
+    border-color: var(--border-color);
+}
+
+[data-theme="light"] .progress-step:hover {
+    background: rgba(0, 0, 0, 0.04);
+}
+
+[data-theme="light"] .progress-step.active {
+    background: rgba(139, 191, 59, 0.1);
+}
+
+[data-theme="light"] .progress-step-number {
+    background: #F0F2F5;
+    border-color: var(--border-color);
+}
+
+[data-theme="light"] .progress-step.active .progress-step-number {
+    border-color: #8bbf3b;
+    color: #5c8a1e;
+}
+
+/* Validation messages */
+[data-theme="light"] .validation-result.success {
+    background: rgba(139, 191, 59, 0.08);
+    border-color: rgba(139, 191, 59, 0.25);
+}
+
+[data-theme="light"] .validation-result.success .validation-header {
+    color: #5c8a1e;
+}
+
+[data-theme="light"] .validation-msg.success {
+    background: rgba(139, 191, 59, 0.08);
+    color: #5c8a1e;
+    border-color: rgba(139, 191, 59, 0.2);
+}
+
+/* Submit button */
+[data-theme="light"] .btn-submit {
+    background: #8bbf3b;
+    color: #FFFFFF;
+}
+
+[data-theme="light"] .btn-submit:hover {
+    background: #5c8a1e;
+    box-shadow: 0 4px 12px rgba(139, 191, 59, 0.25);
+}
+
+/* Resource links — THE DARK GRAY CARDS in screenshot */
+[data-theme="light"] .resource-link {
+    background: #FFFFFF;
+    border-color: var(--border-color);
+    color: var(--text-primary);
+    box-shadow: var(--shadow-sm);
+}
+
+[data-theme="light"] .resource-link:hover {
+    border-color: #8bbf3b;
+    background: #F9FBF5;
+}
+
+[data-theme="light"] .resources-section h5,
+[data-theme="light"] .resources-group-label {
+    color: var(--text-muted);
+}
+
+[data-theme="light"] .challenge-section .section-header {
+    color: var(--text-primary);
 }

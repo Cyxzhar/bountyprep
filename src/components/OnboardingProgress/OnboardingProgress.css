@@ -66,7 +66,8 @@
 
 .onboarding-progress-line {
     width: 40px;
-    height: 3px; /* Thicker line */
+    height: 3px;
+    /* Thicker line */
     background: rgba(255, 255, 255, 0.1);
     margin: 0 8px;
     transition: all var(--transition-fast);
@@ -83,4 +84,55 @@
     .onboarding-progress-line {
         width: 30px;
     }
+}
+
+/* ============================================
+   LIGHT MODE OVERRIDES
+   ============================================ */
+
+/* Inactive dot */
+[data-theme="light"] .onboarding-progress-dot {
+    background: #E5E7EB;
+    border-color: #D1D5DB;
+}
+
+/* Active dot */
+[data-theme="light"] .onboarding-progress-dot.active {
+    background: #FFFFFF;
+    border: 2.5px solid #8bbf3b;
+    box-shadow: 0 0 0 3px rgba(74, 122, 0, 0.15);
+}
+
+[data-theme="light"] .onboarding-progress-dot.active::after {
+    background: #8bbf3b;
+    box-shadow: none;
+}
+
+/* Completed dot */
+[data-theme="light"] .onboarding-progress-dot.completed {
+    background: #8bbf3b;
+    border-color: #8bbf3b;
+    box-shadow: 0 2px 6px rgba(74, 122, 0, 0.3);
+}
+
+/* Completed dot checkmark */
+[data-theme="light"] .onboarding-progress-dot.completed svg {
+    color: #FFFFFF;
+}
+
+/* Hover on clickable dots */
+[data-theme="light"] .onboarding-progress-step.clickable:hover .onboarding-progress-dot {
+    box-shadow: 0 0 0 4px rgba(74, 122, 0, 0.2);
+    border-color: #8bbf3b;
+}
+
+/* Inactive connector line */
+[data-theme="light"] .onboarding-progress-line {
+    background: #D1D5DB;
+}
+
+/* Completed connector line */
+[data-theme="light"] .onboarding-progress-line.completed {
+    background: #8bbf3b;
+    box-shadow: none;
 }
