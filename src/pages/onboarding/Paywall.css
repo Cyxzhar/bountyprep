@@ -322,8 +322,8 @@
 }
 
 [data-theme="light"] .paywall-pricing-card.waitlist-card {
-    background: #F1F8E9;
-    border-color: #8bbf3b;
+    background: #F1F8E9 !important;
+    border-color: #8bbf3b !important;
     box-shadow: 0 4px 20px rgba(139, 191, 59, 0.15);
 }
 

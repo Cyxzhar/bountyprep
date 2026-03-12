@@ -169,6 +169,18 @@
     min-width: 0;
 }
 
+/* --- Lesson Footer (full-width across content column on desktop) --- */
+.lesson-footer {
+    margin-top: 80px;
+    padding-top: 40px;
+    border-top: 1px solid rgba(255, 255, 255, 0.05);
+    width: 100%;
+}
+
+[data-theme="light"] .lesson-footer {
+    border-top-color: var(--border-color);
+}
+
 /* --- Content Styling --- */
 
 /* Video */

@@ -11,8 +11,8 @@
     border-right: 1px solid var(--border-color);
     display: flex;
     flex-direction: column;
-    padding: var(--space-lg) var(--space-lg);
-    gap: var(--space-lg);
+    padding: var(--space-md) var(--space-lg);
+    gap: var(--space-md);
     z-index: 1000;
     box-shadow: var(--shadow-lg);
     transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
@@ -179,8 +179,15 @@
     flex: 1;
     display: flex;
     flex-direction: column;
-    gap: var(--space-sm);
-    overflow: hidden;
+    gap: var(--space-xs);
+    overflow-y: auto;
+    overflow-x: hidden;
+    min-height: 0;
+    scrollbar-width: none;
+}
+
+.sidebar-nav::-webkit-scrollbar {
+    display: none;
 }
 
 .nav-section {
@@ -271,10 +278,15 @@
 /* Footer */
 .sidebar-footer {
     padding-top: var(--space-sm);
+    padding-bottom: var(--space-sm);
     border-top: 1px solid var(--border-color);
     width: 100%;
     max-width: 100%;
     overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    align-items: flex-start;
 }
 
 [data-theme="light"] .sidebar-footer {
