@@ -132,12 +132,17 @@
 }
 
 .module-tag {
-    color: var(--local-accent-primary);
+    display: inline-block;
+    color: #5c8a1e;
     font-weight: 700;
     text-transform: uppercase;
     letter-spacing: 0.1em;
     font-size: 0.85rem;
     margin-bottom: 16px;
+    background: rgba(139, 191, 59, 0.12);
+    border: 1px solid rgba(139, 191, 59, 0.3);
+    padding: 6px 14px;
+    border-radius: 100px;
 }
 
 .lesson-page .hero-title {
@@ -960,4 +965,241 @@
     .lab-cta-info h3 {
         font-size: 1.25rem;
     }
+}
+
+/* ===========================================
+   LIGHT MODE OVERRIDES
+   =========================================== */
+
+/* Page background */
+[data-theme="light"] .lesson-page {
+    background: #F4F6F9;
+}
+
+/* --- Scroll progress bar --- */
+[data-theme="light"] .scroll-progress-container {
+    background: rgba(0, 0, 0, 0.05);
+}
+
+/* --- Hero --- */
+[data-theme="light"] .lesson-hero {
+    background: radial-gradient(circle at 50% 0%, rgba(139, 191, 59, 0.12) 0%, transparent 60%);
+    border-bottom-color: rgba(0, 0, 0, 0.06);
+}
+
+[data-theme="light"] .lesson-page .hero-title {
+    color: #1A1A2E;
+    /* override the hardcoded #fff */
+}
+
+[data-theme="light"] .module-tag {
+    color: #5c8a1e;
+    background: rgba(139, 191, 59, 0.1);
+    border-color: rgba(139, 191, 59, 0.3);
+}
+
+/* Back button */
+[data-theme="light"] .icon-btn-back {
+    background: #FFFFFF;
+    border-color: var(--border-color);
+    color: var(--text-secondary);
+}
+
+[data-theme="light"] .icon-btn-back:hover {
+    background: #F5F7FA;
+    border-color: #8bbf3b;
+    color: var(--text-primary);
+}
+
+/* XP / time badges */
+[data-theme="light"] .xp-badge {
+    background: rgba(92, 138, 30, 0.1);
+    color: #5c8a1e;
+    border-color: rgba(92, 138, 30, 0.2);
+    box-shadow: none;
+}
+
+[data-theme="light"] .time-badge {
+    background: #FFFFFF;
+    border-color: var(--border-color);
+    color: var(--text-secondary);
+}
+
+/* --- Content area --- */
+[data-theme="light"] .lesson-content-modern {
+    background: transparent;
+}
+
+/* List items as cards */
+[data-theme="light"] .markdown-modern ul li {
+    background: #FFFFFF;
+    border-color: var(--border-color);
+    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.04);
+    color: var(--text-primary);
+}
+
+[data-theme="light"] .markdown-modern ul li:hover {
+    background: #F9FBF5;
+    border-color: rgba(139, 191, 59, 0.35);
+    box-shadow: 0 4px 12px rgba(139, 191, 59, 0.08);
+}
+
+/* Inline code */
+[data-theme="light"] .markdown-modern .inline-code {
+    background: rgba(92, 138, 30, 0.1);
+    color: #4a7018;
+    border: 1px solid rgba(92, 138, 30, 0.2);
+}
+
+[data-theme="light"] .markdown-modern code {
+    color: #1A1A2E;
+}
+
+/* Code block */
+[data-theme="light"] .code-block-container {
+    background: #1E1E2E;
+    border-color: rgba(0, 0, 0, 0.12);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+}
+
+[data-theme="light"] .code-block-header {
+    background: rgba(0, 0, 0, 0.1);
+    border-bottom-color: rgba(0, 0, 0, 0.12);
+}
+
+[data-theme="light"] .copy-btn {
+    background: rgba(255, 255, 255, 0.08);
+    border-color: rgba(255, 255, 255, 0.15);
+    color: rgba(255, 255, 255, 0.7);
+}
+
+[data-theme="light"] .copy-btn:hover {
+    background: rgba(255, 255, 255, 0.15);
+    color: #fff;
+}
+
+/* Callouts */
+[data-theme="light"] .callout {
+    background: #FFFFFF;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+}
+
+[data-theme="light"] .callout-tip {
+    background: rgba(139, 191, 59, 0.06);
+    border-color: #8bbf3b;
+}
+
+[data-theme="light"] .callout-important {
+    background: rgba(0, 131, 143, 0.05);
+    border-color: var(--accent-cyan);
+}
+
+[data-theme="light"] .modern-blockquote {
+    border-left-color: #8bbf3b;
+    color: var(--text-secondary);
+}
+
+/* Video container */
+[data-theme="light"] .video-container {
+    border-color: var(--border-color);
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
+}
+
+/* --- Sidebar desktop --- */
+[data-theme="light"] .sidebar-sticky h3 {
+    color: var(--text-muted);
+}
+
+[data-theme="light"] .sidebar-item:hover {
+    background: rgba(0, 0, 0, 0.04);
+    color: var(--text-primary);
+}
+
+[data-theme="light"] .sidebar-item.active {
+    background: rgba(139, 191, 59, 0.1);
+    color: #5c8a1e;
+}
+
+[data-theme="light"] .empty-dot {
+    background: rgba(0, 0, 0, 0.15);
+}
+
+[data-theme="light"] .pulsing-dot {
+    background: #8bbf3b;
+    box-shadow: 0 0 0 4px rgba(139, 191, 59, 0.2);
+}
+
+/* --- Footer nav buttons --- */
+[data-theme="light"] .lesson-footer {
+    border-top-color: var(--border-color);
+}
+
+[data-theme="light"] .nav-btn-secondary {
+    border-color: var(--border-color);
+    color: var(--text-secondary);
+    background: #FFFFFF;
+}
+
+[data-theme="light"] .nav-btn-secondary:hover:not(:disabled) {
+    background: #F5F7FA;
+    border-color: #8bbf3b;
+    color: var(--text-primary);
+}
+
+[data-theme="light"] .complete-btn-primary {
+    background: #8bbf3b;
+    color: #FFFFFF;
+    box-shadow: 0 4px 16px rgba(139, 191, 59, 0.3);
+}
+
+[data-theme="light"] .complete-btn-primary:hover {
+    background: #5c8a1e;
+    box-shadow: 0 8px 24px rgba(139, 191, 59, 0.35);
+}
+
+[data-theme="light"] .complete-btn-primary:disabled {
+    background: #E5E7EB;
+    color: #9CA3AF;
+    border: 1px solid #D1D5DB;
+    box-shadow: none;
+}
+
+/* --- Module pagination --- */
+[data-theme="light"] .module-pagination {
+    background: #FFFFFF;
+    border: 1px solid var(--border-color);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+}
+
+[data-theme="light"] .pagination-dot {
+    background: rgba(0, 0, 0, 0.1);
+}
+
+[data-theme="light"] .pagination-dot:hover {
+    background: rgba(0, 0, 0, 0.2);
+}
+
+[data-theme="light"] .pagination-dot.active {
+    background: #8bbf3b;
+    box-shadow: 0 0 8px rgba(139, 191, 59, 0.3);
+}
+
+[data-theme="light"] .pagination-dot.completed:not(.active) {
+    background: rgba(139, 191, 59, 0.4);
+}
+
+/* --- Lab CTA card --- */
+[data-theme="light"] .lab-cta-card {
+    background: linear-gradient(135deg, rgba(139, 191, 59, 0.06), rgba(0, 131, 143, 0.04));
+    border-color: rgba(139, 191, 59, 0.2);
+}
+
+[data-theme="light"] .lab-cta-info h3 {
+    color: var(--text-primary);
+    /* was #fff */
+}
+
+[data-theme="light"] .lab-cta-icon {
+    background: rgba(139, 191, 59, 0.12);
+    color: #5c8a1e;
 }
