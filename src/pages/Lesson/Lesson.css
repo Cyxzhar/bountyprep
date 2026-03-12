@@ -169,12 +169,14 @@
     min-width: 0;
 }
 
-/* --- Lesson Footer (full-width across content column on desktop) --- */
+/* --- Lesson Footer (outside grid — full page width) --- */
 .lesson-footer {
-    margin-top: 80px;
-    padding-top: 40px;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 40px 32px 48px;
     border-top: 1px solid rgba(255, 255, 255, 0.05);
     width: 100%;
+    box-sizing: border-box;
 }
 
 [data-theme="light"] .lesson-footer {

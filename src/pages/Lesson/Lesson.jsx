@@ -341,56 +341,7 @@ export default function Lesson() {
                         </div>
                     )}
 
-                    {/* Enhanced Footer Navigation */}
-                    <div className="lesson-footer">
-                        <div className="footer-actions">
-                            <button
-                                className="nav-btn-secondary"
-                                disabled={!prevLessonId}
-                                onClick={() => {
-                                    if (prevLessonId) {
-                                        playSFX('click');
-                                        navigate(`/course/${id}/lesson/${prevLessonId}`);
-                                    }
-                                }}
-                            >
-                                <ChevronLeft size={16} /> Previous Lesson
-                            </button>
-
-                            <button
-                                className="complete-btn-primary"
-                                onClick={handleComplete}
-                                disabled={saving || (!isCompleted && scrollProgress < 95)}
-                            >
-                                <div className="btn-content">
-                                    <span className="btn-label">
-                                        {saving ? 'Saving...' : (isCompleted ? 'Next Lesson' : (scrollProgress < 95 ? 'Read to Complete' : 'Mark Complete'))}
-                                    </span>
-                                    {nextLessonTitle && <span className="btn-subtext">Up Next: {nextLessonTitle}</span>}
-                                </div>
-                                <ChevronRight size={20} />
-                            </button>
-                        </div>
-
-                        {/* Pagination / Jump */}
-                        <div className="module-pagination">
-                            <div className="pagination-info">
-                                <span>{currentModule?.title}</span>
-                                <span className="pagination-count">Lesson {currentLessonIndex + 1} of {allLessonsInModule.length}</span>
-                            </div>
-                            <div className="pagination-dots">
-                                {allLessonsInModule.map((l, idx) => (
-                                    <div
-                                        key={l.id}
-                                        className={`pagination-dot ${l.id === lessonId ? 'active' : ''} ${courseProgress?.completedLessons?.includes(l.id) ? 'completed' : ''}`}
-                                        onClick={() => navigate(`/course/${id}/lesson/${l.id}`)}
-                                        title={l.title}
-                                    />
-                                ))}
-                            </div>
-                        </div>
-                    </div>
-                </main >
+                </main>
 
                 {/* Desktop Sidebar (Optional TOC) */}
                 <aside className="lesson-sidebar-desktop">
@@ -414,7 +365,57 @@ export default function Lesson() {
                         </div>
                     </div>
                 </aside>
-            </div >
-        </div >
+            </div>
+
+            {/* Enhanced Footer Navigation — outside grid for full-width */}
+            <div className="lesson-footer">
+                <div className="footer-actions">
+                    <button
+                        className="nav-btn-secondary"
+                        disabled={!prevLessonId}
+                        onClick={() => {
+                            if (prevLessonId) {
+                                playSFX('click');
+                                navigate(`/course/${id}/lesson/${prevLessonId}`);
+                            }
+                        }}
+                    >
+                        <ChevronLeft size={16} /> Previous Lesson
+                    </button>
+
+                    <button
+                        className="complete-btn-primary"
+                        onClick={handleComplete}
+                        disabled={saving || (!isCompleted && scrollProgress < 95)}
+                    >
+                        <div className="btn-content">
+                            <span className="btn-label">
+                                {saving ? 'Saving...' : (isCompleted ? 'Next Lesson' : (scrollProgress < 95 ? 'Read to Complete' : 'Mark Complete'))}
+                            </span>
+                            {nextLessonTitle && <span className="btn-subtext">Up Next: {nextLessonTitle}</span>}
+                        </div>
+                        <ChevronRight size={20} />
+                    </button>
+                </div>
+
+                {/* Pagination / Jump */}
+                <div className="module-pagination">
+                    <div className="pagination-info">
+                        <span>{currentModule?.title}</span>
+                        <span className="pagination-count">Lesson {currentLessonIndex + 1} of {allLessonsInModule.length}</span>
+                    </div>
+                    <div className="pagination-dots">
+                        {allLessonsInModule.map((l, idx) => (
+                            <div
+                                key={l.id}
+                                className={`pagination-dot ${l.id === lessonId ? 'active' : ''} ${courseProgress?.completedLessons?.includes(l.id) ? 'completed' : ''}`}
+                                onClick={() => navigate(`/course/${id}/lesson/${l.id}`)}
+                                title={l.title}
+                            />
+                        ))}
+                    </div>
+                </div>
+            </div>
+        </div>
     );
 }
