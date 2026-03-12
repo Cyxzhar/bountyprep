@@ -281,6 +281,46 @@
     border-top: 1px solid rgba(0, 0, 0, 0.1);
 }
 
+/* Sidebar Theme Toggle Button */
+.sidebar-theme-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    width: 44px;
+    height: 44px;
+    padding: 0;
+    background: transparent;
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-md);
+    color: var(--text-secondary);
+    cursor: pointer;
+    transition: all 0.2s ease;
+    flex-shrink: 0;
+    box-sizing: border-box;
+    appearance: none;
+    -webkit-appearance: none;
+    outline: none;
+}
+
+.sidebar-theme-btn:hover {
+    background: rgba(255, 255, 255, 0.06);
+    color: var(--text-primary);
+    border-color: rgba(255, 255, 255, 0.2);
+}
+
+[data-theme="light"] .sidebar-theme-btn {
+    border-color: transparent;
+    color: var(--text-muted);
+    background: transparent;
+}
+
+[data-theme="light"] .sidebar-theme-btn:hover {
+    background: rgba(0, 0, 0, 0.05);
+    border-color: var(--border-color);
+    color: var(--text-primary);
+}
+
 /* Sidebar Logout Button - Unique styling to avoid conflicts */
 .sidebar-logout-btn {
     /* Display & Layout */

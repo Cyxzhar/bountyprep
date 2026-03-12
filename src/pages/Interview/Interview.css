@@ -1882,3 +1882,83 @@
 [data-theme="light"] .quota-label {
     color: var(--text-secondary);
 }
+
+/* ===========================================
+   LIGHT MODE: MODAL OVERRIDES
+   =========================================== */
+
+/* Overlay */
+[data-theme="light"] .interview-modal-overlay {
+    background: rgba(0, 0, 0, 0.35);
+    backdrop-filter: blur(6px);
+}
+
+/* Modal content — was dark glass gradient */
+[data-theme="light"] .interview-modal-content {
+    background: #FFFFFF;
+    border-color: var(--border-color);
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.12);
+}
+
+/* Modal header */
+[data-theme="light"] .interview-modal-header {
+    background: #F8F9FA;
+    border-bottom-color: var(--border-color);
+}
+
+[data-theme="light"] .interview-modal-header h3 {
+    color: var(--text-primary);
+}
+
+/* Close button */
+[data-theme="light"] .interview-close-btn {
+    background: #F0F2F5;
+    border-color: var(--border-color);
+    color: var(--text-secondary);
+}
+
+[data-theme="light"] .interview-close-btn:hover {
+    background: #E5E7EB;
+    border-color: rgba(0, 0, 0, 0.15);
+    color: var(--text-primary);
+}
+
+/* History list */
+[data-theme="light"] .interview-history-list {
+    background: #FFFFFF;
+}
+
+/* History item card */
+[data-theme="light"] .history-item-wrapper {
+    background: #F8F9FA;
+    border-color: var(--border-color);
+}
+
+[data-theme="light"] .history-item-wrapper:hover {
+    background: #F1F8E9;
+    border-color: rgba(139, 191, 59, 0.35);
+}
+
+/* Icon buttons inside modal */
+[data-theme="light"] .interview-btn-icon {
+    background: #F0F2F5;
+    border-color: var(--border-color);
+    color: var(--text-secondary);
+}
+
+[data-theme="light"] .interview-btn-icon:hover {
+    background: #E5E7EB;
+    border-color: rgba(0, 0, 0, 0.15);
+    color: var(--text-primary);
+}
+
+[data-theme="light"] .interview-btn-icon.primary {
+    background: rgba(92, 138, 30, 0.1);
+    border-color: rgba(92, 138, 30, 0.3);
+    color: #5c8a1e;
+}
+
+[data-theme="light"] .interview-btn-icon.primary:hover {
+    background: rgba(92, 138, 30, 0.18);
+    border-color: #5c8a1e;
+}
