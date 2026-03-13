@@ -52,6 +52,33 @@ export default function ChallengeDetailNew() {
         return () => stopBGM(true);
     }, [loading, challenge]);
 
+    // Load progress and update streak
+    useEffect(() => {
+        if (!currentUser?.uid || !challenge) return;
+
+        async function initChallenge() {
+            try {
+                // Update streak
+                updateStreak(currentUser.uid).then(result => {
+                    if (result.achievements?.length > 0) {
+                        unlockMultiple(result.achievements);
+                    }
+                }).catch(console.error);
+
+                // Load progress
+                const progress = await getChallengeProgress(currentUser.uid, challenge.id);
+                if (progress) {
+                    setSavedProgress(progress);
+                }
+            } catch (err) {
+                console.error("Failed to load challenge:", err);
+            }
+        }
+
+        initChallenge();
+        setPreviousUserXp(currentUser?.xp || 0);
+    }, [currentUser?.uid, challenge?.id]);
+
     // Handle Loading
     if (loading) {
         return (
@@ -87,34 +114,6 @@ export default function ChallengeDetailNew() {
         }
     };
 
-    // Load progress and update streak
-    useEffect(() => {
-        if (!currentUser?.uid) return;
-
-        async function initChallenge() {
-            try {
-                // Update streak
-                updateStreak(currentUser.uid).then(result => {
-                    if (result.achievements?.length > 0) {
-                        unlockMultiple(result.achievements);
-                    }
-                }).catch(console.error);
-
-                // Load progress
-                const progress = await getChallengeProgress(currentUser.uid, challenge.id);
-                if (progress) {
-                    setSavedProgress(progress);
-                    // Do NOT auto-set challengeCompleted(true) here, 
-                    // or replaying the challenge will instantly confirm it.
-                }
-            } catch (err) {
-                console.error("Failed to load challenge:", err);
-            }
-        }
-
-        initChallenge();
-        setPreviousUserXp(currentUser?.xp || 0);
-    }, [currentUser?.uid, challenge.id]);
 
     // Handle challenge completion
     const handleChallengeComplete = async (completionData) => {
