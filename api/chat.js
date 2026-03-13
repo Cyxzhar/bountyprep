@@ -82,27 +82,30 @@ export default async function handler(req, res) {
     }
 
     // ── QUOTA: Server-side rate limiting ────────────────────────
-    const today = new Date().toISOString().split('T')[0];
-    const quotaRef = admin.firestore().doc(`users/${uid}/quota/${today}`);
+    const isLocalMock = process.env.FIREBASE_PROJECT_ID === undefined || !process.env.FIREBASE_PRIVATE_KEY;
+    if (!isLocalMock) {
+        const today = new Date().toISOString().split('T')[0];
+        const quotaRef = admin.firestore().doc(`users/${uid}/quota/${today}`);
 
-    try {
-        const quotaSnap = await quotaRef.get();
-        const quotaData = quotaSnap.exists ? quotaSnap.data() : { used: 0 };
-        const limit = FREE_DAILY_LIMIT; // TODO: check user.isPremium for PREMIUM_DAILY_LIMIT
+        try {
+            const quotaSnap = await quotaRef.get();
+            const quotaData = quotaSnap.exists ? quotaSnap.data() : { used: 0 };
+            const limit = FREE_DAILY_LIMIT; // TODO: check user.isPremium for PREMIUM_DAILY_LIMIT
 
-        if (quotaData.used >= limit) {
-            return res.status(429).json({
-                error: 'Daily quota exceeded',
-                remaining: 0,
-                resetAt: `${today}T23:59:59Z`
-            });
+            if (quotaData.used >= limit) {
+                return res.status(429).json({
+                    error: 'Daily quota exceeded',
+                    remaining: 0,
+                    resetAt: `${today}T23:59:59Z`
+                });
+            }
+
+            // Increment quota
+            await quotaRef.set({ used: (quotaData.used || 0) + 1, date: today }, { merge: true });
+        } catch (err) {
+            console.error('Quota check failed:', err);
+            // Fail open for now — don't block users if quota check fails
         }
-
-        // Increment quota
-        await quotaRef.set({ used: (quotaData.used || 0) + 1, date: today }, { merge: true });
-    } catch (err) {
-        console.error('Quota check failed:', err);
-        // Fail open for now — don't block users if quota check fails
     }
 
     // ── API KEY ─────────────────────────────────────────────────
