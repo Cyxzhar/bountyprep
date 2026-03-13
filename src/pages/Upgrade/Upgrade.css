@@ -14,7 +14,7 @@
     width: 100%;
 }
 
-.icon-btn {
+.upgrade-page .icon-btn {
     background: rgba(255, 255, 255, 0.05);
     border: 1px solid rgba(255, 255, 255, 0.1);
     color: var(--text-secondary);
@@ -27,13 +27,13 @@
     justify-content: center;
 }
 
-.icon-btn:hover {
+.upgrade-page .icon-btn:hover {
     background: rgba(255, 255, 255, 0.15);
     color: #fff;
     border-color: rgba(255, 255, 255, 0.2);
 }
 
-.header-badge {
+.upgrade-page .header-badge {
     display: flex;
     align-items: center;
     gap: 8px;
@@ -463,9 +463,12 @@
 }
 
 @keyframes pulse {
-    0%, 100% {
+
+    0%,
+    100% {
         box-shadow: 0 0 20px rgba(159, 239, 0, 0.3);
     }
+
     50% {
         box-shadow: 0 0 40px rgba(159, 239, 0, 0.5);
     }
@@ -489,7 +492,7 @@
     letter-spacing: -0.02em;
 }
 
-.waitlist-hero > p {
+.waitlist-hero>p {
     font-size: clamp(1rem, 2.5vw, 1.125rem);
     color: var(--text-secondary);
     line-height: 1.6;
@@ -563,9 +566,12 @@
 }
 
 @keyframes pulse-dot {
-    0%, 100% {
+
+    0%,
+    100% {
         box-shadow: 0 0 4px rgba(159, 239, 0, 0.6);
     }
+
     50% {
         box-shadow: 0 0 8px rgba(159, 239, 0, 0.8);
     }
@@ -654,4 +660,123 @@
     .w-param {
         padding: var(--space-lg) 0;
     }
+}
+
+/* ===========================================
+   LIGHT MODE OVERRIDES
+   =========================================== */
+
+/* Waitlist Success Card */
+[data-theme="light"] .waitlist-card-success {
+    background: #FFFFFF;
+    border-color: rgba(106, 173, 0, 0.2);
+    box-shadow: 0 4px 24px rgba(0, 0, 0, 0.04);
+}
+
+[data-theme="light"] .waitlist-hero h1 {
+    color: var(--text-primary);
+}
+
+[data-theme="light"] .w-label {
+    color: var(--text-muted);
+}
+
+[data-theme="light"] .w-value {
+    color: var(--text-primary);
+}
+
+[data-theme="light"] .w-value.on-list {
+    color: #5c8a1e;
+}
+
+[data-theme="light"] .w-value.highlight {
+    color: #5c8a1e;
+    background: rgba(139, 191, 59, 0.1);
+    border-color: rgba(139, 191, 59, 0.2);
+}
+
+[data-theme="light"] .w-param {
+    border-bottom-color: rgba(0, 0, 0, 0.06);
+}
+
+[data-theme="light"] .waitlist-icon {
+    background: linear-gradient(135deg, rgba(139, 191, 59, 0.1), rgba(139, 191, 59, 0.05));
+    border-color: rgba(139, 191, 59, 0.3);
+}
+
+[data-theme="light"] .waitlist-icon::before {
+    background: linear-gradient(135deg, rgba(139, 191, 59, 0.08), transparent);
+}
+
+/* Header Badge */
+[data-theme="light"] .header-badge {
+    background: #F1F8E9;
+    border-color: rgba(139, 191, 59, 0.3);
+    color: #5c8a1e;
+}
+
+[data-theme="light"] .header-badge .text-neon {
+    color: #5c8a1e;
+}
+
+/* Pricing Cards */
+[data-theme="light"] .pricing-card {
+    background: #FFFFFF;
+    border-color: var(--border-color);
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.05);
+}
+
+[data-theme="light"] .pricing-card::before {
+    color: #FFFFFF;
+    background: #6aad00;
+}
+
+[data-theme="light"] .pricing-card .amount {
+    color: var(--text-primary);
+    text-shadow: none;
+}
+
+[data-theme="light"] .pricing-card .currency {
+    color: #5c8a1e;
+}
+
+[data-theme="light"] .feature-item.highlight {
+    color: var(--text-primary);
+}
+
+[data-theme="light"] .check-icon {
+    color: #6aad00;
+    filter: none;
+}
+
+[data-theme="light"] .upgrade-title {
+    color: var(--text-primary);
+    text-shadow: none;
+}
+
+/* Features grid & FAQ */
+[data-theme="light"] .feature-box {
+    background: #FFFFFF;
+    border-color: var(--border-color);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.03);
+}
+
+[data-theme="light"] .icon-box {
+    background: #F5F7FA;
+    border-color: var(--border-color);
+}
+
+[data-theme="light"] .faq-item {
+    background: #FFFFFF;
+    border-color: var(--border-color);
+}
+
+[data-theme="light"] .faq-item.open {
+    background: #F9FBF5;
+    border-color: rgba(106, 173, 0, 0.3);
+    box-shadow: 0 4px 16px rgba(106, 173, 0, 0.08);
+}
+
+[data-theme="light"] .faq-question h4 {
+    color: var(--text-primary);
 }
