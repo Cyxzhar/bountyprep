@@ -1,5 +1,5 @@
 /**
- * Vercel Serverless Function - AI Interview Proxy
+ * Express Route Handler - AI Interview Proxy
  * 
  * SECURITY:
  * - Firebase auth token verification (H2)
