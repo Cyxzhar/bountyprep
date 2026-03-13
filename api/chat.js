@@ -9,16 +9,28 @@
  */
 
 import admin from 'firebase-admin';
+import * as dotenv from 'dotenv';
+
+// Load env vars immediately so Firebase Admin has access to them
+dotenv.config();
 
 // Initialize Firebase Admin (singleton)
 if (!admin.apps.length) {
-    admin.initializeApp({
-        credential: admin.credential.cert({
-            projectId: process.env.FIREBASE_PROJECT_ID,
-            clientEmail: process.env.FIREBASE_CLIENT_EMAIL,
-            privateKey: process.env.FIREBASE_PRIVATE_KEY?.replace(/\\n/g, '\n'),
-        }),
-    });
+    const projectId = process.env.FIREBASE_PROJECT_ID || process.env.VITE_FIREBASE_PROJECT_ID;
+    const clientEmail = process.env.FIREBASE_CLIENT_EMAIL || 'local-dev@bountyprep2.iam.gserviceaccount.com';
+    const privateKey = process.env.FIREBASE_PRIVATE_KEY?.replace(/\\n/g, '\n') || '-----BEGIN PRIVATE KEY-----\nLOCAL_DEV_REPLACE_ME\n-----END PRIVATE KEY-----';
+
+    try {
+        admin.initializeApp({
+            credential: admin.credential.cert({
+                projectId,
+                clientEmail,
+                privateKey,
+            }),
+        });
+    } catch (e) {
+        console.warn('Firebase Admin init failed (likely missing local creds, continuing in limited mode):', e.message);
+    }
 }
 
 const ALLOWED_ORIGINS = [
