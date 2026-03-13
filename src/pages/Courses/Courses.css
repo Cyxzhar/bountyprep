@@ -28,21 +28,29 @@
 .page-header {
     margin-bottom: var(--space-3xl);
     position: relative;
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: var(--space-2xl);
+    flex-wrap: wrap;
 }
 
 @media (max-width: 768px) {
     .page-header {
         margin-bottom: var(--space-2xl);
+        flex-direction: column;
+        gap: var(--space-xl);
     }
 }
 
 .header-content {
-    margin-bottom: var(--space-2xl);
+    flex: 1;
+    min-width: 0;
 }
 
 @media (max-width: 480px) {
     .header-content {
-        margin-bottom: var(--space-xl);
+        margin-bottom: 0;
     }
 }
 
@@ -706,12 +714,20 @@
 }
 
 [data-theme="light"] .course-icon-wrapper {
-    background: #F5F7FA;
+    background: linear-gradient(135deg, #EEF2F7 0%, #E8EDF5 100%);
     border-bottom: 1px solid rgba(0, 0, 0, 0.05);
 }
 
+/* Make the grid visible in light mode */
+[data-theme="light"] .course-icon-wrapper::after {
+    background-image:
+        linear-gradient(rgba(106, 173, 0, 0.12) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(106, 173, 0, 0.12) 1px, transparent 1px);
+    background-size: 20px 20px;
+}
+
 [data-theme="light"] .course-icon-wrapper svg {
-    filter: drop-shadow(0 0 10px rgba(159, 239, 0, 0.2));
+    filter: drop-shadow(0 0 10px rgba(106, 173, 0, 0.3));
 }
 
 [data-theme="light"] .badge {
