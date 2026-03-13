@@ -88,9 +88,9 @@ export default async function handler(req, res) {
     }
 
     // ── API KEY ─────────────────────────────────────────────────
-    const apiKey = process.env.PERPLEXITY_API_KEY;
+    const apiKey = process.env.GEMINI_API_KEY;
     if (!apiKey) {
-        console.error('Missing PERPLEXITY_API_KEY environment variable');
+        console.error('Missing GEMINI_API_KEY environment variable');
         return res.status(500).json({ error: 'Server configuration error' });
     }
 
@@ -106,8 +106,8 @@ export default async function handler(req, res) {
             .filter(m => m.role !== 'system') // Block client-sent system prompts
             .slice(-20) // Limit conversation length
             .map(m => ({
-                role: m.role === 'user' ? 'user' : 'assistant',
-                content: String(m.content || '').slice(0, 2000) // Limit message length
+                role: m.role === 'user' ? 'user' : 'model',
+                parts: [{ text: String(m.content || '').slice(0, 2000) }] // Limit message length
             }));
 
         const systemPrompt = `You are an expert Security Engineer conducting a FAANG-level security interview.
@@ -124,26 +124,26 @@ export default async function handler(req, res) {
         
         Your goal is to assess their depth of knowledge in AppSec, Network Security, and Threat Modeling.`;
 
-        const response = await fetch('https://api.perplexity.ai/chat/completions', {
+        const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${apiKey}`, {
             method: 'POST',
             headers: {
-                'Authorization': `Bearer ${apiKey}`,
                 'Content-Type': 'application/json',
             },
             body: JSON.stringify({
-                model: 'sonar',
-                messages: [
-                    { role: 'system', content: systemPrompt },
-                    ...sanitizedMessages
-                ],
-                temperature: 0.2,
-                max_tokens: 1000,
+                systemInstruction: {
+                    parts: [{ text: systemPrompt }]
+                },
+                contents: sanitizedMessages,
+                generationConfig: {
+                    temperature: 0.2,
+                    maxOutputTokens: 1000,
+                }
             })
         });
 
         if (!response.ok) {
             const errorText = await response.text();
-            console.error('Perplexity API error:', response.status, errorText);
+            console.error('Gemini API error:', response.status, errorText);
             return res.status(response.status).json({
                 error: 'AI service error',
                 details: response.status === 429 ? 'Rate limited' : 'Service unavailable'
@@ -151,7 +151,12 @@ export default async function handler(req, res) {
         }
 
         const data = await response.json();
-        return res.status(200).json(data.choices[0].message);
+        const geminiResponseText = data.candidates?.[0]?.content?.parts?.[0]?.text || "I'm sorry, I couldn't generate a response.";
+
+        return res.status(200).json({
+            role: 'assistant',
+            content: geminiResponseText
+        });
 
     } catch (error) {
         console.error('Proxy error:', error);
