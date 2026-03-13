@@ -66,12 +66,18 @@ export default async function handler(req, res) {
         return res.status(401).json({ error: 'Authentication required' });
     }
 
-    let uid;
+    let uid = 'local-dev-user';
     try {
         const token = authHeader.split('Bearer ')[1];
-        const decoded = await admin.auth().verifyIdToken(token);
-        uid = decoded.uid;
+
+        // Skip actual verification in local dev if using mock credentials
+        const isLocalMock = process.env.FIREBASE_PROJECT_ID === undefined || !process.env.FIREBASE_PRIVATE_KEY;
+        if (!isLocalMock) {
+            const decoded = await admin.auth().verifyIdToken(token);
+            uid = decoded.uid;
+        }
     } catch (err) {
+        console.warn('Token verification failed:', err.message);
         return res.status(401).json({ error: 'Invalid or expired token' });
     }
 
