@@ -27,7 +27,7 @@
     font-weight: 600;
 }
 
-.icon-btn {
+.settings-page .icon-btn {
     width: 40px;
     height: 40px;
     display: flex;
@@ -41,7 +41,7 @@
     transition: all 0.2s;
 }
 
-.icon-btn:hover {
+.settings-page .icon-btn:hover {
     background: rgba(255, 255, 255, 0.1);
     color: var(--text-primary);
 }
@@ -333,12 +333,12 @@ input:checked+.slider:before {
     border-color: rgba(214, 48, 49, 0.3);
 }
 
-.logout-btn {
+.settings-page .logout-btn {
     margin-top: var(--space-lg);
     background: rgba(255, 255, 255, 0.05);
 }
 
-.logout-btn:hover {
+.settings-page .logout-btn:hover {
     background: rgba(255, 255, 255, 0.1);
     color: var(--text-primary);
 }
